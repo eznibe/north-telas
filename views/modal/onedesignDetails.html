@@ -1,0 +1,105 @@
+<div class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" style="margin-top: 0px;">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<div class="edit_person">
+					<h2>
+						<span class="glyphicon glyphicon-file"></span>
+						<span>One design</span>
+					</h2>
+				</div>
+				<a href="javascript:void(0)" class="btn btn-lg closebtn" ng-click="$hide()">
+					<span class="glyphicon glyphicon-remove"></span>
+				</a>
+		</div>
+
+			<div class="modal-body">
+
+				<form class="form-horizontal ng-pristine ng-valid" name="form" novalidate>
+
+					<div class="row">
+						<div class="col-md-3 nopadding">
+								<label class="control-label col-xs-4" translate>Boat</label>
+								<div class="col-xs-8">
+									<input name="edit_order" type="text" class="form-control small" ng-model="onedesign.boat" ng-disabled="!onedesign.isNew" required>
+								</div>
+						</div>
+					</div>
+
+					<div class="row" style="margin-bottom: 25px;">
+
+						<div class="col-md-3 nopadding">
+								<label class="control-label col-xs-3" for="edit_obs" translate>Sail</label>
+								<input class="control-label col-xs-1" type="checkbox" ng-model="onedesign.isManualSail" my-tooltip="'New sail'|translate" data-placement="top"/>
+								<div class="col-xs-8" ng-show="!onedesign.isManualSail">
+									<select name="dd_sail" ng-model="onedesign.selectedSail" ng-options="sc as sc.sail for sc in sails" class="form-control small" ng-required="!onedesign.isManualSail" ng-class="{error: form.dd_sail.$invalid && form.dd_sail.$dirty}">
+				                        <option value="">-- choose one --</option>
+				                    </select>
+								</div>
+								<div class="col-xs-8" ng-show="onedesign.isManualSail">
+									<input name="e_sail" ng-model="onedesign.sail" class="form-control small" ng-required="onedesign.isManualSail" ng-class="{error: form.e_sail.$invalid && form.e_sail.$dirty}"/>
+								</div>
+						</div>
+						<div class="col-md-4 nopadding">
+								<label class="control-label col-xs-3" for="edit_cloth" translate>Cloth</label>
+								<div class="col-xs-9">
+									<select name="dd_cloth" ng-model="onedesign.selectedCloth" ng-options="sc as sc.name for sc in cloths" class="form-control small" required ng-class="{error: form.dd_cloth.$invalid && form.dd_cloth.$dirty}">
+				                        <option value="">-- choose one --</option>
+				                    </select>
+								</div>
+						</div>
+						<div class="col-md-3 nopadding">
+								<label class="control-label col-xs-4" for="edit_obs">mts</label>
+								<div class="col-xs-5">
+									<input name="edit_obs" type="number" class="form-control small" required ng-model="onedesign.mts">
+								</div>
+						</div>
+						<div class="col-md-2 nopadding" access-restricted="read-only">
+								<div class="col-xs-6">
+									<a ng-click="save(onedesign)" class="btn btn-default floatright edit_person" ng-disabled="!form.$valid" >
+										<span class="glyphicon glyphicon-save"></span>
+									</a>
+								</div>
+						</div>
+					</div>
+				</form>
+
+				<table id="groups" class="table table-bordered table-striped table-hover">
+					<thead>
+						<tr>
+							<th translate>Sail</th>
+							<th translate>Cloth</th>
+							<th >mts</th>
+							<th access-restricted="read-only" translate>Delete</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="s in boat.allsails">
+							<td>
+								<editable-sail-name ng-model="s" style="display:inline-block;"></editable-sail-name>
+							</td>
+							<td>
+								{{s.cloth}}
+							</td>
+							<td>
+								{{ s.mts }}
+							</td>
+							<td access-restricted="read-only" style="width:80px; text-align:center;">
+								<a ng-click="showConfirmModal(s, deleteOneDesignCloth)" class="btn btn-default">
+									<span class="glyphicon glyphicon-trash"></span>
+								</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+
+
+		</div>
+	</div>
+
+</div>
+
+<confirm-modal/>

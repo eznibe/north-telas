@@ -1,0 +1,101 @@
+<div class="nopaddingright jumbotron clearfix">
+	<h1>{{'Buys' | translate}}</h1>
+</div>
+
+
+
+<div id="accordion" class="panel-group">
+
+	<!-- To buy -->
+	<div class="panel panel-default">
+		<div class="panel-heading nopadding">
+			<h2 class="panel-title">
+				<a data-toggle="collapse" data-target="#collapse1" href="javascript:void(0)" ng-class="{collapsed: type!='buy'}">
+					<span translate>To buy</span> <small>(<span>{{orders_buy.length}}</span>)</small>
+				</a>
+			</h2>
+		</div>
+
+		<div id="collapse1" class="panel-collapse collapse" style="height: auto;" ng-class="{in: type=='buy'}">
+			<div class="panel-body">
+
+				<div id="members" class="user_cards">
+					<ul>
+						<li class="cards">
+							<ul>
+								<li ng-repeat="o in orders_buy | orderBy:'provider' | filter:searchBox" ng-click="showOrderModal(o)">
+									<h3><span style="color:black;">{{o.provider}} - #{{o.number}}</span></h3>
+									<h3 ng-show="o.orderDate"><small translate>Date</small> <span>{{o.formattedDate}}</span></h3>
+									<h3><small translate>Nr. of Products</small> <span>{{o.products.length}}</span></h3>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- To confirm -->
+	<div class="panel panel-default">
+		<div class="panel-heading nopadding">
+			<h2 class="panel-title">
+				<a data-toggle="collapse" data-target="#collapse2" href="javascript:void(0)" ng-class="{collapsed: type!='confirm'}">
+					<span translate>To confirm</span> <small>(<span>{{orders_confirm.length}}</span>)</small>
+				</a>
+			</h2>
+		</div>
+
+		<div id="collapse2" class="panel-collapse collapse" style="height: auto;" ng-class="{in: type=='confirm'}">
+			<div class="panel-body">
+				<div id="members" class="user_cards">
+					<ul>
+						<li class="cards">
+							<ul>
+								<li ng-repeat="o in orders_confirm | orderBy:'orderDate' | filter:searchBox" ng-click="showOrderModal(o)">
+									<h3><span style="color:black;">{{o.provider}} - #{{o.number}}</span></h3>
+									<h3 ng-show="o.orderDate"><small translate>Date</small> <span>{{o.formattedDate}}</span></h3>
+									<h3><small translate>Nr. of Products</small> <span>{{o.products.length}}</span></h3>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- In transit -->
+	<div class="panel panel-default">
+		<div class="panel-heading nopadding">
+			<h2 class="panel-title">
+				<a data-toggle="collapse" data-target="#collapse3" href="javascript:void(0)" ng-class="{collapsed: type!='transit'}">
+					<span translate>In transit</span> <small>(<span>{{orders_transit.length}}</span>)</small>
+				</a>
+			</h2>
+		</div>
+
+		<div id="collapse3" class="panel-collapse collapse" style="height: auto;" ng-class="{in: type=='transit'}">
+			<div class="panel-body">
+
+				<div id="members" class="user_cards">
+					<ul>
+						<li class="cards">
+							<ul>
+								<li ng-repeat="o in orders_transit | orderBy:'orderDate' | filter:searchBox" ng-click="showOrderModal(o)">
+									<h3><span style="color:black;">{{o.provider}} - #{{o.number}}</span></h3>
+									<h3 ng-show="o.orderDate"><small translate>Date</small> <span>{{o.formattedDate}}</span></h3>
+									<h3><small translate>Nr. of Products</small> <span>{{o.products.length}}</span></h3>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<order-modal callback="confirm">
+
+<warning-modal>

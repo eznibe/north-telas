@@ -1,0 +1,10 @@
+<div>
+	<span ng-repeat="c in cloths">
+		<a style="color:#616161;" class="badge" id="badgeDisplay-{{c.cpId}}" ng-click="clicked(c)">{{c.name}} - {{c.mts}} mts</a>
+		<span class="badge" id="badgeEdit-{{c.cpId}}" style="display:none;">
+			{{c.name}} -
+			<input type="text" ng-model="c.mts" style="width:50px;"/>
+			<a href="javascript:void(0)" ng-click="changed(c)" ><span class="glyphicon glyphicon-ok control-label" style="text-align:center; cursor:pointer; margin-left:4px;"></span></a>
+		</span>
+	</span>
+</div>

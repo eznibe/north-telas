@@ -1,0 +1,8 @@
+<div>
+	<a style="color:#616161; cursor:pointer;" id="textDisplay-{{p.id}}" ng-click="clickedCode(p)">{{p.code}}</a>
+	<span  class="badge" id="textEdit-{{p.id}}" style="display:none;">
+		<input type="text" ng-model="p.code" style="width:100px;"/> 
+		
+		<a href="javascript:void(0)" ng-click="changedCode(p); clickedCode(p);" ><span class="glyphicon glyphicon-ok control-label" style="text-align:center; cursor:pointer; margin-left:4px;"></span></a>
+	</span> 
+</div>

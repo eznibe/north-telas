@@ -1,0 +1,109 @@
+<div class="jumbotron clearfix">
+	<h1><span translate>Plotter</span></h1>
+	<div class="row">
+		<div class="col-md-8 nopadding">
+				<label class="control-label col-xs-1" translate>Order</label>
+				<div class="col-xs-3">
+					<input ng-model="search.order" class="form-control small"></input>
+				</div>
+
+				<div class="col-xs-2">
+					<a ng-click="search()" class="btn btn-default floatright">
+						<span class="glyphicon glyphicon-search"></span>
+						{{'Search' | translate}}
+					</a>
+				</div>
+		</div>
+	</div>
+	<p class="bigmargin">
+	    <a ng-click="showManualPlotterModal()" class="btn btn-info floatright" access-allowed="admin,ordenes,plotter" >
+	        <span class="glyphicon glyphicon-plus"></span>&nbsp;
+	        {{'Create new plotter' | translate}}
+	    </a>
+	</p>
+</div>
+
+<table class="table table-bordered table-striped table-hover">
+	<thead>
+		<tr>
+			<th translate>No Order</th>
+			<th translate>Order number</th>
+			<th translate>Client</th>
+			<th translate>Sail</th>
+			<th translate>Boat</th>
+			<th translate>Cloth</th>
+			<th translate>Mts design</th>
+			<th translate>Mts cut</th>
+			<th style="max-width: 250px;" translate>Observations</th>
+			<th access-allowed="admin,ordenes,plotter" translate>Cutted</th>
+			<th access-allowed="admin,ordenes,plotter" translate>Delete</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="p in plotters | filter:searchBox ">
+			<td>
+				<span access-allowed="admin,ordenes,plotter"><a href="javascript:void(0);" ng-click="showManualPlotterModal(p)">{{p.sOrder}}</a></span>
+				<span access-restricted="admin,ordenes,plotter">{{p.sOrder}}</span>
+			</td>
+			<td title="{{p.tooltip}}">
+				<span ng-show="p.cutted=='0'">{{p.orderNumber}}</span>
+				<editable-input ng-show="p.cutted=='1'" entity="p" field="'orderNumber'" callback="updatePlotterField" style="display:inline-block;" editable-by-role="'admin,ordenes,plotter'"></editable-input>
+			</td>
+			<td>
+				<span ng-show="p.cutted=='0'">{{p.client}}</span>
+				<editable-input ng-show="p.cutted=='1'" entity="p" field="'client'" callback="updatePlotterField" style="display:inline-block;" editable-by-role="'admin,ordenes,plotter'"></editable-input>
+			</td>
+			<td>
+				<span ng-show="p.cutted=='0'">{{p.sailName}}</span>
+				<editable-input ng-show="p.cutted=='1'" entity="p" field="'sailName'" callback="updatePlotterField" style="display:inline-block;" editable-by-role="'admin,ordenes,plotter'"></editable-input>
+			</td>
+			<td>
+				<span ng-show="p.cutted=='0'">{{p.boat}}</span>
+				<editable-input ng-show="p.cutted=='1'" entity="p" field="'boat'" callback="updatePlotterField" style="display:inline-block;" editable-by-role="'admin,ordenes,plotter'"></editable-input>
+			</td>
+			<td>
+				{{p.name}}
+			</td>
+			<td>
+				{{p.mtsDesign}}
+			</td>
+			<td>
+				<plotter-cuts-tags plotter="p" cuts="p.cuts" editable-by-role="'admin,ordenes,plotter'" style="display:inline-block;"></plotter-cuts-tags>
+				<span ng-show="p.cutted=='0'" class="glyphicon glyphicon-plus col-xs-1 control-label" ng-click="addCut(p)" style="text-align:center; cursor:pointer; float:none; padding-left:5px; padding-right:5px;" my-tooltip="'Add cut'|translate" data-placement="right" access-allowed="admin,ordenes,plotter" >&nbsp;</span>
+			</td>
+			<td ng-mouseover="over = true" ng-mouseleave="over = false" >
+				{{p.observations}}
+				<span class="glyphicon glyphicon-pencil col-xs-1 control-label" ng-click="showEditModal(p, editObservations)" style="text-align:center; cursor:pointer; float:none; padding-left:5px; padding-right:5px;" ng-show="over" access-allowed="admin,ordenes,plotter">&nbsp;</span>
+			</td>
+			<td style="width:80px; text-align:center;" ng-show="p.cutted=='1'" access-allowed="admin,ordenes,plotter">
+				<a ng-click="showConfirmModal(p, restore)" class="btn btn-default" >
+					<span class="glyphicon glyphicon-remove"></span>
+				</a>
+			</td>
+			<td style="width:80px; text-align:center;" ng-show="p.cutted=='0'" access-allowed="admin,ordenes,plotter">
+				<a ng-click="showCutConfirmModal(p, cutted)" class="btn btn-default" ng-disabled="!filledCuts(p)" >
+					<span class="glyphicon glyphicon-ok"></span>
+				</a>
+			</td>
+
+			<td style="width:80px; text-align:center;" access-allowed="admin,ordenes,plotter">
+				<a ng-click="showRemovePlotterConfirmModal(p, restoreToDesign, deletePlotter)" class="btn btn-default" ng-show="!p.manualPlotterId && p.cutted=='0'">
+					<span class="glyphicon glyphicon-trash"></span>
+				</a>
+				<a ng-click="showConfirmModal(p, deleteManualPlotter)" class="btn btn-default" ng-show="p.manualPlotterId && p.cutted=='0'">
+					<span class="glyphicon glyphicon-trash"></span>
+				</a>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<manual-plotter-modal/>
+
+<confirm-modal/>
+
+<confirm-cut-modal/>
+
+<confirm-remove-plotter-modal/>
+
+<edit-text-modal field="'observations'"/>

@@ -1,0 +1,46 @@
+<div class="nopaddingright jumbotron clearfix">
+	<h1 translate>Previsions</h1>
+	<div class="row">
+		<div class="col-md-8 nopadding">
+				<label class="control-label col-xs-2" translate>Order by</label>
+				<div class="col-xs-3">
+					<select ng-model="sort" ng-options="s as s.name for s in sortOptions" class="form-control small">
+						<option value="">-- choose one --</option>
+<!-- 						<option value="deliveryDate" translate>Date</option> -->
+<!-- 						<option value="orderNumber" translate>Order number</option> -->
+					</select>
+				</div>
+
+				<div class="col-xs-1">
+					<a ng-click="changeOrder()" class="btn btn-default floatright">
+						<span class="glyphicon glyphicon-sort"></span>
+					</a>
+				</div>
+		</div>
+	</div>
+	<p class="bigmargin">
+	    <a ng-click="showPrevisionModal()" class="btn btn-info floatright" access-allowed="admin,ordenes,velas-od">
+	        <span class="glyphicon glyphicon-plus"></span>&nbsp;
+	        {{'Create new prevision' | translate}}
+	    </a>
+	</p>
+</div>
+
+<div id="members" class="user_cards prevision_cards">
+	<ul>
+		<li class="cards">
+			<ul>
+				<li ng-repeat="p in previsions | orderBy:sort.id:reverse | filter:searchBox" ng-click="showPrevisionModal(p)">
+					<h3><span style="color:black;">{{p.orderNumber}}</span></h3>
+					<h3><small translate>Delivery date</small> <span>{{p.deliveryDate}}</span></h3>
+					<h3 ng-repeat="c in p.cloths | limitTo:maxCloths">
+						<span style="padding-right:20px; min-width:185px; display:inline-block;">{{c.name}}</span>
+						<small>mts</small> <span>{{c.mts}}</span>  <span ng-show="$last && p.cloths.length > maxCloths">...</span>
+					</h3>
+				</li>
+			</ul>
+		</li>
+	</ul>
+</div>
+
+<prevision-modal/>

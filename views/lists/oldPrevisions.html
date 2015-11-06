@@ -1,0 +1,57 @@
+<div class="nopaddingright jumbotron clearfix">
+	<h1><span translate>Old previsions</span></h1>
+	<div class="row">
+		<div class="col-md-6 nopadding">
+				<label class="control-label col-xs-2" for="edit_cloth" translate>Cloth</label>
+				<div class="col-xs-6">
+					<select name="dd_cloth" ng-model="c.selectedCloth" ng-options="sc as sc.name for sc in cloths" class="form-control small" ng-change="fillClothsPlottersHistory(c.selectedCloth)">
+			            <option value="">-- choose one --</option>
+			        </select>
+				</div>
+		</div>
+	</div>
+</div>
+
+<table id="groups" class="table table-bordered table-striped table-hover">
+	<thead>
+		<tr>
+			<th translate>Date</th>	
+			<th translate>Sail</th>
+			<th translate>Boat</th>
+			<th translate>Client</th>
+			<th translate>Order</th>
+			<th translate>Observations</th>
+			<th title="Cortados" translate>Mts</th>
+			<th translate>Rolls</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="p in plotters | filter:searchBox">
+			<td>
+				{{p.formattedDate}}
+			</td>
+			<td>
+				{{p.sailName}}
+			</td>	
+			<td>
+				{{p.boat}}
+			</td>
+			<td>
+				{{p.client}}
+			</td>
+			<td>
+				{{p.orderNumber}}
+			</td>
+			<td>
+				{{p.observations}}
+			</td>
+			<td>
+				{{p.sumMtsCutted}}
+			</td>
+			<td>
+				{{showRolls(p.rolls)}}
+			</td>
+		</tr>
+	</tbody>
+</table>
+

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stock telas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+
+    <link href="css/bootstrap/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="css/angular-motion.css" rel="stylesheet" media="screen">
+<!--     <link href="css/style.css" rel="stylesheet" media="screen"> -->
+<!-- 	<link href="css/font-awesome.min.css" rel="stylesheet" media="screen"> -->
+
+<!-- 	<link href="css/notification.min.css" rel="stylesheet" media="screen"> -->
+<!-- 	<link href="css/bootstrap-datepicker.css" rel="stylesheet" media="screen"> -->
+
+	<link href="bower_components/angular-loading-bar/src/loading-bar.css" rel="stylesheet" media="screen">
+  <link href="bower_components/angucomplete-alt/angucomplete-alt.css" rel="stylesheet" media="screen">
+
+	<script src="scripts/config.js"></script>
+	<script>
+	   if(googleAnalytics) {
+		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		  ga('create', 'UA-58920441-1', 'auto');
+// 		  ga('send', 'pageview');
+	    }
+	</script>
+</head>
+<body ng-app="vsko.stock" ng-controller='AuthorizationCtrl'>
+		<!-- Fixed navbar -->
+		<div google-analytics>
+			<div class="navbar-inverse" role="navigation">
+				<div class="container">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#vsko-application-header-collapse">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						<a class="navbar-brand" href="#/groups" translate>Stock manager</a>
+					</div>
+					<div class="navbar-collapse collapse" id="vsko-application-header-collapse">
+						<ul class="nav navbar-nav" ng-show="user.name">
+							<li>
+								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'Cloths' | translate }} <span class="caret"></span></a>
+			                    <ul class="dropdown-menu" role="menu">
+			                        <li><a href="#/groups" translate>Groups</a></li>
+			                        <li><a href="#/cloths" translate>All</a></li>
+			                    </ul>
+							</li>
+							<li access-restricted="plotter">
+								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'Buys' | translate }} <span class="caret"></span></a>
+			                    <ul class="dropdown-menu" role="menu">
+			                        <li><a href="#/orders/buy" translate>Buy</a></li>
+			                        <li><a href="#/orders/confirm" translate>Confirm</a></li>
+			                        <li><a href="#/orders/transit" translate>Transit</a></li>
+			                    </ul>
+							</li>
+							<li>
+								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'Orders' | translate }} <span class="caret"></span></a>
+			                    <ul class="dropdown-menu" role="menu">
+			                    	<li><a href="#/previsions" access-restricted="plotter" translate>Previsions</a></li>
+			                        <li><a href="#/design" access-restricted="plotter" translate>Design</a></li>
+			                        <li><a href="#/plotter" translate>Plotter</a></li>
+			                    </ul>
+							</li>
+							<li>
+								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'Lists' | translate }} <span class="caret"></span></a>
+			                    <ul class="dropdown-menu" role="menu">
+			                    	  <li><a href="#/lists/oldPrevisions" translate>Old previsions</a></li>
+			                        <li><a href="#/lists/underStock" translate>Under stock</a></li>
+			                        <li><a href="#/lists/betweenDates" translate>Between dates</a></li>
+			                        <li><a href="#/lists/rolls" translate>Cutted sails</a></li>
+			                        <li><a href="#/lists/clothsStock" translate>Cloths stock</a></li>
+                              <li><a href="#/lists/clothsPrice" access-restricted="plotter" translate>Cloths price</a></li>
+                              <li><a href="#/lists/clothsValuedStock" translate>Cloths valued stock</a></li>
+			                    </ul>
+							</li>
+							<li access-restricted="plotter">
+								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'System' | translate }} <span class="caret"></span></a>
+			                    <ul class="dropdown-menu" role="menu">
+			                        <li><a href="#/providers" access-level="admin" translate>Providers</a></li>
+			                        <li><a href="#/onedesign">One design</a></li>
+			                        <li><a href="#/dolar" access-level="admin" translate>Configuration</a></li>
+			                        <li><a href="#/users" access-level="admin" translate>Users</a></li>
+			                    </ul>
+							</li>
+							<li>
+								<a class="dropdown-toggle" data-toggle="dropdown" onclick="focusSearch()">{{ 'Search' | translate }}</a>
+			                    <ul class="dropdown-menu" role="menu">
+			                        <li style="padding:0px 10px;"><input type="search" id="appsearch" ng-model="$parent.searchBox" stop-propagation/></li>
+			                    </ul>
+							</li>
+						</ul>
+						<ul class="nav navbar-nav navbar-right" ng-show="user.name">
+							<li class="dropdrown">
+								<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> {{user.name}} <span class="caret"></span></a>
+								<ul class="dropdown-menu" role="menu">
+									<li><a href="#" translate>Profile</a></li>
+									<li class="divider"></li>
+									<li><a href="#/login" ng-click="logout()" translate>Logout</a></li>
+								</ul>
+							</li>
+						</ul>
+					</div><!--/.nav-collapse -->
+				</div>
+			</div>
+		</div>
+
+		<div class="container" ng-view>
+
+		<br>
+
+		</div> <!-- /container -->
+
+		<!-- Bootstrap core JavaScript
+		================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
+		  <script src="bower_components/jquery/dist/jquery.min.js"></script>
+	    <script src="bower_components/angular/angular.min.js"></script>
+	    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+	    <script src="bower_components/angular-resource/angular-resource.js"></script>
+	    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+	    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+	    <script src="bower_components/angular-route/angular-route.js"></script>
+	    <script src="bower_components/angular-strap/dist/modules/modal.js"></script>
+	    <script src="bower_components/angular-strap/dist/modules/dimensions.js"></script>
+<!-- 	    <script src="bower_components/lodash/dist/lodash.compat.min.js"></script> -->
+	    <script src="bower_components/angular-xeditable/dist/js/xeditable.js"></script>
+	    <script src="bower_components/angular-animate/angular-animate.min.js"></script>
+	    <script src="bower_components/angular-uuid4/angular-uuid4.js"></script>
+	    <script src="bower_components/angular-loading-bar/src/loading-bar.js"></script>
+	    <script src="bower_components/angular-ui-utils/ui-utils.js"></script>
+	    <script src="bower_components/angular-translate/angular-translate.js"></script>
+	    <script src="bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js"></script>
+	    <script src="bower_components/angular-notify-toaster/toaster.js"></script>
+	    <script src="bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+	    <script src="bower_components/sugar/release/sugar.min.js"></script>
+	    <script src="bower_components/jquery-dateFormat/dist/jquery-dateFormat.min.js"></script>
+	    <script src="bower_components/notifyjs/dist/notify-combined.min.js"></script>
+	    <script src="bower_components/angucomplete-alt/angucomplete-alt.js"></script>
+	    <script src="bower_components/angu-fixed-header-table/angu-fixed-header-table.js"></script>
+	    <!-- endbower -->
+	    <!-- endbuild -->
+
+        <!-- build:js({.tmp,webapp}) scripts/scripts.js -->
+        <script src="scripts/app.js"></script>
+        <script src="scripts/controllers/GroupsController.js"></script>
+        <script src="scripts/controllers/ClothsController.js"></script>
+        <script src="scripts/controllers/PrevisionsController.js"></script>
+        <script src="scripts/controllers/OrdersController.js"></script>
+        <script src="scripts/controllers/DesignController.js"></script>
+        <script src="scripts/controllers/PlotterController.js"></script>
+        <script src="scripts/controllers/ProvidersController.js"></script>
+        <script src="scripts/controllers/DolarController.js"></script>
+        <script src="scripts/controllers/OnedesignController.js"></script>
+        <script src="scripts/controllers/AuthorizationController.js"></script>
+        <script src="scripts/controllers/UsersController.js"></script>
+        <script src="scripts/controllers/QueryController.js"></script>
+        <script src="scripts/controllers/lists/OldPrevisionsController.js"></script>
+        <script src="scripts/controllers/lists/BetweenDatesController.js"></script>
+        <script src="scripts/controllers/lists/UnderStockController.js"></script>
+        <script src="scripts/controllers/lists/RollsController.js"></script>
+        <script src="scripts/controllers/lists/ClothsStockController.js"></script>
+        <script src="scripts/controllers/lists/ClothsPriceController.js"></script>
+        <script src="scripts/controllers/lists/ClothsValuedStockController.js"></script>
+        <script src="scripts/services/stock.js"></script>
+        <script src="scripts/services/previsions.js"></script>
+        <script src="scripts/services/plotters.js"></script>
+        <script src="scripts/services/orders.js"></script>
+        <script src="scripts/services/oneDesign.js"></script>
+        <script src="scripts/services/files.js"></script>
+        <script src="scripts/services/users.js"></script>
+        <script src="scripts/services/lists.js"></script>
+        <script src="scripts/directives/utils.js"></script>
+        <script src="scripts/directives/designClothsTags.js"></script>
+        <script src="scripts/directives/plotterCutsTags.js"></script>
+        <script src="scripts/directives/orderRollsTags.js"></script>
+        <script src="scripts/directives/clothRollsTags.js"></script>
+        <script src="scripts/directives/onedesignSails.js"></script>
+        <script src="scripts/directives/editableFields.js"></script>
+        <script src="scripts/directives/modal/documentsModal.js"></script>
+        <script src="scripts/directives/modal/clothModal.js"></script>
+        <script src="scripts/directives/modal/clothPrevisionsModal.js"></script>
+        <script src="scripts/directives/modal/clothPendingsModal.js"></script>
+        <script src="scripts/directives/modal/clothInTransitModal.js"></script>
+        <script src="scripts/directives/modal/clothDjaisModal.js"></script>
+        <script src="scripts/directives/modal/clothRollsModal.js"></script>
+        <script src="scripts/directives/modal/orderModal.js"></script>
+        <script src="scripts/directives/modal/previsionModal.js"></script>
+        <script src="scripts/directives/modal/djaiModal.js"></script>
+        <script src="scripts/directives/modal/manualPlotterModal.js"></script>
+        <script src="scripts/directives/modal/providerModal.js"></script>
+        <script src="scripts/directives/modal/onedesignModal.js"></script>
+        <script src="scripts/directives/modal/manualRollModal.js"></script>
+        <script src="scripts/directives/modal/editTextModal.js"></script>
+        <script src="scripts/directives/modal/confirmCutModal.js"></script>
+        <script src="scripts/directives/modal/confirmRemovePlotterModal.js"></script>
+        <script src="scripts/directives/modal/confirmModal.js"></script>
+        <script src="scripts/directives/modal/warningModal.js"></script>
+        <script src="scripts/filters/filters.js"></script>
+        <script src="scripts/constants/constants.js"></script>
+        <script src="scripts/domain/cloth.js"></script>
+        <!-- endbuild -->
+
+	<script>
+		function focusSearch() {
+			setTimeout(function(){ $('#appsearch').focus(); }, 0);
+		}
+	</script>
+
+
+</body>
+</html>

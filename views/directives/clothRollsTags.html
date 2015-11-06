@@ -1,0 +1,7 @@
+<div>
+	<span ng-repeat="r in rolls">
+		<a style="color:#616161; display:inline-block;" class="badge" ng-show="!isEmptyRoll(r)" title="Original {{r.mtsOriginal}} mts - {{r.type}}">
+			{{r.number}} / {{r.lote}} - {{r.mts}} mts
+		</a>
+	</span>
+</div>

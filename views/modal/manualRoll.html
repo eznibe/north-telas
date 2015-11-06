@@ -1,0 +1,68 @@
+<div class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" style="margin-top: 0px;">
+		<div class="modal-content">
+			
+			<div class="modal-header">
+				<div class="edit_person">
+					<h2>
+						<span class="glyphicon glyphicon-file"></span>
+						<span translate>Manual roll</span>
+					</h2>
+				</div>
+				<a href="javascript:void(0)" class="btn btn-lg closebtn" ng-click="$hide()">
+					<span class="glyphicon glyphicon-remove"></span>
+				</a>
+		</div>
+						
+			<div class="modal-body">
+				<form name="rollForm" class="form-horizontal">
+					<div class="row">
+						<div class="col-md-4 nopadding">
+								<label class="control-label col-xs-3" for="edit_roll" translate>Cloth</label>
+								<div class="col-xs-9">
+									<input name="edit_c" type="text" class="form-control small" ng-model="cloth.name" ng-disabled="cloth.name">
+								</div>
+						</div>
+					</div>			
+					<div class="row">
+						<div class="col-md-4 nopadding">
+								<label class="control-label col-xs-3" for="edit_roll" translate>Roll</label>
+								<div class="col-xs-9">
+									<input name="edit_roll" type="text" class="form-control small" required ng-model="roll.number" >
+								</div>
+						</div>
+						<div class="col-md-3 nopadding">
+								<label class="control-label col-xs-4" for="edit_lote" translate>Lote</label>
+								<div class="col-xs-7">
+									<input name="edit_lote" type="text" class="form-control small" required ng-model="roll.lote" >
+								</div>
+						</div>
+						<div class="col-md-3 nopadding">
+								<label class="control-label col-xs-4" for="edit_lote" translate>Type</label>
+								<div class="col-xs-7">
+									<select name="dd_rolls" ng-model="roll.type">
+											<option value="DEF">DEF</option>
+											<option value="TEMP">TEMP</option>
+									</select> 
+								</div>
+						</div>
+						<div class="col-md-2 nopadding">
+								<label class="control-label col-xs-3" for="edit_mts">mts</label>
+								<div class="col-xs-7">
+									<input name="edit_mts" type="number" class="form-control small" required integer min="0" ng-model="roll.mts" >
+								</div>
+						</div>
+					</div>
+				</form>			
+			</div>
+						
+			<div class="modal-footer">
+				<a ng-click="saveRoll(roll)" class="btn btn-default floatright" ng-disabled="!rollForm.$valid" >
+					<span class="glyphicon glyphicon-save"></span>
+					{{'Save' | translate}}
+				</a>
+			</div>
+						
+		</div>
+	</div>
+</div>

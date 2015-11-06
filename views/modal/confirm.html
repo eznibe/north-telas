@@ -1,0 +1,34 @@
+<div class="modal" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-sm" style="margin-top: 0px;">
+		<div class="modal-content">
+			
+			<div class="modal-header">
+				<div class="edit_person">
+					<h2>
+						<span class="glyphicon glyphicon-file"></span>
+						<span translate>Confirm</span>
+					</h2>
+				</div>
+				<a href="javascript:void(0)" class="btn btn-lg closebtn" ng-click="$hide()">
+					<span class="glyphicon glyphicon-remove"></span>
+				</a>
+			</div>
+						
+			<div class="modal-body">
+				<p translate>Confirm?</p>
+			</div>
+						
+			<div class="modal-footer">
+				<a href="javascript:void(0);" class="btn btn-info floatleft" ng-click="$hide()">
+					<span class="glyphicon glyphicon-remove"></span>
+					{{'No' | translate}}
+				</a>
+				
+				<a href="javascript:void(0);" ng-click="confirm()" class="btn btn-default floatright">
+					<span class="glyphicon glyphicon-ok"></span>
+					{{'Yes' | translate}}
+				</a>
+			</div>				
+		</div>
+	</div>
+</div>

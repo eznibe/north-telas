@@ -1,0 +1,10 @@
+<div>
+	<a style="color:#616161; cursor:pointer;" id="rollDisplay-{{r.id}}-{{rollField}}" ng-click="clicked(r)" ng-class="{rollDataLabel: labelStyle}">
+		<span ng-style="labelStyle">{{ r[rollField] }}</span> <small>{{extraLabel}}</small>
+	</a>
+	<span  class="badge" id="rollEdit-{{r.id}}-{{rollField}}" style="display:none;">
+		<input ng-model="r[rollField]" style="width:60px;"/>
+
+		<a href="javascript:void(0)" ng-click="changed(r)" ><span class="glyphicon glyphicon-ok control-label" style="text-align:center; cursor:pointer; margin-left:4px;" ng-show="r[rollField]"></span></a>
+	</span>
+</div>

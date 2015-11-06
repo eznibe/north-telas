@@ -1,0 +1,42 @@
+<div class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-sm" style="margin-top: 0px;">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<div class="edit_person">
+					<h2>
+						<span class="glyphicon glyphicon-file"></span>
+						<span>{{'Group' | translate}}</span>
+					</h2>
+				</div>
+				<a href="javascript:void(0)" class="btn btn-lg closebtn" ng-click="$hide()">
+					<span class="glyphicon glyphicon-remove"></span>
+				</a>
+		</div>
+
+			<div class="modal-body">
+
+				<form class="form-horizontal ng-pristine ng-valid" name="form" novalidate>
+
+					<div class="row">
+						<div class="col-md-12 nopadding">
+								<label class="control-label col-xs-4" for="edit_order" translate>Name</label>
+								<div class="col-xs-8">
+									<input name="edit_amount" class="form-control small" ng-model="group.name" required/>
+								</div>
+						</div>
+					</div>
+				</form>
+			</div>
+
+			<div class="modal-footer">
+				<a ng-click="saveGroup(group)" class="btn btn-default floatright edit_person" ng-disabled="!form.$valid" >
+					<span class="glyphicon glyphicon-ok"></span>
+					<span ng-show="!group.id">{{'Create' | translate}}</span>
+          <span ng-show="group.id">{{'Save' | translate}}</span>
+				</a>
+			</div>
+
+		</div>
+	</div>
+</div>

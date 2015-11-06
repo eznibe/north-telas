@@ -1,0 +1,74 @@
+<div class="nopaddingright jumbotron clearfix">
+	<h1><span translate>Cloths stock</span></h1>
+	<div class="row">
+		<div class="col-md-8 nopadding">
+				<label class="control-label col-xs-2" translate>Groups</label>
+				<div class="col-xs-3">
+					<select ng-model="filter.selectedGroup" ng-options="sc as sc.name for sc in groups" class="form-control small">
+						<option value="">-- choose one --</option>
+			        </select>
+				</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-8 nopadding">
+				<label class="control-label col-xs-2" access-restricted="plotter" translate>Up to date</label>
+				<div class="col-xs-3">
+					<div class="input-group input-group-sm date" date-picker access-restricted="plotter">
+						<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="filter.upToDate" class="form-control small">
+						<span class="input-group-addon">
+							<span class="glyphicon-calendar glyphicon"></span>
+						</span>
+					</div>
+				</div>
+
+				<div class="col-xs-2">
+					<a ng-click="filter()" class="btn btn-default floatright" >
+						<span class="glyphicon glyphicon-search"></span>
+						{{'Search' | translate}}
+					</a>
+				</div>
+		</div>
+	</div>
+</div>
+
+<table id="groups" class="table table-bordered table-striped table-hover">
+	<thead>
+		<tr>
+			<th style="min-width: 200px" translate>Cloth</th>
+			<th ng-show="filter.pastAvailability" translate>Provider</th>
+			<th ng-show="filter.pastAvailability" style="min-width: 100px" translate>Code</th>
+			<th>Stock</th>
+			<th ng-show="filter.pastAvailability" style="min-width: 125px" translate>Price in usd</th>
+			<th translate>Available</th>
+			<th ng-show="!filter.pastAvailability" access-restricted="plotter" translate>Transit</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="c in cloths | filter:searchBox">
+			<td>
+<!-- 				<a href="javascript:void(0)" ng-click="showClothModal(c)">{{c.name}}</a> -->
+				{{c.name}}
+			</td>
+			<td ng-show="filter.pastAvailability">
+				{{c.provider}}
+			</td>
+			<td ng-show="filter.pastAvailability">
+				{{c.code}}
+			</td>
+			<td>
+				<span ng-if="!filter.pastAvailability" data-toggle="tooltip" data-placement="right" stock-tooltip="c">{{sumStock(c)}}</span>
+				<span ng-show=" filter.pastAvailability">{{c.sumAvailable}}</span>
+			</td>
+			<td ng-show="filter.pastAvailability">
+				{{c.price}}
+			</td>
+			<td>
+				<cloth-rolls-tags rolls="c.rollsAvailable"/>
+			</td>
+			<td ng-show="!filter.pastAvailability" access-restricted="plotter">
+				<cloth-rolls-tags rolls="c.rollsInTransit"/>
+			</td>
+		</tr>
+	</tbody>
+</table>

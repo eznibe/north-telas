@@ -1,0 +1,90 @@
+<div class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" style="margin-top: 0px;">
+		<div class="modal-content">
+			
+			<div class="modal-header">
+				<div class="edit_person">
+					<h2>
+						<span class="glyphicon glyphicon-file"></span>
+						<span translate>Plotter</span>
+					</h2>
+				</div>
+				<a href="javascript:void(0)" class="btn btn-lg closebtn" ng-click="close()">
+					<span class="glyphicon glyphicon-remove"></span>
+				</a>
+		</div>
+						
+			<div class="modal-body nopaddingside">
+							
+				<form class="form-horizontal ng-pristine ng-valid" name="form" novalidate>
+									
+					<div class="row">
+						<div class="col-md-6 nopadding">
+								<label class="control-label col-xs-4" for="edit_order" translate>Order number</label>
+								<div class="col-xs-8">
+									<input name="edit_order" type="text" class="form-control small" ng-model="plotter.orderNumber">
+								</div>
+						</div>
+						<div class="col-md-6 nopadding">
+								<label class="control-label col-xs-4" for="edit_client" translate>S/Order</label>
+								<div class="col-xs-8">
+									<input name="edit_sorder" type="text" class="form-control small" ng-model="plotter.sOrder" required ng-class="{error: form.edit_sorder.$invalid && form.edit_sorder.$dirty}">
+								</div>
+						</div>
+					</div>
+									
+					<div class="row">
+						<div class="col-md-6 nopadding">
+								<label class="control-label col-xs-4" for="edit_date" translate>Date</label>
+								<div class="col-xs-8">
+									<div class="input-group input-group-sm date" date-picker>
+											<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="plotter.plotterDate" class="form-control small" required>
+											<span class="input-group-addon">
+												<span class="glyphicon-calendar glyphicon"></span>
+											</span>
+										</div>
+								</div>
+						</div>
+						<div class="col-md-6 nopadding">
+								<label class="control-label col-xs-4" for="edit_obs" translate>Observations</label>
+								<div class="col-xs-8">
+									<input name="edit_obs" type="text" class="form-control small" ng-model="plotter.observations">
+								</div>
+						</div>
+					</div>
+									
+					<div class="row">
+						<div class="col-md-6 nopadding">
+								<label class="control-label col-xs-4" for="edit_cloth" translate>Cloth</label>
+								<div class="col-xs-8">
+									<select name="dd_cloth" ng-model="plotter.selectedCloth" ng-options="sc as sc.name for sc in cloths" class="form-control small" required ng-class="{error: form.dd_cloth.$invalid && form.dd_cloth.$dirty}">
+				                        <option value="">-- choose one --</option>
+				                    </select>
+								</div>
+						</div>
+					</div>
+				</form>
+							
+			</div>
+						
+			<div class="modal-footer">
+				<a href="javascript:void(0)" class="btn btn-info floatleft" ng-click="close()">
+					<span class="glyphicon glyphicon-remove"></span>
+					{{'Cancel' | translate}}
+				</a>
+				<a href="javascript:void(0)" class="btn btn-warning floatleft" ng-show="plotter.id" ng-click="showConfirmDeleteModal(plotter)">
+					<span class="glyphicon glyphicon-trash"></span>
+					{{'Delete' | translate}}
+				</a>
+				
+				<a ng-click="save()" class="btn btn-default floatright edit_person" ng-disabled="!form.$valid" >
+					<span class="glyphicon glyphicon-save"></span>
+					{{'Save' | translate}}
+				</a>
+			</div>
+						
+		</div>
+	</div>
+	
+	<confirm-modal callback="deleteManualPlotter"/>
+</div>

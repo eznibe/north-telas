@@ -1,0 +1,8 @@
+<div>
+	<a style="color:#616161; cursor:pointer;" id="boatDisplay-{{b.uiId}}" ng-click="clickedName(b)">{{b.boat}}</a>
+	<span  class="badge" id="boatEdit-{{b.uiId}}" style="display:none;">
+		<input type="text" ng-model="b.boat" style="width:100px;"/> 
+		
+		<a href="javascript:void(0)" ng-click="changedName(b); clickedName(b);" ><span class="glyphicon glyphicon-ok control-label" style="text-align:center; cursor:pointer; margin-left:4px;"></span></a>
+	</span> 
+</div>

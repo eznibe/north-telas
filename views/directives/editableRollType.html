@@ -1,0 +1,13 @@
+<div>
+	<a style="color:#616161; cursor:pointer;" id="rollDisplay-{{r.id}}" ng-click="clicked(r)">
+		<span>{{r.type}}</span>
+	</a>
+	<span  class="badge" id="rollEdit-{{r.id}}" style="display:none;">
+		<select name="dd_rolls" ng-model="r.type">
+				<option value="DEF">DEF</option>
+				<option value="TEMP">TEMP</option>
+		</select> 
+		
+		<a href="javascript:void(0)" ng-click="changed(r)" ><span class="glyphicon glyphicon-ok control-label" style="text-align:center; cursor:pointer; margin-left:4px;"></span></a>
+	</span> 
+</div>

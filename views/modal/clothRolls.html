@@ -1,0 +1,76 @@
+<div class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" style="margin-top: 0px;">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<div class="edit_person">
+					<h2>
+						<span class="glyphicon glyphicon-file"></span>
+						<span translate>Rolls</span>
+					</h2>
+				</div>
+				<a href="javascript:void(0)" class="btn btn-lg closebtn" ng-click="$hide()">
+					<span class="glyphicon glyphicon-remove"></span>
+				</a>
+
+				<div class="row" style="margin-top:10px; padding-right: 15px;" access-level="admin">
+					<p class="bigmargin">
+					    <a ng-click="showManualRollModal()" class="btn btn-info floatright">
+					        <span class="glyphicon glyphicon-plus"></span>&nbsp;
+					        {{'Create new roll' | translate}}
+					    </a>
+					</p>
+				</div>
+			</div>
+
+			<div class="modal-body">
+				<div class="user_cards">
+					<ul>
+						<li class="title">{{'Available' | translate}}</li>
+						<li class="cards">
+							<ul>
+								<li ng-repeat="r in availableRolls" style="min-height: 0px;">
+									<h3><span style="min-width:85px; display:inline-block;"><small translate>Number</small></span> <editable-roll-data roll="r" field="'number'" editable-by-role="'admin'" style="display:inline-block;"></editable-roll-data></h3>
+									<h3><span style="min-width:85px; display:inline-block;"><small translate>Lote</small></span> <editable-roll-data roll="r" field="'lote'" editable-by-role="'admin'" style="display:inline-block;"></editable-roll-data></h3>
+									<h3><span style="min-width:85px; display:inline-block;"><small translate>Type</small></span> <editable-roll-type roll="r" editable-by-role="'admin'" style="display:inline-block;"></editable-roll-type></h3>
+									<h3><span style="min-width:85px; display:inline-block;"><small translate>Original amount</small></span> <editable-roll-data roll="r" field="'mtsOriginal'" label-width="50" extra-label="'mts'" editable-by-role="'admin'" style="display:inline-block;"></editable-roll-data></h3>
+									<h3><span style="min-width:85px; display:inline-block;"><small translate>Available amount</small></span> <editable-roll-data roll="r" field="'mts'" label-width="50" extra-label="'mts'" editable-by-role="'admin'" style="display:inline-block;"></editable-roll-data></h3>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+
+				<div class="user_cards">
+					<ul>
+						<li class="title">{{'In transit' | translate}}</li>
+						<li class="cards">
+							<ul>
+								<li ng-repeat="r in inTransitRolls" style="min-height: 0px;">
+									<h3><span style="min-width:85px; display:inline-block;"><small translate>Number</small></span> <span>{{r.number}}</span></h3>
+									<h3><span style="min-width:85px; display:inline-block;"><small translate>Lote</small></span> <span>{{r.lote}}</span></h3>
+									<h3><span style="min-width:85px; display:inline-block;"><small translate>Type</small></span> <editable-roll-type ng-model="r" editable-by-role="'admin'" style="display:inline-block;"></editable-roll-type></h3>
+									<h3><span style="min-width:85px; display:inline-block;"><small translate>Original amount</small></span>  <span style="width:50px; display: inline-block;">{{r.mtsOriginal}}</span> <small>mts</small></h3>
+									<h3><span style="min-width:85px; display:inline-block;"><small translate>Available amount</small></span> <span style="width:50px; display: inline-block;">{{r.mts}}</span> <small>mts</small></h3>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="modal-footer">
+
+				<a ng-click="$hide()" class="btn btn-default floatright" >
+					<span class="glyphicon glyphicon-ok"></span>
+					Ok
+				</a>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<order-modal callback="foo"/>
+
+<manual-roll-modal/>

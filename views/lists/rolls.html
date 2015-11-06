@@ -1,0 +1,95 @@
+<div class="nopaddingright jumbotron clearfix">
+	<h1><span translate>Cutted sails</span></h1>
+	<div class="row">
+		<div class="col-md-8 nopadding">
+				<label class="control-label col-xs-1" translate>Rolls</label>
+				<div class="col-xs-3">
+					<select ng-model="filter.selectedRoll" ng-options="sc as sc.number for sc in rolls" class="form-control small" ng-change="rollSelected(filter.selectedRoll)">
+						<option value="">-- choose one --</option>
+			        </select>
+				</div>
+				
+				<label class="control-label col-xs-1" translate>Lote</label>
+				<div class="col-xs-2">
+					<select ng-model="filter.selectedLote" ng-options="sc as sc.lote for sc in lotes" class="form-control small">
+			        </select>
+				</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-8 nopadding">
+				<label class="control-label col-xs-1" translate>Cloth</label>
+				<div class="col-xs-3">
+					<select name="dd_cloth" ng-model="filter.selectedCloth" ng-options="sc as sc.name for sc in cloths" class="form-control small" ng-change="fillClothsPlottersHistory(c.selectedCloth)">
+			            <option value="">-- choose one --</option>
+			        </select>
+				</div>
+				
+				<div class="col-xs-3">
+				</div>
+				
+				<div class="col-xs-2">
+					<a ng-click="search()" class="btn btn-default floatright" ng-disabled="!filter.selectedLote.id && !filter.selectedCloth.id">
+						<span class="glyphicon glyphicon-search"></span>
+						{{'Search' | translate}}
+					</a>
+				</div>
+		</div>
+	</div>
+</div>
+
+<table id="rolls" class="table table-bordered table-striped table-hover">
+	<thead>
+		<tr>
+			<th style="width: 85px;" translate>Date</th>
+			<th translate>Sail</th>
+			<th translate>Boat</th>
+			<th translate>Client</th>
+			<th translate>Cloth</th>
+			<th translate>Order</th>
+			<th style="max-width: 150px" translate>Observations</th>
+			<th translate>Mts design</th>
+			<th title="Cortados" translate>Mts</th>
+			<th translate>Roll</th>
+			<th translate>Lote</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="p in plotters | filter:searchBox">
+			<td>
+				{{p.formattedDate}}
+			</td>
+			<td>
+				{{p.sailName}}
+			</td>
+			<td>
+				{{p.boat}}
+			</td>
+			<td>
+				{{p.client}}
+			</td>
+			<td>
+				{{p.name}}
+			</td>
+			<td>
+				{{p.orderNumber}}
+			</td>
+			<td>
+				{{p.observations}}
+			</td>
+			<td>
+				{{p.mtsDesign}}
+			</td>
+			<td>
+				{{p.mtsCutted}}
+			</td>
+			<td>
+				{{p.number}}
+			</td>
+			<td>
+				{{p.lote}}
+			</td>
+		</tr>
+	</tbody>
+</table>
+

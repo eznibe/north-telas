@@ -1,0 +1,73 @@
+<div class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" style="margin-top: 0px;">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<div class="edit_person">
+					<h2>
+						<span class="glyphicon glyphicon-file"></span>
+						<span translate>New product</span>
+					</h2>
+				</div>
+				<a href="javascript:void(0)" class="btn btn-lg closebtn" ng-click="$hide()">
+					<span class="glyphicon glyphicon-remove"></span>
+				</a>
+		</div>
+
+			<div class="modal-body nopaddingside">
+
+				<form class="form-horizontal ng-pristine ng-valid" name="form" novalidate>
+
+					<div class="row">
+						<div class="col-md-5 nopadding">
+								<label class="control-label col-xs-4" for="edit_order" translate>Provider</label>
+								<div class="col-xs-8">
+									<input name="edit_order" type="text" class="form-control small" ng-model="newProduct.provider.name" ng-disabled="newProduct.provider.id" required>
+								</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-5 nopadding">
+								<label class="control-label col-xs-4" for="edit_cloth" translate>Cloth</label>
+								<div class="col-xs-8">
+									<select name="dd_cloth" ng-model="newProduct.selectedCloth" ng-options="sc as sc.name for sc in cloths" class="form-control small" required ng-class="{error: form.dd_cloth.$invalid && form.dd_cloth.$dirty}">
+				                        <option value="">-- choose one --</option>
+				                    </select>
+								</div>
+						</div>
+						<div class="col-md-3 nopadding">
+								<label class="control-label col-xs-4" for="edit_obs" translate>Code</label>
+								<div class="col-xs-8">
+									<input name="edit_obs" type="text" class="form-control small" required ng-model="newProduct.code">
+								</div>
+						</div>
+						<div class="col-md-4 nopadding">
+								<label class="control-label col-xs-3" for="edit_obs" translate>Price </label>
+								<div class="col-xs-4">
+									<input name="edit_obs" type="number" class="form-control small" required ng-model="newProduct.price">
+								</div>
+								<label class="control-label col-xs-4">USD x mts</label>
+						</div>
+					</div>
+				</form>
+
+			</div>
+
+			<div class="modal-footer">
+				<a href="javascript:void(0)" class="btn btn-info floatleft" ng-click="$hide()">
+					<span class="glyphicon glyphicon-remove"></span>
+					{{'Cancel' | translate}}
+				</a>
+
+				<a ng-click="saveNewProduct(newProduct)" class="btn btn-default floatright edit_person" ng-disabled="!form.$valid" >
+					<span class="glyphicon glyphicon-save"></span>
+					{{'Save' | translate}}
+				</a>
+			</div>
+
+		</div>
+	</div>
+
+	<confirm-modal callback="deleteManualPlotter"/>
+</div>

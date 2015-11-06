@@ -1,0 +1,185 @@
+<div class="modal" tabindex="-1" role="dialog" >
+  <div class="modal-dialog modal-lg" style="margin-top: 0px;">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<div class="edit_person">
+					<h2>
+						<span class="glyphicon glyphicon-file"></span>
+						{{order.provider | uppercase}}<span ng-show="order.date"> - {{order.date}}</span><span ng-show="order.number"> - #{{order.number}}</span>
+					</h2>
+				</div>
+				<a href="javascript:void(0)" class="btn btn-lg closebtn" ng-click="$hide()">
+					<span class="glyphicon glyphicon-remove"></span>
+				</a>
+			</div>
+
+			<div class="modal-body">
+				<table id="groups" class="table table-bordered table-striped table-hover">
+					<thead>
+						<tr>
+							<th style="min-width: 150px;" translate>Product</th>
+							<th translate>Code</th>
+							<th translate>Amount</th>
+							<th ng-show="order.status!='TO_BUY'" translate>Rolls</th>
+              <th ng-show="order.status!='TO_BUY'" style="width: 52px; border-left-style: hidden;" access-level="admin"></th><!-- Edit rolls icon -->
+							<th translate>Price</th>
+							<th translate>Total</th>
+							<th access-level="admin"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="p in order.products">
+							<td>
+								<a href="javascript:void(0)" ng-click="showUpdateModal(p)">{{p.name}}</a>
+							</td>
+							<td>
+								{{p.code}}
+							</td>
+							<td>
+                <editable-input entity="p" field="'amount'" callback="updateProductAmount" editable-by-role="'admin'" width="50" style="display:inline-block;"></editable-input>
+								<!--<span ng-if="order.status=='TO_BUY'">{{p.amount}}</span>-->
+							</td>
+							<td ng-show="order.status!='TO_BUY'"  ng-mouseover="over = true" ng-mouseleave="over = false" >
+								<order-rolls-tags ng-model="p.rolls"></order-rolls-tags>
+              </td>
+              <td ng-show="order.status!='TO_BUY'" ng-mouseover="over = true" ng-mouseleave="over = false" style="border-left-style: hidden;" access-level="admin">
+                <span class="glyphicon glyphicon-pencil col-xs-1 control-label" ng-click="showRollsModal(p)" data-placement="right" my-tooltip="'Assign rolls'|translate" style="text-align:center; cursor:pointer; float:none; padding-left:5px; padding-right:5px;" ng-show="over">&nbsp;</span>
+							</td>
+							<td>
+								{{p.price}} USD
+							</td>
+							<td>
+								{{subTotal(p)}} USD
+							</td>
+							<td style="width:80px; text-align:center;" access-level="admin">
+								<a ng-click="showConfirmModal(p, removeItem)" class="btn btn-default" >
+									<span class="glyphicon glyphicon-trash"></span>
+								</a>
+							</td>
+						</tr>
+						<tr class="totalRow">
+							<td style="color: #000;">Total</td>
+							<td></td>
+							<td></td>
+							<td ng-show="order.status!='TO_BUY'">
+							<td ng-show="order.status!='TO_BUY'" style="border-left-style: hidden;" access-level="admin"></td>
+              <td></td>
+							<td>{{ total(order.products) }} USD</td>
+							<td access-level="admin"></td>
+						</tr>
+					</tbody>
+				</table>
+
+				<!-- Information collapser -->
+				<div class="panel panel-default" ng-if="order.status!='TO_BUY'">
+					<div class="panel-heading nopadding">
+						<h2 class="panel-title fullwidth">
+							<a data-toggle="collapse" data-target="#collapseInfo" href="javascript:void(0)" class="">
+								<span translate>Information</span></small>
+							</a>
+						</h2>
+					</div>
+
+					<div id="collapseInfo" class="panel-collapse collapse in" style="height: auto;">
+						<div class="panel-body">
+							<form name="formOrderInfo" ng-init="setModalCtrl(this)">
+							<div class="row">
+								<div class="col-md-6 nopadding">
+										<label class="control-label col-xs-3" translate>Invoice</label>
+										<div class="col-xs-7">
+											<input type="text" class="form-control small" name="edit_invoice" ng-required="order.status=='IN_TRANSIT'" ng-model="order.invoiceNumber" ng-class="{error: formOrderInfo.$dirty && formOrderInfo.edit_invoice.$invalid}">
+										</div>
+								</div>
+								<div class="col-md-6 nopadding">
+										<label class="control-label col-xs-5" translate>Description</label>
+										<div class="col-xs-7">
+											<textarea class="form-control small" ng-model="order.description"></textarea>
+										</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6 nopadding">
+									<label class="control-label col-xs-3" for="dd_deltype" translate>Delivery type</label>
+									<div class="col-xs-7">
+										<select name="dd_deltype" ng-model="order.deliveryType" ng-options="t for t in deliveryTypes" class="form-control small" ng-change="oneDesignCloths()">
+<!-- 					                        <option value="">Desconocido</option> -->
+					                    </select>
+									</div>
+								</div>
+								<div class="col-md-6 nopadding" ng-show="order.status=='IN_TRANSIT'">
+									<label class="control-label col-xs-5" for="edit_type" translate>Arrive date</label>
+									<div class="col-xs-7">
+										<div class="input-group input-group-sm date" date-picker>
+											<input id="edit_date" name="edit_date" type="text" ng-model="order.arriveDate" class="form-control small" required ng-class="{error: formOrderInfo.$dirty && formOrderInfo.edit_date.$invalid}">
+											<span class="input-group-addon">
+												<span class="glyphicon-calendar glyphicon"></span>
+											</span>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-md-6 nopadding">
+									<label class="control-label col-xs-3" for="edit_type" translate>Type</label>
+									<div class="col-xs-7">
+										<label class="radio-inline">
+											<input type="radio" name="edit_type" value="TEMP" ng-model="order.type" required> Temp
+										</label>
+										<label class="radio-inline">
+											<input type="radio" name="edit_type" value="DEF" ng-model="order.type" required> Def
+										</label>
+										<span ng-show="formOrderInfo.edit_type.$invalid" class="radio-inline error">!</span>
+									</div>
+								</div>
+							</div>
+
+							</form>
+						</div>
+
+						<div class="panel-footer" access-level="admin">
+							<a ng-click="partialSave(order)" class="btn floatright" my-tooltip="'Save' | translate" data-placement="right" ng-class="{'btn-default': !formOrderInfo.$dirty, 'btn-warning': formOrderInfo.$dirty}">
+									<span class="glyphicon glyphicon-save"></span>
+								</a>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="modal-footer">
+				<a href="javascript:void(0)" class="btn btn-info floatleft" ng-click="$hide()">
+					<span class="glyphicon glyphicon-remove"></span>
+					{{'Close' | translate}}
+				</a>
+				<a href="javascript:void(0)" class="btn btn-warning floatleft" ng-show="order.orderId && order.status!='TO_BUY'" ng-click="showConfirmDeleteModal(order)" access-level="admin">
+					<span class="glyphicon glyphicon-trash"></span>
+					{{'Delete' | translate}}
+				</a>
+
+				<a ng-click="confirmModal()" class="btn btn-default floatright" ng-disabled="formOrderInfo.$invalid" ng-show="order.status=='TO_BUY' || order.status=='TO_CONFIRM'" access-level="admin">
+					<span class="glyphicon glyphicon-ok"></span>
+					<span ng-switch on="order.status">
+						<span ng-switch-when="TO_BUY" translate>Buy</span>
+						<span ng-switch-when="TO_CONFIRM" translate>Confirm</span>
+					</span>
+				</a>
+
+				<a ng-click="receive()" class="btn btn-default floatright" ng-disabled="formOrderInfo.$invalid" ng-show="order.status=='IN_TRANSIT'" access-level="admin">
+					<span class="glyphicon glyphicon-ok"></span>
+					<span ng-switch on="order.status">
+						<span ng-switch-when="IN_TRANSIT" translate>Receive</span>
+					</span>
+				</a>
+			</div>
+
+		</div>
+	</div>
+
+	<rolls-modal/>
+
+	<confirm-modal callback="deleteOrder"/>
+
+	<warning-modal callback="confirmModal"/>
+
+</div>

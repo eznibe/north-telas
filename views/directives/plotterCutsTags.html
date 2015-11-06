@@ -1,0 +1,18 @@
+<div>
+	<span ng-repeat="c in cuts">
+		<a style="color:#616161; display:{{c.isNew ? 'none':'inline-block'}};" id="badgeDisplay-{{c.id}}" class="badge tag-control" ng-click="clicked(c)" ng-class="{disabled: p.cutted=='1'}">{{c.selectedRoll.number}} / {{c.selectedRoll.lote}} - {{c.mtsCutted}} mts</a>
+		<span  class="badge" id="badgeEdit-{{c.id}}" style="display:{{c.isNew ? 'inline-block':'none'}};">
+			<select name="dd_rolls" ng-model="c.selectedRoll" ng-options="r as r.display for r in c.possibleRolls" ng-change="selectedRoll(c, c.selectedRoll)">
+				<option ng-show="!c.possibleRolls || c.possibleRolls.length==0" value="zz">Sin rollos</option>
+			</select>
+			-
+			<input type="text" id="mts-{{c.id}}" ng-model="c.mtsCutted" style="width:40px;" class="tag-control" ng-class="{error: c.selectedRoll && ((c.selectedRoll.mts - c.selectedRoll.mtsPendingToBeCutted) < c.mtsCutted)}"/>
+
+<!-- 			<label>{{c.selectedRoll.mts}}</label> -->
+<!-- 			<label>{{c.selectedRoll.mtsPendingToBeCutted}}</label>  -->
+
+			<a href="javascript:void(0)" ng-click="deleted(c)" ><span class="glyphicon glyphicon-trash control-label" style="text-align:center; cursor:pointer; margin-left:4px;"></span></a>
+			<a href="javascript:void(0)" ng-click="changed(c)" ng-class="{disabled: !c.selectedRoll || !c.mtsCutted || c.mtsCutted==0 || (c.mtsCutted > (c.selectedRoll.mts - c.selectedRoll.mtsPendingToBeCutted)) }" style="cursor:pointer;" class="tag-control"><span class="glyphicon glyphicon-ok control-label" style="text-align:center; margin-left:4px;"></span></a>
+		</span>
+	</span>
+</div>

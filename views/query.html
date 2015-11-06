@@ -1,0 +1,30 @@
+<div class="nopaddingright jumbotron clearfix">
+	<h1>Query</h1>
+</div>
+
+<form class="form-horizontal">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="col-md-8">
+				<textarea ng-model="query" rows="10" style="width: 100%;"></textarea>
+			</div>	
+			<div class="col-md-4">
+				<a href="javascript:void(0)" class="btn btn-info floatleft" ng-click="doQuery()">
+					<span class="glyphicon glyphicon-ok"></span>
+					Query
+				</a>
+				<a href="javascript:void(0)" class="btn btn-info floatleft" ng-click="doUpdate()">
+					<span class="glyphicon glyphicon-ok"></span>
+					Update
+				</a>
+			</div>
+		</div>	
+		
+	</div>
+	
+	<div class="row">
+		<div class="col-md-12">
+			<textarea ng-show="result" ng-model="result" rows="10" style="width: 100%;"></textarea>
+		</div>
+	</div>	
+</form>

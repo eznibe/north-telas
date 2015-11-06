@@ -1,0 +1,1 @@
+alter table previsions add column sailOneDesign varchar(128);

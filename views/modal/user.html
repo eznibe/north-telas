@@ -1,0 +1,79 @@
+<div class="modal" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-lg" style="margin-top: 0px;">
+		<div class="modal-content">
+			
+			<div class="modal-header">
+				<div class="edit_person">
+					<h2>
+						<span class="glyphicon glyphicon-file"></span>
+						<span translate>User</span>
+					</h2>
+				</div>
+				<a href="javascript:void(0)" class="btn btn-lg closebtn" ng-click="close()">
+					<span class="glyphicon glyphicon-remove"></span>
+				</a>
+			</div>
+						
+			<div class="modal-body nopaddingside">
+				<form class="form-horizontal" name="form" ng-init="setModalCtrl(this)">
+					<div class="row">
+						<div class="col-md-6 nopadding">
+								<label class="control-label col-xs-3" for="edit_order" translate>Name</label>
+								<div class="col-xs-9">
+									<input type="text" class="form-control small" required ng-model="user.name" focus-me>
+								</div>
+						</div>
+						<div class="col-md-6 nopadding" ng-show="user.id">
+								<label class="control-label col-xs-4" for="edit_order" translate>Old password</label>
+								<div class="col-xs-8">
+									<input type="password" class="form-control small" name="oldPassword" ng-model="user.oldPassword" ng-class="{error: form.oldPassword.$error.oldPassword}">
+								</div>
+						</div>
+						<div class="col-md-6 nopadding" ng-show="!user.id">
+								<label class="control-label col-xs-4" for="edit_order" translate>Password</label>
+								<div class="col-xs-8">
+									<input type="password" class="form-control small" ng-required="!user.id" ng-model="user.password">
+								</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6 nopadding">
+								<label class="control-label col-xs-3" for="edit_order" translate>Username</label>
+								<div class="col-xs-9">
+									<input type="text" class="form-control small" required ng-model="user.username">
+								</div>
+						</div>
+						<div class="col-md-6 nopadding"  ng-show="user.id">
+								<label class="control-label col-xs-4" for="edit_order" translate>New password</label>
+								<div class="col-xs-8">
+									<input type="password" class="form-control small"  ng-required="user.oldPassword" ng-model="user.newPassword">
+								</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6 nopadding">
+								<label class="control-label col-xs-3" translate>Role</label>
+								<div class="col-xs-9">
+									<select name="dd_role" ng-model="user.role" ng-options="r.role as r.role for r in roles" class="form-control small" required ng-class="{error: form.dd_role.$dirty && form.dd_role.$invalid}">
+				                        <option value="">-- choose one --</option>
+				                    </select>
+								</div>
+						</div>
+					</div>
+				</form>
+			</div>
+						
+			<div class="modal-footer">
+				<a href="javascript:void(0);" class="btn btn-info floatleft" ng-click="close()">
+					<span class="glyphicon glyphicon-remove"></span>
+					{{'Cancel' | translate}}
+				</a>
+				
+				<a href="javascript:void(0);" ng-click="save(user)" class="btn btn-default floatright edit_person" ng-disabled="!form.$valid" >
+					<span class="glyphicon glyphicon-ok"></span>
+					{{'Save' | translate}}
+				</a>
+			</div>				
+		</div>
+	</div>
+</div>

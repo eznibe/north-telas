@@ -1,0 +1,39 @@
+<div class="jumbotron clearfix">
+	<h1 translate>Login</h1>
+</div>
+<div class="row">
+	<div class="col-md-4 nopadding">
+			<label class="control-label col-xs-4" for="edit_order" translate>Username</label>
+			<div class="col-xs-8">
+				<input type="text" class="form-control small" ng-model="$root.user_name" focus-me>
+			</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-4 nopadding">
+			<label class="control-label col-xs-4" for="edit_order" translate>Password</label>
+			<div class="col-xs-8">
+				<input type="password" class="form-control small" ng-model="$root.user_passw">
+			</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-4 nopadding">
+			<label class="control-label col-xs-4">&nbsp;</label>
+			<label class="control-label col-xs-6" style="color:red;" ng-show="login_error" translate>Invalid user or password</label>
+	</div>
+</div>
+<br>	
+<div class="row">
+	<div class="col-md-4">
+			<div>
+				<a href="javascript:void(0);" ng-click="login($root.user_name, $root.user_passw)" class="btn btn-sm btn-default floatright">
+					<span class="glyphicon glyphicon-ok"></span>&nbsp;
+					{{'Login' | translate}}
+				</a>
+			</div>
+	</div>
+</div>				
+<div>
+	
+</div>

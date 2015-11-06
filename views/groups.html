@@ -1,0 +1,41 @@
+<div class="jumbotron clearfix nopaddingright">
+	<h1 translate>Cloth Groups</h1>
+	<p class="bigmargin">
+	    <a ng-click="showGroupModal()" class="btn btn-info floatright" access-level="admin">
+	        <span class="glyphicon glyphicon-plus"></span>&nbsp;
+	        {{'Create new group' | translate}}
+	    </a>
+	</p>
+</div>
+
+<table id="groups" class="bigmargin table table-bordered table-striped table-hover">
+	<tbody>
+		<tr ng-repeat="g in groups | filter:searchBox">
+			<td>
+				<div>
+					<h4> <a href="#/groups/{{g.id}}">{{g.name}}</a></h4>
+                </div>
+                <div ng-if="g.cloths && g.cloths.length > 0">
+					<ul><li>
+						<a ng-repeat="c in g.cloths | limitTo:10" style="color:#616161;" class="badge" ng-click="showClothModal(c)">{{c.name}}</a>
+						<span ng-if="g.cloths.length > 2">...</span>
+					</li></ul>
+		    	</div>
+			</td>
+			<td style="width:80px;">
+				<a href="#/groups/{{g.id}}" class="btn btn-sm btn-default" style="width:90px; text-align:left;">
+					<span class="glyphicon glyphicon-folder-open"></span>&nbsp;
+					{{'View' | translate}}
+				</a>
+				<p/>
+				<a ng-click="showGroupModal(g)" class="btn btn-sm btn-default" access-level="admin">
+					<span class="glyphicon glyphicon-pencil"></span>&nbsp;
+					{{'Edit' | translate}}
+				</a>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+
+<cloth-modal/>

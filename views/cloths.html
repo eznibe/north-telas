@@ -1,0 +1,70 @@
+<div class="nopaddingright jumbotron clearfix">
+	<h1><span translate>Cloths</span><span ng-show="group"> {{'of Group' | translate}} '{{group.name}}'</span></h1>
+	<p class="bigmargin">
+	    <a ng-click="showClothModal()" class="btn btn-info floatright" access-level="admin">
+	        <span class="glyphicon glyphicon-plus"></span>&nbsp;
+	        {{'Create new cloth' | translate}}
+	    </a>
+	</p>
+</div>
+
+<table id="groups" class="table table-bordered table-striped table-hover" fixed-header table-height="500px">
+	<thead>
+		<tr>
+			<th translate>Cloth</th>
+			<th>Stock</th>
+			<th translate>Prevision</th>
+			<th title="Diseñada" translate style="width: 139px;">Cut pending</th>
+			<th translate>Transit</th>
+			<th translate>Delta total</th>
+			<th translate>St. min.</th>
+			<th><span>Djais </span><a href="javascript:void(0)" ng-click="showDjaiModal()" access-level="admin">+</a></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="c in cloths | filter:filter.name | filter:searchBox | orderBy:'name'">
+			<td>
+				<a href="javascript:void(0)" ng-click="showClothModal(c)">{{c.name}}</a>
+			</td>
+			<td>
+				<span data-toggle="tooltip" data-placement="right" stock-tooltip="c">{{sumStock(c.providers)}}</span>
+			</td>
+			<td>
+				<span ng-show="sumPrevision(c) == 0">0</span>
+				<a href="javascript:void(0)" ng-click="showClothPrevisionsModal(c)" ng-show="sumPrevision(c) > 0" access-restricted="plotter">{{sumPrevision(c)}}</a>
+				<span ng-show="sumPrevision(c) > 0" access-allowed="plotter">{{sumPrevision(c)}}</span>
+			</td>
+			<td>
+				<span ng-show="sumPending(c) == 0">0</span>
+				<a href="javascript:void(0)" ng-click="showClothPendingsModal(c)" ng-show="sumPending(c) > 0">{{sumPending(c)}}</a>
+			</td>
+			<td>
+				<span ng-show="c.sumInTransit == 0">0</span>
+				<a href="javascript:void(0)" ng-click="showClothInTransitModal(c)" ng-show="c.sumInTransit > 0" class="positiveLink" access-restricted="plotter">{{c.sumInTransit}}</a>
+				<span ng-show="c.sumInTransit > 0" access-allowed="plotter">{{c.sumInTransit}}</span>
+			</td>
+			<td>
+				{{(sumStock(c.providers) - sumPrevision(c) - sumPending(c) + c.sumInTransit).toFixed(0)}}
+			</td>
+			<td>
+				{{c.stockMin}}
+			</td>
+			<td>
+				<a href="javascript:void(0)" ng-show="c.sumDjais > 0" ng-click="showClothDjaisModal(c)">{{c.sumDjais}}</a>
+				<span ng-show="c.sumDjais <= 0">0</span>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<cloth-modal/>
+
+<cloth-previsions-modal/>
+
+<cloth-in-transit-modal/>
+
+<cloth-pendings-modal/>
+
+<cloth-djais-modal/>
+
+<djai-modal/>

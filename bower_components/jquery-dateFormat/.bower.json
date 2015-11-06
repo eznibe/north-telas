@@ -1,0 +1,28 @@
+{
+  "name": "jquery-dateFormat",
+  "homepage": "https://github.com/phstc/jquery-dateFormat",
+  "version": "1.0.1",
+  "ignore": [
+    "src",
+    "test",
+    "coverage",
+    ".bowerrc",
+    ".gitignore",
+    ".jshintignore",
+    ".jshintrc",
+    "composer.json",
+    "bower.json",
+    "Gruntfile.js",
+    "package.json",
+    "README.md"
+  ],
+  "_release": "1.0.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "1.0.1",
+    "commit": "a4c8002237c0de10cf5a42e8eaf2958ebe65b696"
+  },
+  "_source": "git://github.com/phstc/jquery-dateFormat.git",
+  "_target": ">=1.0.1",
+  "_originalSource": "jquery-dateFormat"
+}

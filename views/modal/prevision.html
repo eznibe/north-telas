@@ -1,0 +1,217 @@
+<div class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" style="margin-top: 0px;">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<div class="edit_person">
+					<h2>
+						<span class="glyphicon glyphicon-file"></span>
+						<span translate>Prevision</span>
+					</h2>
+				</div>
+				<a href="javascript:void(0)" class="btn btn-lg closebtn" ng-click="close()">
+					<span class="glyphicon glyphicon-remove"></span>
+				</a>
+		</div>
+
+			<div class="modal-body nopaddingside">
+
+				<form class="form-horizontal ng-pristine ng-valid" name="form" novalidate>
+
+					<div class="row">
+						<div class="col-md-6 nopadding">
+								<label class="control-label col-xs-4" for="edit_od">One design</label>
+								<div class="col-xs-8">
+									<input name="edit_od" type="checkbox" class="" ng-model="prevision.oneDesign" ng-change="oneDesignCloths()">
+								</div>
+						</div>
+					</div>
+
+					<br>
+
+					<div class="row">
+						<div class="col-md-6 nopadding">
+								<label class="control-label col-xs-4" for="edit_order" translate>Order number</label>
+								<div class="col-xs-8">
+									<input name="edit_order" type="text" class="form-control small" ng-model="prevision.orderNumber" required ng-class="{error: form.edit_order.$dirty && form.edit_order.$invalid}" ng-show="prevision.id">
+                  <angucomplete-alt id="ex1"
+                      placeholder=""
+                      pause="100"
+                      selected-object="selectedPrevision"
+                      local-data="previsions"
+                      search-fields="orderNumber"
+                      title-field="orderNumber"
+                      input-changed="orderNumberChanged"
+                      minlength="2"
+                      input-class="form-control small"
+                      required ng-class="{error: form.edit_order.$dirty && form.edit_order.$invalid}"
+                      ng-show="!prevision.id"/>
+								</div>
+						</div>
+						<div class="col-md-6 nopadding">
+								<label class="control-label col-xs-4" for="edit_client" translate>Client</label>
+								<div class="col-xs-8">
+									<input name="edit_client" type="text" class="form-control small" ng-model="prevision.client">
+								</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-6 nopadding">
+								<label class="control-label col-xs-4" for="edit_date" translate>Delivery date</label>
+								<div class="col-xs-8">
+									<div class="input-group input-group-sm date" date-picker>
+											<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="prevision.deliveryDate" class="form-control small" required>
+											<span class="input-group-addon">
+												<span class="glyphicon-calendar glyphicon"></span>
+											</span>
+										</div>
+								</div>
+						</div>
+						<div class="col-md-6 nopadding">
+								<label class="control-label col-xs-4" for="dd_sail" translate>Sail</label>
+								<div class="col-xs-4" ng-show="!prevision.oneDesign">
+									<select name="dd_sail" ng-model="prevision.selectedSail" ng-options="s as s.description for s in sails" class="form-control small" ng-change="calculateMts(); oneDesignCloths();">
+				                        <option value="">-- choose one --</option>
+				                    </select>
+								</div>
+								<div class="col-xs-4" ng-show="prevision.oneDesign">
+									<select name="dd_sailod" ng-model="prevision.selectedOneDesignSail" ng-options="s as s.sail for s in oneDesignSails" class="form-control small" ng-change="oneDesignCloths()">
+				                        <option value="">-- choose one --</option>
+				                    </select>
+								</div>
+								<div class="col-xs-4">
+									<input name="edit_sail" type="text" class="form-control small" ng-model="prevision.sailDescription">
+								</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-6 nopadding">
+								<label class="control-label col-xs-4" for="edit_type" translate>Type</label>
+								<div class="col-xs-8">
+									<label class="radio-inline">
+										<input type="radio" name="edit_type" value="TEMP" ng-model="prevision.type" required> Temp
+									</label>
+									<label class="radio-inline">
+										<input type="radio" name="edit_type" value="DEF" ng-model="prevision.type" required> Def
+									</label>
+									<span ng-show="form.edit_type.$invalid" class="radio-inline error">!</span>
+								</div>
+						</div>
+						<div class="col-md-6 nopadding">
+								<label class="control-label col-xs-4" for="edit_boat" translate>Boat</label>
+								<div class="col-xs-4" ng-show="!prevision.oneDesign">
+									<input name="edit_boat" type="text" class="form-control small" ng-model="prevision.boat">
+								</div>
+								<div class="col-xs-4" ng-show="prevision.oneDesign">
+									<select name="dd_boat" ng-model="prevision.selectedBoat" ng-options="b as b.boat for b in boats" class="form-control small" ng-change="oneDesignCloths()">
+				                        <option value="">-- choose one --</option>
+				                    </select>
+								</div>
+
+								<label class="control-label col-xs-2" for="edit_feet" translate>&gt; 44</label>
+								<div class="col-xs-2">
+									<input name="edit_feet" type="checkbox" style="margin-top:8px;" ng-model="prevision.greaterThan44"  ng-change="calculateMts()">
+								</div>
+						</div>
+
+					</div>
+
+					<div class="row">
+						<div class="col-md-6 nopadding">
+								<label class="control-label col-xs-4" for="edit_type" translate>Observations</label>
+								<div class="col-xs-8">
+									<input name="edit_obs" type="text" class="form-control small" ng-model="prevision.observations">
+								</div>
+						</div>
+						<div class="col-md-6 nopadding">
+						</div>
+
+					</div>
+
+					<br>
+
+					<div class="row border-bottom border-top">
+						<div class="col-md-2 nopadding">
+								<label class="control-label col-xs-4" for="edit_type" translate>P</label>
+								<div class="col-xs-6">
+									<input name="edit_boat" type="text" class="form-control small" ng-model="prevision.p" ng-change="calculateMts()">
+								</div>
+						</div>
+						<div class="col-md-2 nopadding">
+								<label class="control-label col-xs-4" for="edit_boat" translate>E</label>
+								<div class="col-xs-6">
+									<input name="edit_boat" type="text" class="form-control small" ng-model="prevision.e" ng-change="calculateMts()">
+								</div>
+						</div>
+						<div class="col-md-2 nopadding">
+								<label class="control-label col-xs-4" for="edit_boat" translate>I</label>
+								<div class="col-xs-6">
+									<input name="edit_boat" type="text" class="form-control small" ng-model="prevision.i" ng-change="calculateMts()">
+								</div>
+						</div>
+						<div class="col-md-2 nopadding">
+								<label class="control-label col-xs-4" for="edit_boat" translate>J</label>
+								<div class="col-xs-6">
+									<input name="edit_boat" type="text" class="form-control small" ng-model="prevision.j" ng-change="calculateMts()">
+								</div>
+						</div>
+						<div class="col-md-2 nopadding">
+								<label class="control-label col-xs-4" for="edit_boat" translate>Sup</label>
+								<div class="col-xs-6">
+									<input name="edit_boat" type="text" class="form-control small" ng-model="prevision.area" ng-change="calculateMts()">
+								</div>
+						</div>
+					</div>
+
+					<br>
+
+					<div class="row" ng-repeat="c in prevision.cloths">
+						<ng-form name="innerForm">
+						<div class="col-md-6 nopadding">
+								<label class="control-label col-xs-4" for="edit_cloth" translate>Cloth</label>
+								<div class="col-xs-8">
+									<select name="dd_cloth" ng-model="c.selectedCloth" ng-options="sc as sc.name for sc in cloths" class="form-control small" required ng-class="{error: innerForm.dd_cloth.$invalid}"  >
+				                        <option value="">-- choose one --</option>
+				                    </select>
+								</div>
+						</div>
+						<div class="col-md-6 nopadding">
+								<label class="control-label col-xs-4" for="edit_mts">mts</label>
+								<div class="col-xs-4">
+									<input name="edit_mts" type="text" class="form-control small" required  ng-model="c.mts" ng-class="{error: innerForm.edit_mts.$invalid}">
+								</div>
+								<span class="glyphicon glyphicon-trash col-xs-1 control-label" ng-click="removeCloth($index)" style="text-align:center; cursor:pointer;"></span>
+								<span class="glyphicon glyphicon-plus col-xs-1 control-label" ng-click="addCloth()" ng-show="$last" style="text-align:center; cursor:pointer;"></span>
+						</div>
+						</ng-form>
+					</div>
+
+				</form>
+
+			</div>
+
+			<div class="modal-footer">
+				<a href="javascript:void(0)" class="btn btn-info floatleft" ng-click="close()">
+					<span class="glyphicon glyphicon-remove"></span>
+					{{'Cancel' | translate}}
+				</a>
+				<a href="javascript:void(0)" class="btn btn-warning floatleft" ng-show="prevision.id" ng-click="showConfirmDeleteModal(prevision)" access-allowed="admin,ordenes,velas-od">
+					<span class="glyphicon glyphicon-trash"></span>
+					{{'Delete' | translate}}
+				</a>
+
+				<a ng-click="save()" class="btn btn-default floatright edit_person" ng-disabled="!form.$valid || !prevision.orderNumber" access-allowed="admin,ordenes,velas-od" >
+					<span class="glyphicon glyphicon-save"></span>
+					{{'Save' | translate}}
+				</a>
+			</div>
+
+		</div>
+	</div>
+
+	<documents-modal/>
+
+	<confirm-modal callback="deletePrevision"/>
+</div>

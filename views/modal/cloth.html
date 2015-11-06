@@ -1,0 +1,145 @@
+<div class="modal" tabindex="-1" role="dialog" >
+  <div class="modal-dialog modal-lg" style="margin-top: 0px;">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<div class="edit_person">
+					<h2>
+						<span class="glyphicon glyphicon-file"></span>
+						<span>{{'Cloth' | translate}} '{{cloth.name}}'</span>
+					</h2>
+				</div>
+				<a href="javascript:void(0)" class="btn btn-lg closebtn" ng-click="$hide()">
+					<span class="glyphicon glyphicon-remove"></span>
+				</a>
+			</div>
+
+			<div class="modal-body">
+				<table id="groups" class="table table-bordered table-striped table-hover">
+					<thead>
+						<tr>
+							<th translate>Provider</th>
+							<th translate>Code</th>
+							<th translate>Stock</th>
+							<th access-restricted="plotter" translate>Price fob</th>
+							<th access-restricted="plotter" translate>Price nac</th>
+							<th access-restricted="plotter" translate>Price ref</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="p in cloth.providers" ng-show="p.name">
+							<td>
+								<a href="javascript:void(0)" ng-click="showBuyModal(p)" my-tooltip="'Buy'|translate" data-placement="right" access-level="admin">{{p.name}}</a>
+                <span access-restricted='admin'>{{p.name}}</span>
+							</td>
+							<td>
+								<!--<editable-code ng-model="p" style="display:inline-block;"></editable-code>-->
+                <editable-input entity="p" field="'code'" callback="changedCode" editable-by-role="'admin'" width="140" style="display:inline-block;"></editable-input>
+							</td>
+							<td>
+								{{p.stock}}
+							</td>
+							<td access-restricted="plotter">
+								<!--<editable-price ng-model="p" style="display:inline-block;"></editable-price>-->
+                <editable-input entity="p" field="'price'" tooltip-text="(p.price * 0.9144).toFixed(2) + ' / yds'" callback="changedPrice" editable-by-role="'admin'" extra-label="'USD'" width="50" style="display:inline-block;"></editable-input>
+							</td>
+							<td access-restricted="plotter">
+								{{ toPriceNac(p.price) }} USD
+							</td>
+							<td access-restricted="plotter">
+								{{ toPriceRef(p.price) }} $
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<div class="panel panel-default ng-scope">
+					<div class="panel-heading nopadding">
+						<h2 class="panel-title fullwidth">
+							<a data-toggle="collapse" data-target="#collapse1" href="javascript:void(0)">
+								<span translate>Information</span>
+							</a>
+						</h2>
+					</div>
+
+					<div id="collapse1" class="panel-collapse collapse in" style="height: auto;">
+						<div class="panel-body">
+
+							<form name="formClothInfo">
+							<div class="row">
+								<div class="col-md-6 nopadding">
+										<label class="control-label col-xs-4" translate>Name</label>
+										<div class="col-xs-6">
+											<input name="edit_name" type="text" class="form-control small" ng-model="cloth.name" required>
+										</div>
+								</div>
+								<div class="col-md-6 nopadding">
+										<label class="control-label col-xs-4" for="edit_sm" translate>Stock min.</label>
+										<div class="col-xs-6">
+											<input name="edit_sm" type="text" class="form-control small" ng-model="cloth.stockMin">
+										</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-md-6 nopadding">
+										<label class="control-label col-xs-4" for="dd_group" translate>Group</label>
+										<div class="col-xs-6">
+											<select name="dd_group" ng-model="cloth.selectedGroup" ng-options="sg as sg.name for sg in groups" class="form-control small">
+						                        <option value="">-- choose one --</option>
+						                    </select>
+										</div>
+								</div>
+								<div class="col-md-6 nopadding">
+									<label class="control-label col-xs-4" for="edit_sm" translate>Mts in rolls</label>
+									<div class="col-xs-8">
+										<a href="javascript:void(0)" ng-click="showClothRollsModal(cloth)">{{sumStock(cloth.providers)}}</a>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6 nopadding">
+										<label class="control-label col-xs-4" for="edit_sm" translate>Total Djai</label>
+										<div class="col-xs-8">
+											<a href="javascript:void(0)" ng-click="showClothDjaisModal(cloth)">{{cloth.sumDjais}}</a>
+										</div>
+								</div>
+							</div>
+							</form>
+						</div>
+
+						<div class="panel-footer">
+              <!--<a href="javascript:void(0)" class="btn btn-info floatleft" ng-click="close()">
+      					<span class="glyphicon glyphicon-remove"></span>
+      					{{'Cancel' | translate}}
+      				</a>-->
+      				<a href="javascript:void(0)" class="btn btn-warning floatleft" ng-click="showConfirmDeleteModal(cloth)" title="Eliminar" access-level="admin">
+      					<span class="glyphicon glyphicon-trash"></span>
+      				</a>
+
+      				<a ng-click="saveCloth(cloth)" class="btn btn-default floatright edit_person" ng-disabled="formClothInfo.$invalid" access-level="admin" >
+      					<span class="glyphicon glyphicon-save"></span>
+      					{{'Save' | translate}}
+      				</a>
+
+						<!--	<a ng-click="saveCloth(cloth)" class="btn btn-default floatright" ng-disabled="formClothInfo.$invalid">
+								<span class="glyphicon glyphicon-save"></span>
+								<span translate>Save</span>
+							</a>-->
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="modal-footer">
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<cloth-djais-modal/>
+
+<cloth-rolls-modal/>
+
+<confirm-modal callback="deleteCloth"/>

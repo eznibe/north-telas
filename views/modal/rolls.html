@@ -1,0 +1,55 @@
+<div class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-md" style="margin-top: 0px;">
+		<div class="modal-content">
+			
+			<div class="modal-header">
+				<div class="edit_person">
+					<h2>
+						<span class="glyphicon glyphicon-file"></span>
+						<span translate>Rolls</span>
+					</h2>
+				</div>
+				<a href="javascript:void(0)" class="btn btn-lg closebtn" ng-click="closeRolls()">
+					<span class="glyphicon glyphicon-remove"></span>
+				</a>
+		</div>
+						
+			<div class="modal-body">
+				<form name="rollsForm" class="form-horizontal">			
+				<div class="row" ng-repeat="r in orderProduct.rolls">
+					<ng-form name="innerForm">
+					<div class="col-md-4 nopadding">
+							<label class="control-label col-xs-4" for="edit_roll" translate>Roll</label>
+							<div class="col-xs-8">
+								<input name="edit_roll" type="text" class="form-control small" required integer min="1" ng-model="r.number" ng-class="{error: innerForm.edit_roll.$invalid}">
+							</div>
+					</div>
+					<div class="col-md-4 nopadding">
+							<label class="control-label col-xs-4" for="edit_lote" translate>Lote</label>
+							<div class="col-xs-7">
+								<input name="edit_lote" type="text" class="form-control small" required ng-model="r.lote" ng-class="{error: innerForm.edit_lote.$invalid}">
+							</div>
+					</div>
+					<div class="col-md-4 nopadding">
+							<label class="control-label col-xs-3" for="edit_mts">mts</label>
+							<div class="col-xs-5">
+								<input name="edit_mts" type="text" class="form-control small" required integer min="0" ng-model="r.mts" ng-class="{error: innerForm.edit_mts.$invalid}">
+							</div>
+							<span class="glyphicon glyphicon-trash col-xs-1 control-label" ng-click="removeRoll($index)" style="text-align:center; cursor:pointer;"></span>
+							<span class="glyphicon glyphicon-plus col-xs-1 control-label" ng-click="addRoll()" ng-show="$last" style="text-align:center; cursor:pointer;"></span>
+					</div>
+					</ng-form>
+				</div>
+				</form>			
+			</div>
+						
+			<div class="modal-footer">
+				<a ng-click="saveRolls(orderProduct)" class="btn btn-default floatright" ng-disabled="!rollsForm.$valid && !allEmpty()" >
+					<span class="glyphicon glyphicon-save"></span>
+					{{'Save' | translate}}
+				</a>
+			</div>
+						
+		</div>
+	</div>
+</div>

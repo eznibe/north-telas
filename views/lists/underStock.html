@@ -1,0 +1,65 @@
+<div class="nopaddingright jumbotron clearfix">
+	<h1><span translate>Under stock</span></h1>
+	<div class="row">
+		<div class="col-md-8 nopadding">
+				<label class="control-label col-xs-1" translate>Groups</label>
+				<div class="col-xs-3">
+					<select ng-model="filter.selectedGroup" ng-options="sc as sc.name for sc in groups" class="form-control small">
+						<option value="">-- choose one --</option>
+			        </select>
+				</div>
+				
+				<div class="col-xs-2">
+					<a ng-click="filterByGroup(filter.selectedGroup)" class="btn btn-default floatright" >
+						<span class="glyphicon glyphicon-search"></span>
+						{{'Search' | translate}}
+					</a>
+				</div>
+		</div>
+	</div>
+</div>
+
+<table id="groups" class="table table-bordered table-striped table-hover">
+	<thead>
+		<tr>
+			<th translate>Cloth</th>
+			<th>Stock</th>
+			<th translate>Prevision</th>
+			<th title="En plotter" translate>Pending</th>
+			<th translate>St. min.</th>
+			<th translate>Transit</th>
+			<th translate>Delta total</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="c in cloths | filter:searchBox">
+			<td>
+				<a href="javascript:void(0)" ng-click="showClothModal(c)">{{c.name}}</a>
+			</td>
+			<td>
+				<span data-toggle="tooltip" data-placement="right" stock-tooltip="c">{{sumStock(c.providers)}}</span>
+			</td>
+			<td>
+				<span ng-show="sumPrevision(c) == 0">0</span>
+				<a href="javascript:void(0)" ng-click="showClothPrevisionsModal(c)" ng-show="sumPrevision(c) > 0">{{sumPrevision(c)}}</a>
+			</td>
+			<td>
+				{{sumPending(c)}}
+			</td>
+			<td>
+				{{c.stockMin}}
+			</td>
+			<td>
+				<span ng-show="c.sumInTransit == 0">0</span>
+				<a href="javascript:void(0)" ng-click="showClothInTransitModal(c)" ng-show="c.sumInTransit > 0">{{c.sumInTransit}}</a>
+			</td>
+			<td>
+				<span style="color: #e42b33;">{{(sumStock(c.providers) - sumPrevision(c) - sumPending(c) - c.stockMin + c.sumInTransit).toFixed(0)}}</span>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<cloth-previsions-modal/>
+
+<cloth-in-transit-modal/>

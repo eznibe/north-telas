@@ -1,0 +1,48 @@
+<div class="nopaddingright jumbotron clearfix">
+	<h1>{{'Users' | translate}}</h1>
+	<p class="bigmargin">
+	    <a ng-click="showModal()" class="btn btn-info floatright">
+	        <span class="glyphicon glyphicon-plus"></span>&nbsp;
+	        {{'Create new user' | translate}}
+	    </a>
+	</p>
+</div>
+
+<table class="table table-bordered table-striped table-hover">
+	<thead>
+		<tr>
+			<th translate>Name</th>
+			<th translate>Username</th>
+			<th translate>Role</th>
+			<th></th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="u in users | orderBy:'name' | filter:searchBox">
+			<td>
+				{{u.name}}
+			</td>
+			<td>
+				{{u.username}}
+			</td>
+			<td>
+				{{u.role}}
+			</td>
+			<td style="width:80px;">
+				<a href="javascript:void(0);" ng-click="showModal(u)" class="btn btn-sm btn-default">
+					<span class="glyphicon glyphicon-pencil"></span>&nbsp; 
+					{{'Edit' | translate}}
+				</a>
+			</td>
+			<td style="width:80px;">
+				<a href="javascript:void(0);" ng-click="showConfirmDeleteModal(u);" class="btn btn-sm btn-default">
+					<span class="glyphicon glyphicon-trash"></span>&nbsp; 
+					{{'Delete' | translate}}
+				</a>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<confirm-modal callback="deleteUser"/>

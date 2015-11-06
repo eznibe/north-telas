@@ -1,0 +1,56 @@
+<div class="jumbotron clearfix">
+	<h1><span translate>Design</span></h1>
+</div>
+
+<table class="table table-bordered table-striped table-hover">
+	<thead>
+		<tr>
+			<th translate>Order number</th>
+			<th translate>Client</th>
+			<th translate>Sail</th>
+			<th translate>Boat</th>
+			<th translate>Cloths</th>
+			<th translate>Type</th>
+			<th translate>Observations</th>
+			<th access-allowed="admin,ordenes,velas-od" translate>Designed</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="p in previsions | filter:searchBox | orderBy:'name'">
+			<td>
+				<a href="javascript:void(0)" ng-click="showPrevisionModal(p)">{{p.orderNumber}}</a>
+			</td>
+			<td>
+				{{p.client}}
+			</td>
+			<td>
+				{{p.sailName}}
+			</td>
+			<td>
+				{{p.boat}}
+			</td>
+			<td>
+				<design-cloths-tags cloths="p.cloths" editable-by-role="'admin,ordenes,velas-od'" ng-model="p.cloths"/>
+			</td>
+			<td>
+				{{p.type}}
+			</td>
+			<td ng-mouseover="over = true" ng-mouseleave="over = false" >
+				{{p.observations}}
+				<span class="glyphicon glyphicon-pencil col-xs-1 control-label" ng-click="showEditModal(p, editObservations)" style="text-align:center; cursor:pointer; float:none; padding-left:5px; padding-right:5px;" ng-show="over" access-allowed="admin,ordenes,velas-od">&nbsp;</span>
+			</td>
+			<td style="width:80px; text-align:center;" access-allowed="admin,ordenes,velas-od">
+				<a ng-click="showConfirmModal(p, designed)" class="btn btn-default" ng-disabled="user.role=='velas-od' && !p.oneDesign">
+					<span class="glyphicon glyphicon-ok" ng-show="!p.designed"></span>
+					<span class="glyphicon glyphicon-remove" ng-show="p.designed"></span>
+				</a>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<prevision-modal>
+
+<confirm-modal/>
+
+<edit-text-modal field="'observations'"/>

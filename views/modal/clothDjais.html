@@ -1,0 +1,46 @@
+<div class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" style="margin-top: 0px;">
+		<div class="modal-content">
+			
+			<div class="modal-header">
+				<div class="edit_person">
+					<h2>
+						<span class="glyphicon glyphicon-file"></span>
+						<span translate>Djais</span>
+					</h2>
+				</div>
+				<a href="javascript:void(0)" class="btn btn-lg closebtn" ng-click="$hide()">
+					<span class="glyphicon glyphicon-remove"></span>
+				</a>
+		</div>
+						
+			<div class="modal-body">
+				<div class="user_cards">
+					<ul>
+<!-- 						<li class="title">{{'Def. previsions' | translate}}</li> -->
+						<li class="cards">
+							<ul>
+								<li ng-repeat="d in cloth.djais" ng-click="showDjaiModal(d, modalDjais)">
+									<h3><span style="color:black;">{{d.number}}</span></h3>
+									<h3><small translate>Date</small> <span>{{d.djaiDate}}</span></h3>
+									<h3><small translate>Amount</small> <span>{{d.amount}}</span></h3>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+			
+			<div class="modal-footer">
+				
+				<a ng-click="$hide()" class="btn btn-default floatright" >
+					<span class="glyphicon glyphicon-ok"></span>
+					Ok
+				</a>
+			</div>
+						
+		</div>
+	</div>
+</div>
+
+<djai-modal/>

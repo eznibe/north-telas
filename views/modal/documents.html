@@ -1,0 +1,74 @@
+<div class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" style="margin-top: 0px;">
+		<div class="modal-content">
+			
+			<div class="modal-header">
+				<div class="edit_person">
+					<h2>
+						<span class="glyphicon glyphicon-file"></span>
+						<span>Documents</span>
+					</h2>
+				</div>
+				<a href="javascript:void(0)" class="btn btn-lg closebtn" ng-click="$hide()">
+					<span class="glyphicon glyphicon-remove"></span>
+				</a>
+		</div>
+						
+			<div class="modal-body">
+				<div ng-show="loading">Loading...</div>			
+				<div ng-show="!loading" class="user_cards">
+					<ul>
+						<li class="cards">
+							<ul>
+								<li ng-repeat="d in documents" ng-if="d.$$expanded.$$meta.type=='DOCUMENT'">
+									<h3><span style="color:black;">{{d.$$expanded.name}}</span></h3>
+									<div><a ng-href="{{downloadContentHref(d)}}">Download</a></div>
+									<div><img ng-src="{{previewHref(d)}}" alt="Preview" width="180" height="150" ></div>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+							
+			</div>
+			
+			<div class="modal-footer">
+				<form action="files/upload" method="post" enctype="multipart/form-data" class="form-horizontal">
+					<div class="row">
+						<div class="col-md-6 nopadding">
+								<label class="control-label col-xs-3" for="edit_order">File</label>
+								<div class="col-xs-9">
+									<input type="file" name="file" class="form-control small"/>
+									<input type="hidden" name="uri" value="prevision/">
+								</div>
+						</div>
+						<div class="col-md-6 nopadding">
+								<div class="col-xs-12 nopadding">
+<!-- 									<input type="submit" value="Upload It" /> -->
+									<a ng-click="upload()" class="btn btn-default floatright" >
+						<span class="glyphicon glyphicon-arrow-up"></span>
+						Upload
+					</a>
+								</div>
+						</div>
+					</div>
+					
+					
+				</form>
+			</div>
+						
+			<div class="modal-footer">
+				<a href="javascript:void(0)" class="btn btn-info floatleft" ng-click="back()">
+					<span class="glyphicon glyphicon-arrow-left"></span>
+					Back
+				</a>
+				
+				<a ng-click="$hide()" class="btn btn-default floatright" >
+					<span class="glyphicon glyphicon-ok"></span>
+					Ok
+				</a>
+			</div>
+						
+		</div>
+	</div>
+</div>

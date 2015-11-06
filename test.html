@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TEST</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="css/bootstrap/bootstrap.css" rel="stylesheet" media="screen">
+<!--     <link href="css/style.css" rel="stylesheet" media="screen"> -->
+<!-- 	<link href="css/font-awesome.min.css" rel="stylesheet" media="screen"> -->
+	
+<!-- 	<link href="css/notification.min.css" rel="stylesheet" media="screen"> -->
+<!-- 	<link href="css/bootstrap-datepicker.css" rel="stylesheet" media="screen"> -->
+
+    <script data-main="scripts/main" src="scripts/vendor/angular/angular.js"></script>
+    <script data-main="scripts/main" src="scripts/vendor/jquery/jquery.min.js"></script>
+    <script data-main="scripts/main" src="scripts/custom/bootstrap.min.js"></script>
+    <script data-main="scripts/main" src="scripts/vendor/bootstrap-datetimepicker/js/moment-with-langs.min.js"></script>
+    <script data-main="scripts/main" src="scripts/vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    
+</head>
+<body>
+
+<div class="input-group input-group-sm date" id="datetimepicker_dob" data-date-format="YYYY-MM-DD">
+	<input id="edit_person_dob" type="text" class="form-control small" required="">
+	<span class="input-group-addon">
+		<span class="glyphicon-calendar glyphicon"></span>
+	</span>
+</div>	
+
+
+  <div id="datetimepicker1" class="input-append input-group date">
+    <input data-format="dd/MM/yyyy" type="text"></input>
+    <span class="input-group-addon">
+		<span class="glyphicon-calendar glyphicon"></span>
+	</span>
+  </div>
+
+<script type="text/javascript">
+  $(function() {
+    $('#datetimepicker1').datetimepicker({
+      language: 'en-EN'
+    });
+  
+  
+  	var today = formatDate( new Date() );
+	
+	$("#datetimepicker_dob").datetimepicker( {
+		pickTime: false,
+		useCurrent: false,
+		language: "en",
+		defaultDate: today
+	} );
+	
+	$("#edit_person_dob").data( "dtp", $("#datetimepicker_dob") );
+	
+	function formatDate( date ) {
+		return date.getUTCFullYear() + "-" + lz( date.getUTCMonth()+1, 2 ) + "-" + lz( date.getUTCDate(), 2 );
+	}
+	function lz( n, length ) {
+		var str = (n>0 ? n : -n) + "";
+		var zeros = "";
+		for ( var i=length-str.length; i>0; i-- ) zeros += "0";
+		zeros += str;
+		return (n>=0 ? zeros : "-"+zeros);
+	}
+	
+  });
+</script>
+</body>
+</html>

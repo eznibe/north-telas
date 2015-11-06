@@ -1,0 +1,8 @@
+<div>
+	<a style="color:#616161; cursor:pointer;" id="sailDisplay-{{s.odId}}" ng-click="clicked(s)">{{s.sail}}</a>
+	<span  class="badge" id="sailEdit-{{s.odId}}" style="display:none;">
+		<input type="text" ng-model="s.sail" style="width:100px;"/> 
+		
+		<a href="javascript:void(0)" ng-click="changed(s); clicked(s);" ><span class="glyphicon glyphicon-ok control-label" style="text-align:center; cursor:pointer; margin-left:4px;"></span></a>
+	</span> 
+</div>
