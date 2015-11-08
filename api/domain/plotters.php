@@ -461,20 +461,20 @@ function getClothPlotters($clothId, $startDate, $endDate, $userName, $providerNa
 		$orderByCondition = "c.name ";
 	}
 
-	$query1 = "SELECT c.*, p.*, s.*, pre.*,
-									SUM(pc.mtsCutted) as sumMtsCutted, DATE_FORMAT(p.cuttedOn,'%d-%m-%Y') as formattedDate, IFNULL(pre.orderNumber, mp.orderNumber) as orderNumber, IFNULL(pre.orderNumber, mp.orderNumber) as sortOrderNumber, coalesce(pre.sailDescription, pre.sailOneDesign, s.description) as sailName, p.observations as observations
-						FROM cloths c
-						JOIN plotters p on p.clothId = c.id
-						JOIN plottercuts pc on pc.plotterId = p.id
-						LEFT JOIN previsions pre on pre.id = p.previsionId
-						LEFT JOIN manualplotters mp on mp.id = p.manualPlotterId
-						LEFT JOIN sails s on s.id = pre.sailId
-						JOIN groups g on g.id = c.groupId
-						JOIN products pro on pro.clothId = c.id
-						JOIN providers prov on prov.id = pro.providerId
-						WHERE p.cutted = true $condition
-						GROUP BY $groupByCondition
-						ORDER BY $orderByCondition";
+	$query1 = "SELECT c.*, p.*, s.*, pre.*, pc.plotterId,
+				SUM(pc.mtsCutted) as sumMtsCutted, DATE_FORMAT(p.cuttedOn,'%d-%m-%Y') as formattedDate, IFNULL(pre.orderNumber, mp.orderNumber) as orderNumber, IFNULL(pre.orderNumber, mp.orderNumber) as sortOrderNumber, coalesce(pre.sailDescription, pre.sailOneDesign, s.description) as sailName, p.observations as observations
+				FROM cloths c
+				JOIN plotters p on p.clothId = c.id
+				JOIN plottercuts pc on pc.plotterId = p.id
+				LEFT JOIN previsions pre on pre.id = p.previsionId
+				LEFT JOIN manualplotters mp on mp.id = p.manualPlotterId
+				LEFT JOIN sails s on s.id = pre.sailId
+				JOIN groups g on g.id = c.groupId
+				JOIN products pro on pro.clothId = c.id
+				JOIN providers prov on prov.id = pro.providerId
+				WHERE p.cutted = true $condition
+				GROUP BY $groupByCondition
+				ORDER BY $orderByCondition";
 
 	$result = mysql_query($query1);
 
