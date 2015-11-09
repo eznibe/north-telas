@@ -305,11 +305,19 @@ function deleteCloth($clothId)
 	$obj->method = 'deleteCloth';
 
 
-	// delete cloth
-	$query = "DELETE FROM cloths WHERE id = '".$clothId."'";
+	// delete cloth references in onedesign
+	$query = "DELETE FROM onedesign WHERE clothid = '".$clothId."'";
 	if (! mysql_query($query)) {
 		$obj->successful = false;
 		$obj->query = $query;
+	}
+	else {
+		// delete cloth
+		$query = "DELETE FROM cloths WHERE id = '".$clothId."'";
+		if (! mysql_query($query)) {
+			$obj->successful = false;
+			$obj->query = $query;
+		}
 	}
 
 	return $obj;
