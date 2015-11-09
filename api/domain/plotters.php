@@ -461,7 +461,7 @@ function getClothPlotters($clothId, $startDate, $endDate, $userName, $providerNa
 		$orderByCondition = "c.name ";
 	}
 
-	$query1 = "SELECT c.*, p.*, s.*, pre.*, pc.plotterId,
+	$query1 = "SELECT c.*, p.*, s.*, pre.*, pc.plotterId, pro.code,
 				SUM(pc.mtsCutted) as sumMtsCutted, DATE_FORMAT(p.cuttedOn,'%d-%m-%Y') as formattedDate, IFNULL(pre.orderNumber, mp.orderNumber) as orderNumber, IFNULL(pre.orderNumber, mp.orderNumber) as sortOrderNumber, coalesce(pre.sailDescription, pre.sailOneDesign, s.description) as sailName, p.observations as observations
 				FROM cloths c
 				JOIN plotters p on p.clothId = c.id

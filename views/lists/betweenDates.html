@@ -233,6 +233,7 @@
 	<thead>
 		<tr>
 			<th style="min-width: 200px;" translate>Cloth</th>
+			<th translate>Code</th>
 			<th translate>Mts</th>
 		</tr>
 	</thead>
@@ -240,6 +241,9 @@
 		<tr ng-repeat="p in plotters | filter:searchBox">
 			<td>
 				{{p.name}}
+			</td>
+			<td>
+				{{p.code}}
 			</td>
 			<td>
 				{{p.sumMtsCutted}}
