@@ -102,7 +102,7 @@ angular.module('vsko.stock')
 
         this.getDjai = function(djai, expansion)
         {
-        	return $http.get(url + 'djais_GET.php?djaiNumber='+djai.number+'&expand='+expansion);
+        	return $http.get(url + 'djais_GET.php?djaiNumber='+escape(djai.number)+'&expand='+expansion);
         };
 
         this.saveDjai = function(djai)
