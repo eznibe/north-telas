@@ -494,7 +494,7 @@ function getClothPlotters($clothId, $startDate, $endDate, $userName, $providerNa
 
 		$plotter['rolls'] = $subrows;
 
-		$plotter['query'] = $query1;
+		//$plotter['query'] = $query1;
 
 		array_push($plotters, $plotter);
 	}
