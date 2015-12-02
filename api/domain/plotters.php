@@ -472,7 +472,7 @@ function getClothPlotters($clothId, $startDate, $endDate, $userName, $providerNa
 				JOIN groups g on g.id = c.groupId
 				JOIN products pro on pro.clothId = c.id
 				JOIN providers prov on prov.id = pro.providerId
-				WHERE p.cutted = true $condition
+				WHERE p.cutted = true $condition and prov.name!='?'
 				GROUP BY $groupByCondition
 				ORDER BY $orderByCondition";
 
@@ -494,7 +494,7 @@ function getClothPlotters($clothId, $startDate, $endDate, $userName, $providerNa
 
 		$plotter['rolls'] = $subrows;
 
-		//$plotter['query'] = $query1;
+		$plotter['query'] = $query1;
 
 		array_push($plotters, $plotter);
 	}
