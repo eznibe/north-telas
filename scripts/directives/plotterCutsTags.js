@@ -69,18 +69,19 @@ angular.module('vsko.stock')
           		  	}
           		  	else {
           		  		// need to get possiblerolls again because of possible changes in other plotter cuts mts while this was closed
-          		  		Plotters.getPossibleRolls($scope.p).then(function(possibleRolls){
+          		  		Plotters.getPossibleRolls($scope.p, cut.id).then(function(possibleRolls){
 
           		  			$('#badgeDisplay-'+cut.id).fadeOut('fast', function() {
       		      			    $('#badgeEdit-'+cut.id).fadeIn('slow');
       	      				});
 
-          		  			$scope.p.possibleRolls = possibleRolls.data;
+          		  			cut.possibleRolls = possibleRolls.data;
 
-      		  				  $scope.loadSelectedRoll($scope.cuts, possibleRolls.data);
+      		  				  cut.selectedRoll = loadSelectedRoll(cut.rollId, possibleRolls.data);
 
-  	        		  		$('#mts-'+cut.id).tooltip('destroy');
-  	        		  		$('#mts-'+cut.id).tooltip({title: 'Disponible '+(cut.selectedRoll.mts - cut.selectedRoll.mtsPendingToBeCutted)+' mts'});
+  	        		  		// $('#mts-'+cut.id).tooltip('destroy');
+  	        		  		// $('#mts-'+cut.id).tooltip({title: 'Disponible '+(cut.selectedRoll.mts - cut.selectedRoll.mtsPendingToBeCutted)+' mts'});
+                      $scope.selectedRoll(cut, cut.selectedRoll);
 
           	    		});
           		  	}
@@ -88,6 +89,17 @@ angular.module('vsko.stock')
           		  	cut.editable = !cut.editable;
                 }
         	  };
+
+            function loadSelectedRoll(rollId, possibleRolls) {
+              var sameRoll = possibleRolls.filter(function(roll) {
+                return rollId === roll.id;
+              });
+              if(sameRoll.length > 0) {
+                return sameRoll[0];
+              }
+              // shouldnt happen
+              return null;
+            }
           }
         };
 	}

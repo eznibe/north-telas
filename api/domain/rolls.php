@@ -169,7 +169,7 @@ function getRoll($id) {
 	return $obj;
 }
 
-function getPossibleRolls($clothId, $plotterId) {
+function getPossibleRolls($clothId, $plotterId, $cutId) {
 
 	$query = "SELECT * FROM rolls r JOIN products p on p.productId = r.productId
 		  WHERE p.clothId = '$clothId' AND r.incoming = false AND r.mts > 0 ORDER BY r.number";
@@ -182,9 +182,14 @@ function getPossibleRolls($clothId, $plotterId) {
 	foreach ($rows as $roll) {
 		$roll['display'] = $roll['number'] . " / " . $roll['lote'];
 
+		$differentCut = "";
+		if(isset($cutId)) {
+			$differentCut = " and pc.id != '$cutId' ";
+		}
+
 		// calculate mtsPendingToBeCutted
 		$query = "SELECT sum(pc.mtsCutted) as mtsPendingToBeCutted FROM plottercuts pc join plotters p on p.id=pc.plotterId
-				WHERE p.cutted=false and pc.rollId = '".$roll['id']."' and p.id != '".$plotterId."' group by pc.rollId";
+				WHERE p.cutted=false and pc.rollId = '".$roll['id']."'".$differentCut." group by pc.rollId";
 
 		$qresult = mysql_query($query);
 

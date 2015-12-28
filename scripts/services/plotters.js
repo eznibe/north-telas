@@ -74,9 +74,13 @@ angular.module('vsko.stock')
         	return $http.delete(url + 'plotters_DELETE.php?cutId='+ cut.id);
         };
 
-        this.getPossibleRolls = function(plotter)
+        this.getPossibleRolls = function(plotter, cutId)
         {
-        	return $http.get(url + 'rolls_GET.php?clothId='+plotter.clothId+'&plotterId='+plotter.id+'&possibleRolls=true');
+					var cutIdParam = '';
+					if(cutId) {
+						cutIdParam = '&cutId=' + cutId;
+					}
+        	return $http.get(url + 'rolls_GET.php?clothId='+plotter.clothId+'&plotterId='+plotter.id+cutIdParam+'&possibleRolls=true');
         };
 
         return this;

@@ -20,20 +20,20 @@ if(isset($_GET['id'])) {
 }
 else if(isset($_GET['all'])) {
 	$distincts = isset($_GET['distincts']) ? $_GET['distincts'] : false;
-	$value = getAllRolls($distincts);	
+	$value = getAllRolls($distincts);
 }
 else if(isset($_GET['possibleRolls'])) {
-	$value = getPossibleRolls($_GET['clothId'], $_GET['plotterId']);	
+	$value = getPossibleRolls($_GET['clothId'], $_GET['plotterId'], $_GET['cutId']);	
 }
 else if(isset($_GET['lotes'])) {
-	$value = getRollLotes($_GET['rollNumber']);	
+	$value = getRollLotes($_GET['rollNumber']);
 }
 else if(isset($_GET['cuts'])) { // all the cuts of the given roll
 
 	$rollId = isset($_GET['rollId']) ? $_GET['rollId'] : null;
 	$clothId = isset($_GET['clothId']) ? $_GET['clothId'] : null;
 
-	$value = getRollCuts($rollId, $clothId);	
+	$value = getRollCuts($rollId, $clothId);
 }
 else {
 	$value = getRolls($_GET['productId'], $_GET['orderId']);
