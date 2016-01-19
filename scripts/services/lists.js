@@ -63,9 +63,9 @@ angular.module('vsko.stock')
         	return $http.get(url + 'rolls_GET.php?cuts=true'+rollParam+clothParam);
         };
 
-				this.stockUpToDate = function(groupId, date)
+				this.stockUpToDate = function(groupId, date, includeStock0)
         {
-        	return $http.get(url + 'lists_GET.php?upToDate=true&groupId='+groupId+'&date='+date);
+        	return $http.get(url + 'lists_GET.php?upToDate=true&groupId='+groupId+'&date='+date+'&includeStock0='+includeStock0);
         };
 
 				this.getPrices = function(group)

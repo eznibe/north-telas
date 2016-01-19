@@ -46,7 +46,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="c in cloths | filter:searchBox">
+		<tr ng-repeat="c in cloths | filter:stock0 | filter:searchBox">
 			<td>
 				{{c.name}}
 			</td>

@@ -14,7 +14,7 @@ angular.module('vsko.stock').controller('ClothsValuedStockCtrl', ['$scope', 'Sto
 
 				if($scope.filter.selectedGroup && $scope.filter.upToDate) {
 
-					Lists.stockUpToDate($scope.filter.selectedGroup.id, $scope.filter.upToDate).then(function(result) {
+					Lists.stockUpToDate($scope.filter.selectedGroup.id, $scope.filter.upToDate, true).then(function(result) {
 						$scope.cloths = result.data;
 						$scope.filter.searched = true;
 					});
@@ -153,6 +153,11 @@ angular.module('vsko.stock').controller('ClothsValuedStockCtrl', ['$scope', 'Sto
 
 				return sum.toFixed(2);
 			};
+
+			$scope.stock0 = function(c) {
+				// exclude thos with stock available 0 but also the pending/transit/plotter should be 0
+				return c.sumAvailable > 0 || $scope.delta(c) > 0 || $scope.deltaWithTransit(c) > 0 || $scope.sumTemporary(c) > 0;
+			}
 
       function divideRollsByState(cloths) {
 

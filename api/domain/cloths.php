@@ -71,7 +71,10 @@ function getCloth($id) {
 	return $obj;
 }
 
-function getClothsUpToDate($groupId, $date) {
+function getClothsUpToDate($groupId, $date, $includeStock0, $joinProviders) {
+
+	$includeStock0 = isset($includeStock0);
+	$joinProviders = isset($joinProviders);
 
 	$query = "
 						SELECT o.arriveDate, p.clothId, r.mtsOriginal, coalesce(cuts.mtsCutted, 0) as mtsCutted,
@@ -85,8 +88,29 @@ function getClothsUpToDate($groupId, $date) {
 							where c.groupId='$groupId' and p.cutted = true and p.cuttedOn <= STR_TO_DATE('".$date."', '%d-%m-%Y')
 							group by r2.id
 						) cuts ON cuts.id = r.id
-						WHERE c.groupId='$groupId' and r.incoming=false and o.arriveDate <= STR_TO_DATE('".$date."', '%d-%m-%Y') and ((r.mtsOriginal - coalesce(cuts.mtsCutted, 0)))>0
-						ORDER BY c.name, provider desc, p.productId, p.clothId, r.id ";
+						WHERE c.groupId='$groupId' and r.incoming=false and o.arriveDate <= STR_TO_DATE('".$date."', '%d-%m-%Y')
+							and ((r.mtsOriginal - coalesce(cuts.mtsCutted, 0))) > 0";
+
+  if($includeStock0) {
+		// union with those cloths that have 0 available up to given date
+	  $query = $query . " UNION all
+							SELECT o.arriveDate, p.clothId, r.mtsOriginal, coalesce(cuts.mtsCutted, 0) as mtsCutted,
+							(r.mtsOriginal - coalesce(cuts.mtsCutted, 0)) as available, c.name, coalesce(pro.name, '?') as provider, coalesce(p.price, '?') as price, p.productId, p.code,
+							r.number, r.lote, r.mtsOriginal, r.type
+							FROM rolls r JOIN products p on p.productId=r.productId JOIN orders o on o.orderId=r.orderId JOIN cloths c on c.id=p.clothId left JOIN providers pro on pro.id=p.providerId
+							LEFT JOIN
+							(
+								SELECT r2.id, sum(pc.mtsCutted) as mtsCutted
+								FROM plottercuts pc join plotters p on pc.plotterId=p.id join rolls r2 on r2.id=pc.rollId join cloths c on p.clothId=c.id
+								where c.groupId='$groupId' and p.cutted = true and p.cuttedOn <= STR_TO_DATE('".$date."', '%d-%m-%Y')
+								group by r2.id
+							) cuts ON cuts.id = r.id
+							WHERE c.groupId='$groupId' and r.incoming=false and o.arriveDate <= STR_TO_DATE('".$date."', '%d-%m-%Y')
+								and ((r.mtsOriginal - coalesce(cuts.mtsCutted, 0))) = 0
+							GROUP BY p.clothId	";
+	}
+
+	$query = $query . " ORDER BY name, provider desc, productId, clothId ";
 
   $result = mysql_query($query);
 
@@ -116,7 +140,7 @@ function getClothsUpToDate($groupId, $date) {
 
 		if($lastClothId==$row['clothId']) {
 
-			if($lastProvider==$row['provider']) {
+			if($lastProvider==$row['provider'] || $joinProviders) {
  				$sumAvailable = $sumAvailable + $row['available'];
 				if($row['available'] > 0)
 					array_push($rolls, $roll);
@@ -127,7 +151,7 @@ function getClothsUpToDate($groupId, $date) {
 				$lastRow['rollsAvailable'] = $rolls;
 				$lastRow['data'] = 'different provider';
 
-				if($sumAvailable > 0)
+				if($sumAvailable > 0 || $includeStock0)
 					array_push($clothRows, $lastRow);
 
 				// start to sum new provider data
@@ -144,11 +168,11 @@ function getClothsUpToDate($groupId, $date) {
 		}
 		else {
 			// new cloth
-			if($sumAvailable > 0) {
+			if($sumAvailable > 0 || $includeStock0) {
 				$lastRow['sumAvailable'] = $sumAvailable;
 				$lastRow['rollsAvailable'] = $rolls;
 				$lastRow['data'] = 'different cloth';
-
+				$lastRow['query'] = $query;
 				array_push($clothRows, $lastRow);
 			}
 
@@ -168,7 +192,7 @@ function getClothsUpToDate($groupId, $date) {
 	}
 
 	// after iterating the query result a last push to the results array is needed but only if the sum available is > 0
-	if($sumAvailable > 0) {
+	if($sumAvailable > 0 || $includeStock0) {
 		$lastRow['sumAvailable'] = $sumAvailable;
 		$lastRow['rollsAvailable'] = $rolls;
 
