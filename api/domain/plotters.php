@@ -7,7 +7,7 @@ function getPlotters($clothId, $cutted, $search, $upToDate) {
 		$orderCondition = " AND clothId = '$clothId' ";
 
 	$cuttedCondition = "";
-	if(isset($cutted))
+	if(isset($cutted) && !isset($upToDate))
 		$cuttedCondition = " AND pl.cutted = $cutted ";
 
 	$searchCondition = ""; $searchCondition2 = "";
@@ -18,17 +18,22 @@ function getPlotters($clothId, $cutted, $search, $upToDate) {
 
 	$upToDateCondition = "";
 	if(isset($upToDate)) {
-		$upToDateCondition = " AND pl.plotterDate <= STR_TO_DATE('".$upToDate."', '%d-%m-%Y') AND (pl.cuttedOn is null OR pl.cuttedOn >= STR_TO_DATE('".$upToDate."', '%d-%m-%Y')) ";
+		$upToDateCondition = " AND pl.plotterDate <= STR_TO_DATE('".$upToDate."', '%d-%m-%Y')
+													 AND (
+													 	 (pl.cuttedOn is null and pl.cutted = false)
+														 OR
+														 (pl.cuttedOn >= STR_TO_DATE('".$upToDate."', '%d-%m-%Y') and pl.cutted = true)
+													 ) ";
 	}
 
-	$query = "SELECT *, pl.id as id, coalesce(p.sailDescription, p.sailOneDesign, s.description) as sailName, pl.observations as observations
+	$queryGral = "SELECT *, pl.id as id, coalesce(p.sailDescription, p.sailOneDesign, s.description) as sailName, pl.observations as observations
 		  FROM plotters pl
 		  JOIN previsions p on p.id = pl.previsionId
 		  JOIN cloths c on c.id = pl.clothId
 		  LEFT JOIN sails s on s.id=p.sailId
 		  WHERE 1=1 $cuttedCondition $orderCondition $searchCondition $upToDateCondition ORDER BY p.orderNumber, c.name";
 
-	$result = mysql_query($query);
+	$result = mysql_query($queryGral);
 
 	$rows = fetch_array($result);
 
@@ -42,6 +47,8 @@ function getPlotters($clothId, $cutted, $search, $upToDate) {
 		$subrows = fetch_array($result);
 
 		$plotter['cuts'] = $subrows;
+
+		$plotter['query'] = $queryGral;
 
 		array_push($plotters, $plotter);
 	}

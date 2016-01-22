@@ -18,17 +18,25 @@ function getOrdersUpToDate($status, $providerId, $expand, $upToDate)
 
 	$upToDateCondition = "";
 	if(isset($upToDate)) {
-		$upToDateCondition = " AND inTransitDate is not null AND inTransitDate <= STR_TO_DATE('".$upToDate."', '%d-%m-%Y') AND (arriveDate is null OR STR_TO_DATE('".$upToDate."', '%d-%m-%Y') <= arriveDate) ";
+		$upToDateCondition = " AND inTransitDate is not null AND inTransitDate <= STR_TO_DATE('".$upToDate."', '%d-%m-%Y')
+													 AND
+													 (
+														 (arriveDate is null and o.status = 'IN_TRANSIT') 
+														 OR
+														 (STR_TO_DATE('".$upToDate."', '%d-%m-%Y') <= arriveDate and o.status = 'ARRIVED')
+													 ) ";
 	}
 
-	if(isset($status)) {
-		$query = "SELECT *, DATE_FORMAT(orderDate,'%d-%m-%Y') as formattedDate, arriveDate as unformattedArriveDate, DATE_FORMAT(arriveDate,'%d-%m-%Y') as arriveDate FROM orders o WHERE o.status = '$status' $providerCondition $upToDateCondition ORDER BY o.orderDate";
+	if(isset($status) && !isset($upToDate)) {
+		$queryGral = "SELECT *, DATE_FORMAT(orderDate,'%d-%m-%Y') as formattedDate, arriveDate as unformattedArriveDate, DATE_FORMAT(arriveDate,'%d-%m-%Y') as arriveDate FROM orders o
+									WHERE o.status = '$status' $providerCondition $upToDateCondition ORDER BY o.orderDate";
 	}
 	else {
-		$query = "SELECT *, DATE_FORMAT(orderDate,'%d-%m-%Y') as formattedDate, arriveDate as unformattedArriveDate, DATE_FORMAT(arriveDate,'%d-%m-%Y') as arriveDate FROM orders o WHERE 1=1 $providerCondition $upToDateCondition ORDER BY o.orderDate";
+		$queryGral = "SELECT *, DATE_FORMAT(orderDate,'%d-%m-%Y') as formattedDate, arriveDate as unformattedArriveDate, DATE_FORMAT(arriveDate,'%d-%m-%Y') as arriveDate FROM orders o
+									WHERE 1=1 $providerCondition $upToDateCondition ORDER BY o.orderDate";
 	}
 
-	$result = mysql_query($query);
+	$result = mysql_query($queryGral);
 
 	$rows = array();
 	while($orderRow = mysql_fetch_array($result, MYSQL_ASSOC)) {
@@ -50,6 +58,8 @@ function getOrdersUpToDate($status, $providerId, $expand, $upToDate)
 		if(isset($provider)) {
 			$orderRow['provider'] = $provider;
 		}
+
+		$orderRow['query'] = $queryGral;
 
 		array_push($rows, $orderRow);
 	}

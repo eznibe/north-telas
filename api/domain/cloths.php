@@ -108,6 +108,23 @@ function getClothsUpToDate($groupId, $date, $includeStock0, $joinProviders) {
 							WHERE c.groupId='$groupId' and r.incoming=false and o.arriveDate <= STR_TO_DATE('".$date."', '%d-%m-%Y')
 								and ((r.mtsOriginal - coalesce(cuts.mtsCutted, 0))) = 0
 							GROUP BY p.clothId	";
+
+		// union special cases of new cloths with order in transit but no cuts made yet
+		$query = $query . " UNION all
+							SELECT o.arriveDate, p.clothId, r.mtsOriginal, coalesce(cuts.mtsCutted, 0) as mtsCutted,
+							0 as available, c.name, coalesce(pro.name, '?') as provider, coalesce(p.price, '?') as price, p.productId, p.code,
+							r.number, r.lote, r.mtsOriginal, r.type
+							FROM rolls r JOIN products p on p.productId=r.productId JOIN orders o on o.orderId=r.orderId JOIN cloths c on c.id=p.clothId left JOIN providers pro on pro.id=p.providerId
+							LEFT JOIN
+							(
+								SELECT r2.id, sum(pc.mtsCutted) as mtsCutted
+								FROM plottercuts pc join plotters p on pc.plotterId=p.id join rolls r2 on r2.id=pc.rollId join cloths c on p.clothId=c.id
+								where c.groupId='$groupId' and p.cutted = true and p.cuttedOn <= STR_TO_DATE('".$date."', '%d-%m-%Y')
+								group by r2.id
+							) cuts ON cuts.id = r.id
+							WHERE c.groupId='$groupId' and r.incoming=true and o.arriveDate is null and o.inTransitDate is not null
+							and o.inTransitDate <= STR_TO_DATE('".$date."', '%d-%m-%Y') 
+							GROUP BY p.clothId	";
 	}
 
 	$query = $query . " ORDER BY name, provider desc, productId, clothId ";
