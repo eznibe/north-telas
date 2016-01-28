@@ -2,7 +2,7 @@
 
 angular.module('vsko.stock')
 
-.directive('orderModal', function($modal, Orders) {
+.directive('orderModal', function($modal, Orders, Previsions, orderStatus) {
 
     return {
           restrict: 'E',
@@ -45,10 +45,16 @@ angular.module('vsko.stock')
 	      			Orders.removeItem(orderproduct).then(function(result){
 	      				// ok
 	      				if(result.data.successful) {
-                  
+
 		      				$scope.order.products.remove(orderproduct);
 
 		      				$.notify("Item de la orden removido.", {className: "success", globalPosition: "bottom right"});
+
+                  if($scope.order.status == orderStatus.in_transit) {
+                    Previsions.updatePrevisionState(orderproduct.clothId).then(function() {
+                      $.notify("Estado de previsiones actualizado.", {className: "success", globalPosition: "bottom right"});
+                    });
+                  }
 
 		      				if($scope.order.products.length==0 && result.data.orderDeleted) {
 
@@ -87,6 +93,12 @@ angular.module('vsko.stock')
               Orders.updateProductAmount(product).then(function(result){
 
                 console.log('Updated product amount to '+product.amount);
+
+                if($scope.order.status == orderStatus.in_transit) {
+                  Previsions.updatePrevisionState(product.clothId).then(function() {
+        						$.notify("Estado de previsiones actualizado.", {className: "success", globalPosition: "bottom right"});
+        					});
+                }
               });
             }
 

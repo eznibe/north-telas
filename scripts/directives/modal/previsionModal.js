@@ -110,10 +110,14 @@ angular.module('vsko.stock')
               			  $scope.previsions.push($scope.prevision);
 
               			  $.notify("Prevision creada.", {className: "success", globalPosition: "bottom right"});
+
+                      updatePrevisionState($scope.prevision);
               		  }
               		  else if(result.data.successful && !result.data.isNew) {
 
               			  $.notify("Prevision modificada.", {className: "success", globalPosition: "bottom right"});
+
+                      updatePrevisionState($scope.prevision);
               		  }
               		  else if(!result.data.successfulInsert && result.data.insert) {
                       Lists.log({type: 'error.insertPrevision', log: result.data.insert}).then(function(result) {});
@@ -149,6 +153,8 @@ angular.module('vsko.stock')
               		  $scope.modalPrevision.hide();
 
               		  $.notify("Prevision eliminada.", {className: "success", globalPosition: "bottom right"});
+
+                    updatePrevisionState($scope.prevision, true);
               	  });
               };
 
@@ -295,6 +301,34 @@ angular.module('vsko.stock')
 
               	  return dateParts[2] + "-" + dateParts[1] + "-" + dateParts[0];
               }
+
+              function updatePrevisionState(prevision, skipNotify) {
+
+                console.log('Prevision', prevision);
+
+      					var clothsIds = prevision.cloths.map(function(c) { return c.clothId; }).join(',');
+
+      					Previsions.updatePrevisionState(clothsIds).then(function(result) {
+
+                  console.log('update prevision state', result);
+                  if(skipNotify) {
+        						$.notify("Estado de previsiones actualizado.", {className: "success", globalPosition: "bottom right"});
+                  }
+
+                  // update the state of the modified previsions in the scope
+                  result.data.modifiedPrevisions.map(function(modifiedPrevision) {
+                    $scope.previsions.map(function(p) {
+                      if(modifiedPrevision.id == p.id) {
+
+                        if(p.state != modifiedPrevision.state) {
+                          p.state = modifiedPrevision.state;
+                          p.stateAccepted = "0";
+                        }
+                      }
+                    });
+                  });
+      					});
+      				}
           }
         };
 	}

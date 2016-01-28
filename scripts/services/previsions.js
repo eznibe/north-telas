@@ -93,5 +93,20 @@ angular.module('vsko.stock')
         	return $http.post(url + 'previsions_POST.php?edit=true&field=observations', prevision);
         };
 
+				this.updatePrevisionState = function(clothIds) {
+
+        	return $http.post(url + 'previsions_POST.php?updatePrevisionState=true&clothIds='+clothIds, clothIds);
+        };
+
+				this.updateAllPrevisionsStates = function() {
+
+        	return $http.post(url + 'previsions_POST.php?updateAllPrevisionsStates=true', {});
+        };
+
+				this.acceptStateChange = function(prevision) {
+
+        	return $http.post(url + 'previsions_POST.php?acceptStateChange=true', prevision);
+        };
+
         return this;
     }]);

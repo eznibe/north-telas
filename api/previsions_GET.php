@@ -7,6 +7,7 @@ include_once '../include/dbutils.php';
 include_once '../include/main.php';
 
 include_once 'domain/previsions.php';
+include_once 'domain/previsionStates.php';
 
 db_connect();
 
@@ -19,6 +20,12 @@ if(isset($_GET['id'])) {
 }
 if(isset($_GET['clothId'])) {
 	$value = getPrevisions($_GET['clothId'], $designed, $expand, null);
+}
+else if(isset($_GET['updateAllPrevisionsStates'])) {
+	$value = updateAllPrevisionsStates($_GET['updateClothId']);
+}
+else if(isset($_GET['updatePrevisionState'])) {
+	$value = updatePrevisionState($_GET['updateClothId']);
 }
 else {
 	$value = getPrevisions(null, $designed, $expand, null);

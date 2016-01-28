@@ -150,8 +150,8 @@
   "Total valued positives": "Stock 'disponible' valorizado (delta sin transito)",
   "Total valued negatives": "Stock 'faltante' valorizado",
   "Total valued with transit": "Stock 'disponible' valorizado (delta con transito)",
-  "": "",
-  "": "",
+  "State changed": "Ver solo cambios de estado",
+  "Refresh Previsions States": "Sincronizar cambios de estado",
   "": "",
   "": ""
 }

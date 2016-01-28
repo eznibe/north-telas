@@ -15,6 +15,13 @@ angular.module('vsko.stock').controller('DesignCtrl', ['$scope', 'Previsions', '
             	console.log('Designed: '+prevision.orderNumber);
 
             	$.notify("Orden pasada a plotter.", {className: "success", globalPosition: "bottom right"});
+
+
+              var clothsIds = prevision.cloths.map(function(c) { return c.clothId; }).join(',');
+
+              Previsions.updatePrevisionState(clothsIds).then(function() {
+  							$.notify("Estado de previsiones actualizado.", {className: "success", globalPosition: "bottom right"});
+  						});
             });
 
         	//prevision.designed = prevision.designed ? !prevision.designed : true;
