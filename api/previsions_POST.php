@@ -4,8 +4,12 @@ include_once '../include/headers.php';
 include_once '../include/dbutils.php';
 include_once '../include/main.php';
 
+include_once 'domain/providers.php';
+include_once 'domain/plotters.php';
+include_once 'domain/orders.php';
 include_once 'domain/previsions.php';
 include_once 'domain/previsionStates.php';
+
 
 db_connect();
 

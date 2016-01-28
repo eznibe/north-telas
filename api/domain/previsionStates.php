@@ -1,8 +1,6 @@
 <?php
 
-include_once 'domain/providers.php';
-include_once 'domain/plotters.php';
-include_once 'domain/orders.php';
+error_reporting(E_ERROR);
 
 // Used refernces in this file
 // UFA: used from available (mts used from the available stock)
