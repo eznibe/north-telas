@@ -185,6 +185,9 @@ function buildPrevisionStateData(&$clothsDisponibility, $prevision) {
 		$cloth['UFA'] = getUFA($c->mtsAvailable, $sumPriorUFA, $cloth['mts']);
 		$cloth['UFT'] = getUFT($c->mtsInTransit, $sumPriorUFT, $cloth['mts'], $cloth['UFA']);
 
+		// only will be useful if the cloth is taking some mts from transit for it state
+		$cloth['UFT_type'] = $c->inTransitType;
+
 		// special case: if UFA + UFT are not enough to fill the necessary mts we release the used
 		// and will be still available for other orders with less priority
 		if(($cloth['UFA'] + $cloth['UFT']) < $cloth['mts']) {
@@ -319,10 +322,12 @@ function fillClothDisponibility(&$clothsDisponibility, $clothId) {
 
 				if($product['clothId'] == $clothId) {
 					$sumInTransit += $product['amount'];
+					$inTransitType = $order['deliveryType'];
 				}
 			}
 		}
 		$c->mtsInTransit = $sumInTransit;
+		$c->inTransitType = $inTransitType;
 
 		// available stock (available in rolls - plotters)
 		$providers = getProviders($clothId);
@@ -356,6 +361,7 @@ function calculateAndUpdateState($prevision, $skipUpdateStateAccepted) {
 			array_push($okCloths, $cloth);
 		} else if($cloth['UFA'] + $cloth['UFT'] == $cloth['mts']) {
 			array_push($withTransitCloths, $cloth);
+			$inTransitType = $cloth['UFT_type'];
 		} else {
 			array_push($noCloths, $cloth);
 		}
@@ -368,7 +374,8 @@ function calculateAndUpdateState($prevision, $skipUpdateStateAccepted) {
 	if(count($okCloths) == $totalCloths) {
 		$state = "OK";
 	} else if((count($okCloths) + count($withTransitCloths)) == $totalCloths) {
-		$state = "TRANSITO";
+		// $state = "TRANSITO";
+		$state = $inTransitType;
 	} else {
 		$state = "NO";
 	}

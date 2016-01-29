@@ -2,7 +2,7 @@
 
 angular.module('vsko.stock')
 
-.directive('previsionModal', function($modal, $rootScope, Stock, Previsions, Files, OneDesign, Lists) {
+.directive('previsionModal', function($modal, $rootScope, $q, Stock, Previsions, Files, OneDesign, Lists) {
 
     return {
           restrict: 'E',
@@ -26,6 +26,13 @@ angular.module('vsko.stock')
         	  OneDesign.getSails().then(function(result) {
         		  $scope.oneDesignSails = result.data;
           	  });
+
+            $scope.acceptStateChange = function(p) {
+              Previsions.acceptStateChange(p).then(function() {
+                $.notify("Cambio de estado aceptado.", {className: "success", globalPosition: "bottom right"});
+                p.stateAccepted = '1';
+              });
+            };
 
         	  $scope.showPrevisionModal = function(prevision, previousModal) {
 
@@ -102,45 +109,79 @@ angular.module('vsko.stock')
             		  $scope.prevision.sailOneDesign = $scope.prevision.selectedOneDesignSail.sail;
             	  }
 
+                var waitForPossiblePrevisionStateChange = false;
+                var showChangedStateModal = false;
 
-              	  Previsions.save($scope.prevision, $rootScope.user.name).then(function(result) {
+                function newStateClose() {
+                  $scope.modalPrevision.hide();
 
-              		  if(result.data.successful && result.data.isNew) {
+                  if($scope.previousModal) {
+                    $scope.previousModal.show();
+                  }
+                }
 
-              			  $scope.previsions.push($scope.prevision);
+            	  Previsions.save($scope.prevision, $rootScope.user.name).then(function(result) {
 
-              			  $.notify("Prevision creada.", {className: "success", globalPosition: "bottom right"});
+            		  if(result.data.successful && result.data.isNew) {
 
-                      updatePrevisionState($scope.prevision);
-              		  }
-              		  else if(result.data.successful && !result.data.isNew) {
+            			  $scope.previsions.push($scope.prevision);
 
-              			  $.notify("Prevision modificada.", {className: "success", globalPosition: "bottom right"});
+            			  $.notify("Prevision creada.", {className: "success", globalPosition: "bottom right"});
 
-                      updatePrevisionState($scope.prevision);
-              		  }
-              		  else if(!result.data.successfulInsert && result.data.insert) {
-                      Lists.log({type: 'error.insertPrevision', log: result.data.insert}).then(function(result) {});
-              			  $.notify("Prevision no pudo ser creada.", {className: "error", globalPosition: "bottom right"});
-              		  }
-                    else if(!result.data.successfulUpdate && result.data.update) {
-                      Lists.log({type: 'error.updatePrevision', log: result.data.update}).then(function(result) {});
-              			  $.notify("Prevision no pudo ser editada.", {className: "error", globalPosition: "bottom right"});
-              		  }
-                    else if(!result.data.successfulCloths && result.data.queryCloths) {
-                      Lists.log({type: 'error.queryCloths', log: result.data.queryCloths}).then(function(result) {});
-              			  $.notify("Prevision, problema guardando las telas.", {className: "error", globalPosition: "bottom right"});
-              		  }
-                    else if(!result.data.successful) {
-              			  $.notify("Prevision, error desconocido, ver log.", {className: "error", globalPosition: "bottom right"});
-              		  }
-              	  });
+                    waitForPossiblePrevisionStateChange = true;
 
-              	  $scope.modalPrevision.hide();
+                    updatePrevisionState($scope.prevision).then(function(state) {
+                      console.log('Ended update prev state (new):', state);
+                      // the prevision is new => show modal with the prev state for the user
+                      $scope.state = state;
+                      $scope.onClose = newStateClose;
+                      var modal = $modal({template: 'views/modal/showNewState.html', show: false, scope: $scope, backdrop:'static', animation:'am-fade-and-slide-top'});
+                      modal.$promise.then(modal.show);
+                    });;
+            		  }
+            		  else if(result.data.successful && !result.data.isNew) {
 
-              	  if($scope.previousModal) {
-              		  $scope.previousModal.show();
-              	  }
+            			  $.notify("Prevision modificada.", {className: "success", globalPosition: "bottom right"});
+
+                    waitForPossiblePrevisionStateChange = true;
+
+                    updatePrevisionState($scope.prevision).then(function(state) {
+                      console.log('Ended update prev state:', state);
+                      if(state) {
+                        // the prevision state was updated => show modal with the new prev state for the user
+                        $scope.state = state;
+                        $scope.onClose = newStateClose;
+                        var modal = $modal({template: 'views/modal/showNewState.html', show: false, scope: $scope, backdrop:'static', animation:'am-fade-and-slide-top'});
+                        modal.$promise.then(modal.show);
+                      } else {
+                        newStateClose();
+                      }
+                    });
+            		  }
+            		  else if(!result.data.successfulInsert && result.data.insert) {
+                    Lists.log({type: 'error.insertPrevision', log: result.data.insert}).then(function(result) {});
+            			  $.notify("Prevision no pudo ser creada.", {className: "error", globalPosition: "bottom right"});
+            		  }
+                  else if(!result.data.successfulUpdate && result.data.update) {
+                    Lists.log({type: 'error.updatePrevision', log: result.data.update}).then(function(result) {});
+            			  $.notify("Prevision no pudo ser editada.", {className: "error", globalPosition: "bottom right"});
+            		  }
+                  else if(!result.data.successfulCloths && result.data.queryCloths) {
+                    Lists.log({type: 'error.queryCloths', log: result.data.queryCloths}).then(function(result) {});
+            			  $.notify("Prevision, problema guardando las telas.", {className: "error", globalPosition: "bottom right"});
+            		  }
+                  else if(!result.data.successful) {
+            			  $.notify("Prevision, error desconocido, ver log.", {className: "error", globalPosition: "bottom right"});
+            		  }
+
+                  if(!waitForPossiblePrevisionStateChange) {
+                    $scope.modalPrevision.hide();
+
+                    if($scope.previousModal) {
+                      $scope.previousModal.show();
+                    }
+                  }
+            	  });
               };
 
               $scope.deletePrevision = function(prevision) {
@@ -304,6 +345,8 @@ angular.module('vsko.stock')
 
               function updatePrevisionState(prevision, skipNotify) {
 
+                var d = $q.defer();
+
                 console.log('Prevision', prevision);
 
       					var clothsIds = prevision.cloths.map(function(c) { return c.clothId; }).join(',');
@@ -315,19 +358,47 @@ angular.module('vsko.stock')
         						$.notify("Estado de previsiones actualizado.", {className: "success", globalPosition: "bottom right"});
                   }
 
+                  var currentPrevisionUpdated = false;
+
                   // update the state of the modified previsions in the scope
                   result.data.modifiedPrevisions.map(function(modifiedPrevision) {
-                    $scope.previsions.map(function(p) {
-                      if(modifiedPrevision.id == p.id) {
 
-                        if(p.state != modifiedPrevision.state) {
-                          p.state = modifiedPrevision.state;
-                          p.stateAccepted = "0";
+                    // if(prevision.id == modifiedPrevision.id &&
+                    //    prevision.state != modifiedPrevision.state) {
+                    //      prevision.state = modifiedPrevision.state;
+                    //      prevision.stateAccepted = "0";
+                    //
+                    //      d.resolve(prevision.state);
+                    //      return;
+                    // }
+
+                    var previsionsToUpdate = $scope.previsions || $scope.cloth.previsions;
+
+                    if(previsionsToUpdate) {
+                      previsionsToUpdate.map(function(p) {
+                        if(modifiedPrevision.id == p.id) {
+
+                          if(p.state != modifiedPrevision.state) {
+                            p.state = modifiedPrevision.state;
+                            p.stateAccepted = "0";
+
+                            // the prevision of this modal was updated => resolve the promise with the new state
+                            if(p.id == prevision.id) {
+                              d.resolve(p.state);
+                              currentPrevisionUpdated = true;
+                            }
+                          }
                         }
-                      }
-                    });
+                      });
+                    }
                   });
+
+                  if(!currentPrevisionUpdated) {
+                    d.resolve(null);
+                  }
       					});
+
+                return d.promise;
       				}
           }
         };

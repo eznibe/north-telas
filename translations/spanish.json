@@ -151,6 +151,9 @@
   "Total valued negatives": "Stock 'faltante' valorizado",
   "Total valued with transit": "Stock 'disponible' valorizado (delta con transito)",
   "State changed": "Ver solo cambios de estado",
+  "State": "Estado",
+  "New state": "Nuevo estado",
+  "New prevision state": "Nuevo estado de la previsión",
   "Refresh Previsions States": "Sincronizar cambios de estado",
   "": "",
   "": ""

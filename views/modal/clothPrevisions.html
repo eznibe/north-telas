@@ -1,7 +1,7 @@
 <div class="modal" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-lg" style="margin-top: 0px;">
 		<div class="modal-content">
-			
+
 			<div class="modal-header">
 				<div class="edit_person">
 					<h2>
@@ -13,7 +13,7 @@
 					<span class="glyphicon glyphicon-remove"></span>
 				</a>
 		</div>
-						
+
 			<div class="modal-body">
 				<div class="user_cards">
 					<ul>
@@ -21,7 +21,13 @@
 						<li class="cards">
 							<ul>
 								<li ng-repeat="p in cloth.previsions | previsionsByType:'DEF'" ng-click="showPrevisionModal(p, modalPrevisions)">
-									<h3><span style="color:black;">{{p.orderNumber}}</span></h3>
+									<h3 style="margin-bottom: 10px;">
+                    <span style="color:black;">{{p.orderNumber}}</span>
+                    <span style="color:black; float:right; padding:2px;" ng-style="{'background-color': (p.stateAccepted=='0' ? 'orange' : '')}">
+        							{{p.state}}
+        							<a href="javascript:void(0)" ng-show="p.stateAccepted=='0'" ng-click="acceptStateChange(p); $event.stopPropagation();" style="cursor:pointer;" class="tag-control"><span class="glyphicon glyphicon-ok control-label" style="text-align:center; margin-left:4px;"></span></a>
+        						</span>
+                  </h3>
 									<h3><small translate>Client</small> <span>{{p.client}}</span></h3>
 									<h3><small translate>Sail</small> <span>{{p.sailName}}</span></h3>
 									<h3><small translate>Boat</small> <span>{{p.boat}}</span></h3>
@@ -30,7 +36,7 @@
 						</li>
 					</ul>
 				</div>
-				
+
 				<div class="user_cards">
 					<ul>
 						<li class="title">{{'Temp. previsions' | translate}}</li>
@@ -47,15 +53,15 @@
 					</ul>
 				</div>
 			</div>
-			
+
 			<div class="modal-footer">
-				
+
 				<a ng-click="$hide()" class="btn btn-default floatright" >
 					<span class="glyphicon glyphicon-ok"></span>
 					Ok
 				</a>
 			</div>
-						
+
 		</div>
 	</div>
 </div>

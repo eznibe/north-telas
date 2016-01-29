@@ -25,6 +25,15 @@
 									<input name="edit_od" type="checkbox" class="" ng-model="prevision.oneDesign" ng-change="oneDesignCloths()">
 								</div>
 						</div>
+            <div class="col-md-6 nopadding">
+								<label class="control-label col-xs-4" for="edit_client" translate>State</label>
+								<div class="col-xs-8">
+                  <span style="color:black; padding:2px;" ng-style="{'background-color': (prevision.stateAccepted=='0' ? 'orange' : '')}">
+      							{{prevision.state}}
+      							<a href="javascript:void(0)" ng-show="prevision.stateAccepted=='0'" ng-click="acceptStateChange(prevision); $event.stopPropagation();" style="cursor:pointer;" class="tag-control"><span class="glyphicon glyphicon-ok control-label" style="text-align:center; margin-left:4px;"></span></a>
+      						</span>
+								</div>
+						</div>
 					</div>
 
 					<br>
