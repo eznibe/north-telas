@@ -22,9 +22,13 @@ function updateAllPrevisionsStates($clothId) {
 	}
 
 	$query = "SELECT distinct(pc.clothId) as id, c.name
-						FROM previsions p join previsioncloth pc on p.id=pc.previsionId
-						join cloths c on c.id=pc.clothId
-						where p.designed = false $conditionClothId
+						FROM previsions p
+						JOIN previsioncloth pc on p.id=pc.previsionId
+						LEFT JOIN plotters pl on pl.previsionId = p.id
+						JOIN cloths c on c.id=pc.clothId
+						where (p.designed=false or (p.designed=true and pl.id is not null))
+  					  and (pl.cutted is null or pl.cutted=false)
+						$conditionClothId
 						order by p.id, pc.clothId";
 
 	$result = mysql_query($query);
@@ -69,16 +73,21 @@ function updatePrevisionState($clothIdsStr, $skipUpdateStateAccepted) {
 		foreach ($clothIds as $clothId) {
 			// process each of the given cloths
 
-			// seek the last
-			$query = "SELECT pre.id, pre.deliveryDate, pre.createdOn, pre.orderNumber
-								FROM previsions pre JOIN previsioncloth pc on pc.previsionId = pre.id
-							  WHERE pre.designed = false AND pc.clothId = '$clothId'
+			// seek the last prevision by delivery date (including previsions of given cloth still in plotter)
+			$query = "SELECT pre.id, pre.deliveryDate, pre.createdOn, pre.orderNumber, IF(pl.id is null, 'in_design', 'in_plotter') as location
+								FROM previsions pre
+								JOIN previsioncloth pc on pc.previsionId = pre.id
+								LEFT JOIN plotters pl on pl.previsionId = pre.id
+								WHERE (pre.designed=false or (pre.designed=true and pl.id is not null))
+									AND (pl.cutted is null or pl.cutted=false)
+									AND pc.clothId = '$clothId'
+									AND (pl.clothId is null or pl.clothId = '$clothId')
 								GROUP BY pre.id
 								ORDER BY pre.deliveryDate desc, pre.createdOn desc
 								LIMIT 1";
 
 			//$obj->queryInitial = array();
-			array_push($obj->queryInitial, $query);
+			// array_push($obj->queryInitial, $query);
 
 			$result = mysql_query($query);
 
@@ -97,10 +106,14 @@ function updatePrevisionState($clothIdsStr, $skipUpdateStateAccepted) {
 			}
 		}
 
+		// must do a final iteration over the modified previsions to set the ufa and uft of thos enot marked as 'completed'
+		// this is needed to fill those that in the first iteration were complete with a sum of ufa + uft but erased to favor others that would complete with total ufa
+		$finalPrevisions = calculateUFAandUFTofUncompleted($touchedPrevisions, $clothsDisponibility);
+
 		// update state of touched previsions
 		$modifiedPrevisions = array();
-		foreach ($touchedPrevisions as $prevision) {
-			array_push($modifiedPrevisions, calculateAndUpdateState($prevision, $skipUpdateStateAccepted));
+		foreach ($finalPrevisions as $prevision) {
+			array_push($modifiedPrevisions, calculateAndUpdateState($prevision, $skipUpdateStateAccepted, $clothsDisponibility));
 		}
 
 		$obj->successful = true;
@@ -185,10 +198,7 @@ function buildPrevisionStateData(&$clothsDisponibility, $prevision) {
 		$cloth['UFA'] = getUFA($c->mtsAvailable, $sumPriorUFA, $cloth['mts']);
 		$cloth['UFT'] = getUFT($c->mtsInTransit, $sumPriorUFT, $cloth['mts'], $cloth['UFA']);
 
-		// only will be useful if the cloth is taking some mts from transit for it state
-		$cloth['UFT_type'] = $c->inTransitType;
-
-		// special case: if UFA + UFT are not enough to fill the necessary mts we release the used
+		// special case I: if UFA + UFT are not enough to fill the necessary mts we release the used
 		// and will be still available for other orders with less priority
 		if(($cloth['UFA'] + $cloth['UFT']) < $cloth['mts']) {
 			// we store the cleared ufa and uft, maybe needed in the future to show for how much it is not possible to assign
@@ -197,6 +207,24 @@ function buildPrevisionStateData(&$clothsDisponibility, $prevision) {
 
 			$cloth['UFA'] = 0;
 			$cloth['UFT'] = 0;
+		}
+
+		// special case II: if UFA + UFT (both different to 0) can complete the needed mts we still delete the assignations
+		// because the UFA will be still available for other orders with less priority that don't require UFT
+		// we come later to this prevs marked as 'completeWithUFAandUFT' at the end and we restore the values if no other prev take that UFA amount
+		if(($cloth['UFA'] + $cloth['UFT']) == $cloth['mts'] && $cloth['UFA'] > 0 && $cloth['UFT'] > 0) {
+			// we store the cleared ufa and uft, maybe needed in the future to show for how much it is not possible to assign
+			$cloth['clearedUFA'] = $cloth['UFA'];
+			$cloth['clearedUFT'] = $cloth['UFT'];
+
+			$cloth['UFA'] = 0;
+			$cloth['UFT'] = 0;
+
+			$cloth['completeWithUFAandUFT'] = true;
+		}
+
+		if($cloth['UFA'] == $cloth['mts'] || $cloth['UFT'] == $cloth['mts']) {
+			$cloth['completed'] = true;
 		}
 
 		$cloth['leaf'] = $leaf;
@@ -268,9 +296,17 @@ function getPriorityPrevisions($clothId, &$prevision) {
 	$deliveryDate = $prevision['deliveryDate'];
 	$createdOn = $prevision['createdOn'];
 
-	$query = "SELECT pre.id, pre.deliveryDate, pre.createdOn, pre.orderNumber
-					  FROM previsions pre JOIN previsioncloth pc on pc.previsionId = pre.id
-						WHERE pre.designed = false AND pc.clothId = '$clothId'
+	// this query is including previsions of the given cloth not designed
+	// and also previsions of the given cloth already designed but still to be cutted
+	// all of them should be prior to the given prevision
+	$query = "SELECT pre.id, pre.deliveryDate, pre.createdOn, pre.orderNumber, IF(pl.id is null, 'in_design', 'in_plotter') as location
+					  FROM previsions pre
+						JOIN previsioncloth pc on pc.previsionId = pre.id
+						LEFT JOIN plotters pl on pl.previsionId = pre.id
+						WHERE (pre.designed=false or (pre.designed=true and pl.id is not null))
+						  AND (pl.cutted is null or pl.cutted=false)
+							AND pc.clothId = '$clothId'
+						  AND (pl.clothId is null or pl.clothId = '$clothId')
 						  AND
 								(pre.deliveryDate < '$deliveryDate'
 							 OR
@@ -317,12 +353,19 @@ function fillClothDisponibility(&$clothsDisponibility, $clothId) {
 		$c->id = $clothId;
 
 		$sumInTransit=0;
+		$inTransitType = array();
 		foreach (getInTransit($clothId) as $order) {
 			foreach ($order['products'] as $product) {
 
 				if($product['clothId'] == $clothId) {
 					$sumInTransit += $product['amount'];
-					$inTransitType = $order['deliveryType'];
+					// $inTransitType = $order['deliveryType'];
+
+					$transit = new stdClass();
+					$transit->type = $order['deliveryType'];
+					$transit->amount = $product['amount'];
+					$transit->used = 0;
+					array_push($inTransitType, $transit);
 				}
 			}
 		}
@@ -345,11 +388,68 @@ function fillClothDisponibility(&$clothsDisponibility, $clothId) {
 		$c->mtsAvailable = $sumAvailable;// - $sumPlotters; // we dont rest the plotters, we consider available if still in plotter
 		$c->mtsPlotter = $sumPlotters;
 
+		// extra info for the second iteration of ufa and uft set
+		$c->totalUFA = 0;
+		$c->totalUFT = 0;
+
+		$c->sumNewUFA = 0;
+		$c->sumNewUFT = 0;
+
 		array_push($clothsDisponibility, $c);
 	}
 }
 
-function calculateAndUpdateState($prevision, $skipUpdateStateAccepted) {
+function calculateUFAandUFTofUncompleted($touchedPrevisions, &$clothsDisponibility) {
+	$finalPrevisions = array();
+
+	// 1) Get the total real UFA and UFT (only from completed)
+	$totalUFA = 0; $totalUFT = 0;
+	foreach ($touchedPrevisions as $prevision) {
+
+		foreach ($prevision['cloths'] as $cloth) {
+			$c = findClothById($cloth['clothId'], $clothsDisponibility);
+
+			if(isset($cloth['completed'])) {
+				$c->totalUFA += $cloth['UFA'];
+				$c->totalUFT += $cloth['UFT'];
+			}
+		}
+	}
+
+	// 2) recaulculte the UFA and UFT for those cloths not completed
+	$sumNewUFA = 0;
+	$sumNewUFT = 0;
+
+	foreach ($touchedPrevisions as $prevision) {
+
+		$cloths = array();
+		foreach ($prevision['cloths'] as $cloth) {
+			$c = findClothById($cloth['clothId'], $clothsDisponibility);
+
+			if(!isset($cloth['completed'])) {
+
+				// new availbale is diff between original avaiblable and used in completed cloths
+				$newMtsAvailable = $c->mtsAvailable - $c->totalUFA;
+				$newMtsInTransitAvailable = $c->mtsInTransit - $c->totalUFT;
+
+				$cloth['UFA'] = getUFA($newMtsAvailable, $c->sumNewUFA, $cloth['mts']);
+				$cloth['UFT'] = getUFT($newMtsInTransitAvailable, $c->sumNewUFT, $cloth['mts'], $cloth['UFA']);
+
+				$c->sumNewUFA += $cloth['UFA'];
+				$c->sumNewUFT += $cloth['UFT'];
+			}
+
+			array_push($cloths, $cloth);
+		}
+		$prevision['cloths'] = $cloths;
+
+		array_push($finalPrevisions, $prevision);
+	}
+
+	return $finalPrevisions;
+}
+
+function calculateAndUpdateState($prevision, $skipUpdateStateAccepted, &$clothsDisponibility) {
 
 	$okCloths = array();
 	$withTransitCloths = array();
@@ -357,11 +457,12 @@ function calculateAndUpdateState($prevision, $skipUpdateStateAccepted) {
 	$totalCloths = count($prevision['cloths']);
 
 	foreach ($prevision['cloths'] as $cloth) {
+
 		if($cloth['UFA'] == $cloth['mts']) {
 			array_push($okCloths, $cloth);
 		} else if($cloth['UFA'] + $cloth['UFT'] == $cloth['mts']) {
 			array_push($withTransitCloths, $cloth);
-			$inTransitType = $cloth['UFT_type'];
+			$inTransitType = getTransitType($cloth, $clothsDisponibility);
 		} else {
 			array_push($noCloths, $cloth);
 		}
@@ -402,6 +503,25 @@ function calculateAndUpdateState($prevision, $skipUpdateStateAccepted) {
 	}
 
 	return $prevision;
+}
+
+function getTransitType($cloth, &$clothsDisponibility) {
+
+	$c = findClothById($cloth['clothId'], $clothsDisponibility);
+
+	$sumFromOtherType = 0;
+
+	foreach ($c->inTransitType as $transit) {
+		// cosnidering possibliñty that only part is used from one transit type and the rest from the following
+		if($transit->amount - $transit->used - ($cloth['UFT'] - $sumFromOtherType) >= 0) {
+			$transit->used += ($cloth['UFT'] - $sumFromOtherType);
+			return $transit->type;
+		} else {
+			$currSum = $sumFromOtherType;
+			$sumFromOtherType += $transit->amount - $transit->used - $currSum;
+			$transit->used += $transit->amount - $transit->used - $currSum;
+		}
+	}
 }
 
 function acceptStateChange($prevision) {
