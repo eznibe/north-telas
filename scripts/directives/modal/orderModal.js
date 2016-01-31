@@ -37,6 +37,13 @@ angular.module('vsko.stock')
   	      			Orders.partialSave(order).then(function(result){
   	      				// ok
   	      				$scope.modalCtrl.formOrderInfo.$setPristine();
+
+                  if(order.status == orderStatus.in_transit) {
+                    var clothsIds = order.products.map(function(p) { return p.clothId; }).join(',');
+                    Previsions.updatePrevisionState(clothsIds).then(function() {
+                      $.notify("Estado de previsiones actualizado.", {className: "success", globalPosition: "bottom right"});
+                    });
+                  }
   	      			});
 	      	  };
 
