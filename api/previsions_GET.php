@@ -25,7 +25,7 @@ if(isset($_GET['clothId'])) {
 	$value = getPrevisions($_GET['clothId'], $designed, $expand, null);
 }
 else if(isset($_GET['updateAllPrevisionsStates'])) {
-	$value = updateAllPrevisionsStates($_GET['updateClothId']);
+	$value = updateAllPrevisionsStates($_GET['updateClothId'], $_GET['limit'], $_GET['offset']);
 }
 else if(isset($_GET['updatePrevisionState'])) {
 	$value = updatePrevisionState($_GET['updateClothId']);

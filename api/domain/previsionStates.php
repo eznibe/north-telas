@@ -11,7 +11,7 @@ $priorityPrevisionsQueries = array();
 $builtPrevisions = array();
 $recurses = 0;
 
-function updateAllPrevisionsStates($clothId) {
+function updateAllPrevisionsStates($clothId, $limit, $offset) {
 
 	global $priorityPrevisionsQueries;
 	$resultInfo = array();
@@ -21,6 +21,19 @@ function updateAllPrevisionsStates($clothId) {
 		$conditionClothId = " AND clothId = '$clothId' ";
 	}
 
+	$limitCondition = "";
+	if(isset($limit)) {
+		$limitCondition = " LIMIT $limit";
+	}
+
+	// $offsetCondition = "";
+	if(isset($offset)) {
+		$offsetCondition = " OFFSET $offset";
+	} else {
+		$offsetCondition = " OFFSET 0";
+	}
+
+
 	$query = "SELECT distinct(pc.clothId) as id, c.name
 						FROM previsions p
 						JOIN previsioncloth pc on p.id=pc.previsionId
@@ -29,7 +42,8 @@ function updateAllPrevisionsStates($clothId) {
 						where (p.designed=false or (p.designed=true and pl.id is not null))
   					  and (pl.cutted is null or pl.cutted=false)
 						$conditionClothId
-						order by p.id, pc.clothId";
+						order by p.id, pc.clothId
+						$limitCondition $offsetCondition";
 
 	$result = mysql_query($query);
 	foreach (fetch_array($result) as $cloth) {
