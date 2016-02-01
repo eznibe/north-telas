@@ -206,12 +206,12 @@
 					<span class="glyphicon glyphicon-remove"></span>
 					{{'Cancel' | translate}}
 				</a>
-				<a href="javascript:void(0)" class="btn btn-warning floatleft" ng-show="prevision.id" ng-click="showConfirmDeleteModal(prevision)" access-allowed="admin,ordenes,velas-od">
+				<a href="javascript:void(0)" class="btn btn-warning floatleft" ng-show="prevision.id" ng-hide="prevision.designed=='1'" ng-click="showConfirmDeleteModal(prevision)" access-allowed="admin,ordenes,velas-od">
 					<span class="glyphicon glyphicon-trash"></span>
 					{{'Delete' | translate}}
 				</a>
 
-				<a ng-click="save()" class="btn btn-default floatright edit_person" ng-disabled="!form.$valid || !prevision.orderNumber" access-allowed="admin,ordenes,velas-od" >
+				<a ng-click="save()" class="btn btn-default floatright edit_person" ng-disabled="!form.$valid || !prevision.orderNumber" ng-hide="prevision.designed=='1'" access-allowed="admin,ordenes,velas-od" >
 					<span class="glyphicon glyphicon-save"></span>
 					{{'Save' | translate}}
 				</a>

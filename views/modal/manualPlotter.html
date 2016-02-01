@@ -1,7 +1,7 @@
 <div class="modal" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-lg" style="margin-top: 0px;">
 		<div class="modal-content">
-			
+
 			<div class="modal-header">
 				<div class="edit_person">
 					<h2>
@@ -13,11 +13,11 @@
 					<span class="glyphicon glyphicon-remove"></span>
 				</a>
 		</div>
-						
+
 			<div class="modal-body nopaddingside">
-							
+
 				<form class="form-horizontal ng-pristine ng-valid" name="form" novalidate>
-									
+
 					<div class="row">
 						<div class="col-md-6 nopadding">
 								<label class="control-label col-xs-4" for="edit_order" translate>Order number</label>
@@ -32,7 +32,7 @@
 								</div>
 						</div>
 					</div>
-									
+
 					<div class="row">
 						<div class="col-md-6 nopadding">
 								<label class="control-label col-xs-4" for="edit_date" translate>Date</label>
@@ -52,7 +52,7 @@
 								</div>
 						</div>
 					</div>
-									
+
 					<div class="row">
 						<div class="col-md-6 nopadding">
 								<label class="control-label col-xs-4" for="edit_cloth" translate>Cloth</label>
@@ -64,11 +64,11 @@
 						</div>
 					</div>
 				</form>
-							
+
 			</div>
-						
+
 			<div class="modal-footer">
-				<a href="javascript:void(0)" class="btn btn-info floatleft" ng-click="close()">
+				<a href="javascript:void(0)" class="btn btn-info floatleft" ng-click="closeManualPlotter()">
 					<span class="glyphicon glyphicon-remove"></span>
 					{{'Cancel' | translate}}
 				</a>
@@ -76,15 +76,15 @@
 					<span class="glyphicon glyphicon-trash"></span>
 					{{'Delete' | translate}}
 				</a>
-				
+
 				<a ng-click="save()" class="btn btn-default floatright edit_person" ng-disabled="!form.$valid" >
 					<span class="glyphicon glyphicon-save"></span>
 					{{'Save' | translate}}
 				</a>
 			</div>
-						
+
 		</div>
 	</div>
-	
+
 	<confirm-modal callback="deleteManualPlotter"/>
 </div>

@@ -20,7 +20,7 @@
 <!-- 						<li class="title">{{'Def. previsions' | translate}}</li> -->
 						<li class="cards">
 							<ul>
-								<li ng-repeat="p in cloth.plotters">
+								<li ng-repeat="p in cloth.plotters" ng-click="showPrevisionModal(p, modalPendings)">
 									<h3 style="margin-bottom: 10px;">
                     <span style="color:black;">{{p.orderNumber}}</span>
                     <span style="color:black; float:right; padding:2px;" ng-style="{'background-color': (p.stateAccepted=='0' ? 'orange' : '')}">

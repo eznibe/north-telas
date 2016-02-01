@@ -50,6 +50,18 @@ function getPlotters($clothId, $cutted, $search, $upToDate) {
 
 		$plotter['query'] = $queryGral;
 
+		$query = "SELECT * FROM previsioncloth pc JOIN cloths c on c.id=pc.clothId WHERE pc.previsionId = '".$plotter['previsionId']."'";
+
+		$subrows = array();
+		foreach (fetch_array(mysql_query($query)) as $subrow) {
+			array_push($subrows, $subrow);
+		}
+		$plotter['cloths'] = $subrows;
+
+		$plotter['designed'] = $plotter['designed']=='1' ? true : false;
+		$plotter['oneDesign'] = $plotter['oneDesign']=='1' ? true : false;
+		$plotter['greaterThan44'] = $plotter['greaterThan44']=='1' ? true : false;
+
 		array_push($plotters, $plotter);
 	}
 
