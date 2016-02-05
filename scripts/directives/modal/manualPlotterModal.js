@@ -41,7 +41,7 @@ angular.module('vsko.stock')
         		  }
               };
 
-              $scope.save = function() {
+              $scope.saveManualPlotter = function() {
 
               	  Previsions.saveManualPlotter($scope.plotter).then(function(result) {
 

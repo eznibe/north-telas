@@ -23,6 +23,10 @@ angular.module('vsko.stock')
 
         this.save = function(prevision, loggedUser) {
 
+					if(prevision.previsionId) {
+						prevision.id = prevision.previsionId;
+					}
+
         	if(!prevision.id)
         		prevision.id = uuid4.generate();
 

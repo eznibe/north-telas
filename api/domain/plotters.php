@@ -26,7 +26,7 @@ function getPlotters($clothId, $cutted, $search, $upToDate) {
 													 ) ";
 	}
 
-	$queryGral = "SELECT *, pl.id as id, coalesce(p.sailDescription, p.sailOneDesign, s.description) as sailName, pl.observations as observations
+	$queryGral = "SELECT *, pl.id as id, coalesce(p.sailDescription, p.sailOneDesign, s.description) as sailName, pl.observations as observations, deliveryDate as unformattedDeliveryDate, DATE_FORMAT(deliveryDate,'%d-%m-%Y') as deliveryDate, p.id as previsionId
 		  FROM plotters pl
 		  JOIN previsions p on p.id = pl.previsionId
 		  JOIN cloths c on c.id = pl.clothId

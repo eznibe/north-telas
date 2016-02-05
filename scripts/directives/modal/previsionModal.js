@@ -363,20 +363,11 @@ angular.module('vsko.stock')
               // update the state of the modified previsions in the scope
               result.data.modifiedPrevisions.map(function(modifiedPrevision) {
 
-                // if(prevision.id == modifiedPrevision.id &&
-                //    prevision.state != modifiedPrevision.state) {
-                //      prevision.state = modifiedPrevision.state;
-                //      prevision.stateAccepted = "0";
-                //
-                //      d.resolve(prevision.state);
-                //      return;
-                // }
-
-                var previsionsToUpdate = $scope.previsions || $scope.cloth.previsions;
+                var previsionsToUpdate = $scope.previsions || ($scope.cloth && $scope.cloth.previsions) || $scope.plotters;
 
                 if(previsionsToUpdate) {
                   previsionsToUpdate.map(function(p) {
-                    if(modifiedPrevision.id == p.id) {
+                    if(modifiedPrevision.id == p.id || modifiedPrevision.id == p.previsionId) {
 
                       if(p.state != modifiedPrevision.state) {
                         p.state = modifiedPrevision.state;

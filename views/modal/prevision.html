@@ -1,4 +1,4 @@
-<div class="modal" tabindex="-1" role="dialog">
+<div class="modal" tabindex="-1" role="dialog" name="updated">
   <div class="modal-dialog modal-lg" style="margin-top: 0px;">
 		<div class="modal-content">
 
@@ -12,7 +12,7 @@
 				<a href="javascript:void(0)" class="btn btn-lg closebtn" ng-click="close()">
 					<span class="glyphicon glyphicon-remove"></span>
 				</a>
-		</div>
+		  </div>
 
 			<div class="modal-body nopaddingside">
 
@@ -181,18 +181,18 @@
 						<div class="col-md-6 nopadding">
 								<label class="control-label col-xs-4" for="edit_cloth" translate>Cloth</label>
 								<div class="col-xs-8">
-									<select name="dd_cloth" ng-model="c.selectedCloth" ng-options="sc as sc.name for sc in cloths" class="form-control small" required ng-class="{error: innerForm.dd_cloth.$invalid}"  >
-				                        <option value="">-- choose one --</option>
-				                    </select>
+									<select name="dd_cloth" ng-model="c.selectedCloth" ng-options="sc as sc.name for sc in cloths" class="form-control small" required ng-class="{error: innerForm.dd_cloth.$invalid}" ng-disabled="prevision.designed=='1'" >
+                      <option value="">-- choose one --</option>
+                  </select>
 								</div>
 						</div>
 						<div class="col-md-6 nopadding">
 								<label class="control-label col-xs-4" for="edit_mts">mts</label>
 								<div class="col-xs-4">
-									<input name="edit_mts" type="text" class="form-control small" required  ng-model="c.mts" ng-class="{error: innerForm.edit_mts.$invalid}">
+									<input name="edit_mts" type="text" class="form-control small" required  ng-model="c.mts" ng-class="{error: innerForm.edit_mts.$invalid}" ng-disabled="prevision.designed=='1'">
 								</div>
-								<span class="glyphicon glyphicon-trash col-xs-1 control-label" ng-click="removeCloth($index)" style="text-align:center; cursor:pointer;"></span>
-								<span class="glyphicon glyphicon-plus col-xs-1 control-label" ng-click="addCloth()" ng-show="$last" style="text-align:center; cursor:pointer;"></span>
+								<span class="glyphicon glyphicon-trash col-xs-1 control-label" ng-click="removeCloth($index)" style="text-align:center; cursor:pointer;" ng-hide="prevision.designed=='1'"></span>
+								<span class="glyphicon glyphicon-plus col-xs-1 control-label" ng-click="addCloth()" ng-show="$last" style="text-align:center; cursor:pointer;" ng-hide="prevision.designed=='1'"></span>
 						</div>
 						</ng-form>
 					</div>
@@ -211,7 +211,7 @@
 					{{'Delete' | translate}}
 				</a>
 
-				<a ng-click="save()" class="btn btn-default floatright edit_person" ng-disabled="!form.$valid || !prevision.orderNumber" ng-hide="prevision.designed=='1'" access-allowed="admin,ordenes,velas-od" >
+				<a ng-click="save()" class="btn btn-default floatright edit_person" ng-disabled="!form.$valid || !prevision.orderNumber" access-allowed="admin,ordenes,velas-od" >
 					<span class="glyphicon glyphicon-save"></span>
 					{{'Save' | translate}}
 				</a>
