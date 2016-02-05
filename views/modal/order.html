@@ -107,11 +107,11 @@
 					                    </select>
 									</div>
 								</div>
-								<div class="col-md-6 nopadding" ng-show="order.status=='IN_TRANSIT'">
-									<label class="control-label col-xs-5" for="edit_type" translate>Arrive date</label>
+								<div class="col-md-6 nopadding" ng-show="order.status!='TO_BUY'">
+									<label class="control-label col-xs-5" for="edit_type" translate>Estimated arrive date</label>
 									<div class="col-xs-7">
 										<div class="input-group input-group-sm date" date-picker>
-											<input id="edit_date" name="edit_date" type="text" ng-model="order.arriveDate" class="form-control small" required ng-class="{error: formOrderInfo.$dirty && formOrderInfo.edit_date.$invalid}">
+											<input id="edit_date" name="edit_date" type="text" ng-model="order.estimatedArriveDate" class="form-control small">
 											<span class="input-group-addon">
 												<span class="glyphicon-calendar glyphicon"></span>
 											</span>
@@ -131,6 +131,17 @@
 											<input type="radio" name="edit_type" value="DEF" ng-model="order.type" required> Def
 										</label>
 										<span ng-show="formOrderInfo.edit_type.$invalid" class="radio-inline error">!</span>
+									</div>
+								</div>
+                <div class="col-md-6 nopadding" ng-show="order.status=='IN_TRANSIT'">
+									<label class="control-label col-xs-5" for="edit_type" translate>Arrive date</label>
+									<div class="col-xs-7">
+										<div class="input-group input-group-sm date" date-picker>
+											<input id="edit_date" name="edit_date" type="text" ng-model="order.arriveDate" class="form-control small" required ng-class="{error: formOrderInfo.$dirty && formOrderInfo.edit_date.$invalid}">
+											<span class="input-group-addon">
+												<span class="glyphicon-calendar glyphicon"></span>
+											</span>
+										</div>
 									</div>
 								</div>
 							</div>
