@@ -10,10 +10,11 @@ angular.module('vsko.stock')
 
         this.getAll = function(designed)
         {
+					var designedCondition = "";
         	if(!designed)
-        		designed = false;
+        		designedCondition = "designed=false&";
 
-        	return $http.get(url + 'previsions_GET.php?designed='+designed+'&expand=FULL');
+        	return $http.get(url + 'previsions_GET.php?'+designedCondition+'&expand=FULL');
         };
 
         this.getPrevisions = function(clothId)

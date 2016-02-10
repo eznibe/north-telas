@@ -5,7 +5,7 @@ angular.module('vsko.stock').controller('PrevisionsCtrl', ['$scope', 'Previsions
     	$scope.maxCloths = 3;
 
         // initial list of cloth groups
-    	Previsions.getAll().then(function(result) {
+    	Previsions.getAll(true).then(function(result) {
         	$scope.previsions = result.data;
 
 //        	$.each($scope.previsions, function(index) {
@@ -30,7 +30,13 @@ angular.module('vsko.stock').controller('PrevisionsCtrl', ['$scope', 'Previsions
     	};
 
       $scope.filterStateChanged = function(p) {
-    		return !$scope.showStateChanged ? true : p.stateAccepted=='0';
+
+        if(!$scope.showStateChanged) {
+
+          return !p.designed;
+        }
+
+    		return p.stateAccepted=='0';
     	};
 
       $scope.acceptStateChange = function(p) {
