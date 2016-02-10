@@ -29,11 +29,11 @@ function getOrdersUpToDate($status, $providerId, $expand, $upToDate)
 
 	if(isset($status) && !isset($upToDate)) {
 		$queryGral = "SELECT *, DATE_FORMAT(orderDate,'%d-%m-%Y') as formattedDate, arriveDate as unformattedArriveDate, DATE_FORMAT(arriveDate,'%d-%m-%Y') as arriveDate, DATE_FORMAT(estimatedArriveDate,'%d-%m-%Y') as estimatedArriveDate FROM orders o
-									WHERE o.status = '$status' $providerCondition $upToDateCondition ORDER BY o.orderDate";
+									WHERE o.status = '$status' $providerCondition $upToDateCondition ORDER BY -o.estimatedArriveDate desc, o.orderDate";
 	}
 	else {
 		$queryGral = "SELECT *, DATE_FORMAT(orderDate,'%d-%m-%Y') as formattedDate, arriveDate as unformattedArriveDate, DATE_FORMAT(arriveDate,'%d-%m-%Y') as arriveDate, DATE_FORMAT(estimatedArriveDate,'%d-%m-%Y') as estimatedArriveDate FROM orders o
-									WHERE 1=1 $providerCondition $upToDateCondition ORDER BY o.orderDate";
+									WHERE 1=1 $providerCondition $upToDateCondition ORDER BY -o.estimatedArriveDate desc, o.orderDate";
 	}
 
 	$result = mysql_query($queryGral);
