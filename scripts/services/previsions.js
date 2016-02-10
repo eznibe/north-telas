@@ -8,10 +8,10 @@ angular.module('vsko.stock')
 
 		var url = telasAPIUrl;
 
-        this.getAll = function(designed)
+        this.getAll = function(includeDesigned)
         {
 					var designedCondition = "";
-        	if(!designed)
+        	if(!includeDesigned)
         		designedCondition = "designed=false&";
 
         	return $http.get(url + 'previsions_GET.php?'+designedCondition+'&expand=FULL');
