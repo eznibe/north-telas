@@ -485,12 +485,13 @@ function getClothPlotters($clothId, $startDate, $endDate, $userName, $providerNa
 				FROM cloths c
 				JOIN plotters p on p.clothId = c.id
 				JOIN plottercuts pc on pc.plotterId = p.id
+				JOIN rolls r on r.id = pc.rollId
 				LEFT JOIN previsions pre on pre.id = p.previsionId
 				LEFT JOIN manualplotters mp on mp.id = p.manualPlotterId
 				LEFT JOIN sails s on s.id = pre.sailId
 				JOIN groups g on g.id = c.groupId
 				JOIN products pro on pro.clothId = c.id
-				JOIN providers prov on prov.id = pro.providerId
+				JOIN providers prov on (prov.id = pro.providerId and pro.productId = r.productId)
 				WHERE p.cutted = true $condition and prov.name!='?'
 				GROUP BY $groupByCondition
 				ORDER BY $orderByCondition";
