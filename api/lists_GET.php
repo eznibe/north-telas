@@ -29,7 +29,7 @@ else if(isset($_GET['betweenDates']) && $_GET['type']=='plotters') {
 	$value = getClothPlotters($_GET['clothId'], $_GET['startDate'], $_GET['endDate'], $_GET['userName'], $_GET['providerName'], $_GET['groupName'], $_GET['groupBy']);
 }
 else if(isset($_GET['betweenDates']) && $_GET['type']=='orders') {
-	$value = getClothOrders($_GET['startDate'], $_GET['endDate'], $_GET['clothId'], $_GET['invoiceNumber']);
+	$value = getClothOrders($_GET['startDate'], $_GET['endDate'], $_GET['clothId'], $_GET['invoiceNumber'], $_GET['providerName'], $_GET['groupName']);
 }
 else if(isset($_GET['betweenDates']) && $_GET['type']=='all') {
 //	$value1 = getClothPlotters($_GET['clothId'], $_GET['startDate'], $_GET['endDate']);

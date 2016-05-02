@@ -310,7 +310,7 @@ function validate($order) {
 }
 
 
-function getClothOrders($startDate, $endDate, $clothId, $invoiceNumber) {
+function getClothOrders($startDate, $endDate, $clothId, $invoiceNumber, $providerName, $groupName) {
 
 	// all cloths between dates
 	$condition  = " AND STR_TO_DATE('$startDate', '%d-%m-%Y') <= o.arriveDate AND STR_TO_DATE('$endDate', '%d-%m-%Y') >= o.arriveDate ";
@@ -319,11 +319,16 @@ function getClothOrders($startDate, $endDate, $clothId, $invoiceNumber) {
 
 	$condition .= isset($invoiceNumber) ? " AND o.invoiceNumber like '$invoiceNumber%'" : '';
 
+	$condition .= isset($providerName) ? " AND prov.name like '$providerName'" : '';
+
+	$condition .= isset($groupName) ? " AND gr.name like '$groupName'" : '';
+
 	$query = "SELECT *, SUM(r.mtsOriginal) as sumMts,
 											DATE_FORMAT(o.arriveDate,'%d-%m-%Y') as formattedDate,
 											prov.name as provider,
 											c.name as name
 		FROM cloths c
+		JOIN groups gr on gr.id = c.groupId
 		JOIN products pr on pr.clothId = c.id
 		JOIN providers prov on prov.id = pr.providerId
 		JOIN orderproduct op on op.productId = pr.productId
