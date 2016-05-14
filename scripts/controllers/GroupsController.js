@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('vsko.stock').controller('GroupsCtrl', ['$scope', 'Stock', '$modal', function ($scope, Stock, $modal) {
+angular.module('vsko.stock').controller('GroupsCtrl', ['$scope', 'Utils', 'Stock', '$modal', function ($scope, Utils, Stock, $modal) {
 
         // initial list of cloth groups
         Stock.getAllGroups().then(function(result) {
@@ -34,11 +34,11 @@ angular.module('vsko.stock').controller('GroupsCtrl', ['$scope', 'Stock', '$moda
 
     	  		// show feedback message
 						if(result.data.isNew) {
-	    	  		$.notify("Grupo '"+group.name+ "' creado.", {className: "success", globalPosition: "bottom right"});
+              Utils.showMessage('notify.group_created', 'success', {groupName: group.name});
 	    	  		$scope.groups.push(result.data.group);
 						}
 						else {
-							$.notify("Grupo '"+group.name+ "' actualizado.", {className: "success", globalPosition: "bottom right"});
+              Utils.showMessage('notify.group_updated', 'success', {groupName: group.name});
 						}
     	  	});
         };

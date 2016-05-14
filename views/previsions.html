@@ -16,6 +16,19 @@
 						<span class="glyphicon glyphicon-sort"></span>
 					</a>
 				</div>
+				<!-- <div class="col-xs-1" access-allowed="admin" title="{{'Refresh Previsions States' | translate}}">
+					<a ng-click="updateAllPrevisionsStates()" class="btn btn-default floatright">
+						<span class="glyphicon glyphicon-refresh"></span>
+					</a>
+				</div> -->
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-8 nopadding">
+				<label class="control-label col-xs-4" translate>State changed</label>
+				<div class="col-xs-1">
+					<input type="checkbox" style="float:right;" ng-model="showStateChanged"></input>
+				</div>
 		</div>
 	</div>
 	<p class="bigmargin">
@@ -30,12 +43,22 @@
 	<ul>
 		<li class="cards">
 			<ul>
-				<li ng-repeat="p in previsions | orderBy:sort.id:reverse | filter:searchBox" ng-click="showPrevisionModal(p)">
-					<h3><span style="color:black;">{{p.orderNumber}}</span></h3>
+				<li ng-repeat="p in previsions | orderBy:sort.id:reverse | filter:filterStateChanged | filter:searchBox" ng-click="showPrevisionModal(p)">
+					<h3>
+						<span style="color:black;">{{p.orderNumber}}</span>
+						<span style="color:black; float:right; padding:2px;" ng-style="{'background-color': (p.stateAccepted=='0' ? 'orange' : '')}">
+							{{p.state}}
+							<a href="javascript:void(0)" ng-show="showStateChanged && p.stateAccepted=='0'" ng-click="acceptStateChange(p); $event.stopPropagation();" style="cursor:pointer;" class="tag-control"><span class="glyphicon glyphicon-ok control-label" style="text-align:center; margin-left:4px;"></span></a>
+						</span>
+					</h3>
 					<h3><small translate>Delivery date</small> <span>{{p.deliveryDate}}</span></h3>
 					<h3 ng-repeat="c in p.cloths | limitTo:maxCloths">
 						<span style="padding-right:20px; min-width:185px; display:inline-block;">{{c.name}}</span>
-						<small>mts</small> <span>{{c.mts}}</span>  <span ng-show="$last && p.cloths.length > maxCloths">...</span>
+						<span style="float:right;">
+							<small>mts</small>
+							<span>{{c.mts}}</span>
+							<span ng-show="$last && p.cloths.length > maxCloths">...</span>
+						</span>
 					</h3>
 				</li>
 			</ul>

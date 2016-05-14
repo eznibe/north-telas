@@ -2,7 +2,7 @@
 
 angular.module('vsko.stock')
 
-.directive('plotterCutsTags', function($modal, $rootScope, Previsions, Plotters) {
+.directive('plotterCutsTags', function($modal, $rootScope, Utils, Previsions, Plotters) {
 
     return {
           restrict: 'E',
@@ -30,7 +30,7 @@ angular.module('vsko.stock')
         		  Previsions.savePlotterCut(cut).then(function(result){
         			  console.log("Changed cut to "+cut.mtsCutted+" mts");
 
-        			  $.notify("Corte asignado.", {className: "success", globalPosition: "bottom right"});
+                Utils.showMessage('notify.cut_assigned');
         		  });
 
         		  $scope.clicked(cut);

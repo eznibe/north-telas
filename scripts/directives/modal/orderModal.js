@@ -2,7 +2,7 @@
 
 angular.module('vsko.stock')
 
-.directive('orderModal', function($modal, Orders) {
+.directive('orderModal', function($modal, Utils, Orders, Previsions, orderStatus) {
 
     return {
           restrict: 'E',
@@ -37,6 +37,13 @@ angular.module('vsko.stock')
   	      			Orders.partialSave(order).then(function(result){
   	      				// ok
   	      				$scope.modalCtrl.formOrderInfo.$setPristine();
+
+                  if(order.status == orderStatus.in_transit) {
+                    var clothsIds = order.products.map(function(p) { return p.clothId; }).join(',');
+                    Previsions.updatePrevisionState(clothsIds).then(function() {
+                      Utils.showMessage('notify.previsions_state_updated');
+                    });
+                  }
   	      			});
 	      	  };
 
@@ -45,10 +52,16 @@ angular.module('vsko.stock')
 	      			Orders.removeItem(orderproduct).then(function(result){
 	      				// ok
 	      				if(result.data.successful) {
-                  
+
 		      				$scope.order.products.remove(orderproduct);
 
-		      				$.notify("Item de la orden removido.", {className: "success", globalPosition: "bottom right"});
+                  Utils.showMessage('notify.order_item_deleted');
+
+                  if($scope.order.status == orderStatus.in_transit) {
+                    Previsions.updatePrevisionState(orderproduct.clothId).then(function() {
+                      Utils.showMessage('notify.previsions_state_updated');
+                    });
+                  }
 
 		      				if($scope.order.products.length==0 && result.data.orderDeleted) {
 
@@ -58,7 +71,7 @@ angular.module('vsko.stock')
 		      						$scope.orders_buy.remove($scope.order);
 		      					}
 
-		      					$.notify("Orden sin items removida.", {className: "success", globalPosition: "bottom right"});
+                    Utils.showMessage('notify.order_no_items_deleted');
 		      				}
 	      				}
 	      			});
@@ -87,6 +100,12 @@ angular.module('vsko.stock')
               Orders.updateProductAmount(product).then(function(result){
 
                 console.log('Updated product amount to '+product.amount);
+
+                if($scope.order.status == orderStatus.in_transit) {
+                  Previsions.updatePrevisionState(product.clothId).then(function() {
+                    Utils.showMessage('notify.previsions_state_updated');
+        					});
+                }
               });
             }
 

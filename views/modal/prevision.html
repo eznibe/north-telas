@@ -1,4 +1,4 @@
-<div class="modal" tabindex="-1" role="dialog">
+<div class="modal" tabindex="-1" role="dialog" name="updated">
   <div class="modal-dialog modal-lg" style="margin-top: 0px;">
 		<div class="modal-content">
 
@@ -12,7 +12,7 @@
 				<a href="javascript:void(0)" class="btn btn-lg closebtn" ng-click="close()">
 					<span class="glyphicon glyphicon-remove"></span>
 				</a>
-		</div>
+		  </div>
 
 			<div class="modal-body nopaddingside">
 
@@ -23,6 +23,15 @@
 								<label class="control-label col-xs-4" for="edit_od">One design</label>
 								<div class="col-xs-8">
 									<input name="edit_od" type="checkbox" class="" ng-model="prevision.oneDesign" ng-change="oneDesignCloths()">
+								</div>
+						</div>
+            <div class="col-md-6 nopadding">
+								<label class="control-label col-xs-4" for="edit_client" translate>State</label>
+								<div class="col-xs-8">
+                  <span style="color:black; padding:2px;" ng-style="{'background-color': (prevision.stateAccepted=='0' ? 'orange' : '')}">
+      							{{prevision.state}}
+      							<a href="javascript:void(0)" ng-show="prevision.stateAccepted=='0'" ng-click="acceptStateChange(prevision); $event.stopPropagation();" style="cursor:pointer;" class="tag-control"><span class="glyphicon glyphicon-ok control-label" style="text-align:center; margin-left:4px;"></span></a>
+      						</span>
 								</div>
 						</div>
 					</div>
@@ -172,18 +181,18 @@
 						<div class="col-md-6 nopadding">
 								<label class="control-label col-xs-4" for="edit_cloth" translate>Cloth</label>
 								<div class="col-xs-8">
-									<select name="dd_cloth" ng-model="c.selectedCloth" ng-options="sc as sc.name for sc in cloths" class="form-control small" required ng-class="{error: innerForm.dd_cloth.$invalid}"  >
-				                        <option value="">-- choose one --</option>
-				                    </select>
+									<select name="dd_cloth" ng-model="c.selectedCloth" ng-options="sc as sc.name for sc in cloths" class="form-control small" required ng-class="{error: innerForm.dd_cloth.$invalid}" ng-disabled="prevision.designed=='1'" >
+                      <option value="">-- choose one --</option>
+                  </select>
 								</div>
 						</div>
 						<div class="col-md-6 nopadding">
 								<label class="control-label col-xs-4" for="edit_mts">mts</label>
 								<div class="col-xs-4">
-									<input name="edit_mts" type="text" class="form-control small" required  ng-model="c.mts" ng-class="{error: innerForm.edit_mts.$invalid}">
+									<input name="edit_mts" type="text" class="form-control small" required  ng-model="c.mts" ng-class="{error: innerForm.edit_mts.$invalid}" ng-disabled="prevision.designed=='1'">
 								</div>
-								<span class="glyphicon glyphicon-trash col-xs-1 control-label" ng-click="removeCloth($index)" style="text-align:center; cursor:pointer;"></span>
-								<span class="glyphicon glyphicon-plus col-xs-1 control-label" ng-click="addCloth()" ng-show="$last" style="text-align:center; cursor:pointer;"></span>
+								<span class="glyphicon glyphicon-trash col-xs-1 control-label" ng-click="removeCloth($index)" style="text-align:center; cursor:pointer;" ng-hide="prevision.designed=='1'"></span>
+								<span class="glyphicon glyphicon-plus col-xs-1 control-label" ng-click="addCloth()" ng-show="$last" style="text-align:center; cursor:pointer;" ng-hide="prevision.designed=='1'"></span>
 						</div>
 						</ng-form>
 					</div>
@@ -197,7 +206,7 @@
 					<span class="glyphicon glyphicon-remove"></span>
 					{{'Cancel' | translate}}
 				</a>
-				<a href="javascript:void(0)" class="btn btn-warning floatleft" ng-show="prevision.id" ng-click="showConfirmDeleteModal(prevision)" access-allowed="admin,ordenes,velas-od">
+				<a href="javascript:void(0)" class="btn btn-warning floatleft" ng-show="prevision.id" ng-hide="prevision.designed=='1'" ng-click="showConfirmDeleteModal(prevision)" access-allowed="admin,ordenes,velas-od">
 					<span class="glyphicon glyphicon-trash"></span>
 					{{'Delete' | translate}}
 				</a>

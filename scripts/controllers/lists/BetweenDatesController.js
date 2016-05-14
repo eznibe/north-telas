@@ -26,11 +26,17 @@ angular.module('vsko.stock').controller('BetweenDatesCtrl', ['$scope', 'Stock', 
         $scope.filter.selectedType = $scope.filter.types[0];
         $scope.filter.type = $scope.filter.types[0].id;
 
-        $scope.filter.options = [{name:'Tela', id:'OPTION_CLOTH'},
-																 {name:'Grupo', id:'OPTION_GROUP'},
-																 {name:'Proveedor', id:'OPTION_PROVIDER'},
-                                 {name:'Nr. factura', id:'OPTION_INVOICE'},
-																 {name:'Usuario', id:'OPTION_USER'}];
+				var optionsPlotters = [{name:'Tela', id:'OPTION_CLOTH'},
+															 {name:'Grupo', id:'OPTION_GROUP'},
+															 {name:'Proveedor', id:'OPTION_PROVIDER'},
+															 {name:'Usuario', id:'OPTION_USER'}];
+			 	var optionsOrders = [{name:'Tela', id:'OPTION_CLOTH'},
+														 {name:'Grupo', id:'OPTION_GROUP'},
+														 {name:'Proveedor', id:'OPTION_PROVIDER'},
+														 {name:'Nr. factura', id:'OPTION_INVOICE'}];
+				var optionsBoth = [{name:'Tela', id:'OPTION_CLOTH'}];
+
+        $scope.filter.options = optionsPlotters;
         $scope.filter.selectedOption = $scope.filter.options[0];
 
 				$scope.filter.groupByOptions = [{name:'Tela', id:'GROUP_BY_CLOTH'}];
@@ -67,4 +73,16 @@ angular.module('vsko.stock').controller('BetweenDatesCtrl', ['$scope', 'Stock', 
 					$scope.filter.selectedProvider = null;
 					$scope.filter.selectedGroup = null;
 				};
+
+				$scope.updateFilterOptions = function() {
+					$scope.clearFilterOption();
+					if ($scope.filter.selectedType.id === 'TYPE_PLOTTERS') {
+						$scope.filter.options = optionsPlotters;
+					} else if ($scope.filter.selectedType.id === 'TYPE_ORDERS') {
+						$scope.filter.options = optionsOrders;
+					} else {
+						$scope.filter.options = optionsBoth;
+					}
+	        $scope.filter.selectedOption = $scope.filter.options[0];
+				}
 }]);

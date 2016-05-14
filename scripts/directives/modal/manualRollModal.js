@@ -2,7 +2,7 @@
 
 angular.module('vsko.stock')
 
-.directive('manualRollModal', ['$modal', 'Stock', function($modal, Stock) {
+.directive('manualRollModal', ['$modal', 'Utils', 'Stock', function($modal, Utils, Stock) {
 
     return {
           restrict: 'E',
@@ -34,12 +34,12 @@ angular.module('vsko.stock')
 
             			  $scope.availableRolls.push(roll);
 
-            			  $.notify("Rollo creado.", {className: "success", globalPosition: "bottom right"});
+                    Utils.showMessage('notify.roll_created');
 
             			  $scope.modalManualRoll.hide();
             		  }
             		  else {
-            			  $.notify("Error creando rollo.", {className: "error", globalPosition: "bottom right"});
+                    Utils.showMessage('notify.roll_create_failed', 'error');
             		  }
             	  });
               };

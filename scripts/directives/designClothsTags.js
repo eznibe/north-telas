@@ -21,6 +21,10 @@ angular.module('vsko.stock')
 
         		  Previsions.updateClothMts(cloth).then(function(result){
         			  console.log("Changed cloth to "+cloth.mts+" mts");
+
+      					Previsions.updatePrevisionState(cloth.id).then(function() {
+      						// $.notify("Estado de previsiones actualizado.", {className: "success", globalPosition: "bottom right"});
+      					});
         		  });
 
         		  $scope.clicked(cloth);

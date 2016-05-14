@@ -77,6 +77,19 @@ angular.module("vsko.stock", [
         $httpProvider.interceptors.push('ClearSearchBox');
     }
     ])
+		.config(['$httpProvider', function ($httpProvider) {
+			//initialize get if not there
+			if (!$httpProvider.defaults.headers.get) {
+					$httpProvider.defaults.headers.get = {};
+			}
+
+			//disable IE ajax request caching
+			$httpProvider.defaults.headers.get['If-Modified-Since'] = 'Mon, 26 Jul 1997 05:00:00 GMT';
+			// extra
+			$httpProvider.defaults.headers.get['Cache-Control'] = 'no-cache';
+			$httpProvider.defaults.headers.get['Pragma'] = 'no-cache';
+    }
+    ])
     .config(['$routeProvider', '$locationProvider', '$translateProvider', function ($routeProvider, $locationProvider, $translateProvider) {
 
         $routeProvider
@@ -209,8 +222,8 @@ angular.module("vsko.stock", [
           })
           .determinePreferredLanguage(function () {
             var locale = getLocale();
-            if (locale.toLowerCase().substring(0, 2) === 'nl') {
-            	return 'dutch';
+            if (locale.toLowerCase().substring(0, 2) === 'pt') {
+            	return 'port';
             }
             else if (locale.toLowerCase().substring(0, 2) === 'es') {
             	return 'spanish';

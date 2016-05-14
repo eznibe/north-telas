@@ -26,7 +26,7 @@ function getPlotters($clothId, $cutted, $search, $upToDate) {
 													 ) ";
 	}
 
-	$queryGral = "SELECT *, pl.id as id, coalesce(p.sailDescription, p.sailOneDesign, s.description) as sailName, pl.observations as observations
+	$queryGral = "SELECT *, pl.id as id, coalesce(p.sailDescription, p.sailOneDesign, s.description) as sailName, pl.observations as observations, deliveryDate as unformattedDeliveryDate, DATE_FORMAT(deliveryDate,'%d-%m-%Y') as deliveryDate, p.id as previsionId
 		  FROM plotters pl
 		  JOIN previsions p on p.id = pl.previsionId
 		  JOIN cloths c on c.id = pl.clothId
@@ -49,6 +49,18 @@ function getPlotters($clothId, $cutted, $search, $upToDate) {
 		$plotter['cuts'] = $subrows;
 
 		$plotter['query'] = $queryGral;
+
+		$query = "SELECT * FROM previsioncloth pc JOIN cloths c on c.id=pc.clothId WHERE pc.previsionId = '".$plotter['previsionId']."'";
+
+		$subrows = array();
+		foreach (fetch_array(mysql_query($query)) as $subrow) {
+			array_push($subrows, $subrow);
+		}
+		$plotter['cloths'] = $subrows;
+
+		$plotter['designed'] = $plotter['designed']=='1' ? true : false;
+		$plotter['oneDesign'] = $plotter['oneDesign']=='1' ? true : false;
+		$plotter['greaterThan44'] = $plotter['greaterThan44']=='1' ? true : false;
 
 		array_push($plotters, $plotter);
 	}
@@ -473,12 +485,13 @@ function getClothPlotters($clothId, $startDate, $endDate, $userName, $providerNa
 				FROM cloths c
 				JOIN plotters p on p.clothId = c.id
 				JOIN plottercuts pc on pc.plotterId = p.id
+				JOIN rolls r on r.id = pc.rollId
 				LEFT JOIN previsions pre on pre.id = p.previsionId
 				LEFT JOIN manualplotters mp on mp.id = p.manualPlotterId
 				LEFT JOIN sails s on s.id = pre.sailId
 				JOIN groups g on g.id = c.groupId
 				JOIN products pro on pro.clothId = c.id
-				JOIN providers prov on prov.id = pro.providerId
+				JOIN providers prov on (prov.id = pro.providerId and pro.productId = r.productId)
 				WHERE p.cutted = true $condition and prov.name!='?'
 				GROUP BY $groupByCondition
 				ORDER BY $orderByCondition";

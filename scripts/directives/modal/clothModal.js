@@ -2,7 +2,7 @@
 
 angular.module('vsko.stock')
 
-.directive('clothModal', function($modal, Stock, Orders, orderStatus) {
+.directive('clothModal', function($modal, Utils, Stock, Orders, orderStatus) {
 
     return {
           restrict: 'E',
@@ -65,7 +65,7 @@ angular.module('vsko.stock')
 
                 $scope.modalCloth.hide();
 
-                $.notify("Cambios guardados.", {className: "success", globalPosition: "bottom right"});
+                Utils.showMessage('notify.saved_changes');
 
         			  Stock.getAllGroups().then(function(result){
         				    // refresh groups because of possible modification in the cloth group
@@ -84,7 +84,7 @@ angular.module('vsko.stock')
 
                   $scope.modalCloth.hide();
 
-                  $.notify("Tela eliminada.", {className: "success", globalPosition: "bottom right"});
+                  Utils.showMessage('notify.cloth_deleted');
                 }
               });
             };
@@ -132,10 +132,11 @@ angular.module('vsko.stock')
               	  Orders.buy($scope.provider).then(function(result){
 
               		  // show feedback message
-                    if(result.data.successful)
-              		    $.notify("Cantidad a comprar: "+amount+ " mts", {className: "success", globalPosition: "bottom right"});
+                    if(result.data.successful) {
+                      Utils.showMessage('notify.buy_amount', 'success', {amount: amount});
+                    }
                     else {
-                      $.notify("No se pudo crear compra.", {className: "error", globalPosition: "bottom right"});
+                      Utils.showMessage('notify.buy_failed', 'error');
                     }
               	  });
                 }
@@ -143,10 +144,11 @@ angular.module('vsko.stock')
                   Orders.assignProduct($scope.provider, $scope.filter.selectedOrder.orderId).then(function(result){
 
               		  // show feedback message
-                    if(result.data.successful)
-              		    $.notify("Compra asignada a orden #"+scope.filter.selectedOrder.number, {className: "success", globalPosition: "bottom right"});
+                    if(result.data.successful) {
+                      Utils.showMessage('notify.buy_assigned', 'success', {orderNumber: scope.filter.selectedOrder.number});
+                    }
                     else {
-                      $.notify("No se pudo asignar compra.", {className: "error", globalPosition: "bottom right"});
+                      Utils.showMessage('notify.buy_assign_failed', 'error');
                     }
               	  });
                 }

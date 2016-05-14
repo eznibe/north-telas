@@ -6,7 +6,11 @@ include_once '../include/headers.php';
 include_once '../include/dbutils.php';
 include_once '../include/main.php';
 
+include_once 'domain/providers.php';
+include_once 'domain/plotters.php';
+include_once 'domain/orders.php';
 include_once 'domain/previsions.php';
+include_once 'domain/previsionStates.php';
 
 db_connect();
 
@@ -19,6 +23,12 @@ if(isset($_GET['id'])) {
 }
 if(isset($_GET['clothId'])) {
 	$value = getPrevisions($_GET['clothId'], $designed, $expand, null);
+}
+else if(isset($_GET['updateAllPrevisionsStates'])) {
+	$value = updateAllPrevisionsStates($_GET['updateClothId'], $_GET['limit'], $_GET['offset']);
+}
+else if(isset($_GET['updatePrevisionState'])) {
+	$value = updatePrevisionState($_GET['updateClothId']);
 }
 else {
 	$value = getPrevisions(null, $designed, $expand, null);

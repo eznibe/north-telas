@@ -8,12 +8,13 @@ angular.module('vsko.stock')
 
 		var url = telasAPIUrl;
 
-        this.getAll = function(designed)
+        this.getAll = function(includeDesigned)
         {
-        	if(!designed)
-        		designed = false;
+					var designedCondition = "";
+        	if(!includeDesigned)
+        		designedCondition = "designed=false&";
 
-        	return $http.get(url + 'previsions_GET.php?designed='+designed+'&expand=FULL');
+        	return $http.get(url + 'previsions_GET.php?'+designedCondition+'&expand=FULL');
         };
 
         this.getPrevisions = function(clothId)
@@ -22,6 +23,10 @@ angular.module('vsko.stock')
         };
 
         this.save = function(prevision, loggedUser) {
+
+					if(prevision.previsionId) {
+						prevision.id = prevision.previsionId;
+					}
 
         	if(!prevision.id)
         		prevision.id = uuid4.generate();
@@ -91,6 +96,21 @@ angular.module('vsko.stock')
 				this.editObservations = function(prevision) {
 
         	return $http.post(url + 'previsions_POST.php?edit=true&field=observations', prevision);
+        };
+
+				this.updatePrevisionState = function(clothIds) {
+
+        	return $http.post(url + 'previsions_POST.php?updatePrevisionState=true&clothIds='+clothIds, clothIds);
+        };
+
+				this.updateAllPrevisionsStates = function() {
+
+        	return $http.post(url + 'previsions_POST.php?updateAllPrevisionsStates=true', {});
+        };
+
+				this.acceptStateChange = function(prevision) {
+
+        	return $http.post(url + 'previsions_POST.php?acceptStateChange=true', prevision);
         };
 
         return this;

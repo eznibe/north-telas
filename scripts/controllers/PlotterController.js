@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('vsko.stock').controller('PlotterCtrl', ['$scope', '$rootScope', 'Previsions', 'Plotters', 'Stock', 'Lists', '$modal', 'uuid4', function ($scope, $rootScope, Previsions, Plotters, Stock, Lists, $modal, uuid4) {
+angular.module('vsko.stock').controller('PlotterCtrl', ['$scope', '$rootScope', 'Utils', 'Previsions', 'Plotters', 'Stock', 'Lists', '$modal', 'uuid4', function ($scope, $rootScope, Utils, Previsions, Plotters, Stock, Lists, $modal, uuid4) {
 
         // initial list of plotters
 		loadAllPlotters();
@@ -17,17 +17,21 @@ angular.module('vsko.stock').controller('PlotterCtrl', ['$scope', '$rootScope', 
 						if(result.data.successful && result.data.successfulRolls) {
 	        		$scope.plotters.remove(plotter);
 
-	        		console.log('Cutted: '+plotter.id);
+	        		console.log('Cutted: ', plotter);
 
-	        		$.notify("Tela marcada como cortada.", {className: "success", globalPosition: "bottom right"});
+							Utils.showMessage('notify.cloth_cutted');
+
+							Previsions.updatePrevisionState(plotter.clothId).then(function() {
+								Utils.showMessage('notify.previsions_state_updated');
+							});
 						}
 						else if(!result.data.successful) {
 							Lists.log({type: 'error.finishPlotter', log: result.data.update}).then(function(result) {});
-							$.notify("Plotter no pudo ser cortado.", {className: "error", globalPosition: "bottom right"});
+							Utils.showMessage('notify.plotter_cut_failed', 'error');
 						}
 						else if(!result.data.successfulRolls) {
 							Lists.log({type: 'error.updateRolls', log: result.data.updateRolls}).then(function(result) {});
-							$.notify("Rollos del plotter cortado no pudieron ser actualizados.", {className: "error", globalPosition: "bottom right"});
+							Utils.showMessage('notify.plotter_rolls_update_failed', 'error');
 						}
         	});
         };
@@ -111,10 +115,14 @@ angular.module('vsko.stock').controller('PlotterCtrl', ['$scope', '$rootScope', 
 
 		    			plotter.possibleRolls = possibleRolls.data;
 
-		    			loadSelectedRoll(plotter.cuts, possibleRolls.data);
+		    			$scope.loadSelectedRoll(plotter.cuts, possibleRolls.data);
 		    		});
 
-        		$.notify("Tela vuelta a estado 'Por cortar'.", {className: "success", globalPosition: "bottom right"});
+						Utils.showMessage('notify.cloth_back_to_plotter');
+
+						Previsions.updatePrevisionState(plotter.clothId).then(function() {
+							Utils.showMessage('notify.previsions_state_updated');
+						});
         	});
         };
 
@@ -124,7 +132,7 @@ angular.module('vsko.stock').controller('PlotterCtrl', ['$scope', '$rootScope', 
 
         		$scope.plotters.remove(plotter);
 
-        		$.notify("Plotter eliminado.", {className: "success", globalPosition: "bottom right"});
+						Utils.showMessage('notify.plotter_deleted');
         	});
         };
 
@@ -140,7 +148,12 @@ angular.module('vsko.stock').controller('PlotterCtrl', ['$scope', '$rootScope', 
         			  return p.orderNumber == orderNumber;
         		});
 
-        		$.notify("Plotter restaurado a diseno.", {className: "success", globalPosition: "bottom right"});
+						Utils.showMessage('notify.plotter_back_to_design');
+
+						// TODO when a plotter returns to design also all cloths in the original prevision returns => need to send all
+						Previsions.updatePrevisionState(plotter.clothId).then(function() {
+							Utils.showMessage('notify.previsions_state_updated');
+						});
         	});
         };
 
@@ -153,7 +166,7 @@ angular.module('vsko.stock').controller('PlotterCtrl', ['$scope', '$rootScope', 
 	    		  if($scope.modalManualPlotter)
 	    			  $scope.modalManualPlotter.hide();
 
-	    		  $.notify("Plotter eliminado.", {className: "success", globalPosition: "bottom right"});
+						Utils.showMessage('notify.plotter_deleted');
 	    	  });
         };
 

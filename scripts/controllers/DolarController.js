@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('vsko.stock').controller('DolarCtrl', ['$scope', 'Stock', function ($scope, Stock) {
+angular.module('vsko.stock').controller('DolarCtrl', ['$scope', 'Utils', 'Stock', function ($scope, Utils, Stock) {
 
         // initial list of providers
     	Stock.getDolar().then(function(result) {
@@ -19,15 +19,14 @@ angular.module('vsko.stock').controller('DolarCtrl', ['$scope', 'Stock', functio
 
 	    		Stock.saveDolar($scope.dolar).then(function(resut){
 
-	    			$.notify("Valor del dolar actualizado.", {className: "success", globalPosition: "bottom right"});
+            Utils.showMessage('notify.dolar_updated');
 	    		});
 				}
 
 				if($scope.pctNacOrig != $scope.pctNac) {
 
 					Stock.savePctNac($scope.pctNac).then(function(result){
-
-	    			$.notify("Valor del % actualizado.", {className: "success", globalPosition: "bottom right"});
+            Utils.showMessage('notify.percentage_updated');
 	    		});
 				}
     	}

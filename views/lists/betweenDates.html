@@ -27,7 +27,7 @@
 		<div class="col-md-6 nopadding">
 				<label class="control-label col-xs-2" translate>Type</label>
 				<div class="col-xs-4">
-					<select name="dd_cloth" ng-model="filter.selectedType" ng-options="sc as sc.name for sc in filter.types" class="form-control small" ng-change="filer.selectedGroupBy=null;">
+					<select name="dd_cloth" ng-model="filter.selectedType" ng-options="sc as sc.name for sc in filter.types" class="form-control small" ng-change="filer.selectedGroupBy=null; updateFilterOptions();">
 	        </select>
 				</div>
 

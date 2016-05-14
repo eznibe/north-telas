@@ -32,6 +32,7 @@
 			<th translate>Sail</th>
 			<th translate>Boat</th>
 			<th translate>Cloth</th>
+			<th translate>State</th>
 			<th translate>Mts design</th>
 			<th translate>Mts cut</th>
 			<th style="max-width: 250px;" translate>Observations</th>
@@ -46,7 +47,10 @@
 				<span access-restricted="admin,ordenes,plotter">{{p.sOrder}}</span>
 			</td>
 			<td title="{{p.tooltip}}">
-				<span ng-show="p.cutted=='0'">{{p.orderNumber}}</span>
+				<span ng-show="p.cutted=='0'">
+					<a ng-hide="p.sOrder" href="javascript:void(0);" ng-click="showPrevisionModal(p)">{{p.orderNumber}}</a>
+					<span ng-show="p.sOrder">{{p.orderNumber}}</span>
+				</span>
 				<editable-input ng-show="p.cutted=='1'" entity="p" field="'orderNumber'" callback="updatePlotterField" style="display:inline-block;" editable-by-role="'admin,ordenes,plotter'"></editable-input>
 			</td>
 			<td>
@@ -63,6 +67,9 @@
 			</td>
 			<td>
 				{{p.name}}
+			</td>
+			<td>
+				{{p.state}}
 			</td>
 			<td>
 				{{p.mtsDesign}}
@@ -107,3 +114,5 @@
 <confirm-remove-plotter-modal/>
 
 <edit-text-modal field="'observations'"/>
+
+<prevision-modal/>

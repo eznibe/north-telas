@@ -21,19 +21,19 @@ function getOrdersUpToDate($status, $providerId, $expand, $upToDate)
 		$upToDateCondition = " AND inTransitDate is not null AND inTransitDate <= STR_TO_DATE('".$upToDate."', '%d-%m-%Y')
 													 AND
 													 (
-														 (arriveDate is null and o.status = 'IN_TRANSIT') 
+														 (arriveDate is null and o.status = 'IN_TRANSIT')
 														 OR
 														 (STR_TO_DATE('".$upToDate."', '%d-%m-%Y') <= arriveDate and o.status = 'ARRIVED')
 													 ) ";
 	}
 
 	if(isset($status) && !isset($upToDate)) {
-		$queryGral = "SELECT *, DATE_FORMAT(orderDate,'%d-%m-%Y') as formattedDate, arriveDate as unformattedArriveDate, DATE_FORMAT(arriveDate,'%d-%m-%Y') as arriveDate FROM orders o
-									WHERE o.status = '$status' $providerCondition $upToDateCondition ORDER BY o.orderDate";
+		$queryGral = "SELECT *, DATE_FORMAT(orderDate,'%d-%m-%Y') as formattedDate, arriveDate as unformattedArriveDate, DATE_FORMAT(arriveDate,'%d-%m-%Y') as arriveDate, DATE_FORMAT(estimatedArriveDate,'%d-%m-%Y') as estimatedArriveDate FROM orders o
+									WHERE o.status = '$status' $providerCondition $upToDateCondition ORDER BY -o.estimatedArriveDate desc, o.orderDate";
 	}
 	else {
-		$queryGral = "SELECT *, DATE_FORMAT(orderDate,'%d-%m-%Y') as formattedDate, arriveDate as unformattedArriveDate, DATE_FORMAT(arriveDate,'%d-%m-%Y') as arriveDate FROM orders o
-									WHERE 1=1 $providerCondition $upToDateCondition ORDER BY o.orderDate";
+		$queryGral = "SELECT *, DATE_FORMAT(orderDate,'%d-%m-%Y') as formattedDate, arriveDate as unformattedArriveDate, DATE_FORMAT(arriveDate,'%d-%m-%Y') as arriveDate, DATE_FORMAT(estimatedArriveDate,'%d-%m-%Y') as estimatedArriveDate FROM orders o
+									WHERE 1=1 $providerCondition $upToDateCondition ORDER BY -o.estimatedArriveDate desc, o.orderDate";
 	}
 
 	$result = mysql_query($queryGral);
@@ -125,8 +125,8 @@ function buy($provider)
 	else {
 		$orderId = uniqid();
 		// no order for the provider
-		$insert = "INSERT INTO orders (orderId, orderDate, arriveDate, invoiceNumber, status, type, providerId, description, deliveryType)
-							 VALUES ('$orderId', null, null, null, 'TO_BUY', null, '".$provider->providerId."', null, 'Desconocido')" ;
+		$insert = "INSERT INTO orders (orderId, orderDate, estimatedArriveDate, arriveDate, invoiceNumber, status, type, providerId, description, deliveryType)
+							 VALUES ('$orderId', null, null, null, null, 'TO_BUY', null, '".$provider->providerId."', null, 'Desconocido')" ;
 
 		if(mysql_query($insert)) {
 			$obj->successful = true;
@@ -256,10 +256,11 @@ function updateInfo($order) {
 	if(isset($order->type)) $type = "'".$order->type."'"; else $type = "null";
 	if(isset($order->description)) $description = "'".$order->description."'"; else $description = "null";
 	if(isset($order->deliveryType)) $deliveryType = "'".$order->deliveryType."'"; else $deliveryType = "null";
-	if(isset($order->arriveDate)) $arriveDate = "STR_TO_DATE('".$order->arriveDate."', '%d-%m-%Y')"; else $arriveDate = "null";
+	if(isset($order->arriveDate) && $order->arriveDate!='') $arriveDate = "STR_TO_DATE('".$order->arriveDate."', '%d-%m-%Y')"; else $arriveDate = "null";
+	if(isset($order->estimatedArriveDate) && $order->estimatedArriveDate!='') $estimatedArriveDate = "STR_TO_DATE('".$order->estimatedArriveDate."', '%d-%m-%Y')"; else $estimatedArriveDate = "null";
 
 
-	$update = "UPDATE orders SET invoiceNumber = $invoice, type = $type, description = $description, deliveryType = $deliveryType, arriveDate = $arriveDate WHERE orderId = '".$order->orderId."'" ;
+	$update = "UPDATE orders SET invoiceNumber = $invoice, type = $type, description = $description, deliveryType = $deliveryType, arriveDate = $arriveDate, estimatedArriveDate = $estimatedArriveDate WHERE orderId = '".$order->orderId."'" ;
 
 	if(mysql_query($update)) {
 		$obj->successful = true;
@@ -309,7 +310,7 @@ function validate($order) {
 }
 
 
-function getClothOrders($startDate, $endDate, $clothId, $invoiceNumber) {
+function getClothOrders($startDate, $endDate, $clothId, $invoiceNumber, $providerName, $groupName) {
 
 	// all cloths between dates
 	$condition  = " AND STR_TO_DATE('$startDate', '%d-%m-%Y') <= o.arriveDate AND STR_TO_DATE('$endDate', '%d-%m-%Y') >= o.arriveDate ";
@@ -318,11 +319,16 @@ function getClothOrders($startDate, $endDate, $clothId, $invoiceNumber) {
 
 	$condition .= isset($invoiceNumber) ? " AND o.invoiceNumber like '$invoiceNumber%'" : '';
 
+	$condition .= isset($providerName) ? " AND prov.name like '$providerName'" : '';
+
+	$condition .= isset($groupName) ? " AND gr.name like '$groupName'" : '';
+
 	$query = "SELECT *, SUM(r.mtsOriginal) as sumMts,
 											DATE_FORMAT(o.arriveDate,'%d-%m-%Y') as formattedDate,
 											prov.name as provider,
 											c.name as name
 		FROM cloths c
+		JOIN groups gr on gr.id = c.groupId
 		JOIN products pr on pr.clothId = c.id
 		JOIN providers prov on prov.id = pr.providerId
 		JOIN orderproduct op on op.productId = pr.productId
