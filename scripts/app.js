@@ -222,8 +222,8 @@ angular.module("vsko.stock", [
           })
           .determinePreferredLanguage(function () {
             var locale = getLocale();
-            if (locale.toLowerCase().substring(0, 2) === 'nl') {
-            	return 'dutch';
+            if (locale.toLowerCase().substring(0, 2) === 'pt') {
+            	return 'port';
             }
             else if (locale.toLowerCase().substring(0, 2) === 'es') {
             	return 'spanish';

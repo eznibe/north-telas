@@ -2,7 +2,7 @@
 
 angular.module('vsko.stock')
 
-.directive('previsionModal', function($modal, $rootScope, $q, Stock, Previsions, Files, OneDesign, Lists) {
+.directive('previsionModal', function($modal, $rootScope, $q, $translate, Utils, Stock, Previsions, Files, OneDesign, Lists) {
 
     return {
           restrict: 'E',
@@ -29,7 +29,7 @@ angular.module('vsko.stock')
 
             $scope.acceptStateChange = function(p) {
               Previsions.acceptStateChange(p).then(function() {
-                $.notify("Cambio de estado aceptado.", {className: "success", globalPosition: "bottom right"});
+                Utils.showMessage('notify.state_accepted_prevision');
                 p.stateAccepted = '1';
               });
             };
@@ -126,7 +126,7 @@ angular.module('vsko.stock')
 
         			  $scope.previsions.push($scope.prevision);
 
-        			  $.notify("Prevision creada.", {className: "success", globalPosition: "bottom right"});
+                Utils.showMessage('notify.prevision_created');
 
                 waitForPossiblePrevisionStateChange = true;
 
@@ -141,7 +141,7 @@ angular.module('vsko.stock')
         		  }
         		  else if(result.data.successful && !result.data.isNew) {
 
-        			  $.notify("Prevision modificada.", {className: "success", globalPosition: "bottom right"});
+                Utils.showMessage('notify.prevision_modified');
 
                 waitForPossiblePrevisionStateChange = true;
 
@@ -160,18 +160,18 @@ angular.module('vsko.stock')
         		  }
         		  else if(!result.data.successfulInsert && result.data.insert) {
                 Lists.log({type: 'error.insertPrevision', log: result.data.insert}).then(function(result) {});
-        			  $.notify("Prevision no pudo ser creada.", {className: "error", globalPosition: "bottom right"});
+                Utils.showMessage('notify.prevision_create_failed', 'error');
         		  }
               else if(!result.data.successfulUpdate && result.data.update) {
                 Lists.log({type: 'error.updatePrevision', log: result.data.update}).then(function(result) {});
-        			  $.notify("Prevision no pudo ser editada.", {className: "error", globalPosition: "bottom right"});
+                Utils.showMessage('notify.prevision_edit_failed', 'error');
         		  }
               else if(!result.data.successfulCloths && result.data.queryCloths) {
                 Lists.log({type: 'error.queryCloths', log: result.data.queryCloths}).then(function(result) {});
-        			  $.notify("Prevision, problema guardando las telas.", {className: "error", globalPosition: "bottom right"});
+                Utils.showMessage('notify.prevision_cloth_save_failed', 'error');
         		  }
               else if(!result.data.successful) {
-        			  $.notify("Prevision, error desconocido, ver log.", {className: "error", globalPosition: "bottom right"});
+                Utils.showMessage('notify.unknown_error', 'error');
         		  }
 
               if(!waitForPossiblePrevisionStateChange) {
@@ -193,7 +193,7 @@ angular.module('vsko.stock')
 
           		  $scope.modalPrevision.hide();
 
-          		  $.notify("Prevision eliminada.", {className: "success", globalPosition: "bottom right"});
+                Utils.showMessage('notify.prevision_deleted');
 
                 updatePrevisionState($scope.prevision, true);
           	  });
@@ -355,7 +355,7 @@ angular.module('vsko.stock')
 
               console.log('update prevision state', result);
               if(skipNotify) {
-    						$.notify("Estado de previsiones actualizado.", {className: "success", globalPosition: "bottom right"});
+                Utils.showMessage('notify.previsions_state_updated');
               }
 
               var currentPrevisionUpdated = false;

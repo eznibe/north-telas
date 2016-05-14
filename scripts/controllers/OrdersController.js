@@ -2,7 +2,7 @@
 
 angular.module('vsko.stock')
 
-.controller('OrdersCtrl', ['$scope', 'Orders', 'Previsions', 'orderStatus', '$routeParams', '$modal', function ($scope, Orders, Previsions, orderStatus, $routeParams, $modal) {
+.controller('OrdersCtrl', ['$scope', 'Utils', 'Orders', 'Previsions', 'orderStatus', '$routeParams', '$modal', function ($scope, Utils, Orders, Previsions, orderStatus, $routeParams, $modal) {
 
 		$scope.type = $routeParams.type;
 
@@ -40,7 +40,7 @@ angular.module('vsko.stock')
 
 	        			order = $.extend(true, order, result.data.order);
 
-	        			$.notify("Orden pasada a confirmar.", {className: "success", globalPosition: "bottom right"});
+								Utils.showMessage('notify.order_confirmed');
         			}
         		});
         	}
@@ -56,7 +56,7 @@ angular.module('vsko.stock')
 
 	        			order = $.extend(true, order, result.data.order);
 
-	        			$.notify("Orden pasada a en transito.", {className: "success", globalPosition: "bottom right"});
+								Utils.showMessage('notify.order_to_in_transit');
 
 								updatePrevisionState(order);
         			}
@@ -87,7 +87,7 @@ angular.module('vsko.stock')
         			result = false;
         			$scope.modalCtrl.formOrderInfo.$setDirty();
 
-        			$.notify("Informacion faltante para arrivar orden.", {className: "error", globalPosition: "bottom right"});
+							Utils.showMessage('notify.missing_info_arrive', 'error');
         		}
         	}
 
@@ -108,7 +108,7 @@ angular.module('vsko.stock')
 
 	        			order = $.extend(true, order, result.data.order);
 
-	        			$.notify("Orden arribada.", {className: "success", globalPosition: "bottom right"});
+								Utils.showMessage('notify.order_arrived');
 
 								updatePrevisionState(order);
 	    			}
@@ -126,14 +126,14 @@ angular.module('vsko.stock')
 
 	        			$scope.modalOrder.hide();
 
-	        			$.notify("Orden eliminada.", {className: "success", globalPosition: "bottom right"});
+								Utils.showMessage('notify.order_deleted');
 
 								if(order.status == orderStatus.in_transit) {
 									updatePrevisionState(order);
 								}
 	    			}
 	    			else {
-	    				$.notify("Error eliminando orden.", {className: "error", globalPosition: "bottom right"});
+							Utils.showMessage('notify.order_delete_failed', 'error');
 	    			}
 	    		});
 
@@ -161,7 +161,7 @@ angular.module('vsko.stock')
 					var clothsIds = order.products.map(function(p) { return p.clothId; }).join(',');
 
 					Previsions.updatePrevisionState(clothsIds).then(function() {
-						$.notify("Estado de previsiones actualizado.", {className: "success", globalPosition: "bottom right"});
+						Utils.showMessage('notify.previsions_state_updated');
 					});
 				}
 }]);

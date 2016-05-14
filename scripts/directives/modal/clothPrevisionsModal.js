@@ -2,7 +2,7 @@
 
 angular.module('vsko.stock')
 
-.directive('clothPrevisionsModal', function($modal, Previsions) {
+.directive('clothPrevisionsModal', function($modal, Utils, Previsions) {
 
     return {
           restrict: 'E',
@@ -26,7 +26,7 @@ angular.module('vsko.stock')
 
             $scope.acceptStateChange = function(p) {
               Previsions.acceptStateChange(p).then(function() {
-                $.notify("Cambio de estado aceptado.", {className: "success", globalPosition: "bottom right"});
+                Utils.showMessage('notify.state_accepted_prevision');
                 p.stateAccepted = '1';
               });
             };

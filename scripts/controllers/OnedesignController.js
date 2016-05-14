@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('vsko.stock').controller('OnedesignCtrl', ['$scope', 'OneDesign', '$modal', 'uuid4', function ($scope, OneDesign, $modal, uuid4) {
+angular.module('vsko.stock').controller('OnedesignCtrl', ['$scope', 'Utils', 'OneDesign', '$modal', 'uuid4', function ($scope, Utils, OneDesign, $modal, uuid4) {
 
 		OneDesign.getBoats().then(function(result){
 
@@ -20,7 +20,7 @@ angular.module('vsko.stock').controller('OnedesignCtrl', ['$scope', 'OneDesign',
 
         			$scope.boats.remove(boat);
 
-        			$.notify("Barco eliminado como OD.", {className: "success", globalPosition: "bottom right"});
+							Utils.showMessage('notify.od_boat_deleted');
         		}
         	});
         };

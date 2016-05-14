@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('vsko.stock').controller('DesignCtrl', ['$scope', 'Previsions', '$modal', function ($scope, Previsions, $modal) {
+angular.module('vsko.stock').controller('DesignCtrl', ['$scope', 'Utils', 'Previsions', '$modal', function ($scope, Utils, Previsions, $modal) {
 
         // initial list of previsions
         Previsions.getAll(false).then(function(result) {
@@ -14,13 +14,12 @@ angular.module('vsko.stock').controller('DesignCtrl', ['$scope', 'Previsions', '
 
             	console.log('Designed: '+prevision.orderNumber);
 
-            	$.notify("Orden pasada a plotter.", {className: "success", globalPosition: "bottom right"});
-
+              Utils.showMessage('notify.order_to_plotter');
 
               var clothsIds = prevision.cloths.map(function(c) { return c.clothId; }).join(',');
 
               Previsions.updatePrevisionState(clothsIds).then(function() {
-  							$.notify("Estado de previsiones actualizado.", {className: "success", globalPosition: "bottom right"});
+                Utils.showMessage('notify.previsions_state_updated');
   						});
             });
 

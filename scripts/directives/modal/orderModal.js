@@ -2,7 +2,7 @@
 
 angular.module('vsko.stock')
 
-.directive('orderModal', function($modal, Orders, Previsions, orderStatus) {
+.directive('orderModal', function($modal, Utils, Orders, Previsions, orderStatus) {
 
     return {
           restrict: 'E',
@@ -41,7 +41,7 @@ angular.module('vsko.stock')
                   if(order.status == orderStatus.in_transit) {
                     var clothsIds = order.products.map(function(p) { return p.clothId; }).join(',');
                     Previsions.updatePrevisionState(clothsIds).then(function() {
-                      $.notify("Estado de previsiones actualizado.", {className: "success", globalPosition: "bottom right"});
+                      Utils.showMessage('notify.previsions_state_updated');
                     });
                   }
   	      			});
@@ -55,11 +55,11 @@ angular.module('vsko.stock')
 
 		      				$scope.order.products.remove(orderproduct);
 
-		      				$.notify("Item de la orden removido.", {className: "success", globalPosition: "bottom right"});
+                  Utils.showMessage('notify.order_item_deleted');
 
                   if($scope.order.status == orderStatus.in_transit) {
                     Previsions.updatePrevisionState(orderproduct.clothId).then(function() {
-                      $.notify("Estado de previsiones actualizado.", {className: "success", globalPosition: "bottom right"});
+                      Utils.showMessage('notify.previsions_state_updated');
                     });
                   }
 
@@ -71,7 +71,7 @@ angular.module('vsko.stock')
 		      						$scope.orders_buy.remove($scope.order);
 		      					}
 
-		      					$.notify("Orden sin items removida.", {className: "success", globalPosition: "bottom right"});
+                    Utils.showMessage('notify.order_no_items_deleted');
 		      				}
 	      				}
 	      			});
@@ -103,7 +103,7 @@ angular.module('vsko.stock')
 
                 if($scope.order.status == orderStatus.in_transit) {
                   Previsions.updatePrevisionState(product.clothId).then(function() {
-        						$.notify("Estado de previsiones actualizado.", {className: "success", globalPosition: "bottom right"});
+                    Utils.showMessage('notify.previsions_state_updated');
         					});
                 }
               });
