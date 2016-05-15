@@ -17,6 +17,24 @@
 					<input ng-model="pctNac" class="form-control small" required/>
 				</div>
 
+				<!-- <label class="control-label col-xs-1" >&nbsp;</label>
+				<div class="col-xs-4">
+					<a ng-click="save()" class="btn btn-default floatright" ng-disabled="formDolar.$invalid">
+						<span class="glyphicon glyphicon-save"></span>
+						{{'Save' | translate}}
+					</a>
+				</div> -->
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6 nopadding">
+
+				<label class="control-label col-xs-3" translate>Idioma</label>
+				<div class="col-xs-3">
+					<a href="#" ng-click="changeLanguage('spanish')">es</a>
+					<a href="#" ng-click="changeLanguage('port')">br</a>
+				</div>
+
 				<label class="control-label col-xs-1" >&nbsp;</label>
 				<div class="col-xs-4">
 					<a ng-click="save()" class="btn btn-default floatright" ng-disabled="formDolar.$invalid">

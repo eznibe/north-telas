@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('vsko.stock').controller('DolarCtrl', ['$scope', 'Utils', 'Stock', function ($scope, Utils, Stock) {
+angular.module('vsko.stock').controller('DolarCtrl', ['$scope', '$translate', '$cookieStore', 'Utils', 'Stock', function ($scope, $translate, $cookieStore, Utils, Stock) {
 
         // initial list of providers
     	Stock.getDolar().then(function(result) {
@@ -12,6 +12,11 @@ angular.module('vsko.stock').controller('DolarCtrl', ['$scope', 'Utils', 'Stock'
       	$scope.pctNac = result.data[0].value;
 				$scope.pctNacOrig = $scope.pctNac;
       });
+
+      $scope.changeLanguage = function(lang) {
+        $translate.use(lang);
+        $cookieStore.put('lang', lang);
+      }
 
     	$scope.save = function() {
 

@@ -11,11 +11,16 @@ angular.module("vsko.stock", [
 				'angucomplete-alt',
 				'anguFixedHeaderTable'
     ])
-    .run(['$cookieStore', '$rootScope', function ($cookieStore, $rootScope) {
+    .run(['$cookieStore', '$rootScope', '$translate', function ($cookieStore, $rootScope, $translate) {
     	console.log('vsko.stock run');
 
     	var user = $cookieStore.get('user');
     	$rootScope.user = user ? user : {};
+
+			var lang = $cookieStore.get('lang');
+			if (lang) {
+	    	$translate.use(lang);
+			}
 
 	}])
 	.factory('Authorization', ['$rootScope', function($rootScope) {
