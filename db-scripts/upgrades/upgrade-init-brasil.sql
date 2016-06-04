@@ -287,3 +287,42 @@ INSERT INTO rolls (id,productId,type,number,lote,mtsOriginal,mts,orderId,incomin
 INSERT INTO rolls (id,productId,type,number,lote,mtsOriginal,mts,orderId,incoming,manual) VALUES ('103','52','DEF','41748-01','04',35,35,'1',false,true);
 INSERT INTO rolls (id,productId,type,number,lote,mtsOriginal,mts,orderId,incoming,manual) VALUES ('104','53','DEF','1646402','05',106,106,'1',false,true);
 INSERT INTO rolls (id,productId,type,number,lote,mtsOriginal,mts,orderId,incoming,manual) VALUES ('105','54','DEF','1682503','04',95,95,'1',false,true);
+
+
+INSERT INTO sails (id,description,formulaLower44Id,formulaGreater44Id) VALUES ('1','Mestra radial','1','9');
+INSERT INTO sails (id,description,formulaLower44Id,formulaGreater44Id) VALUES ('2','Mestra dacron','2','10');
+INSERT INTO sails (id,description,formulaLower44Id,formulaGreater44Id) VALUES ('3','Genoa radial','3','11');
+INSERT INTO sails (id,description,formulaLower44Id,formulaGreater44Id) VALUES ('4','Genoa dacron','4','12');
+INSERT INTO sails (id,description,formulaLower44Id,formulaGreater44Id) VALUES ('5','Spi staysail','5','13');
+INSERT INTO sails (id,description,formulaLower44Id,formulaGreater44Id) VALUES ('6','Spi','6','14');
+INSERT INTO sails (id,description,formulaLower44Id,formulaGreater44Id) VALUES ('7','Spi S0','7','15');
+INSERT INTO sails (id,description,formulaLower44Id,formulaGreater44Id) VALUES ('8','Assimetrico','8','16');
+INSERT INTO sails (id,description,formulaLower44Id,formulaGreater44Id) VALUES ('9','Gennaker','8','16');
+INSERT INTO sails (id,description,formulaLower44Id,formulaGreater44Id) VALUES ('10','My capa','3','11');
+INSERT INTO sails (id,description,formulaLower44Id,formulaGreater44Id) VALUES ('11','Mesana dacron','2','10');
+INSERT INTO sails (id,description,formulaLower44Id,formulaGreater44Id) VALUES ('12','Staysail','3','11');
+INSERT INTO sails (id,description,formulaLower44Id,formulaGreater44Id) VALUES ('13','Trinquetilla','3','11');
+INSERT INTO sails (id,description,formulaLower44Id,formulaGreater44Id) VALUES ('14','Tormentin','3','11');
+INSERT INTO sails (id,description,formulaLower44Id,formulaGreater44Id) VALUES ('15','Jib top','3','11');
+INSERT INTO sails (id,description,formulaLower44Id,formulaGreater44Id) VALUES ('16','Yankee','3','11');
+INSERT INTO sails (id,description,formulaLower44Id,formulaGreater44Id) VALUES ('18','Otra',null,null);
+INSERT INTO sails (id,description,formulaLower44Id,formulaGreater44Id) VALUES ('19','Buja radial','3','11');
+INSERT INTO sails (id,description,formulaLower44Id,formulaGreater44Id) VALUES ('20','Buja dacron','4','12');
+
+
+INSERT INTO formulas (id,formula,value,fields,type,split) VALUES ('1','Mayor radial PE <44',1.70,'PE','MULT_DIV','Y');
+INSERT INTO formulas (id,formula,value,fields,type,split) VALUES ('2','Mayor dacron PE <44',1.50,'PE','MULT_DIV','N');
+INSERT INTO formulas (id,formula,value,fields,type,split) VALUES ('3','Genoa radial SUP <44',1.30,'SUP','MULT','Y');
+INSERT INTO formulas (id,formula,value,fields,type,split) VALUES ('4','Genoa dacron SUP <44',1.10,'SUP','MULT','N');
+INSERT INTO formulas (id,formula,value,fields,type,split) VALUES ('5','Spi staysail SUP <44',1.10,'SUP','MULT','N');
+INSERT INTO formulas (id,formula,value,fields,type,split) VALUES ('6','Spi IJ <44',1.80,'IJ','MULT_MULT','N');
+INSERT INTO formulas (id,formula,value,fields,type,split) VALUES ('7','Spi S0 IJ <44',1.40,'IJ','MULT_MULT','N');
+INSERT INTO formulas (id,formula,value,fields,type,split) VALUES ('8','Asymetr y gennak IJ <44',1.65,'IJ','MULT_MULT','N');
+INSERT INTO formulas (id,formula,value,fields,type,split) VALUES ('9','Mayor radial PE >44',1.80,'PE','MULT_DIV','Y');
+INSERT INTO formulas (id,formula,value,fields,type,split) VALUES ('10','Mayor dacron PE >44',1.60,'PE','MULT_DIV','N');
+INSERT INTO formulas (id,formula,value,fields,type,split) VALUES ('11','Genoa radial SUP >44',1.40,'SUP','MULT','Y');
+INSERT INTO formulas (id,formula,value,fields,type,split) VALUES ('12','Genoa dacron SUP >44',1.20,'SUP','MULT','N');
+INSERT INTO formulas (id,formula,value,fields,type,split) VALUES ('13','Spi staysail SUP >44',1.20,'SUP','MULT','N');
+INSERT INTO formulas (id,formula,value,fields,type,split) VALUES ('14','Spi IJ >44',1.80,'IJ','MULT_MULT','N');
+INSERT INTO formulas (id,formula,value,fields,type,split) VALUES ('15','Spi S0 IJ >44',1.40,'IJ','MULT_MULT','N');
+INSERT INTO formulas (id,formula,value,fields,type,split) VALUES ('16','Asymetr y gennak IJ >44',1.65,'IJ','MULT_MULT','N');
