@@ -8,7 +8,7 @@
 
     <link href="css/bootstrap/bootstrap.css" rel="stylesheet" media="screen">
     <link href="css/angular-motion.css" rel="stylesheet" media="screen">
-<!--     <link href="css/style.css" rel="stylesheet" media="screen"> -->
+    <link href="css/custom.css" rel="stylesheet" media="screen">
 <!-- 	<link href="css/font-awesome.min.css" rel="stylesheet" media="screen"> -->
 
 <!-- 	<link href="css/notification.min.css" rel="stylesheet" media="screen"> -->
@@ -70,6 +70,14 @@
 			                        <li><a href="#/plotter" translate>Plotter</a></li>
 			                    </ul>
 							</li>
+              <li>
+								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'Manage' | translate }} <span class="caret"></span></a>
+			                    <ul class="dropdown-menu" role="menu">
+                            <li><a href="#/production" translate>Production</a></li>
+                            <li><a href="#/dispatch" translate>Dispatchs</a></li>
+                            <!-- <li><a href="#/canvas" translate>Canvas</a></li> -->
+			                    </ul>
+							</li>
 							<li>
 								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'Lists' | translate }} <span class="caret"></span></a>
 			                    <ul class="dropdown-menu" role="menu">
@@ -97,6 +105,13 @@
 			                        <li style="padding:0px 10px;"><input type="search" id="appsearch" ng-model="$parent.searchBox" stop-propagation/></li>
 			                    </ul>
 							</li>
+              <!-- <li>
+                <div angular-stats watch-count=".watch-count" digest-length=".digest-length"
+                     on-watch-count-update="onWatchCountUpdate(watchCount)"
+                     on-digest-length-update="onDigestLengthUpdate(digestLength)" style="z-index: 999; position: relative; left:10px;">
+                  Watchers: <span class="watch-count"></span><br />
+                </div>
+              </li> -->
 						</ul>
 						<ul class="nav navbar-nav navbar-right" ng-show="user.name">
 							<li class="dropdrown">
@@ -147,19 +162,22 @@
 	    <script src="bower_components/notifyjs/dist/notify-combined.min.js"></script>
 	    <script src="bower_components/angucomplete-alt/angucomplete-alt.js"></script>
 	    <script src="bower_components/angu-fixed-header-table/angu-fixed-header-table.js"></script> -->
+      <!-- <script src="bower_components/ng-stats/ng-stats.js"></script> --> 
 	    <!-- endbower -->
 	    <!-- endbuild -->
 
-      <script src="build/code.js"></script>
+      <!-- <script src="build/code.js"></script> -->
 
-        <!-- build:js({.tmp,webapp}) scripts/scripts.js -->
-        <!-- <script src="scripts/app.js"></script>
+        <script src="scripts/app.js"></script>
         <script src="scripts/controllers/GroupsController.js"></script>
         <script src="scripts/controllers/ClothsController.js"></script>
         <script src="scripts/controllers/PrevisionsController.js"></script>
         <script src="scripts/controllers/OrdersController.js"></script>
         <script src="scripts/controllers/DesignController.js"></script>
         <script src="scripts/controllers/PlotterController.js"></script>
+        <script src="scripts/controllers/ProductionController.js"></script>
+        <script src="scripts/controllers/DispatchController.js"></script>
+        <script src="scripts/controllers/CanvasController.js"></script>
         <script src="scripts/controllers/ProvidersController.js"></script>
         <script src="scripts/controllers/DolarController.js"></script>
         <script src="scripts/controllers/OnedesignController.js"></script>
@@ -188,6 +206,8 @@
         <script src="scripts/directives/orderRollsTags.js"></script>
         <script src="scripts/directives/clothRollsTags.js"></script>
         <script src="scripts/directives/onedesignSails.js"></script>
+        <script src="scripts/directives/dispatchOrders.js"></script>
+        <script src="scripts/directives/previsionCloths.js"></script>
         <script src="scripts/directives/editableFields.js"></script>
         <script src="scripts/directives/modal/documentsModal.js"></script>
         <script src="scripts/directives/modal/clothModal.js"></script>
@@ -202,6 +222,7 @@
         <script src="scripts/directives/modal/manualPlotterModal.js"></script>
         <script src="scripts/directives/modal/providerModal.js"></script>
         <script src="scripts/directives/modal/onedesignModal.js"></script>
+        <script src="scripts/directives/modal/dispatchModal.js"></script>
         <script src="scripts/directives/modal/manualRollModal.js"></script>
         <script src="scripts/directives/modal/editTextModal.js"></script>
         <script src="scripts/directives/modal/confirmCutModal.js"></script>
@@ -210,7 +231,7 @@
         <script src="scripts/directives/modal/warningModal.js"></script>
         <script src="scripts/filters/filters.js"></script>
         <script src="scripts/constants/constants.js"></script>
-        <script src="scripts/domain/cloth.js"></script> -->
+        <script src="scripts/domain/cloth.js"></script>
         <!-- endbuild -->
 
 	<script>

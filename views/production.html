@@ -1,0 +1,154 @@
+<div class="nopaddingright jumbotron clearfix">
+	<div class="row">
+		<h1 class="col-md-11"><span translate>Production</span></h1>
+		<div class="col-md-1 text-right">
+			<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span></a>
+			<ul class="columns-settings-dropdown dropdown-menu form-horizontal" role="menu">
+				<li class="row" ng-click="$event.stopPropagation();"><label class="col-xs-10" translate>Seller col</label><input class="col-xs-2" type="checkbox" ng-model="columns.seller"/></li>
+				<li class="row" ng-click="$event.stopPropagation();"><label class="col-xs-10" translate>Week col</label><input class="col-xs-2" type="checkbox" ng-model="columns.week"/></li>
+				<li class="row" ng-click="$event.stopPropagation();"><label class="col-xs-10" translate>Priority col</label><input class="col-xs-2" type="checkbox" ng-model="columns.priority"/></li>
+				<li class="row" ng-click="$event.stopPropagation();"><label class="col-xs-10" translate>Dispatch</label><input class="col-xs-2" type="checkbox" ng-model="columns.dispatch"/></li>
+				<li class="row" ng-click="$event.stopPropagation();"><label class="col-xs-10" translate>Order</label><input class="col-xs-2" type="checkbox" ng-model="columns.order"/></li>
+				<li class="row" ng-click="$event.stopPropagation();"><label class="col-xs-10" translate>Client</label><input class="col-xs-2" type="checkbox" ng-model="columns.client"/></li>
+				<li class="row" ng-click="$event.stopPropagation();"><label class="col-xs-10" translate>Boat</label><input class="col-xs-2" type="checkbox" ng-model="columns.boat"/></li>
+				<li class="row" ng-click="$event.stopPropagation();"><label class="col-xs-10" translate>Sail</label><input class="col-xs-2" type="checkbox" ng-model="columns.sail"/></li>
+				<li class="row" ng-click="$event.stopPropagation();"><label class="col-xs-10" translate>Line</label><input class="col-xs-2" type="checkbox" ng-model="columns.line"/></li>
+				<li class="row" ng-click="$event.stopPropagation();"><label class="col-xs-10" translate>%</label><input class="col-xs-2" type="checkbox" ng-model="columns.percentage"/></li>
+				<li class="row" ng-click="$event.stopPropagation();"><label class="col-xs-10" translate>Advance</label><input class="col-xs-2" type="checkbox" ng-model="columns.advance"/></li>
+				<li class="row" ng-click="$event.stopPropagation();"><label class="col-xs-10" translate>Delivery date min</label><input class="col-xs-2" type="checkbox" ng-model="columns.deliveryDate"/></li>
+				<li class="row" ng-click="$event.stopPropagation();"><label class="col-xs-10" translate>Tentative date min</label><input class="col-xs-2" type="checkbox" ng-model="columns.tentativeDate"/></li>
+				<li class="row" ng-click="$event.stopPropagation();"><label class="col-xs-10" translate>Production date min</label><input class="col-xs-2" type="checkbox" ng-model="columns.productionDate"/></li>
+				<li class="row" ng-click="$event.stopPropagation();"><label class="col-xs-10" translate>Info date min</label><input class="col-xs-2" type="checkbox" ng-model="columns.infoDate"/></li>
+				<li class="row" ng-click="$event.stopPropagation();"><label class="col-xs-10" translate>Advance date min</label><input class="col-xs-2" type="checkbox" ng-model="columns.advanceDate"/></li>
+				<li class="row" ng-click="$event.stopPropagation();"><label class="col-xs-10" translate>Cloths</label><input class="col-xs-2" type="checkbox" ng-model="columns.cloths"/></li>
+				<li class="row" ng-click="$event.stopPropagation();"><label class="col-xs-10" translate>State col</label><input class="col-xs-2" type="checkbox" ng-model="columns.state"/></li>
+				<li class="row" ng-click="$event.stopPropagation();"><label class="col-xs-10" translate>Area</label><input class="col-xs-2" type="checkbox" ng-model="columns.area"/></li>
+			</ul>
+		</div>
+	</div>
+
+
+	<div class="row">
+		<div class="col-md-6 nopadding">
+				<label class="control-label col-xs-3" translate>Filter by</label>
+				<div class="col-xs-4">
+					<select name="dd_ty" ng-model="filter.selectedOption" ng-options="sc as sc.name for sc in filter.optionsb" class="form-control small" ng-change="clearFilterOption();">
+			        </select>
+				</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6 nopadding">
+				<label class="control-label col-xs-3" translate>Order by</label>
+				<div class="col-xs-4">
+					<select name="dd_ty" ng-model="filter.selectedOption" ng-options="sc as sc.name for sc in filter.optionsb" class="form-control small" ng-change="clearFilterOption();">
+			        </select>
+				</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-6 nopadding">
+				<label class="control-label col-xs-2"></label>
+				<div class="col-xs-4">
+				</div>
+
+				<label class="control-label col-xs-1" for="edit_cloth" translate>&nbsp;</label>
+				<div class="col-xs-4">
+					<a ng-click="search()" class="btn btn-default floatright">
+						<span class="glyphicon glyphicon-search"></span>
+						{{'Search' | translate}}
+					</a>
+				</div>
+		</div>
+	</div>
+</div>
+
+<!-- Consumos -->
+<table id="production" class="table table-bordered table-striped table-hover">
+	<thead>
+		<tr>
+			<th ng-show="columns.seller" translate>Seller col</th>
+			<th ng-show="columns.week" translate>Week col</th>
+			<th ng-show="columns.priority" translate>Priority col</th>
+			<th ng-show="columns.dispatch" translate>Dispatch</th>
+			<th ng-show="columns.order" translate>Order</th>
+			<th ng-show="columns.client" translate>Client</th>
+			<th ng-show="columns.boat" translate>Boat</th>
+			<th ng-show="columns.sail" translate>Sail</th>
+			<th ng-show="columns.line" translate>Line</th>
+			<th ng-show="columns.percentage">%</th>
+			<th ng-show="columns.advance" translate>Advance</th>
+			<th ng-show="columns.deliveryDate" translate style="min-width:95px;">Delivery date min</th>
+			<th ng-show="columns.tentativeDate" translate style="min-width:95px;">Tentative date min</th>
+			<th ng-show="columns.productionDate" translate style="min-width:95px;">Production date min</th>
+			<th ng-show="columns.infoDate" translate>Info date min</th>
+			<th ng-show="columns.advanceDate" translate>Advance date min</th>
+			<th ng-show="columns.cloths" translate>Cloths</th>
+			<th ng-show="columns.state" translate>State col</th>
+			<th ng-show="columns.area" translate>Area</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="p in previsions | filter:searchBox">
+			<td ng-show="columns.seller">
+				TT
+			</td>
+			<td ng-show="columns.week">
+				1
+			</td>
+			<td ng-show="columns.priority">
+				10
+			</td>
+			<td ng-show="columns.dispatch">
+				{{p.dispatch}}
+			</td>
+			<td ng-show="columns.order">
+				{{p.orderNumber}}
+			</td>
+			<td ng-show="columns.client">
+				{{p.client}}
+			</td>
+			<td ng-show="columns.boat">
+				{{p.boat}}
+			</td>
+			<td ng-show="columns.sail">
+				{{p.sailName}}
+			</td>
+			<td ng-show="columns.line">
+				{{p.line}}
+			</td>
+			<td ng-show="columns.percentage">
+				5
+			</td>
+			<td ng-show="columns.advance">
+				{{p.advance}}
+			</td>
+			<td class="column-date" ng-show="columns.deliveryDate">
+				<editable-date entity="p" field="'deliveryDate'" callback="updateDate" editable-by-role="'admin'" width="50" style="display:inline-block;"></editable-date>
+			</td>
+			<td ng-show="columns.tentativeDate">
+				<!-- Date -->
+			</td>
+			<td ng-show="columns.productionDate">
+				<!-- Date -->
+			</td>
+			<td ng-show="columns.infoDate">
+				<!-- Date -->
+			</td>
+			<td ng-show="columns.advanceDate">
+				<!-- Date -->
+			</td>
+			<td ng-show="columns.cloths">
+				<!-- Cloths tags -->
+				<prevision-cloths prevision="p" style="display:inline-block;"></prevision-cloths>
+			</td>
+			<td ng-show="columns.state">
+				{{p.state}}
+			</td>
+			<td ng-show="columns.area">
+				{{p.area}}
+			</td>
+		</tr>
+	</tbody>
+</table>

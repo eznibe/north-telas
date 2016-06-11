@@ -9,7 +9,8 @@ angular.module("vsko.stock", [
         'toaster',
         'angular-loading-bar',
 				'angucomplete-alt',
-				'anguFixedHeaderTable'
+				'anguFixedHeaderTable',
+				'angularStats',
     ])
     .run(['$cookieStore', '$rootScope', '$translate', function ($cookieStore, $rootScope, $translate) {
     	console.log('vsko.stock run');
@@ -130,6 +131,21 @@ angular.module("vsko.stock", [
             .when('/plotter', {
                 templateUrl: 'views/plotter.html',
                 controller: 'PlotterCtrl',
+                access: 'public'
+            })
+						.when('/production', {
+                templateUrl: 'views/production.html',
+                controller: 'ProductionCtrl',
+                access: 'public'
+            })
+						.when('/dispatch', {
+                templateUrl: 'views/dispatchs.html',
+                controller: 'DispatchCtrl',
+                access: 'public'
+            })
+						.when('/canvas', {
+                templateUrl: 'views/canvas.html',
+                controller: 'CanvasCtrl',
                 access: 'public'
             })
             .when('/orders/:type', {

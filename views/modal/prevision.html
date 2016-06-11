@@ -70,11 +70,11 @@
 								<label class="control-label col-xs-4" for="edit_date" translate>Delivery date</label>
 								<div class="col-xs-8">
 									<div class="input-group input-group-sm date" date-picker>
-											<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="prevision.deliveryDate" class="form-control small" required>
-											<span class="input-group-addon">
-												<span class="glyphicon-calendar glyphicon"></span>
-											</span>
-										</div>
+										<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="prevision.deliveryDate" class="form-control small" required>
+										<span class="input-group-addon">
+											<span class="glyphicon-calendar glyphicon"></span>
+										</span>
+									</div>
 								</div>
 						</div>
 						<div class="col-md-6 nopadding">
@@ -115,8 +115,8 @@
 								</div>
 								<div class="col-xs-4" ng-show="prevision.oneDesign">
 									<select name="dd_boat" ng-model="prevision.selectedBoat" ng-options="b as b.boat for b in boats" class="form-control small" ng-change="oneDesignCloths()">
-				                        <option value="">-- choose one --</option>
-				                    </select>
+                    <option value="">-- choose one --</option>
+                  </select>
 								</div>
 
 								<label class="control-label col-xs-2" for="edit_feet" translate>&gt; 44</label>
@@ -139,7 +139,92 @@
 
 					</div>
 
-					<br>
+          <div class="row border-top">
+            <div class="col-md-6 nopadding">
+                <label class="control-label col-xs-4" translate>Seller</label>
+                <div class="col-xs-8">
+                  <select name="dd_boat" ng-model="prevision.selectedSeller" ng-options="b as b.boat for b in sellers" class="form-control small" ng-change="">
+                    <option value="">-- choose one --</option>
+                  </select>
+                </div>
+            </div>
+            <div class="col-md-6 nopadding">
+                <label class="control-label col-xs-4" translate>Week</label>
+                <div class="col-xs-8">
+                  <input type="text" class="form-control small" ng-model="prevision.week">
+                </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 nopadding">
+                <label class="control-label col-xs-4" translate>Tentative date</label>
+                <div class="col-xs-8">
+									<div class="input-group input-group-sm date" date-picker>
+										<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="prevision.tentativeDate" class="form-control small">
+										<span class="input-group-addon">
+											<span class="glyphicon-calendar glyphicon"></span>
+										</span>
+									</div>
+								</div>
+            </div>
+            <div class="col-md-6 nopadding">
+                <label class="control-label col-xs-4" translate>Line</label>
+                <div class="col-xs-8">
+                  <select name="dd_boat" ng-model="prevision.selectedLine" ng-options="b as b.boat for b in lines" class="form-control small" ng-change="">
+                    <option value="">-- choose one --</option>
+                  </select>
+                </div>
+            </div>
+          </div>
+
+          <div class="row" style="min-height: 32px;">
+            <div class="col-md-6 nopadding">
+                <label class="control-label col-xs-4" translate>Info</label>
+                <div class="col-xs-1">
+									<input type="checkbox" style="margin-top:8px;" ng-model="prevision.info">
+								</div>
+                <div class="col-xs-7" ng-show="prevision.info">
+									<div class="input-group input-group-sm date" date-picker>
+										<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="prevision.infoDate" class="form-control small">
+										<span class="input-group-addon">
+											<span class="glyphicon-calendar glyphicon"></span>
+										</span>
+									</div>
+								</div>
+            </div>
+            <div class="col-md-6 nopadding">
+                <label class="control-label col-xs-4" translate>Advance</label>
+                <div class="col-xs-1">
+									<input type="checkbox" style="margin-top:8px;" ng-model="prevision.advance">
+								</div>
+                <div class="col-xs-4" ng-show="prevision.advance">
+									<div class="input-group input-group-sm date" date-picker>
+										<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="prevision.advanceDate" class="form-control small">
+										<span class="input-group-addon">
+											<span class="glyphicon-calendar glyphicon"></span>
+										</span>
+									</div>
+								</div>
+                <label class="control-label col-xs-1" ng-show="prevision.advance">%</label>
+                <div class="col-xs-2">
+                  <input type="text" class="form-control small" ng-model="prevision.advancePercentage" ng-show="prevision.advance">
+                </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 nopadding">
+                <label class="control-label col-xs-4" translate>Dispatch</label>
+                <div class="col-xs-6">
+                  <select name="dd_boat" ng-model="prevision.selectedDispatch" ng-options="b as b.boat for b in dispatchs" class="form-control small" ng-change="">
+                    <option value="">-- choose one --</option>
+                  </select>
+                </div>
+                <span class="glyphicon glyphicon-plus col-xs-1 control-label" ng-click="newDispatch()" style="text-align:center; cursor:pointer;"></span>
+            </div>
+          </div>
+
 
 					<div class="row border-bottom border-top">
 						<div class="col-md-2 nopadding">
@@ -173,8 +258,6 @@
 								</div>
 						</div>
 					</div>
-
-					<br>
 
 					<div class="row" ng-repeat="c in prevision.cloths">
 						<ng-form name="innerForm">

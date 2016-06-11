@@ -32,7 +32,8 @@ gulp.task('dependencies', function () {
 'bower_components/jquery-dateFormat/dist/jquery-dateFormat.min.js',
 'bower_components/notifyjs/dist/notify-combined.min.js',
 'bower_components/angucomplete-alt/angucomplete-alt.js',
-'bower_components/angu-fixed-header-table/angu-fixed-header-table.js'
+'bower_components/angu-fixed-header-table/angu-fixed-header-table.js',
+'bower_components/ng-stats/ng-stats.js'
 ])
     .pipe(concat('build/bower.js'))
     .pipe(gulp.dest('.'))

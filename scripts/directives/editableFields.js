@@ -299,4 +299,67 @@ angular.module('vsko.stock')
         }
       };
 	}
-);
+)
+
+.directive('editableDate', function($modal, $rootScope) {
+
+	return {
+        restrict: 'E',
+        scope: {
+        	field: '=',
+        	entity: '=',
+        	callback: '=',
+          editableByRole: '=',
+          tooltipText: '=',
+          width: '=',
+          extraLabel: "="
+        },
+        templateUrl: 'views/directives/editableDate.html',
+        link: function postLink(scope, element, attrs) {
+
+      	  scope.editable = false;
+
+          scope.readonly = scope.editableByRole && scope.editableByRole.split(',').lastIndexOf($rootScope.user.role) == -1;
+
+          scope.$watch('entity.id', function(value){
+            if(scope.tooltipText && scope.entity.id)
+              $('#entityDisplay-'+scope.entity.id+'-'+scope.field).tooltip({title: scope.tooltipText });
+          });
+
+
+      	  /*scope.value = scope.entity[scope.field];*/
+
+      	  scope.changed = function(entity) {
+
+            if(entity[scope.field]) {
+        		  scope.callback(entity, entity[scope.field], scope.field);
+
+        		  scope.clicked(entity);
+            }
+      	  };
+
+      	  scope.clicked = function(entity) {
+
+            if(!scope.readonly) {
+
+      		  	if(scope.editable) {
+	        		  	$('#entityEdit-'+entity.id+'-'+scope.field).fadeOut('fast', function() {
+		      			    $('#entityDisplay-'+entity.id+'-'+scope.field).fadeIn('fast');
+	      				  });
+
+                  if(scope.tooltipText)
+                    $('#value-'+scope.entity.id+'-'+scope.field).tooltip({title: scope.tooltipText });
+      		  	}
+      		  	else {
+      		  		$('#entityDisplay-'+entity.id+'-'+scope.field).fadeOut('fast', function() {
+		      			    $('#entityEdit-'+entity.id+'-'+scope.field).fadeIn('fast');
+	      				});
+      		  	}
+
+      		  	scope.editable = !scope.editable;
+            }
+      	  };
+        }
+      };
+	})
+  ;

@@ -1,0 +1,33 @@
+.border-bottom {
+	padding-bottom: 10px;
+	border-bottom: 1px solid #e5e5e5;
+  margin-bottom: 15px !important;
+}
+
+.border-top {
+	padding-top: 10px;
+	border-top: 1px solid #e5e5e5;
+  margin-top: 15px;
+}
+
+.columns-settings-dropdown {
+	min-width: 140px;
+}
+
+.columns-settings-dropdown .row {
+	margin-bottom: 0px;
+}
+
+.columns-settings-dropdown a {
+	min-width: 130px;
+}
+
+td.column-date {
+		padding-left: 3px !important;
+		padding-right: 3px !important;
+		text-align: center;
+}
+
+table#production th {
+	text-align: center;
+}
