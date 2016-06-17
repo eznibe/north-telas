@@ -27,6 +27,17 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', 'Stock', 'P
 
 				};
 
+				$scope.visibility = {
+					showColumn: function(column) {
+						// return false;
+						return $scope.columns[column];
+					},
+
+					refreshColumns() {
+						$scope.$broadcast('$$rebind::refreshColumns');
+					}
+				}
+
 				$scope.clearFilterOption = function() {
 					$scope.filter.invoice = null;
 					$scope.filter.selectedCloth = null;

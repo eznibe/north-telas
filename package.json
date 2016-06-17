@@ -1,1 +1,26 @@
-{}
+{
+  "name": "north-telas",
+  "version": "0.0.1",
+  "description": "A structured cloths stock manager",
+  "author": "ezequiel",
+  "license": "private",
+  "dependencies": {
+    "angular": "1.4.5",
+    "angular-sanitize": "1.4.5",
+    "angular-route": "1.4.5",
+    "angular-cookies": "1.4.5",
+    "angular-resource": "1.4.5",
+    "angular-translate": "2.8.0",
+    "angular-translate-loader-static-files": "2.8.0",
+    "angular-animate": "1.4.5",
+    "angular-loading-bar": "0.8.0",
+    "angular-ui-bootstrap": "~0.14.3",
+    "angular-bind-notifier": "~1.1.6",
+    "jquery": "~2.1.4",
+    "stringify": "~3.1.0",
+    "browserify": "11.2.0",
+    "moment": "2.10.6"
+  },
+  "devDependencies": {
+  }
+}

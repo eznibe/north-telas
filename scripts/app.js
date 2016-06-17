@@ -3,14 +3,15 @@
 angular.module("vsko.stock", [
 	    'ngRoute',
 	    'ngCookies',
-        'mgcrea.ngStrap.modal',
-        'pascalprecht.translate',
-        'uuid4',
-        'toaster',
-        'angular-loading-bar',
-				'angucomplete-alt',
-				'anguFixedHeaderTable',
-				'angularStats',
+      'mgcrea.ngStrap.modal',
+      'pascalprecht.translate',
+      'uuid4',
+      'toaster',
+      'angular-loading-bar',
+			'angucomplete-alt',
+			'anguFixedHeaderTable',
+			'angularStats',
+			'angular.bind.notifier'
     ])
     .run(['$cookieStore', '$rootScope', '$translate', function ($cookieStore, $rootScope, $translate) {
     	console.log('vsko.stock run');

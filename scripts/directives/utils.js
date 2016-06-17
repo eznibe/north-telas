@@ -56,12 +56,18 @@ angular.module('vsko.stock')
 
         link: function(scope, elem, attr) {
 
-        	elem.datepicker( {
+        	elem.datepicker({
         		format: "dd-mm-yyyy",
-                autoclose: true,
-                todayHighlight: true,
-        		language: "en"
-        	} );
+            autoclose: true,
+            todayHighlight: true,
+        		language: "en",
+						// clearBtn: true,
+						forceParse: false						
+        	});
+
+					// elem.datepicker().on('changeDate', function (ev) {
+					//     console.log('date changed');
+					// });
         }
     };
 })
