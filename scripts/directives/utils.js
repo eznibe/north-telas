@@ -62,7 +62,7 @@ angular.module('vsko.stock')
             todayHighlight: true,
         		language: "en",
 						// clearBtn: true,
-						forceParse: false						
+						forceParse: false
         	});
 
 					// elem.datepicker().on('changeDate', function (ev) {
@@ -238,4 +238,17 @@ angular.module('vsko.stock')
       });
     }
   };
-});
+})
+
+.directive('myRepeatDirective', function() {
+  return {
+			restrict: 'AC',
+			scope: { start: '=myRepeatDirective' },
+		link: function(scope, element, attrs) {
+	    if (scope.$parent.$last){
+				console.log('Last repeat row ' + (Date.now() - scope.start) + ' ms.'); //eslint-disable-line
+	    }
+		}
+  };
+})
+;

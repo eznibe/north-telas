@@ -2,7 +2,7 @@
 
 angular.module('vsko.stock')
 
-.directive('previsionModal', function($modal, $rootScope, $q, $translate, Utils, Stock, Previsions, Files, OneDesign, Lists) {
+.directive('previsionModal', function($modal, $rootScope, $q, $translate, Utils, Stock, Previsions, Files, OneDesign, Lists, Production) {
 
     return {
           restrict: 'E',
@@ -13,19 +13,21 @@ angular.module('vsko.stock')
 
         	  Stock.getAllCloths().then(function(result) {
         		  $scope.cloths = result.data;
-          	  });
+        	  });
 
         	  Stock.getAllSails().then(function(result) {
         		  $scope.sails = result.data;
-          	  });
+        	  });
 
         	  OneDesign.getBoats().then(function(result) {
         		  $scope.boats = result.data;
-          	  });
+        	  });
 
         	  OneDesign.getSails().then(function(result) {
-        		  $scope.oneDesignSails = result.data;
-          	  });
+      		    $scope.oneDesignSails = result.data;
+        	  });
+
+    		    $scope.lines = Production.getLines();
 
             $scope.acceptStateChange = function(p) {
               Previsions.acceptStateChange(p).then(function() {
@@ -61,6 +63,13 @@ angular.module('vsko.stock')
 
           	  // set current selected one design sail
           	  $scope.prevision.selectedOneDesignSail = $scope.prevision.oneDesign ? $scope.oneDesignSails.findAll({sail:$scope.prevision.sailOneDesign})[0] : {};
+
+
+              $scope.prevision.selectedLine = $scope.prevision.line ? $scope.lines.findAll({name:$scope.prevision.line})[0] : {};
+
+              if (!$scope.prevision.week) {
+                $scope.prevision.week = 19;
+              }
 
 
           	  $scope.modalPrevision = $modal({template: 'views/modal/prevision.html', show: false, scope: $scope, backdrop:'static', animation:'am-fade-and-slide-top'});
