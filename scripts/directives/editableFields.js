@@ -331,7 +331,6 @@ angular.module('vsko.stock')
           //     $('#entityDisplay-'+scope.entity.id+'-'+scope.field).tooltip({title: scope.tooltipText });
           // });
 
-
       	  /*scope.value = scope.entity[scope.field];*/
 
           scope.oneTimeBindings = {
@@ -365,9 +364,9 @@ angular.module('vsko.stock')
       	  scope.changed = function(entity) {
 
             if(!scope.required || entity[scope.field]) {
-        		  scope.callback(entity, entity[scope.field], scope.field);
+              scope.callback(entity, entity[scope.field], scope.field);
 
-        		  scope.clicked(entity);
+              scope.clicked(entity);
 
               scope.$broadcast('$$rebind::refreshLinkValue');
             }
@@ -377,16 +376,31 @@ angular.module('vsko.stock')
 
             if(!scope.readonly) {
 
-      		  	if(scope.editable) {
-                  $('#entityEdit-'+entity.id+'-'+scope.field).hide();
-		      			  $('#entityDisplay-'+entity.id+'-'+scope.field).fadeIn('fast');
-                  $('#entityPencil-'+entity.id+'-'+scope.field).fadeIn('fast');
+              if(scope.editable) {
+                $('#entityEdit-'+entity.id+'-'+scope.field).hide();
+                $('#entityDisplay-'+entity.id+'-'+scope.field).fadeIn('fast');
+                $('#entityPencil-'+entity.id+'-'+scope.field).fadeIn('fast');
 
-                  if(scope.tooltipText) {
-                    $('#value-'+scope.entity.id+'-'+scope.field).tooltip({title: scope.tooltipText });
-                  }
-      		  	}
+                if(scope.tooltipText) {
+                  $('#value-'+scope.entity.id+'-'+scope.field).tooltip({title: scope.tooltipText });
+                }
+              }
       		  	else {
+                // create datepicker if needed
+                var dateInputElem = $('#entityEdit-'+entity.id+'-'+scope.field + ' input');
+                if(!scope.datepickerCreated) {
+                  dateInputElem.datepicker({
+                    format: "dd-mm-yyyy",
+                    autoclose: true,
+                    todayHighlight: true,
+                    language: "en",
+                    // clearBtn: true,
+                    forceParse: false
+                	});
+                  scope.datepickerCreated = true;
+                }
+
+
                 if (scope.entity[scope.field]) {
                   $('#entityDisplay-'+entity.id+'-'+scope.field).fadeOut('fast', function() {
                     $('#entityEdit-'+entity.id+'-'+scope.field).fadeIn('fast');

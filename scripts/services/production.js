@@ -14,28 +14,20 @@ angular.module('vsko.stock')
       	return lines;
       };
 
+			this.getSellers = function()
+      {
+				var sellers = [{name: 'MP'}, {name: 'EB'}, {name: 'HP'}, {name: 'GS'}];
+      	return sellers;
+      };
+
       this.getPrevisions = function(clothId)
       {
       	return $http.get(url + 'previsions_GET.php?clothId='+clothId+'&designed=false&expand=FULL');
       };
 
-      this.save = function(prevision, loggedUser) {
+      this.updateDate = function(prevision, fieldName) {
 
-				if(prevision.previsionId) {
-					prevision.id = prevision.previsionId;
-				}
-
-      	if(!prevision.id)
-      		prevision.id = uuid4.generate();
-
-      	$.each(prevision.cloths, function(index){
-      		if(!this.cpId)
-      			this.cpId = uuid4.generate();
-      	});
-
-				prevision.modifiedBy = loggedUser;
-
-      	return $http.post(url + 'previsions_POST.php', prevision);
+      	return $http.post(url + 'production_POST.php?updateDate=true&field='+fieldName, prevision);
       };
 
       return this;

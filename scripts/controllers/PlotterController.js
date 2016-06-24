@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('vsko.stock').controller('PlotterCtrl', ['$scope', '$rootScope', 'Utils', 'Previsions', 'Plotters', 'Stock', 'Lists', '$modal', 'uuid4', function ($scope, $rootScope, Utils, Previsions, Plotters, Stock, Lists, $modal, uuid4) {
+angular.module('vsko.stock').controller('PlotterCtrl', ['$scope', '$rootScope', 'Utils', 'Previsions', 'Plotters', 'Stock', 'Lists', 'Rules', 'uuid4', function ($scope, $rootScope, Utils, Previsions, Plotters, Stock, Lists, Rules, uuid4) {
 
         // initial list of plotters
 		loadAllPlotters();
@@ -24,6 +24,14 @@ angular.module('vsko.stock').controller('PlotterCtrl', ['$scope', '$rootScope', 
 							Previsions.updatePrevisionState(plotter.clothId).then(function() {
 								Utils.showMessage('notify.previsions_state_updated');
 							});
+
+							if (plotter.previsionId) {
+								Previsions.checkAllClothsCutted(plotter.previsionId).then(function(prevision) {
+									if (prevision.data.allCutted) {
+										Rules.updatePrevisionPercentage(prevision.data, true);
+									}
+								});
+							}
 						}
 						else if(!result.data.successful) {
 							Lists.log({type: 'error.finishPlotter', log: result.data.update}).then(function(result) {});

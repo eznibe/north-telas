@@ -17,8 +17,7 @@ gulp.task('dependencies', function () {
 'node_modules/angular-cookies/angular-cookies.js',
 'node_modules/angular-sanitize/angular-sanitize.js',
 'node_modules/angular-route/angular-route.js',
-'bower_components/angular-strap/dist/modules/modal.js',
-'bower_components/angular-strap/dist/modules/dimensions.js',
+'node_modules/angular-strap/dist/angular-strap.min.js',
 'bower_components/angular-xeditable/dist/js/xeditable.js',
 'node_modules/angular-animate/angular-animate.js',
 'bower_components/angular-uuid4/angular-uuid4.js',
@@ -34,7 +33,8 @@ gulp.task('dependencies', function () {
 'bower_components/angucomplete-alt/angucomplete-alt.js',
 'bower_components/angu-fixed-header-table/angu-fixed-header-table.js',
 'bower_components/ng-stats/ng-stats.js',
-'node_modules/angular-bind-notifier/dist/angular-bind-notifier.min.js'
+'node_modules/angular-bind-notifier/dist/angular-bind-notifier.min.js',
+'node_modules/moment/moment.js'
 ])
     .pipe(concat('build/bower.js'))
     .pipe(gulp.dest('.'))

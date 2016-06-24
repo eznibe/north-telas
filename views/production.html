@@ -87,42 +87,50 @@
 			<th ng-show=":refreshColumns:visibility.showColumn('cloths')" translate>Cloths</th>
 			<th ng-show=":refreshColumns:visibility.showColumn('state')" translate>State col</th>
 			<th ng-show=":refreshColumns:visibility.showColumn('area')" translate>Area</th>
+			<th access-allowed="admin,ordenes,plotter" translate>Delete</th>
 		</tr>
 	</thead>
 	<tbody>
+		<tr>
+			<td colspan="20" ng-show="!hideLoading">
+				<!-- <img src="css/img/spinner.gif" style="height: 35px;"/> -->
+				Cargando...
+			</td>
+		</tr>
 		<tr ng-repeat="p in previsions | filter:searchBox" my-repeat-directive="start">
 			<td ng-show=":refreshColumns:visibility.showColumn('seller')">
-				TT
+				<!-- {{:refreshColumsValue:getValue(p, 'seller')}} -->
+				<span ng-bind=":refreshColumnsValue:getValue(p, 'seller')"></span>
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('week')">
-				1
+				{{:refreshColumnsValue:getValue(p, 'week')}}
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('priority')">
-				10
+				{{:refreshColumnsValue:getValue(p, 'priority')}}
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('dispatch')">
-				{{::getValue(p, 'dispatch')}}
+				{{:refreshColumnsValue:getValue(p, 'dispatch')}}
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('order')">
-				<a href="javascript:void(0);" ng-click="showPrevisionModal(p)">{{::p.orderNumber}}</a>
+				<a href="javascript:void(0);" ng-click="showPrevisionModal(p)">{{:refreshColumnsValue:p.orderNumber}}</a>
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('client')">
-				{{::getValue(p, 'client')}}
+				{{:refreshColumnsValue:getValue(p, 'client')}}
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('boat')">
-				{{::getValue(p, 'boat')}}
+				{{:refreshColumnsValue:getValue(p, 'boat')}}
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('sail')">
-				{{::getValue(p, 'sailName')}}
+				{{:refreshColumnsValue:getValue(p, 'sailName')}}
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('line')">
-				{{::getValue(p, 'line')}}
+				{{:refreshColumnsValue:getValue(p, 'line')}}
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('percentage')">
-				5
+				{{:refreshColumnsValue:getValue(p, 'percentage')}}
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('advance')">
-				{{::getValue(p, 'advance')}}
+				{{:refreshColumnsValue:getValue(p, 'advance')}}
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('deliveryDate')" class="column-date">
 				<editable-date entity="::p" field="deliveryDate" callback="::updateDate" editable-by-role="admin" style="display:inline-block;" required="true"></editable-date>
@@ -143,13 +151,20 @@
 				<prevision-cloths prevision="p" style="display:inline-block;"></prevision-cloths>
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('state')">
-				{{::getValue(p, 'state')}}
+				{{:refreshColumnsValue:getValue(p, 'state')}}
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('area')">
-				{{::getValue(p, 'area')}}
+				{{:refreshColumnsValue:getValue(p, 'area')}}
+			</td>
+			<td style="width:80px; text-align:center;" access-allowed="admin,ordenes,plotter">
+				<a ng-click="showConfirmModal(p, removeFromProduction)" class="btn btn-default">
+					<span class="glyphicon glyphicon-trash"></span>
+				</a>
 			</td>
 		</tr>
 	</tbody>
 </table>
 
 <prevision-modal/>
+
+<confirm-modal/>

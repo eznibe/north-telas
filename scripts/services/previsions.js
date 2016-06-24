@@ -22,6 +22,11 @@ angular.module('vsko.stock')
         	return $http.get(url + 'previsions_GET.php?clothId='+clothId+'&designed=false&expand=FULL');
         };
 
+				this.getPrevisionsForProduction = function(includeDesigned)
+        {
+					return $http.get(url + 'previsions_GET.php?listForProduction=true');
+        };
+
         this.save = function(prevision, loggedUser) {
 
 					if(prevision.previsionId) {
@@ -84,6 +89,11 @@ angular.module('vsko.stock')
         	return $http.get(url + 'rolls_GET.php?clothId='+plotter.clothId+'&possibleRolls=true');
         };
 
+				this.checkAllClothsCutted = function(previsionId)
+        {
+        	return $http.get(url + 'previsions_GET.php?checkAllClothsCutted=true&previsionId='+previsionId);
+        };
+
 
         this.saveManualPlotter = function(plotter) {
 
@@ -96,6 +106,11 @@ angular.module('vsko.stock')
 				this.editObservations = function(prevision) {
 
         	return $http.post(url + 'previsions_POST.php?edit=true&field=observations', prevision);
+        };
+
+				this.editField = function(prevision, field) {
+
+        	return $http.post(url + 'previsions_POST.php?edit=true&field='+field, prevision);
         };
 
 				this.updatePrevisionState = function(clothIds) {

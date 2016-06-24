@@ -2,7 +2,7 @@
 
 angular.module('vsko.stock')
 
-.directive('previsionModal', function($modal, $rootScope, $q, $translate, Utils, Stock, Previsions, Files, OneDesign, Lists, Production) {
+.directive('previsionModal', function($modal, $rootScope, $q, $translate, Utils, Stock, Previsions, Files, OneDesign, Lists, Production, Rules) {
 
     return {
           restrict: 'E',
@@ -27,7 +27,9 @@ angular.module('vsko.stock')
       		    $scope.oneDesignSails = result.data;
         	  });
 
-    		    $scope.lines = Production.getLines();
+            $scope.lines = Production.getLines();
+
+            $scope.sellers = Production.getSellers();
 
             $scope.acceptStateChange = function(p) {
               Previsions.acceptStateChange(p).then(function() {
@@ -66,11 +68,19 @@ angular.module('vsko.stock')
 
 
               $scope.prevision.selectedLine = $scope.prevision.line ? $scope.lines.findAll({name:$scope.prevision.line})[0] : {};
+              $scope.prevision.selectedSeller = $scope.prevision.seller ? $scope.sellers.findAll({name:$scope.prevision.seller})[0] : {};
 
               if (!$scope.prevision.week) {
                 $scope.prevision.week = 19;
               }
 
+              if ($scope.prevision.infoDate) {
+                $scope.prevision.hasInfo = true;
+              }
+
+              if ($scope.prevision.advanceDate) {
+                $scope.prevision.hasAdvance = true;
+              }
 
           	  $scope.modalPrevision = $modal({template: 'views/modal/prevision.html', show: false, scope: $scope, backdrop:'static', animation:'am-fade-and-slide-top'});
 
@@ -97,31 +107,40 @@ angular.module('vsko.stock')
 
           $scope.save = function() {
 
-        	  // save changes in each cloth (extending current values only if a new cloth was selected)
-          	  $scope.prevision.cloths.each(function( item ) {
-          		if(item.selectedCloth && item.id != item.selectedCloth.id) {
-          			$.extend(item, item.selectedCloth);
-          			item.clothId = item.selectedCloth.id;
-          			item.previsionId = $scope.prevision.id; // when the cloth is new the previsionid is not set, other cases will have no effect
-          		}
-          	  });
+            // save changes in each cloth (extending current values only if a new cloth was selected)
+            $scope.prevision.cloths.each(function( item ) {
+              if(item.selectedCloth && item.id != item.selectedCloth.id) {
+                $.extend(item, item.selectedCloth);
+                item.clothId = item.selectedCloth.id;
+                item.previsionId = $scope.prevision.id; // when the cloth is new the previsionid is not set, other cases will have no effect
+              }
+            });
 
-          	  if($scope.prevision.selectedSail.id) {
-          		  $scope.prevision.sailId = $scope.prevision.selectedSail.id;
-          	  }
+            if($scope.prevision.selectedSail.id) {
+              $scope.prevision.sailId = $scope.prevision.selectedSail.id;
+            }
 
-          	  if($scope.prevision.selectedBoat.boat) {
-          		  $scope.prevision.boat = $scope.prevision.selectedBoat.boat;
-          	  }
+            if($scope.prevision.selectedBoat.boat) {
+              $scope.prevision.boat = $scope.prevision.selectedBoat.boat;
+            }
 
-          	  if($scope.prevision.selectedOneDesignSail && $scope.prevision.selectedOneDesignSail.sail) {
-        		  $scope.prevision.sailOneDesign = $scope.prevision.selectedOneDesignSail.sail;
-        	  }
+            if($scope.prevision.selectedOneDesignSail && $scope.prevision.selectedOneDesignSail.sail) {
+              $scope.prevision.sailOneDesign = $scope.prevision.selectedOneDesignSail.sail;
+            }
+
+            if($scope.prevision.selectedSeller.name) {
+              $scope.prevision.seller = $scope.prevision.selectedSeller.name;
+            }
+
+            if($scope.prevision.selectedLine.name) {
+              $scope.prevision.line = $scope.prevision.selectedLine.name;
+            }
 
             var waitForPossiblePrevisionStateChange = false;
             var showChangedStateModal = false;
 
             function newStateClose() {
+              // called after the new state warning modal is closed, or called just after save if state is not changed
               $scope.modalPrevision.hide();
 
               if($scope.previousModal) {
@@ -190,6 +209,10 @@ angular.module('vsko.stock')
                   $scope.previousModal.show();
                 }
               }
+
+              if ($scope.onSavePrevision) {
+                $scope.onSavePrevision($scope.prevision);
+              }
         	  });
           };
 
@@ -236,6 +259,10 @@ angular.module('vsko.stock')
 
           $scope.orderNumberChanged = function(str) {
             $scope.prevision.orderNumber = str;
+          }
+
+          $scope.updatePrevisionPercentage = function() {
+            Rules.updatePrevisionPercentage($scope.prevision);
           }
 
           $scope.close = function() {

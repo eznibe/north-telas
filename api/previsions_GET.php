@@ -21,8 +21,14 @@ $expand = isset($_GET['expand']) ? $_GET['expand'] : null;
 if(isset($_GET['id'])) {
 	$value = getPrevision($_GET['id']);
 }
-if(isset($_GET['clothId'])) {
+else if(isset($_GET['clothId'])) {
 	$value = getPrevisions($_GET['clothId'], $designed, $expand, null);
+}
+else if(isset($_GET['listForProduction'])) {
+	$value = getPrevisions(null, null, $expand, true);
+}
+else if(isset($_GET['checkAllClothsCutted'])) {
+	$value = checkAllClothsCutted($_GET['previsionId']);
 }
 else if(isset($_GET['updateAllPrevisionsStates'])) {
 	$value = updateAllPrevisionsStates($_GET['updateClothId'], $_GET['limit'], $_GET['offset']);

@@ -247,6 +247,7 @@ angular.module('vsko.stock')
 		link: function(scope, element, attrs) {
 	    if (scope.$parent.$last){
 				console.log('Last repeat row ' + (Date.now() - scope.start) + ' ms.'); //eslint-disable-line
+				scope.$parent.$parent.hideLoading = true;
 	    }
 		}
   };

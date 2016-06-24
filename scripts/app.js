@@ -3,7 +3,7 @@
 angular.module("vsko.stock", [
 	    'ngRoute',
 	    'ngCookies',
-      'mgcrea.ngStrap.modal',
+      'mgcrea.ngStrap',
       'pascalprecht.translate',
       'uuid4',
       'toaster',

@@ -1,6 +1,6 @@
 <?php
 
-function getPrevisions($clothId, $designed, $expand, $upToDate)
+function getPrevisions($clothId, $designed, $expand, $production)
 {
 
 	$designedCondition = "";
@@ -8,17 +8,24 @@ function getPrevisions($clothId, $designed, $expand, $upToDate)
 		$designedCondition = " AND p.designed = $designed ";
 	}
 
+	$productionCondition = "";
+	if(isset($production)) {
+		$productionCondition = " AND p.deletedProductionOn is null ";
+	}
+
 	$query = '';
 	if(isset($clothId)) {
 
-		$query = "SELECT p.*, coalesce(p.sailDescription, p.sailOneDesign, s.description) as sailName, deliveryDate as unformattedDeliveryDate, DATE_FORMAT(deliveryDate,'%d-%m-%Y') as deliveryDate
+		$query = "SELECT p.*, coalesce(p.sailDescription, p.sailOneDesign, s.description) as sailName, deliveryDate as unformattedDeliveryDate,
+									   DATE_FORMAT(deliveryDate,'%d-%m-%Y') as deliveryDate, DATE_FORMAT(tentativeDate,'%d-%m-%Y') as tentativeDate, DATE_FORMAT(productionDate,'%d-%m-%Y') as productionDate, DATE_FORMAT(infoDate,'%d-%m-%Y') as infoDate, DATE_FORMAT(advanceDate,'%d-%m-%Y') as advanceDate
 							FROM previsions p LEFT JOIN sails s on s.id=p.sailId JOIN previsioncloth pc on pc.previsionId=p.id
 							WHERE pc.clothId = '$clothId' $designedCondition ORDER by p.deliveryDate, p.id";
 	}
 	else {
-		$query = "SELECT p.*, coalesce(p.sailDescription, p.sailOneDesign, s.description) as sailName, deliveryDate as unformattedDeliveryDate, DATE_FORMAT(deliveryDate,'%d-%m-%Y') as deliveryDate
+		$query = "SELECT p.*, coalesce(p.sailDescription, p.sailOneDesign, s.description) as sailName, deliveryDate as unformattedDeliveryDate,
+							       DATE_FORMAT(deliveryDate,'%d-%m-%Y') as deliveryDate, DATE_FORMAT(tentativeDate,'%d-%m-%Y') as tentativeDate, DATE_FORMAT(productionDate,'%d-%m-%Y') as productionDate, DATE_FORMAT(infoDate,'%d-%m-%Y') as infoDate, DATE_FORMAT(advanceDate,'%d-%m-%Y') as advanceDate
 							FROM previsions p LEFT JOIN sails s on s.id=p.sailId
-							WHERE 1=1 $designedCondition ORDER by p.deliveryDate, p.orderNumber";
+							WHERE 1=1 $designedCondition $productionCondition ORDER by p.deliveryDate, p.orderNumber";
 	}
 
 
@@ -91,6 +98,22 @@ function getPrevision($id) {
 	return $obj;
 }
 
+function checkAllClothsCutted($id) {
+
+	$query = "SELECT count(*) as count FROM plotters WHERE previsionId = '$id' and cutted = false";
+	$result = mysql_query($query);
+
+	while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+		$allCutted = $row['count'] == "0";
+	}
+
+	$prevision = getPrevision($id);
+
+	$prevision['allCutted'] = $allCutted;
+
+	return $prevision;
+}
+
 
 function savePrevision($prevision)
 {
@@ -105,6 +128,8 @@ function savePrevision($prevision)
 	$obj->successful = false;
 
 	$observations = isset($prevision->observations) ? $prevision->observations : '' ;
+	$productionObservations = isset($prevision->productionObservations) ? $prevision->productionObservations : '' ;
+	$designObservations = isset($prevision->designObservations) ? $prevision->designObservations : '' ;
 	$boat = isset($prevision->boat) ? $prevision->boat : '' ;
 	$client = isset($prevision->client) ? $prevision->client : '' ;
 	$sailId = isset($prevision->sailId) && $prevision->sailId!='' ? "'".$prevision->sailId."'" : 'null' ;
@@ -118,11 +143,26 @@ function savePrevision($prevision)
 	$j = isset($prevision->j) && trim($prevision->j)!='' ? $prevision->j : 'null' ;
 	$area = isset($prevision->area) && trim($prevision->area)!='' ? $prevision->area : 'null' ;
 
+	$week = isset($prevision->week) && trim($prevision->week)!='' ? $prevision->week : '' ;
+	$priority = isset($prevision->priority) && trim($prevision->priority)!='' ? $prevision->priority : 'null' ;
+	$line = isset($prevision->line) && trim($prevision->line)!='' ? $prevision->line : '' ;
+	$seller = isset($prevision->seller) && trim($prevision->seller)!='' ? $prevision->seller: '' ;
+	$advance = isset($prevision->advance) && trim($prevision->advance)!='' ? $prevision->advance : 'null' ;
+	$percentage = isset($prevision->percentage) && trim($prevision->percentage)!='' ? $prevision->percentage : 'null' ;
+	$tentativeDate = isset($prevision->tentativeDate) && trim($prevision->tentativeDate)!='' ? "STR_TO_DATE('".$prevision->tentativeDate."', '%d-%m-%Y')" : 'null' ;
+	$productionDate = isset($prevision->productionDate) && trim($prevision->productionDate)!='' ? "STR_TO_DATE('".$prevision->productionDate."', '%d-%m-%Y')" : 'null' ;
+	$infoDate = isset($prevision->infoDate) && trim($prevision->infoDate)!='' ? "STR_TO_DATE('".$prevision->infoDate."', '%d-%m-%Y')" : 'null' ;
+	$advanceDate = isset($prevision->advanceDate) && trim($prevision->advanceDate)!='' ? "STR_TO_DATE('".$prevision->advanceDate."', '%d-%m-%Y')" : 'null' ;
+
 	if ($num_results != 0)
 	{
 		// update
 		$update = "UPDATE previsions SET orderNumber = '".$prevision->orderNumber."', deliveryDate = STR_TO_DATE('".$prevision->deliveryDate."', '%d-%m-%Y'), client = '".$client."', sailId = $sailId, sailDescription = $sailDescription, boat = '".$boat."', type = '".$prevision->type."', oneDesign = ".$oneDesign.", greaterThan44 = ".$greaterThan44.
-																		", p = ".$p.", e = ".$e.", i = ".$i.", j = ".$j.", area = ".$area.", sailOneDesign = $sailOneDesign, observations = '$observations' WHERE id = '".$prevision->id."'";
+																		", p = ".$p.", e = ".$e.", i = ".$i.", j = ".$j.", area = ".$area.", sailOneDesign = $sailOneDesign, observations = '$observations'".
+																		", productionObservations = '$productionObservations', designObservations = '$designObservations'".
+																		", week = $week, priority = $priority, line = '$line', seller = '$seller', advance = $advance, percentage = $percentage".
+																		", tentativeDate = $tentativeDate, productionDate = $productionDate, infoDate = $infoDate, advanceDate = $advanceDate".
+																		" WHERE id = '".$prevision->id."'";
 
 		if(mysql_query($update))
 			$obj->successful = true;
@@ -133,9 +173,12 @@ function savePrevision($prevision)
 	}
 	else {
 		// insert
-		$insert = "INSERT INTO previsions (id, orderNumber, deliveryDate, client, sailId, sailDescription, boat,type, designed, oneDesign, greaterThan44, p, e, i,j, area, sailOneDesign, observations)
+		$insert = "INSERT INTO previsions (id, orderNumber, deliveryDate, client, sailId, sailDescription, boat,
+				type, designed, oneDesign, greaterThan44, p, e, i,j, area, sailOneDesign, observations, productionObservations, designObservations,
+				week, priority, line, seller, advance, percentage, tentativeDate, productionDate, infoDate, advanceDate)
 				VALUES ('".$prevision->id."', '".$prevision->orderNumber."', STR_TO_DATE('".$prevision->deliveryDate."', '%d-%m-%Y'), '".$client."', $sailId, $sailDescription, '".$boat."', '".$prevision->type."', false, ".$oneDesign.", ".$greaterThan44.", ".
-								$p.", ".$e.", ".$i.", ".$j.", ".$area.", $sailOneDesign, '$observations')" ;
+								$p.", ".$e.", ".$i.", ".$j.", ".$area.", $sailOneDesign, '$observations', '$productionObservations', '$designObservations',
+								$week, $priority, '$line', '$seller', $advance, $percentage, $tentativeDate, $productionDate, $infoDate, $advanceDate)" ;
 
 		if(mysql_query($insert)) {
 			$obj->successful = true;
@@ -293,6 +336,22 @@ function editPrevisionField($prevision, $field) {
 	$obj->prevision = $prevision;
 
 	$update = "UPDATE previsions SET $field = '".$prevision->$field."' WHERE id = '".$prevision->id."'";
+
+	if(!mysql_query($update)) {
+		$obj->successful = false;
+		$obj->update = $update;
+	}
+
+	return $obj;
+}
+
+function editPrevisionDate($prevision, $field) {
+
+	$obj->successful = true;
+	$obj->method = "updatePrevisionDate($field)";
+	$obj->prevision = $prevision;
+
+	$update = "UPDATE previsions SET $field = STR_TO_DATE('".$prevision->$field."', '%d-%m-%Y') WHERE id = '".$prevision->id."'";
 
 	if(!mysql_query($update)) {
 		$obj->successful = false;
