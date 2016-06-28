@@ -44,7 +44,6 @@ alter table previsions add column designObservations varchar(1024);
 delete from plotters where clothId is null or clothId = '';
 delete previsions from previsions left join plotters on plotters.previsionId = previsions.id where previsions.designed = true and plotters.id is null
 
-update previsions p join plotters pl on p.id = pl.previsionId set p.deletedProductionOn = '2016-06-01', p.deletedProductionBy = 'script'
-where pl.cuttedOn < '2016-05-01'
+update previsions p join plotters pl on p.id = pl.previsionId set p.deletedProductionOn = '2016-06-01', p.deletedProductionBy = 'script' where pl.cuttedOn < '2016-05-01'
 
 update previsions set percentage = 6 where designed = true and percentage is null
