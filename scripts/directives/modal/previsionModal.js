@@ -11,7 +11,7 @@ angular.module('vsko.stock')
         	  var $scope = scope;
 
 
-        	  Stock.getAllCloths().then(function(result) {
+        	  Stock.getAllCloths(true).then(function(result) {
         		  $scope.cloths = result.data;
         	  });
 

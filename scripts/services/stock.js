@@ -75,9 +75,13 @@ angular.module('vsko.stock')
         	return $http.get(url + 'groups_GET.php?id='+groupId+'&expand='+expansion);
         };
 
-        this.getAllCloths = function()
+        this.getAllCloths = function(light)
         {
-        	return $http.get(url + 'cloths_GET.php?expand=FULL');
+					var expand = '';
+					if(!light) {
+						expand = '?expand=FULL';
+					}
+        	return $http.get(url + 'cloths_GET.php'+expand);
         };
 
         this.getProviders = function(clothId)

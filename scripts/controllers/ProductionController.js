@@ -53,6 +53,18 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 		});
 	};
 
+	$scope.changedField = function(entity, value, fieldName) {
+		// console.log('Updated date ', fieldName, ' to:', value);
+		Production.updateDate(entity, fieldName).then(function() {
+			// entity[fieldName] = value;
+			Rules.updatePrevisionPercentage(entity, true);
+			if (entity.percentageChanged) {
+				$scope.$broadcast('$$rebind::refreshColumnsValue');
+				delete entity.percentageChanged;
+			}
+		});
+	};
+
 	$scope.removeFromProduction = function(prevision) {
 		prevision.deletedProductionOn = moment().format('DD-MM-YYYY');
 		prevision.deletedProductionBy = $rootScope.user.name;

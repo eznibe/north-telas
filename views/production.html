@@ -104,6 +104,7 @@
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('week')">
 				{{:refreshColumnsValue:getValue(p, 'week')}}
+				<!-- <editable-input entity="p" field="'week'" callback="changedWeek" width="50" style="display:inline-block;"></editable-input> -->
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('priority')">
 				{{:refreshColumnsValue:getValue(p, 'priority')}}
@@ -127,24 +128,25 @@
 				{{:refreshColumnsValue:getValue(p, 'line')}}
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('percentage')">
-				{{:refreshColumnsValue:getValue(p, 'percentage')}}
+				<!-- {{:refreshColumnsValue:getValue(p, 'percentage')}} -->
+				<editable-production-input entity="p" field="'percentage'" callback="::changedField" width="50" style="display:inline-block;"></editable-production-input>
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('advance')">
 				{{:refreshColumnsValue:getValue(p, 'advance')}}
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('deliveryDate')" class="column-date">
+			<td ng-show=":refreshColumns:visibility.showColumn('deliveryDate')" class="column-date" nowrap>
 				<editable-date entity="::p" field="deliveryDate" callback="::updateDate" editable-by-role="admin" style="display:inline-block;" required="true"></editable-date>
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('tentativeDate')">
+			<td ng-show=":refreshColumns:visibility.showColumn('tentativeDate')" nowrap>
 				<editable-date entity="::p" field="tentativeDate" callback="::updateDate" editable-by-role="admin" style="display:inline-block;"></editable-date>
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('productionDate')">
+			<td ng-show=":refreshColumns:visibility.showColumn('productionDate')" nowrap>
 				<editable-date entity="::p" field="productionDate" callback="::updateDate" editable-by-role="admin" style="display:inline-block;"></editable-date>
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('infoDate')">
+			<td ng-show=":refreshColumns:visibility.showColumn('infoDate')" nowrap>
 				<editable-date entity="::p" field="infoDate" callback="::updateDate" editable-by-role="admin" style="display:inline-block;"></editable-date>
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('advanceDate')">
+			<td ng-show=":refreshColumns:visibility.showColumn('advanceDate')" nowrap>
 				<editable-date entity="::p" field="advanceDate" callback="::updateDate" editable-by-role="admin" style="display:inline-block;"></editable-date>
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('cloths')">

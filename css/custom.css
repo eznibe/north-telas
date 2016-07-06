@@ -31,3 +31,7 @@ td.column-date {
 table#production th {
 	text-align: center;
 }
+
+table#production td {
+	font-size: 12px;
+}
