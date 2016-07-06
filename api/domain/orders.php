@@ -315,7 +315,7 @@ function getClothOrders($startDate, $endDate, $clothId, $invoiceNumber, $provide
 	// all cloths between dates
 	$condition  = " AND STR_TO_DATE('$startDate', '%d-%m-%Y') <= o.arriveDate AND STR_TO_DATE('$endDate', '%d-%m-%Y') >= o.arriveDate ";
 
-	$condition .= isset($clothId) ? " AND c.id = $clothId" : '';
+	$condition .= isset($clothId) ? " AND c.id = '$clothId'" : '';
 
 	$condition .= isset($invoiceNumber) ? " AND o.invoiceNumber like '$invoiceNumber%'" : '';
 
@@ -345,14 +345,16 @@ function getClothOrders($startDate, $endDate, $clothId, $invoiceNumber, $provide
 	$orders = array();
 	foreach ($rows as $order) {
 
-		$query = "SELECT *
+		$subquery = "SELECT *
 			FROM rolls r
 			WHERE r.orderId = '".$order['orderId']."' AND r.productId = '".$order['productId']."'";
-		$result = mysql_query($query);
+		$result = mysql_query($subquery);
 
 		$subrows = fetch_array($result);
 
 		$order['rolls'] = $subrows;
+
+$order['bigquery']  = $query;
 
 		array_push($orders, $order);
 	}
