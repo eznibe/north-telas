@@ -317,7 +317,7 @@ function getClothOrders($startDate, $endDate, $clothId, $invoiceNumber, $provide
 	// all cloths between dates
 	$condition  = " AND STR_TO_DATE('$startDate', '%d-%m-%Y') <= o.arriveDate AND STR_TO_DATE('$endDate', '%d-%m-%Y') >= o.arriveDate ";
 
-	$condition .= isset($clothId) ? " AND c.id = $clothId" : '';
+	$condition .= isset($clothId) ? " AND c.id = '$clothId'" : '';
 
 	$condition .= isset($invoiceNumber) ? " AND o.invoiceNumber like '$invoiceNumber%'" : '';
 

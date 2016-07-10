@@ -101,6 +101,9 @@
 			<td ng-show=":refreshColumns:visibility.showColumn('seller')">
 				<!-- {{:refreshColumsValue:getValue(p, 'seller')}} -->
 				<span ng-bind=":refreshColumnsValue:getValue(p, 'seller')"></span>
+				<!-- <div class="popover-wrapper">
+			    <a href="#" editable-text="p.seller">{{p.seller || '' }}</a>
+			  </div> -->
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('week')">
 				{{:refreshColumnsValue:getValue(p, 'week')}}
@@ -127,9 +130,9 @@
 			<td ng-show=":refreshColumns:visibility.showColumn('line')">
 				{{:refreshColumnsValue:getValue(p, 'line')}}
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('percentage')">
+			<td ng-show=":refreshColumns:visibility.showColumn('percentage')" style="min-width:20px;">
 				<!-- {{:refreshColumnsValue:getValue(p, 'percentage')}} -->
-				<editable-production-input entity="p" field="'percentage'" callback="::changedField" width="50" style="display:inline-block;"></editable-production-input>
+				<editable-production-input entity="::p" field="'percentage'" callback="::changedNumericField" width="50" style="display:inline-block;"></editable-production-input>
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('advance')">
 				{{:refreshColumnsValue:getValue(p, 'advance')}}

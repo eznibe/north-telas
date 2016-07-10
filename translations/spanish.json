@@ -29,7 +29,7 @@
   "Production date min": "F.Producción",
   "Info date min": "F.Info",
   "Advance date min": "F.Adelanto ",
-  "Advance": "Anticipo",
+  "Advance": "Anticipo %",
   "Create new dispatch": "Nuevo despacho",
   "Add order": "Agregar orden",
   "Dispatch date": "Fecha de despacho",

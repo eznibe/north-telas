@@ -27,6 +27,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$value = setDesigned($json);
 	else if(isset($_GET['updateMts']))
 		$value = updateMts($json);
+	else if(isset($_GET['edit']) && isset($_GET['isNumber']))
+		$value = editPrevisionNumberField($json, $_GET['field']);
 	else if(isset($_GET['edit']))
 		$value = editPrevisionField($json, $_GET['field']);
 	else if(isset($_GET['updatePrevisionState']))

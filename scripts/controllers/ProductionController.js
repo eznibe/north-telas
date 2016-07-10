@@ -53,15 +53,9 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 		});
 	};
 
-	$scope.changedField = function(entity, value, fieldName) {
-		// console.log('Updated date ', fieldName, ' to:', value);
-		Production.updateDate(entity, fieldName).then(function() {
-			// entity[fieldName] = value;
-			Rules.updatePrevisionPercentage(entity, true);
-			if (entity.percentageChanged) {
-				$scope.$broadcast('$$rebind::refreshColumnsValue');
-				delete entity.percentageChanged;
-			}
+	$scope.changedNumericField = function(entity, value, fieldName) {
+
+		Production.updateField(entity, fieldName, true).then(function() {			
 		});
 	};
 

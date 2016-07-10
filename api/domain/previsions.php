@@ -345,6 +345,22 @@ function editPrevisionField($prevision, $field) {
 	return $obj;
 }
 
+function editPrevisionNumberField($prevision, $field) {
+
+	$obj->successful = true;
+	$obj->method = "editPrevisionNumberField($field)";
+	$obj->prevision = $prevision;
+
+	$update = "UPDATE previsions SET $field = ".$prevision->$field." WHERE id = '".$prevision->id."'";
+
+	if(!mysql_query($update)) {
+		$obj->successful = false;
+		$obj->update = $update;
+	}
+
+	return $obj;
+}
+
 function editPrevisionDate($prevision, $field) {
 
 	$obj->successful = true;

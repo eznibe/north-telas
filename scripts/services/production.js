@@ -30,5 +30,15 @@ angular.module('vsko.stock')
       	return $http.post(url + 'production_POST.php?updateDate=true&field='+fieldName, prevision);
       };
 
+			this.updateField = function(prevision, fieldName, isNumeric) {
+
+				var numeric = '';
+				if (isNumeric) {
+					numeric = '&isNumber=true';
+				}
+
+      	return $http.post(url + 'previsions_POST.php?edit=true&field='+fieldName + numeric, prevision);
+      };
+
       return this;
     }]);

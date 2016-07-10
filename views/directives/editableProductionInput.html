@@ -1,0 +1,15 @@
+<div ng-mouseover="::oneTimeBindings.mouseOver();" ng-mouseleave="::oneTimeBindings.mouseLeave();" style="min-width:20px; height:20px;">
+	<a style="color:#616161; cursor:pointer;" id="entityDisplay-{{::entity.id}}-{{::field}}" ng-click="::clicked(entity)">
+		<span>{{:refreshLinkValue:oneTimeBindings.getFieldValue()}}</span> <span>{{:refreshLinkValue:oneTimeBindings.getExtraLabel()}}</span>
+	</a>
+	<span ng-show=":refreshPencil:oneTimeBindings.showPencil();"  ng-click="::clicked(entity)" id="entityPencil-{{::entity.id}}-{{::field}}" class="glyphicon glyphicon-pencil control-label" style="text-align:center; cursor:pointer; float:none; padding-left:5px; padding-right:5px;">&nbsp;</span>
+
+	<span  class="badge" id="entityEdit-{{::entity.id}}-{{::field}}" style="display:none; border:0; padding: 0;">
+
+		<!-- <input id="edit_date_dob"  style="height: 20px; width:60px; font-size: 10px;" type="text" ng-model="entity[field]"> -->
+		<!-- <input type="text" ng-model="entity[field]" ng-style="{'width': (width ? width+'px' : '100px')}"/> -->
+		<input type="text" ng-model="entity[field]"  style="height: 20px; width:20px; font-size: 10px;"/>
+
+		<a href="javascript:void(0)" ng-click="::changed(entity)" ><span class="glyphicon glyphicon-ok control-label" style="text-align:center; cursor:pointer; margin-left:4px;"></span></a>
+	</span>
+</div>

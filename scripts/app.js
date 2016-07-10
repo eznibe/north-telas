@@ -11,7 +11,8 @@ angular.module("vsko.stock", [
 			'angucomplete-alt',
 			'anguFixedHeaderTable',
 			'angularStats',
-			'angular.bind.notifier'
+			'angular.bind.notifier',
+			'xeditable'
     ])
     .run(['$cookieStore', '$rootScope', '$translate', function ($cookieStore, $rootScope, $translate) {
     	console.log('vsko.stock run');
