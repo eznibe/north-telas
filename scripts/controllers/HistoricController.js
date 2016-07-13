@@ -1,26 +1,22 @@
 'use strict';
 
-angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope', 'Production', 'Previsions', 'Users', 'Rules', function ($scope, $rootScope, Production, Previsions, Users, Rules) {
+angular.module('vsko.stock').controller('HistoricCtrl', ['$scope', '$rootScope', 'Production', 'Previsions', 'Users', 'Rules', function ($scope, $rootScope, Production, Previsions, Users, Rules) {
 
 	$scope.start = Date.now();
 
-	Previsions.getPrevisionsForProduction().then(function(result) {
+	Previsions.getPrevisionsHistoric().then(function(result) {
 
 		console.log('Results in ' + (Date.now() - $scope.start) + ' ms.'); //eslint-disable-line
 
 		$scope.previsions = result.data;
 		var count=0;
 		$scope.previsions.map(function(prev) {
-			// prev.dispatch = '123-456';
-			if(count<3) {
-				// prev.tentativeDate = '2016-05-15';
-			}
-			count++
+
 		})
 	});
 
-	$scope.columns = {seller: true, week: true, priority: true, dispatch: true, order: true, client: true, boat: true, sail: true, line: true, percentage: true, advance: true, deliveryDate: true
-									 ,tentativeDate: true, productionDate: true, infoDate: true, advanceDate: true, cloths: true, state: true, area: true, productionObservations: true};
+	$scope.columns = {seller: true, week: true, priority: true, dispatch: true, order: true, client: true, boat: true, sail: true, line: true, percentage: true, advance: false, deliveryDate: true
+									 ,tentativeDate: false, productionDate: true, infoDate: false, advanceDate: false, cloths: true, state: false, area: true, productionObservations: false};
 
 	$scope.getValue = function(prevision, fieldName) {
 		if (!prevision[fieldName]) {
@@ -76,8 +72,8 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 		});
 	};
 
-	$scope.removeFromProduction = function(prevision) {
-		prevision.deletedProductionOn = moment().format('DD-MM-YYYY');
+	$scope.restoreToProduction = function(prevision) {
+		prevision.deletedProductionOn = null;
 		prevision.deletedProductionBy = $rootScope.user.name;
 
 		Production.updateDate(prevision, 'deletedProductionOn').then(function() {
@@ -86,7 +82,7 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 			});
 		});
 
-		Previsions.editField(prevision, 'deletedProductionBy');
+		// Previsions.editField(prevision, 'deletedProductionBy');
 	};
 
 	$scope.visibility = {

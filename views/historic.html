@@ -1,6 +1,6 @@
 <div class="nopaddingright jumbotron clearfix">
 	<div class="row">
-		<h1 class="col-md-11"><span translate>Production</span></h1>
+		<h1 class="col-md-11"><span translate>Historics</span></h1>
 		<div class="col-md-1 text-right">
 			<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span></a>
 			<ul class="columns-settings-dropdown dropdown-menu form-horizontal" role="menu">
@@ -29,7 +29,7 @@
 	</div>
 
 
-	<div class="row">
+	<!-- <div class="row">
 		<div class="col-md-6 nopadding">
 				<label class="control-label col-xs-3" translate>Filter by</label>
 				<div class="col-xs-4">
@@ -62,7 +62,7 @@
 					</a>
 				</div>
 		</div>
-	</div>
+	</div> -->
 </div>
 
 <!-- Consumos -->
@@ -90,21 +90,17 @@
 			<th ng-show=":refreshColumns:visibility.showColumn('state')" translate>State col</th>
 			<th ng-show=":refreshColumns:visibility.showColumn('area')" translate>Area</th>
 			<th ng-show=":refreshColumns:visibility.showColumn('productionObservations')" translate>Observations</th>
-			<th access-allowed="admin,ordenes,plotter" translate>Delete</th>
+			<th translate>Archived date min</th>
+			<th access-allowed="admin,ordenes,plotter" translate>Restore</th>
 		</tr>
 	</thead>
 	<tbody>
 		<tr ng-repeat="p in previsions | filter:searchBox" my-repeat-directive="start">
-			<td ng-show=":refreshColumns:visibility.showColumn('seller')">
-				<!-- {{:refreshColumsValue:getValue(p, 'seller')}} -->
-				<span ng-bind=":refreshColumnsValue:getValue(p, 'seller')"></span>
-				<!-- <div class="popover-wrapper">
-			    <a href="#" editable-text="p.seller">{{p.seller || '' }}</a>
-			  </div> -->
+			<td>
+				{{:refreshColumsValue:getValue(p, 'seller')}}
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('week')" ng-mouseover="::oneTimeBindings.showPopupList('weeks');" ng-mouseleave="::oneTimeBindings.hidePopupList('weeks');">
-				<!-- {{:refreshColumnsValue:getValue(p, 'week')}} -->
-				<editable-production-input entity="::p" field="'week'" callback="::changedNumericField" width="20" style="display:inline-block;"></editable-production-input>
+			<td>
+				{{:refreshColumnsValue:getValue(p, 'week')}}
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('priority')">
 				{{:refreshColumnsValue:getValue(p, 'priority')}}
@@ -112,8 +108,8 @@
 			<td ng-show=":refreshColumns:visibility.showColumn('dispatch')">
 				{{:refreshColumnsValue:getValue(p, 'dispatch')}}
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('order')">
-				<a href="javascript:void(0);" ng-click="showPrevisionModal(p)">{{:refreshColumnsValue:p.orderNumber}}</a>
+			<td ng-show=":refreshColumns:visibility.showColumn('order')" nowrap>
+				{{:refreshColumnsValue:getValue(p, 'orderNumber')}}
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('client')">
 				{{:refreshColumnsValue:getValue(p, 'client')}}
@@ -121,44 +117,43 @@
 			<td ng-show=":refreshColumns:visibility.showColumn('boat')">
 				{{:refreshColumnsValue:getValue(p, 'boat')}}
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('sail')">
+			<td ng-show=":refreshColumns:visibility.showColumn('sail')" nowrap>
 				{{:refreshColumnsValue:getValue(p, 'sailName')}}
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('line')">
 				{{:refreshColumnsValue:getValue(p, 'line')}}
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('percentage')" style="min-width:30px;" ng-mouseover="::oneTimeBindings.showPopupList('percentages');" ng-mouseleave="::oneTimeBindings.hidePopupList('percentages');">
-				<editable-production-input entity="::p" field="'percentage'" callback="::changedNumericField" width="20" style="display:inline-block;"></editable-production-input>
+			<td ng-show=":refreshColumns:visibility.showColumn('percentage')" style="min-width:30px;">
+				{{:refreshColumnsValue:getValue(p, 'percentage')}}
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('advance')">
 				{{:refreshColumnsValue:getValue(p, 'advance')}}
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('deliveryDate')" class="column-date" nowrap>
-				<editable-date entity="::p" field="deliveryDate" callback="::updateDate" editable-by-role="admin" style="display:inline-block;" required="true"></editable-date>
+				{{:refreshColumnsValue:getValue(p, 'deliveryDate')}}
+				<!-- <editable-date entity="::p" field="deliveryDate" callback="::updateDate" editable-by-role="admin" style="display:inline-block;" required="true"></editable-date> -->
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('tentativeDate')" nowrap>
-				<editable-date entity="::p" field="tentativeDate" callback="::updateDate" editable-by-role="admin" style="display:inline-block;"></editable-date>
+				{{:refreshColumnsValue:getValue(p, 'tentativeDate')}}
+				<!-- <editable-date entity="::p" field="tentativeDate" callback="::updateDate" editable-by-role="admin" style="display:inline-block;"></editable-date> -->
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('productionDate')" nowrap>
-				<editable-date entity="::p" field="productionDate" callback="::updateDate" editable-by-role="admin" style="display:inline-block;"></editable-date>
+				{{:refreshColumnsValue:getValue(p, 'productionDate')}}
+				<!-- <editable-date entity="::p" field="productionDate" callback="::updateDate" editable-by-role="admin" style="display:inline-block;"></editable-date> -->
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('infoDate')" nowrap>
-				<editable-date entity="::p" field="infoDate" callback="::updateDate" editable-by-role="admin" style="display:inline-block;"></editable-date>
+				{{:refreshColumnsValue:getValue(p, 'infoDate')}}
+				<!-- <editable-date entity="::p" field="infoDate" callback="::updateDate" editable-by-role="admin" style="display:inline-block;"></editable-date> -->
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('advanceDate')" nowrap>
-				<editable-date entity="::p" field="advanceDate" callback="::updateDate" editable-by-role="admin" style="display:inline-block;"></editable-date>
+				{{:refreshColumnsValue:getValue(p, 'advanceDate')}}
+				<!-- <editable-date entity="::p" field="advanceDate" callback="::updateDate" editable-by-role="admin" style="display:inline-block;"></editable-date> -->
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('cloths')">
 				<prevision-cloths prevision="p" style="display:inline-block;"></prevision-cloths>
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('state')">
-				<!-- {{:refreshColumnsValue:getValue(p, 'state')}} -->
-				<span style="color:black; float:right; padding:2px;" ng-style="{'background-color': (p.stateAccepted=='0' ? 'orange' : '')}">
-					{{:refreshColumnsValue:getValue(p, 'state')}}
-					<a href="javascript:void(0)" ng-show=":refreshStateValue:p.stateAccepted=='0'" ng-click="::oneTimeBindings.acceptStateChange(p); $event.stopPropagation();" style="cursor:pointer;" class="tag-control">
-						<span class="glyphicon glyphicon-ok control-label" style="text-align:center; margin-left:4px;"></span>
-					</a>
-				</span>
+				{{:refreshColumnsValue:getValue(p, 'state')}}
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('area')">
 				{{:refreshColumnsValue:getValue(p, 'area')}}
@@ -166,9 +161,12 @@
 			<td ng-show=":refreshColumns:visibility.showColumn('productionObservations')">
 				{{:refreshColumnsValue:getValue(p, 'productionObservations')}}
 			</td>
+			<td>
+				{{:refreshColumnsValue:getValue(p, 'deletedProductionOn')}}
+			</td>
 			<td style="width:80px; text-align:center;" access-allowed="admin,ordenes,plotter">
-				<a ng-click="showConfirmModal(p, removeFromProduction)" class="btn btn-default">
-					<span class="glyphicon glyphicon-trash"></span>
+				<a ng-click="showConfirmModal(p, restoreToProduction)" class="btn btn-default">
+					<span class="glyphicon glyphicon-refresh"></span>
 				</a>
 			</td>
 		</tr>
@@ -180,122 +178,5 @@
 	</tbody>
 </table>
 
-<div id="percentages">
-  <table width="100%" valign="top" cellspacing="0" cellpadding="2" border="1" style="border-width:1px; border-style:solid; border-collapse:collapse;">
-  	<tbody><tr class="title">
-  		<td align="center" colspan="2">% de Producción</td>
-  	</tr>
-    <tr class="FilaPopUp">
-  		<td align="center">0%</td>
-  		<td>Orden</td>
-    </tr>
-    <tr class="FilaPopUp">
-  		<td align="center">3%</td>
-  		<td>Anticipo Sin Informacion</td>
-    </tr>
-    <tr class="FilaPopUp">
-  		<td align="center">4%</td>
-  		<td>Informacion Sin Anticipo</td>
-    </tr>
-    <tr class="FilaPopUp">
-  		<td align="center">5%</td>
-  		<td>Informacion Con Anticipo, lista para diseñar</td>
-    </tr>
-    <tr class="FilaPopUp">
-  		<td align="center">6%</td>
-  		<td>Diseñada</td>
-    </tr>
-    <tr class="FilaPopUp">
-  		<td align="center">25%</td>
-  		<td>Cortada</td>
-    </tr>
-    <tr class="FilaPopUp">
-  		<td align="center">30%</td>
-  		<td>Pegada</td>
-    </tr>
-    <tr class="FilaPopUp">
-  		<td align="center">50%</td>
-  		<td>Cosida</td>
-    </tr>
-    <tr class="FilaPopUp">
-  		<td align="center">60%</td>
-  		<td>Recortada</td>
-    </tr>
-    <tr class="FilaPopUp">
-  		<td align="center">75%</td>
-  		<td>En Maquina</td>
-    </tr>
-    <tr class="FilaPopUp">
-  		<td align="center">98%</td>
-  		<td>En Terminacion Manual</td>
-    </tr>
-    <tr class="FilaPopUp">
-  		<td align="center">100%</td>
-  		<td>Terminada</td>
-    </tr>
-    <tr class="FilaPopUp">
-  		<td align="center">101%</td>
-  		<td>Saldada, Lista para despachar</td>
-    </tr>
-    <tr class="FilaPopUp">
-  		<td align="center">102%</td>
-  		<td>Despachada</td>
-    </tr>
-  </tbody></table>
-</div>
-
-<div id="weeks">
-  <table width="100%" valign="top" cellspacing="0" cellpadding="2" border="1" style="border-width:1px; border-style:solid; border-collapse:collapse;">
-  	<tbody><tr class="title">
-  		<td align="center" colspan="2">Semana</td>
-  	</tr>
-    <tr class="FilaPopUp">
-  		<td align="center" width="28">1</td>
-  		<td>10 al 16 de Julio</td>
-    </tr>
-    <tr class="FilaPopUp">
-  		<td align="center" style="background-color:#ffff99;">2</td>
-  		<td>17 al 23 de Julio</td>
-    </tr>
-    <tr class="FilaPopUp">
-  		<td align="center" style="background-color:#a3d3ac;">3</td>
-  		<td>24 al 30 de Julio</td>
-    </tr>
-    <tr class="FilaPopUp">
-  		<td align="center" style="background-color:#ffdab9;">4</td>
-  		<td>31 al 6 de Agosto</td>
-    </tr>
-    <tr class="FilaPopUp">
-  		<td align="center">5</td>
-  		<td>7 al 13 de Agosto</td>
-    </tr>
-    <tr class="FilaPopUp">
-  		<td align="center">6</td>
-  		<td>14 al 20 de Agosto</td>
-    </tr>
-    <tr class="FilaPopUp">
-  		<td align="center">7</td>
-  		<td>21 al 27 de Agosto</td>
-    </tr>
-    <tr class="FilaPopUp">
-  		<td align="center">8</td>
-  		<td>Sri Lanka</td>
-    </tr>
-    <tr class="FilaPopUp">
-  		<td align="center">9</td>
-  		<td>Velas sin prog.</td>
-    </tr>
-    <tr class="FilaPopUp">
-  		<td align="center">10</td>
-  		<td>Ords.en susp.</td>
-    </tr>
-    <tr class="FilaPopUp">
-  		<td align="center">11</td>
-  		<td>Velas p/entregar</td>
-    </tr>
-  </tbody></table>
-</div>
-
-<prevision-modal/>
 
 <confirm-modal/>

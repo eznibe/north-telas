@@ -7,7 +7,7 @@ angular.module("vsko.stock", [
       'pascalprecht.translate',
       'uuid4',
       'toaster',
-      'angular-loading-bar',
+      // 'angular-loading-bar',
 			'angucomplete-alt',
 			'anguFixedHeaderTable',
 			'angularStats',
@@ -138,6 +138,11 @@ angular.module("vsko.stock", [
 						.when('/production', {
                 templateUrl: 'views/production.html',
                 controller: 'ProductionCtrl',
+                access: 'public'
+            })
+						.when('/historic', {
+                templateUrl: 'views/historic.html',
+                controller: 'HistoricCtrl',
                 access: 'public'
             })
 						.when('/dispatch', {

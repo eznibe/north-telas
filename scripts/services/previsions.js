@@ -22,9 +22,14 @@ angular.module('vsko.stock')
         	return $http.get(url + 'previsions_GET.php?clothId='+clothId+'&designed=false&expand=FULL');
         };
 
-				this.getPrevisionsForProduction = function(includeDesigned)
+				this.getPrevisionsForProduction = function()
         {
 					return $http.get(url + 'previsions_GET.php?listForProduction=true');
+        };
+
+				this.getPrevisionsHistoric = function()
+        {
+					return $http.get(url + 'previsions_GET.php?listHistoric=true');
         };
 
         this.save = function(prevision, loggedUser) {

@@ -35,3 +35,35 @@ table#production th {
 table#production td {
 	font-size: 12px;
 }
+
+#percentages {
+	border: 0px solid rgb(204, 204, 204);
+	/*height: 100px;*/
+	display: none;
+	position: fixed;
+	right: 10px;
+	top: 10px;
+	width: 190px;
+	z-index: 100;
+}
+
+#weeks {
+	border: 0px solid rgb(204, 204, 204);
+	display: none;
+	position: fixed;
+	right: 10px;
+	top: 10px;
+	width: 150px;
+	z-index: 25;
+}
+
+#percentages tr,
+#weeks tr {
+	background-color: #f2dbc4;
+	font-size: 12px;
+}
+
+#percentages tr.title,
+#weeks tr.title {
+	background-color: #edccaa;
+}

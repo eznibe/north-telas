@@ -46,4 +46,4 @@ delete previsions from previsions left join plotters on plotters.previsionId = p
 
 update previsions p join plotters pl on p.id = pl.previsionId set p.deletedProductionOn = '2016-06-01', p.deletedProductionBy = 'script' where pl.cuttedOn < '2016-05-01'
 
-update previsions set percentage = 6 where designed = true and percentage is null
+update previsions set percentage = 6 where designed = true and percentage is null;

@@ -14,6 +14,7 @@
   "Manage": "Gestión",
   "Production": "Producción",
   "Dispatchs": "Despachos",
+  "Historics": "Históricos",
   "Dispatch": "Despacho",
   "Seller": "Vendedor",
   "Week": "Semana",
@@ -34,6 +35,7 @@
   "Add order": "Agregar orden",
   "Dispatch date": "Fecha de despacho",
   "Dispatch date col": "F.Despacho",
+  "Archived date min": "F.Archivada",
   "Destinatary": "Destinatario",
   "Destiny": "Destino",
   "Transport": "Transporte",
@@ -44,6 +46,7 @@
   "General observations": "Generales",
   "Production observations": "Producción",
   "Design observations": "Diseño",
+  "Restore": "Restaurar",
   "": "",
 
   "Buy": "Comprar",

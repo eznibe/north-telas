@@ -16,7 +16,9 @@ angular.module('vsko.stock')
 
 			this.getSellers = function()
       {
-				var sellers = [{name: 'MP'}, {name: 'EB'}, {name: 'HP'}, {name: 'GS'}];
+				var sellers = [{name: 'GB'}, {name: 'MB'}, {name: 'HS'}, {name: 'CC'}, {name: 'FL'}, {name: 'SA'}, {name: 'DS'}, {name: 'MU'}, {name: 'RH'}, {name: 'PN'},
+											 {name: 'LF'}, {name: 'LS'}, {name: 'GBA'}, {name: 'TB'}, {name: 'PC'}, {name: 'OS'}, {name: 'GC'}, {name: 'ED'}, {name: 'OJ'}, {name: 'RZ'},
+											 {name: 'AN'}, {name: 'LB'}, {name: 'RF'}, {name: 'PB'}, {name: 'MRC'}, {name: 'IA'}, {name: 'RM'}, {name: 'GRV'}, {name: 'JPM'}, {name: 'CS'}, {name: 'HM'}];
       	return sellers;
       };
 

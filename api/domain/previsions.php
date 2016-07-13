@@ -1,6 +1,6 @@
 <?php
 
-function getPrevisions($clothId, $designed, $expand, $production)
+function getPrevisions($clothId, $designed, $expand, $production, $historic)
 {
 
 	$designedCondition = "";
@@ -13,6 +13,11 @@ function getPrevisions($clothId, $designed, $expand, $production)
 		$productionCondition = " AND p.deletedProductionOn is null ";
 	}
 
+	$historicCondition = "";
+	if(isset($historic)) {
+		$historicCondition = " AND p.deletedProductionOn is not null and p.deletedProductionOn > '2016-06-01' ";
+	}
+
 	$query = '';
 	if(isset($clothId)) {
 
@@ -23,11 +28,11 @@ function getPrevisions($clothId, $designed, $expand, $production)
 	}
 	else {
 		$query = "SELECT p.*, coalesce(p.sailDescription, p.sailOneDesign, s.description) as sailName, deliveryDate as unformattedDeliveryDate,
-							       DATE_FORMAT(deliveryDate,'%d-%m-%Y') as deliveryDate, DATE_FORMAT(tentativeDate,'%d-%m-%Y') as tentativeDate, DATE_FORMAT(productionDate,'%d-%m-%Y') as productionDate, DATE_FORMAT(infoDate,'%d-%m-%Y') as infoDate, DATE_FORMAT(advanceDate,'%d-%m-%Y') as advanceDate
+							       DATE_FORMAT(deliveryDate,'%d-%m-%Y') as deliveryDate, DATE_FORMAT(tentativeDate,'%d-%m-%Y') as tentativeDate, DATE_FORMAT(productionDate,'%d-%m-%Y') as productionDate, DATE_FORMAT(infoDate,'%d-%m-%Y') as infoDate, DATE_FORMAT(advanceDate,'%d-%m-%Y') as advanceDate, DATE_FORMAT(deletedProductionOn,'%d-%m-%Y') as deletedProductionOn
 							FROM previsions p LEFT JOIN sails s on s.id=p.sailId
-							WHERE 1=1 $designedCondition $productionCondition ORDER by p.deliveryDate, p.orderNumber";
+							WHERE 1=1 $designedCondition $productionCondition $historicCondition ORDER by p.deliveryDate, p.orderNumber";
 	}
-
+// return $query;
 
 	$result = mysql_query($query);
 
@@ -367,7 +372,9 @@ function editPrevisionDate($prevision, $field) {
 	$obj->method = "updatePrevisionDate($field)";
 	$obj->prevision = $prevision;
 
-	$update = "UPDATE previsions SET $field = STR_TO_DATE('".$prevision->$field."', '%d-%m-%Y') WHERE id = '".$prevision->id."'";
+	$setStr = isset($prevision->$field) ? "STR_TO_DATE('".$prevision->$field."', '%d-%m-%Y')" : 'null';
+
+	$update = "UPDATE previsions SET $field = $setStr WHERE id = '".$prevision->id."'";
 
 	if(!mysql_query($update)) {
 		$obj->successful = false;

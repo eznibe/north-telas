@@ -37,6 +37,6 @@ gulp.task('dependencies', function () {
 'node_modules/angular-bind-notifier/dist/angular-bind-notifier.min.js',
 'node_modules/moment/moment.js'
 ])
-    .pipe(concat('build/bower.js'))
+    .pipe(concat('build/dependencies.js'))
     .pipe(gulp.dest('.'))
 })
