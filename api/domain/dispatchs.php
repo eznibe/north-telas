@@ -11,6 +11,7 @@ function getDispatchs($expand, $startDate, $endDate)
 							FROM dispatchs d
 							WHERE d.archived = false
 							ORDER BY d.dispatchDate";
+
 	} else if ($expand == 'HISTORIC') {
 
 		$condition .= " AND ( STR_TO_DATE('$startDate', '%d-%m-%Y') <= d.dispatchDate AND STR_TO_DATE('$endDate', '%d-%m-%Y') >= d.dispatchDate ) ";
@@ -92,9 +93,9 @@ function getDispatch($id) {
 	$tubes = array();
 	while($subrow = mysql_fetch_array($subresult, MYSQL_ASSOC)) {
 		if ($subrow['type'] == 'BOX') {
-			array_push($boxes, $subrow);
+			array_push($boxes, (object)$subrow);
 		} else {
-			array_push($tubes, $subrow);
+			array_push($tubes, (object)$subrow);
 		}
 	}
 

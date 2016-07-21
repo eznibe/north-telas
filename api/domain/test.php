@@ -1,5 +1,9 @@
 <?php
 
+echo phpversion();
+
+echo '<br>/n\n';
+
 $array = array();
 
 $array[0]->id = 'one';

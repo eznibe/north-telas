@@ -192,6 +192,16 @@ angular.module('vsko.stock')
                 }
               }
               return result;
+            };
+
+            $scope.sumPrevisionsWeight = function() {
+              var result = 0;
+              if ($scope.dispatch && $scope.dispatch.previsions) {
+                for(var i=0; i < $scope.dispatch.previsions.length; i++) {
+                  result += $scope.dispatch.previsions[i].weight ? +$scope.dispatch.previsions[i].weight : 0;
+                }
+              }
+              return result != 0 ? result : '';
             }
 
           }

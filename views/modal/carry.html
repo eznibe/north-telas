@@ -22,7 +22,7 @@
 						<div class="col-md-12 nopadding">
 								<label class="control-label col-xs-3" for="edit_order" translate>Number</label>
 								<div class="col-xs-3">
-									<input name="edit_amount" type="number" class="form-control small" ng-model="carry.number" required integer min="0" ng-class="{error: form.edit_amount.$dirty && form.edit_amount.$invalid}"/>
+									<input type="text" class="form-control small" ng-model="carry.number" required ng-class="{error: form.edit_amount.$dirty && form.edit_amount.$invalid}"/>
 								</div>
 						</div>
 					</div>
@@ -31,7 +31,7 @@
 						<div class="col-md-12 nopadding">
 								<label class="control-label col-xs-3" for="edit_client" translate>Weight</label>
 								<div class="col-xs-3">
-									<input name="edit_amount" type="number" class="form-control small" ng-model="carry.weight" integer min="0"/>
+									<input name="edit_amount" type="text" class="form-control small" ng-model="carry.weight" />
 								</div>
 						</div>
 					</div>

@@ -26,5 +26,8 @@ else {
 }
 
 //return JSON array
-exit(json_encode($value, JSON_NUMERIC_CHECK));
+exit(json_encode($value));
+
+// Not possible to use in php 5.2 (server version)
+// exit(json_encode($value, JSON_NUMERIC_CHECK));
 ?>
