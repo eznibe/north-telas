@@ -90,7 +90,7 @@
 			<th ng-show=":refreshColumns:visibility.showColumn('state')" translate>State col</th>
 			<th ng-show=":refreshColumns:visibility.showColumn('area')" translate>Area</th>
 			<th ng-show=":refreshColumns:visibility.showColumn('productionObservations')" translate>Observations</th>
-			<th access-allowed="admin,ordenes,plotter" translate>Delete</th>
+			<th access-allowed="admin,ordenes,plotter" translate>Archive</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -167,8 +167,8 @@
 				{{:refreshColumnsValue:getValue(p, 'productionObservations')}}
 			</td>
 			<td style="width:80px; text-align:center;" access-allowed="admin,ordenes,plotter">
-				<a ng-click="showConfirmModal(p, removeFromProduction)" class="btn btn-default">
-					<span class="glyphicon glyphicon-trash"></span>
+				<a ng-click="showArchiveConfirmModal(p, null, removeFromProduction)" class="btn btn-default">
+					<span class="glyphicon glyphicon-ok"></span>
 				</a>
 			</td>
 		</tr>
@@ -299,3 +299,5 @@
 <prevision-modal/>
 
 <confirm-modal/>
+
+<confirm-archive-modal/>
