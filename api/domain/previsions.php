@@ -59,6 +59,18 @@ function getPrevisions($clothId, $designed, $expand, $production, $historic)
 	return $rows;
 }
 
+function getPrevisionsBasic()
+{
+
+	$query = "SELECT p.id, p.orderNumber, p.boat, p.percentage, p.client,
+									 coalesce(p.sailDescription, p.sailOneDesign, s.description) as sailName
+						FROM previsions p LEFT JOIN sails s on s.id=p.sailId";
+
+	$result = mysql_query($query);
+
+	return fetch_array($result);
+}
+
 function getPrevisionsUpToDate($clothId, $upToDate) {
 
 	$query = "SELECT p.*, coalesce(p.sailDescription, p.sailOneDesign, s.description) as sailName, deliveryDate as unformattedDeliveryDate, DATE_FORMAT(deliveryDate,'%d-%m-%Y') as deliveryDate, plog.mts

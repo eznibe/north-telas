@@ -385,7 +385,7 @@ angular.module('vsko.stock')
                 }
               }
       		  	else {
-                          
+
                 if (scope.entity[scope.field]) {
                   $('#entityDisplay-'+entity.id+'-'+scope.field).fadeOut('fast', function() {
                     $('#entityEdit-'+entity.id+'-'+scope.field).fadeIn('fast');
@@ -409,6 +409,233 @@ angular.module('vsko.stock')
 	}
 )
 
+.directive('editableProductionTextarea', function($modal, $rootScope) {
+
+	return {
+        restrict: 'E',
+        scope: {
+        	field: '=',
+        	entity: '=',
+        	callback: '=',
+          editableByRole: '=',
+          tooltipText: '=',
+          width: '=',
+          extraLabel: "="
+        },
+        templateUrl: 'views/directives/editableProductionTextarea.html',
+        link: function postLink(scope, element, attrs) {
+
+          scope.editable = false;
+          scope.over = false;
+          if (scope.required === undefined) {
+            scope.required = false;
+          }
+
+          scope.readonly = scope.editableByRole && scope.editableByRole.split(',').lastIndexOf($rootScope.user.role) == -1;
+
+          // scope.$watch('entity.id', function(value){
+          //   if(scope.tooltipText && scope.entity.id)
+          //     $('#entityDisplay-'+scope.entity.id+'-'+scope.field).tooltip({title: scope.tooltipText });
+          // });
+
+      	  /*scope.value = scope.entity[scope.field];*/
+
+          scope.oneTimeBindings = {
+            mouseOver: function(entity) {
+              scope.over = true;
+              scope.$broadcast('$$rebind::refreshPencil');
+            },
+            mouseLeave: function(entity) {
+              scope.over = false;
+              scope.$broadcast('$$rebind::refreshPencil');
+            },
+            showPencil: function() {
+              return !scope.entity[scope.field] && scope.over && !scope.editable;
+            },
+
+            getExtraLabel: function() {
+              if (!scope.extraLabel) {
+                return '';
+              }
+              return scope.extraLabel;
+            },
+            getFieldValue: function() {
+              if (!scope.entity[scope.field]) {
+                return '';
+              }
+              return scope.entity[scope.field];
+              // return 'n';
+            }
+          };
+
+      	  scope.changed = function(entity) {
+
+            if(!scope.required || entity[scope.field]) {
+              scope.callback(entity, entity[scope.field], scope.field);
+
+              scope.clicked(entity);
+
+              scope.$broadcast('$$rebind::refreshLinkValue');
+            }
+      	  };
+
+      	  scope.clicked = function(entity) {
+
+            if(!scope.readonly) {
+
+              if(scope.editable) {
+                $('#entityEdit-'+entity.id+'-'+scope.field).hide();
+                $('#entityDisplay-'+entity.id+'-'+scope.field).fadeIn('fast');
+                $('#entityPencil-'+entity.id+'-'+scope.field).fadeIn('fast');
+
+                if(scope.tooltipText) {
+                  $('#value-'+scope.entity.id+'-'+scope.field).tooltip({title: scope.tooltipText });
+                }
+              }
+      		  	else {
+
+                if (scope.entity[scope.field]) {
+                  $('#entityDisplay-'+entity.id+'-'+scope.field).fadeOut('fast', function() {
+                    $('#entityEdit-'+entity.id+'-'+scope.field).fadeIn('fast');
+                    $('#entityPencil-'+entity.id+'-'+scope.field).fadeOut('fast');
+                  });
+                } else {
+                  $('#entityPencil-'+entity.id+'-'+scope.field).fadeOut('fast', function() {
+                    $('#entityEdit-'+entity.id+'-'+scope.field).fadeIn('fast');
+                    $('#entityDisplay-'+entity.id+'-'+scope.field).fadeOut('fast');
+                  });
+                }
+
+                scope.$broadcast('$$rebind::refreshDateInput');
+      		  	}
+
+      		  	scope.editable = !scope.editable;
+            }
+      	  };
+        }
+      };
+	}
+)
+
+.directive('editableProductionDropdown', function($modal, $rootScope) {
+
+	return {
+        restrict: 'E',
+        scope: {
+        	field: '=',
+        	entity: '=',
+          options: '=',
+          display: '=',
+        	callback: '=',
+          editableByRole: '=',
+          tooltipText: '=',
+          width: '=',
+          extraLabel: "="
+        },
+        templateUrl: 'views/directives/editableProductionDropdown.html',
+        link: function postLink(scope, element, attrs) {
+
+          scope.editable = false;
+          scope.over = false;
+          if (scope.required === undefined) {
+            scope.required = false;
+          }
+
+          scope.readonly = scope.editableByRole && scope.editableByRole.split(',').lastIndexOf($rootScope.user.role) == -1;
+
+          // scope.$watch('entity.id', function(value){
+          //   if(scope.tooltipText && scope.entity.id)
+          //     $('#entityDisplay-'+scope.entity.id+'-'+scope.field).tooltip({title: scope.tooltipText });
+          // });
+
+      	  /*scope.value = scope.entity[scope.field];*/
+
+          scope.oneTimeBindings = {
+            mouseOver: function(entity) {
+              scope.over = true;
+              scope.$broadcast('$$rebind::refreshPencil');
+            },
+            mouseLeave: function(entity) {
+              scope.over = false;
+              scope.$broadcast('$$rebind::refreshPencil');
+            },
+            showPencil: function() {
+              return !scope.entity[scope.field] && scope.over && !scope.editable;
+            },
+
+            getExtraLabel: function() {
+              if (!scope.extraLabel) {
+                return '';
+              }
+              return scope.extraLabel;
+            },
+            getFieldValue: function() {
+              if (!scope.entity[scope.field] || !scope.options) {
+                return '';
+              }
+              return scope.display(scope.options.filter(function(o) {
+                return o.id == scope.entity[scope.field];
+              })[0]);
+            }
+          };
+
+      	  scope.changed = function(entity) {
+
+            entity[scope.field] = entity.selectedOption ? entity.selectedOption.id : null;
+
+            if(!scope.required || entity[scope.field]) {
+              scope.callback(entity, entity[scope.field], scope.field);
+
+              scope.clicked(entity);
+
+              scope.$broadcast('$$rebind::refreshLinkValue');
+            }
+      	  };
+
+      	  scope.clicked = function(entity) {
+
+            if(!scope.readonly) {
+
+              if(scope.editable) {
+                $('#entityEdit-'+entity.id+'-'+scope.field).hide();
+                $('#entityDisplay-'+entity.id+'-'+scope.field).fadeIn('fast');
+                $('#entityPencil-'+entity.id+'-'+scope.field).fadeIn('fast');
+
+                if(scope.tooltipText) {
+                  $('#value-'+scope.entity.id+'-'+scope.field).tooltip({title: scope.tooltipText });
+                }
+              }
+      		  	else {
+                // set dropdown editable
+
+                if (scope.entity[scope.field]) {
+                  scope.entity.selectedOption = scope.options.filter(function(o) {
+                    return o.id == scope.entity[scope.field];
+                  })[0];
+
+                  $('#entityDisplay-'+entity.id+'-'+scope.field).fadeOut('fast', function() {
+                    $('#entityEdit-'+entity.id+'-'+scope.field).fadeIn('fast');
+                    $('#entityEdit-'+entity.id+'-'+scope.field).css('display', 'inline-table');
+                    $('#entityPencil-'+entity.id+'-'+scope.field).fadeOut('fast');
+                  });
+                } else {
+                  $('#entityPencil-'+entity.id+'-'+scope.field).fadeOut('fast', function() {
+                    $('#entityEdit-'+entity.id+'-'+scope.field).fadeIn('fast');
+                    $('#entityEdit-'+entity.id+'-'+scope.field).css('display', 'inline-table');
+                    $('#entityDisplay-'+entity.id+'-'+scope.field).fadeOut('fast');
+                  });
+                }
+
+                scope.$broadcast('$$rebind::refreshDateInput');
+      		  	}
+
+      		  	scope.editable = !scope.editable;
+            }
+      	  };
+        }
+      };
+	}
+)
 
 .directive('editableDate', function($modal, $rootScope) {
 

@@ -220,6 +220,11 @@ angular.module("vsko.stock", [
                 controller: 'ClothsValuedStockCtrl',
                 access: 'public'
             })
+						.when('/lists/dispatchsHistoric', {
+                templateUrl: 'views/lists/dispatchsHistoric.html',
+                controller: 'DispatchsHistoricCtrl',
+                access: 'public'
+            })
             .when('/accessdenied', {
                 templateUrl: 'views/accessdenied.html',
                 access: 'public'

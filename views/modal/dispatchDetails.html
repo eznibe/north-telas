@@ -20,7 +20,7 @@
 
 					<div class="row">
 						<div class="col-md-4 nopadding">
-								<label class="control-label col-xs-4" translate>Number</label>
+								<label class="control-label col-xs-4" translate>Code</label>
 								<div class="col-xs-8">
 									<input name="edit_order" type="text" class="form-control small" ng-model="dispatch.number" required>
 								</div>
@@ -28,7 +28,13 @@
             <div class="col-md-4 nopadding">
 								<label class="control-label col-xs-4" translate>Dispatch date</label>
 								<div class="col-xs-8">
-									<input name="edit_order" type="text" class="form-control small" ng-model="dispatch.date" >
+									<!-- <input name="edit_order" type="text" class="form-control small" ng-model="dispatch.date" > -->
+                  <div class="input-group input-group-sm date" date-picker>
+										<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="dispatch.dispatchDate" class="form-control small">
+										<span class="input-group-addon">
+											<span class="glyphicon-calendar glyphicon"></span>
+										</span>
+									</div>
 								</div>
 						</div>
             <div class="col-md-4 nopadding">
@@ -43,7 +49,7 @@
 						<div class="col-md-4 nopadding">
 								<label class="control-label col-xs-4" translate>Destiny</label>
 								<div class="col-xs-8">
-									<input name="edit_order" type="text" class="form-control small" ng-model="dispatch.destiny" required>
+									<input name="edit_order" type="text" class="form-control small" ng-model="dispatch.destiny">
 								</div>
 						</div>
             <div class="col-md-4 nopadding">
@@ -60,35 +66,27 @@
 						</div>
 					</div>
 
-          <div class="row">
-						<div class="col-md-4 nopadding">
-								<label class="control-label col-xs-4" translate>Weight</label>
-								<div class="col-xs-8">
-									<input name="edit_order" type="text" class="form-control small" ng-model="dispatch.weight" required>
-								</div>
-						</div>
-            <div class="col-md-4 nopadding">
-								<label class="control-label col-xs-4" translate>Measures</label>
-								<div class="col-xs-8">
-									<input type="text" class="form-control small" ng-model="dispatch.measures" >
-								</div>
-						</div>
-					</div>
-
 					<div class="row" style="margin-bottom: 25px; margin-top: 25px;">
 
 						<div class="col-md-4 nopadding">
 								<label class="control-label col-xs-4" for="edit_obs" translate>Order</label>
 								<div class="col-xs-8">
-									<select name="dd_sail" ng-model="onedesign.selectedSail" ng-options="sc as sc.sail for sc in orders" class="form-control small" ng-required="!onedesign.isManualSail" ng-class="{error: form.dd_sail.$invalid && form.dd_sail.$dirty}">
-                      <option value="">-- choose one --</option>
-                  </select>
+                  <angucomplete-alt id="ex1"
+                      placeholder=""
+                      pause="100"
+                      selected-object="selectedPrevision"
+                      local-data="previsions"
+                      search-fields="orderNumber"
+                      title-field="orderNumber"
+                      input-changed="orderNumberChanged"
+                      minlength="2"
+                      input-class="form-control small"/>
 								</div>
 						</div>
 
             <div class="col-md-4 nopadding">
               <div class="col-xs-3">
-                <a ng-click="save(dispatch)" class="btn nopadding" style="color: #616161;">
+                <a ng-click="addPrevision(prevision)" class="btn nopadding" style="color: #616161;" ng-disabled="!dispatch.id">
                   <span class="glyphicon glyphicon-plus"></span>
                 </a>
               </div>
@@ -107,32 +105,155 @@
 				<table id="groups" class="table table-bordered table-striped table-hover">
 					<thead>
 						<tr>
+              <th translate></th>
 							<th translate>Order</th>
-							<th translate>Date</th>
+							<th translate>Client</th>
+              <th translate>Boat</th>
               <th translate>Sail</th>
+              <th translate>%</th>
+              <th translate>Weight</th>
+              <th translate>Observations</th>
 							<th access-restricted="read-only" translate>Delete</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="o in dispatch.orders">
+						<tr ng-repeat="o in dispatch.previsions">
+              <td>
+								<!-- {{o.type == 'BOX' ? (('Box' | translate) + ' ' + o.number) : (o.type == 'TUBE' ? (('Tube' | translate) + ' ' + o.number) : '')}} -->
+                <editable-production-dropdown entity="::o" options="dispatch.carries" field="'carryId'" display="carryDisplayFn" callback="::changedCarry" width="75" style="display:inline-block;"></editable-production-dropdown>
+							</td>
 							<td>
 								{{o.orderNumber}}
 							</td>
 							<td>
-								{{o.deliveryDate}}
+								{{o.client}}
+							</td>
+              <td>
+								{{o.boat}}
+							</td>
+              <td>
+								{{o.sailName}}
 							</td>
 							<td>
-								{{o.sail}}
+								{{o.percentage}}
+							</td>
+              <td>
+                <editable-production-input entity="::o" field="'weight'" callback="::changedNumericField" width="20" style="display:inline-block;"></editable-production-input>
+							</td>
+              <td>
+                <editable-production-textarea entity="::o" field="'observations'" callback="::changedField" width="100" style="display:inline-block;"></editable-production-textarea>
 							</td>
 							<td access-restricted="read-only" style="width:80px; text-align:center;">
-								<a ng-click="showConfirmModal(s, deleteDispatchOrder)" class="btn btn-default">
+								<a ng-click="showConfirmModal(o, deleteDispatchPrevision)" class="btn btn-default">
 									<span class="glyphicon glyphicon-trash"></span>
 								</a>
 							</td>
 						</tr>
 					</tbody>
 				</table>
-			</div>
+
+        <div class="row" style="margin-bottom: 25px; margin-top: 25px;">
+
+          <div class="col-md-6">
+            <a ng-click="showCarryModal(null, 'BOX')" class="btn btn-info floatleft" style="margin-bottom: 10px;" access-restricted="read-only">
+      	        <span class="glyphicon glyphicon-plus"></span>&nbsp;
+      	        {{'Create new box' | translate}}
+      	    </a>
+            <table id="groups" class="table table-bordered table-striped table-hover">
+              <thead>
+                <tr>
+                  <th translate>Box</th>
+                  <th translate>Weight</th>
+                  <th translate>Measures</th>
+                  <th access-restricted="read-only"></th>
+                  <th access-restricted="read-only"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="b in dispatch.carries | carriesByType:'BOX'">
+                  <td>
+                    {{b.number}}
+                  </td>
+                  <td>
+                    {{b.weight}}
+                  </td>
+                  <td>
+                    {{b.measures}}
+                  </td>
+                  <td access-restricted="read-only" style="width:80px; text-align:center;">
+                    <a ng-click="showCarryModal(b)" class="btn btn-default">
+                      <span class="glyphicon glyphicon-edit"></span>
+                    </a>
+                  </td>
+                  <td access-restricted="read-only" style="width:80px; text-align:center;">
+                    <a ng-click="showConfirmModal(b, deleteDispatchCarry)" class="btn btn-default">
+                      <span class="glyphicon glyphicon-trash"></span>
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Total
+                  </td>
+                  <td>
+                    {{ sumBoxesWeight(dispatch) }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="col-md-6">
+            <a ng-click="showCarryModal(null, 'TUBE')" class="btn btn-info floatleft" style="margin-bottom: 10px;" access-restricted="read-only">
+      	        <span class="glyphicon glyphicon-plus"></span>&nbsp;
+      	        {{'Create new tube' | translate}}
+      	    </a>
+            <table id="groups" class="table table-bordered table-striped table-hover">
+              <thead>
+                <tr>
+                  <th translate>Tube</th>
+                  <th translate>Weight</th>
+                  <th translate>Measures</th>
+                  <th access-restricted="read-only" translate></th>
+                  <th access-restricted="read-only" translate></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="t in dispatch.carries | carriesByType:'TUBE'">
+                  <td>
+                    {{t.number}}
+                  </td>
+                  <td>
+                    {{t.weight}}
+                  </td>
+                  <td>
+                    {{t.measures}}
+                  </td>
+                  <td access-restricted="read-only" style="width:80px; text-align:center;">
+                    <a ng-click="showCarryModal(t)" class="btn btn-default">
+                      <span class="glyphicon glyphicon-edit"></span>
+                    </a>
+                  </td>
+                  <td access-restricted="read-only" style="width:80px; text-align:center;">
+                    <a ng-click="showConfirmModal(t, deleteDispatchCarry)" class="btn btn-default">
+                      <span class="glyphicon glyphicon-trash"></span>
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td translate>
+                    Total weight
+                  </td>
+                  <td>
+                    {{ sumAllWeights(dispatch) }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
 
 		</div>
 	</div>

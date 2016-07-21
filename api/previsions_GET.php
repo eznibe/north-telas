@@ -30,6 +30,9 @@ else if(isset($_GET['listForProduction'])) {
 else if(isset($_GET['listHistoric'])) {
 	$value = getPrevisions(null, null, $expand, null, true);
 }
+else if(isset($_GET['expand']) && $_GET['expand'] == 'NONE') {
+	$value = getPrevisionsBasic();
+}
 else if(isset($_GET['checkAllClothsCutted'])) {
 	$value = checkAllClothsCutted($_GET['previsionId']);
 }

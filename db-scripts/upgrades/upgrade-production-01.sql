@@ -22,16 +22,31 @@ CREATE TABLE dispatchs
    destiny varchar(128),
    transport varchar(128),
    deliveryType varchar(64),
-   weight varchar(64),
-   measures varchar(128)
+   archived boolean default false,
+   archivedOn timestamp ON UPDATE CURRENT_TIMESTAMP
 )ENGINE=MyISAM
 ;
 
-CREATE TABLE dispatchOrders
+CREATE TABLE dispatchPrevisions
 (
    id char(64) PRIMARY KEY NOT NULL,
    dispatchId varchar(64),
-   orderId varchar(64)
+   previsionId varchar(64),
+   carryId varchar(64),
+   weight int,
+   observations varchar(1024)
+)ENGINE=MyISAM
+;
+
+
+CREATE TABLE dispatchCarries
+(
+   id char(64) PRIMARY KEY NOT NULL,
+   dispatchId varchar(64),
+   number int,
+   measures varchar(128),
+   weight int,
+   type varchar(32) -- BOX / TUBE
 )ENGINE=MyISAM
 ;
 

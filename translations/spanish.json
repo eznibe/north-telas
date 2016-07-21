@@ -32,8 +32,10 @@
   "Advance date min": "F.Adelanto ",
   "Advance": "Anticipo %",
   "Create new dispatch": "Nuevo despacho",
+  "Create new box": "Nueva caja",
+  "Create new tube": "Nuevo atado",
   "Add order": "Agregar orden",
-  "Dispatch date": "Fecha de despacho",
+  "Dispatch date": "Día despacho",
   "Dispatch date col": "F.Despacho",
   "Archived date min": "F.Archivada",
   "Destinatary": "Destinatario",
@@ -42,11 +44,20 @@
   "Delivery type": "Tipo de entrega",
   "Weight": "Peso",
   "Measures": "Medidas",
+  "Box": "Caja",
+  "BOX": "Caja",
+  "Tube": "Atado",
+  "TUBE": "Atado",
   "Columns": "Columnas",
   "General observations": "Generales",
   "Production observations": "Producción",
   "Design observations": "Diseño",
   "Restore": "Restaurar",
+  "Total weight": "Peso total",
+  "Carry": "Carga",
+  "Archive": "Archivar",
+  "Dispatchs historic": "Despachos histórico",
+  "Confirm archive?": "Confirma archivar?",
   "": "",
 
   "Buy": "Comprar",
@@ -237,6 +248,12 @@
     "group_created": "Grupo {{groupName}} creado.",
     "group_updated": "Grupo {{groupName}} actualizado.",
     "buy_amount": "Cantidad a comprar: {{amount}} mts",
-    "buy_assigned": "Compra asignada a orden #{{orderNumber}}"
+    "buy_assigned": "Compra asignada a orden #{{orderNumber}}",
+
+    "dispatch_added": "Nuevo despacho agregado.",
+    "dispatch_updated": "Despacho actualizado.",
+    "dispatch_removed": "Despacho borrado.",
+    "dispatch_archived": "Despacho archivado.",
+    "dispatch_restored": "Despacho restaurado."
   }
 }

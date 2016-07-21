@@ -1,5 +1,5 @@
 <div class="jumbotron clearfix">
-	<h1><span translate>Dispatch</span></h1>
+	<h1><span translate>Dispatchs</span></h1>
 	<p class="bigmargin">
 	    <a ng-click="showDispatchModal()" class="btn btn-info floatright" access-restricted="read-only">
 	        <span class="glyphicon glyphicon-plus"></span>&nbsp;
@@ -11,14 +11,13 @@
 <table class="table table-bordered table-striped table-hover">
 	<thead>
 		<tr>
-			<th translate>Dispatch</th>
+			<th translate>Code</th>
 			<th translate>Dispatch date col</th>
 			<th translate>Destinatary</th>
 			<th translate>Destiny</th>
 			<th translate>Transport</th>
-			<th translate>Weight</th>
-			<th translate>Measures</th>
 			<th translate>Orders</th>
+			<th access-restricted="read-only" translate>Archive</th>
 			<th access-restricted="read-only" translate>Delete</th>
 		</tr>
 	</thead>
@@ -26,29 +25,26 @@
 		<tr ng-repeat="d in dispatchs | filter:searchBox ">
 			<td>
 				<span><a href="javascript:void(0);" ng-click="showDispatchModal(d)">{{d.number}}</a></span>
-				<!-- <editable-input entity="d" field="'name'" callback="changedName" style="display:inline-block;" editable-by-role="'admin,ordenes,velas-od'"></editable-input> -->
 			</td>
 			<td>
-				{{d.date}}
+				{{d.dispatchDate}}
 			</td>
 			<td>
-				?
+				{{d.destinatary}}
 			</td>
 			<td>
-				?
+				{{d.destiny}}
 			</td>
 			<td>
-				?
-			</td>
-			<td>
-				?
-			</td>
-			<td>
-				?
+				{{d.transport}}
 			</td>
 			<td>
 				<dispatch-orders dispatch="d" open="showDispatchModal" style="display:inline-block;"></dispatch-orders>
-				<!-- <span class="glyphicon glyphicon-plus col-xs-1 control-label" ng-click="showDispatchModal(b)" style="text-align:center; cursor:pointer; float:none; padding-left:5px; padding-right:5px;" my-tooltip="'Add order'|translate" data-placement="right" access-restricted="read-only">&nbsp;</span> -->
+			</td>
+			<td access-restricted="read-only" style="width:80px; text-align:center;">
+				<a ng-click="showConfirmModal(d, archiveDispatch)" class="btn btn-default" ng-disabled="!d.dispatchDate">
+					<span class="glyphicon glyphicon-ok"></span>
+				</a>
 			</td>
 			<td access-restricted="read-only" style="width:80px; text-align:center;">
 				<a ng-click="showConfirmModal(d, deleteDispatch)" class="btn btn-default">
