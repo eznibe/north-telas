@@ -9,8 +9,10 @@ function getPrevisions($clothId, $designed, $expand, $production, $historic)
 	}
 
 	$productionCondition = "";
+	$productionOrderBy = "";
 	if(isset($production)) {
 		$productionCondition = " AND p.deletedProductionOn is null ";
+		$productionOrderBy = "p.week, ";
 	}
 
 	$historicCondition = "";
@@ -30,9 +32,9 @@ function getPrevisions($clothId, $designed, $expand, $production, $historic)
 		$query = "SELECT p.*, coalesce(p.sailDescription, p.sailOneDesign, s.description) as sailName, deliveryDate as unformattedDeliveryDate,
 							       DATE_FORMAT(deliveryDate,'%d-%m-%Y') as deliveryDate, DATE_FORMAT(tentativeDate,'%d-%m-%Y') as tentativeDate, DATE_FORMAT(productionDate,'%d-%m-%Y') as productionDate, DATE_FORMAT(infoDate,'%d-%m-%Y') as infoDate, DATE_FORMAT(advanceDate,'%d-%m-%Y') as advanceDate, DATE_FORMAT(deletedProductionOn,'%d-%m-%Y') as deletedProductionOn
 							FROM previsions p LEFT JOIN sails s on s.id=p.sailId
-							WHERE 1=1 $designedCondition $productionCondition $historicCondition ORDER by p.deliveryDate, p.orderNumber";
+							WHERE 1=1 $designedCondition $productionCondition $historicCondition ORDER by $productionOrderBy p.deliveryDate, p.orderNumber LIMIT 10";
 	}
-// return $query;
+ // return $query;
 
 	$result = mysql_query($query);
 

@@ -11,7 +11,7 @@
 <table class="table table-bordered table-striped table-hover">
 	<thead>
 		<tr>
-			<th translate>Code</th>
+			<th translate>Dispatch number</th>
 			<th translate>Dispatch date col</th>
 			<th translate>Destinatary</th>
 			<th translate>Destiny</th>
@@ -24,7 +24,7 @@
 	<tbody>
 		<tr ng-repeat="d in dispatchs | filter:searchBox ">
 			<td>
-				<span><a href="javascript:void(0);" ng-click="showDispatchModal(d)">{{d.number}}</a></span>
+				<span><a href="javascript:void(0);" ng-click="showDispatchModal(d)">#{{d.number}}</a></span>
 			</td>
 			<td>
 				{{d.dispatchDate}}

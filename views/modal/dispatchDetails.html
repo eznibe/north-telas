@@ -20,13 +20,13 @@
 
 					<div class="row">
 						<div class="col-md-4 nopadding">
-								<label class="control-label col-xs-4" translate>Code</label>
+								<label class="control-label col-xs-4 nopaddingright" translate>Dispatch number</label>
 								<div class="col-xs-8">
-									<input name="edit_order" type="text" class="form-control small" ng-model="dispatch.number" required>
+									<input name="edit_order" type="text" class="form-control small" ng-model="dispatch.number" required readonly>
 								</div>
 						</div>
             <div class="col-md-4 nopadding">
-								<label class="control-label col-xs-4" translate>Dispatch date</label>
+								<label class="control-label col-xs-4 nopadding" translate>Dispatch date</label>
 								<div class="col-xs-8">
 									<!-- <input name="edit_order" type="text" class="form-control small" ng-model="dispatch.date" > -->
                   <div class="input-group input-group-sm date" date-picker>
@@ -38,20 +38,46 @@
 								</div>
 						</div>
             <div class="col-md-4 nopadding">
-								<label class="control-label col-xs-4" translate>Destinatary</label>
+								<label class="control-label col-xs-4" translate>Value USD</label>
 								<div class="col-xs-8">
-									<input name="edit_order" type="text" class="form-control small" ng-model="dispatch.destinatary" >
+									<input name="edit_order" type="text" class="form-control small" ng-model="dispatch.value" >
 								</div>
 						</div>
 					</div>
 
           <div class="row">
+            <div class="col-md-4 nopadding">
+								<label class="control-label col-xs-4" translate>Destinatary</label>
+									<!-- <input name="edit_order" type="text" class="form-control small" ng-model="dispatch.destinatary" > -->
+                <div class="col-xs-8">
+                  <angucomplete-alt id="ex1"
+                      placeholder=""
+                      pause="100"
+                      selected-object="selectedDestinatary"
+                      local-data="destinataries"
+                      search-fields="name"
+                      title-field="name"
+                      input-changed="destinataryChanged"
+                      initial-value="acDestinatary"
+                      minlength="2"
+                      input-class="form-control small"/>
+								</div>
+						</div>
+            <div class="col-md-4 nopadding">
+								<label class="control-label col-xs-4 nopadding" translate>Address</label>
+								<div class="col-xs-8">
+									<input name="edit_order" type="text" class="form-control small" ng-model="dispatch.address" >
+								</div>
+						</div>
 						<div class="col-md-4 nopadding">
 								<label class="control-label col-xs-4" translate>Destiny</label>
 								<div class="col-xs-8">
 									<input name="edit_order" type="text" class="form-control small" ng-model="dispatch.destiny">
 								</div>
 						</div>
+					</div>
+
+          <div class="row">
             <div class="col-md-4 nopadding">
 								<label class="control-label col-xs-4" translate>Transport</label>
 								<div class="col-xs-8">
@@ -59,9 +85,15 @@
 								</div>
 						</div>
             <div class="col-md-4 nopadding">
-								<label class="control-label col-xs-4" translate>Delivery type</label>
+								<label class="control-label col-xs-4 nopadding" translate>Delivery type</label>
 								<div class="col-xs-8">
 									<input name="edit_order" type="text" class="form-control small" ng-model="dispatch.deliveryType" >
+								</div>
+						</div>
+            <div class="col-md-4 nopadding">
+								<label class="control-label col-xs-4" translate>Tracking</label>
+								<div class="col-xs-8">
+									<input name="edit_order" type="text" class="form-control small" ng-model="dispatch.tracking" >
 								</div>
 						</div>
 					</div>
@@ -84,15 +116,21 @@
 								</div>
 						</div>
 
-            <div class="col-md-4 nopadding">
-              <div class="col-xs-3">
+            <div class="col-md-6 nopadding">
+              <div class="col-xs-2">
                 <a ng-click="addPrevision(prevision)" class="btn nopadding" style="color: #616161;" ng-disabled="!dispatch.id">
                   <span class="glyphicon glyphicon-plus"></span>
                 </a>
               </div>
+              <div class="col-xs-10">
+                <label class="control-label col-xs-4" translate>Notes</label>
+                <div class="col-xs-8">
+                  <textarea name="edit_order" type="text" class="form-control small" ng-model="dispatch.notes"></textarea>
+                </div>
+              </div>
             </div>
 
-						<div class="col-md-4 nopadding" access-restricted="read-only">
+						<div class="col-md-2 nopadding" access-restricted="read-only">
 								<div class="col-xs-12">
 									<a ng-click="save(dispatch)" class="btn btn-default floatright edit_person" ng-disabled="!form.$valid" >
 										<span class="glyphicon glyphicon-save"></span>

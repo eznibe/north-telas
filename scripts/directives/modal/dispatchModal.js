@@ -21,12 +21,9 @@ angular.module('vsko.stock')
               })
             });
 
-            $scope.selectedPrevision = function(prevision) {
-              // autocomplete option selected
-              if(prevision) {
-                $scope.prevision = prevision;
-              }
-            };
+            Dispatchs.getDispatchDestinataries().then(function(result) {
+              $scope.destinataries = result.data;
+            });
 
 
         	  $scope.showDispatchModal = function(dispatch) {
@@ -42,8 +39,17 @@ angular.module('vsko.stock')
                   Dispatchs.getDispatch($scope.dispatch.id).then(function(result) {
                     $scope.dispatch.previsions = result.data.previsions;
                     $scope.dispatch.carries = result.data.boxes.concat(result.data.tubes);
-                    // $scope.dispatch.tubes = ;
+
+                    if ($scope.dispatch.destinatary) {
+                      $scope.acDestinatary = $scope.destinataries.filter(function(d) {
+                        return $scope.dispatch.destinatary == d.name;
+                      })[0];
+                    }
                   });
+                });
+              } else {
+                Dispatchs.getNextDispatchNumber().then(function(result) {
+                  $scope.dispatch.number = result.data;
                 });
               }
 
@@ -61,13 +67,15 @@ angular.module('vsko.stock')
     			  		  if(result.data.isNew) {
                     $scope.dispatchs.push($scope.dispatch);
 
+                    delete $scope.dispatch.isNew;
+
                     Utils.showMessage('notify.dispatch_added');
                   } else {
                     Utils.showMessage('notify.dispatch_updated');
                   }
     			  	  }
     			  	  else {
-                  Utils.showMessage('Error');
+                  Utils.showMessage('Error', 'error');
     			  	  }
 
          			 //  $scope.modalDispatch.hide();
@@ -86,6 +94,15 @@ angular.module('vsko.stock')
                     $scope.dispatch.previsions.push(prevision.originalObject);
 
                     delete $scope.prevision;
+                  }
+                });
+              } else if (!prevision && $scope.orderNumberText) {
+                prevision = {orderNumber: $scope.orderNumberText};
+                Dispatchs.addPrevision(prevision, $scope.dispatch.id).then(function(result) {
+
+                  if(result.data.successful) {
+                    $scope.dispatch.previsions.push(prevision);
+        						prevision.id = prevision.dpId;
                   }
                 });
               }
@@ -202,6 +219,33 @@ angular.module('vsko.stock')
                 }
               }
               return result != 0 ? result : '';
+            };
+
+            // -- Automcomplete  -- //
+
+            $scope.selectedPrevision = function(prevision) {
+              // autocomplete option selected
+              if(prevision) {
+                $scope.prevision = prevision;
+              }
+            };
+
+            $scope.orderNumberChanged = function(value) {
+              $scope.orderNumberText = value;
+            }
+
+            $scope.selectedDestinatary = function(destinatary) {
+              // autocomplete option selected
+              if(destinatary) {
+                $scope.dispatch.destinatary = destinatary.originalObject.name;
+
+                // update address field
+                $scope.dispatch.address = destinatary.originalObject.address;
+              }
+            };
+
+            $scope.destinataryChanged = function(value) {
+              $scope.dispatch.destinatary = value;
             }
 
           }

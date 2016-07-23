@@ -23,6 +23,21 @@
 				</div>
 		</div>
 	</div>
+	<div class="row">
+		<div class="col-md-6 nopadding">
+				<label class="control-label col-xs-2" translate>Filter by</label>
+				<div class="col-xs-4">
+					<select name="dd_ty" ng-model="filter.selectedOption" ng-options="sc as sc.name for sc in filter.options" class="form-control small" ng-change="clearFilterOption();">
+						<option value="">-- choose one --</option>
+		      </select>
+				</div>
+
+				<label class="control-label col-xs-1"></label>
+				<div class="col-xs-4">
+					<input ng-model="filter.value" class="form-control small" />
+				</div>
+		</div>
+	</div>
 
 	<div class="row">
 		<div class="col-md-6 nopadding">
@@ -45,11 +60,12 @@
 <table class="table table-bordered table-striped table-hover">
 	<thead>
 		<tr>
-			<th translate>Code</th>
+			<th translate>Dispatch number</th>
 			<th translate>Dispatch date col</th>
 			<th translate>Destinatary</th>
 			<th translate>Destiny</th>
 			<th translate>Transport</th>
+			<th translate>Tracking</th>
 			<th translate>Orders</th>
 			<th access-restricted="read-only" translate>Restore</th>
 		</tr>
@@ -57,7 +73,7 @@
 	<tbody>
 		<tr ng-repeat="d in dispatchs | filter:searchBox ">
 			<td>
-				<span><a href="javascript:void(0);" ng-click="showDispatchModal(d)">{{d.number}}</a></span>
+				<span><a href="javascript:void(0);" ng-click="showDispatchModal(d)">#{{d.number}}</a></span>
 			</td>
 			<td>
 				{{d.dispatchDate}}
@@ -70,6 +86,9 @@
 			</td>
 			<td>
 				{{d.transport}}
+			</td>
+			<td>
+				{{d.tracking}}
 			</td>
 			<td>
 				<dispatch-orders dispatch="d" open="showDispatchModal" style="display:inline-block;"></dispatch-orders>

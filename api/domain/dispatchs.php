@@ -1,11 +1,12 @@
 <?php
 
-function getDispatchs($expand, $startDate, $endDate)
+function getDispatchs($expand, $startDate, $endDate, $filterKey, $filterValue)
 {
 
 	if ($expand == 'NONE') {
 		$query = "SELECT *
 							FROM dispatchs d";
+
 	} else if ($expand == 'CURRENTS') {
 		$query = "SELECT *, DATE_FORMAT(dispatchDate,'%d-%m-%Y') as dispatchDate, d.dispatchDate as unformattedDispatchDate
 							FROM dispatchs d
@@ -14,10 +15,18 @@ function getDispatchs($expand, $startDate, $endDate)
 
 	} else if ($expand == 'HISTORIC') {
 
-		$condition .= " AND ( STR_TO_DATE('$startDate', '%d-%m-%Y') <= d.dispatchDate AND STR_TO_DATE('$endDate', '%d-%m-%Y') >= d.dispatchDate ) ";
+		$condition = " AND ( STR_TO_DATE('$startDate', '%d-%m-%Y') <= d.dispatchDate AND STR_TO_DATE('$endDate', '%d-%m-%Y') >= d.dispatchDate ) ";
 
-		$query = "SELECT *, DATE_FORMAT(dispatchDate,'%d-%m-%Y') as dispatchDate, d.dispatchDate as unformattedDispatchDate
-							FROM dispatchs d
+		if (isset($filterKey) && isset($filterValue)) {
+			if ($filterKey == 'orderNumber') {
+				$condition .= " AND $filterKey like '%$filterValue%'";
+			} else {
+				$condition .= " AND $filterKey like '%$filterValue%'";
+			}
+		}
+
+		$query = "SELECT d.*, DATE_FORMAT(dispatchDate,'%d-%m-%Y') as dispatchDate, d.dispatchDate as unformattedDispatchDate
+							FROM dispatchs d LEFT JOIN dispatchPrevisions dp on d.id = dp.dispatchId LEFT JOIN previsions p on p.id = dp.previsionId
 							WHERE d.archived = true  $condition
 							ORDER BY d.dispatchDate";
 	}
@@ -29,8 +38,8 @@ function getDispatchs($expand, $startDate, $endDate)
 		$rows = array();
 		while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
 
-			$query = "SELECT dp.*, p.orderNumber
-								FROM dispatchs d JOIN dispatchPrevisions dp on dp.dispatchId = d.id JOIN previsions p on p.id = dp.previsionId
+			$query = "SELECT dp.*, coalesce(p.orderNumber, dp.orderNumber) as orderNumber
+								FROM dispatchs d JOIN dispatchPrevisions dp on dp.dispatchId = d.id LEFT JOIN previsions p on p.id = dp.previsionId
 								WHERE dp.dispatchId = '".$row['id']."'";
 			$subresult = mysql_query($query);
 
@@ -68,10 +77,10 @@ function getDispatch($id) {
 	}
 
 	// previsions
-	$query = "SELECT dp.*, dp.id as dpId, dc.number, dc.type, p.orderNumber, p.client, p.boat, p.percentage, coalesce(p.sailDescription, p.sailOneDesign, s.description) as sailName
+	$query = "SELECT dp.*, dp.id as dpId, dc.number, dc.type, coalesce(p.orderNumber, dp.orderNumber) as orderNumber, p.client, p.boat, p.percentage, coalesce(p.sailDescription, p.sailOneDesign, s.description) as sailName
 						FROM dispatchs d JOIN dispatchPrevisions dp on dp.dispatchId = d.id
 						 								 LEFT JOIN dispatchCarries dc on dc.id = dp.carryId
-														 JOIN previsions p on p.id = dp.previsionId
+														 LEFT JOIN previsions p on p.id = dp.previsionId
 														 LEFT JOIN sails s on p.sailId = s.id
 						WHERE dp.dispatchId = '".$row['id']."'";
 	$subresult = mysql_query($query);
@@ -116,6 +125,28 @@ function getDispatchCarries($dispatchId)
 	return fetch_array($result);
 }
 
+function getDispatchDestinataries()
+{
+
+	$query = "SELECT destinatary as name, address FROM dispatchs WHERE destinatary is not null					
+						GROUP BY destinatary
+					  ORDER BY destinatary";
+
+	$result = mysql_query($query);
+
+	return fetch_array($result);
+}
+
+
+function getNextDispatchNumber() {
+	$query = "SELECT (max(number) + 1) as number FROM dispatchs";
+
+	$result = mysql_query($query);
+
+	$arr = fetch_array($result);
+
+	return $arr[0]['number'];
+}
 
 function saveDispatch($dispatch)
 {
@@ -134,14 +165,17 @@ function saveDispatch($dispatch)
 	$destiny = isset($dispatch->destiny) ? "'".$dispatch->destiny."'" : 'null' ;
 	$transport = isset($dispatch->transport) ? "'".$dispatch->transport."'" : 'null' ;
 	$deliveryType = isset($dispatch->deliveryType) ? "'".$dispatch->deliveryType."'" : 'null' ;
-	// $ = isset($dispatch->) ? "'".$dispatch->."'" : 'null' ;
-	// $ = isset($dispatch->) ? "'".$dispatch->."'" : 'null' ;
+	$address = isset($dispatch->address) ? "'".$dispatch->address."'" : 'null' ;
+	$value = isset($dispatch->value) ? $dispatch->value : 'null' ;
+	$tracking = isset($dispatch->tracking) ? "'".$dispatch->tracking."'" : 'null' ;
+	$notes = isset($dispatch->notes) ? "'".$dispatch->notes."'" : 'null' ;
 
 	if ($num_results != 0)
 	{
 		// update
-		$update = "UPDATE dispatchs SET number = '".$dispatch->number."', dispatchDate = $dispatchDate ".
+		$update = "UPDATE dispatchs SET number = ".$dispatch->number.", dispatchDate = $dispatchDate ".
 																		", destinatary = ".$destinatary.", destiny = ".$destiny.", transport = ".$transport.", deliveryType = ".$deliveryType.
+																		", Address = ".$address.", value = ".$value.", tracking = ".$tracking.", notes = ".$notes.
 																		" WHERE id = '".$dispatch->id."'";
 
 		if(mysql_query($update))
@@ -153,8 +187,8 @@ function saveDispatch($dispatch)
 	}
 	else {
 		// insert
-		$insert = "INSERT INTO dispatchs (id, number, dispatchDate, destinatary, destiny, transport, deliveryType)
-				VALUES ('".$dispatch->id."', '".$dispatch->number."', $dispatchDate, $destinatary, $destiny, $transport, $deliveryType)" ;
+		$insert = "INSERT INTO dispatchs (id, number, dispatchDate, destinatary, destiny, transport, deliveryType, address, value, tracking, notes)
+				VALUES ('".$dispatch->id."', $dispatch->number, $dispatchDate, $destinatary, $destiny, $transport, $deliveryType, $address, $value, $tracking, $notes)" ;
 
 		if(mysql_query($insert)) {
 			$obj->successful = true;
@@ -208,8 +242,14 @@ function addPrevision($prevision)
 	$obj->method = 'addPrevision';
 	$obj->successful = false;
 
-	$insert = "INSERT INTO dispatchPrevisions (id, dispatchId, previsionId)
-						 VALUES ('".$prevision->dpId."', '".$prevision->dispatchId."', '".$prevision->id."')" ;
+	if (isset($prevision->id)) {
+		$insert = "INSERT INTO dispatchPrevisions (id, dispatchId, previsionId)
+						 	VALUES ('".$prevision->dpId."', '".$prevision->dispatchId."', '".$prevision->id."')" ;
+	} else {
+		// will add not a real prevision but something manually entered by the user
+		$insert = "INSERT INTO dispatchPrevisions (id, dispatchId, orderNumber)
+						 	VALUES ('".$prevision->dpId."', '".$prevision->dispatchId."', '".$prevision->orderNumber."')" ;
+	}
 
 	if(mysql_query($insert)) {
 		$obj->successful = true;

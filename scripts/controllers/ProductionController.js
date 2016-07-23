@@ -76,6 +76,12 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 		});
 	};
 
+	$scope.changedField = function(entity, value, fieldName) {
+
+		Production.updateField(entity, fieldName).then(function() {
+		});
+	};
+
 	$scope.removeFromProduction = function(prevision) {
 		prevision.deletedProductionOn = prevision.date; //moment().format('DD-MM-YYYY');
 		prevision.deletedProductionBy = $rootScope.user.name;

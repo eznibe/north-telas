@@ -16,10 +16,16 @@ if(isset($_GET['id'])) {
 	$value = getDispatch($_GET['id']);
 }
 else if(isset($expand)) {
-	$value = getDispatchs($expand, $_GET['startDate'], $_GET['endDate']);
+	$value = getDispatchs($expand, $_GET['startDate'], $_GET['endDate'], $_GET['filterKey'], $_GET['filterValue']);
 }
 else if(isset($_GET['carriesOf'])) {
 	$value = getDispatchCarries($_GET['carriesOf']);
+}
+else if(isset($_GET['destinataries'])) {
+	$value = getDispatchDestinataries();
+}
+else if(isset($_GET['nextNumber'])) {
+	$value = getNextDispatchNumber();
 }
 else {
 

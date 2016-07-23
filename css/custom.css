@@ -38,7 +38,6 @@ table#production td {
 
 #percentages {
 	border: 0px solid rgb(204, 204, 204);
-	/*height: 100px;*/
 	display: none;
 	position: fixed;
 	right: 10px;

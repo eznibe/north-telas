@@ -2,12 +2,16 @@
 
 angular.module('vsko.stock').controller('DispatchsHistoricCtrl', ['$scope', 'Dispatchs', 'Lists', 'Users', '$modal', function ($scope, Dispatchs, Lists, Users, $modal) {
 
-				Dispatchs.getDispatchs('HISTORIC').then(function(result) {
-					$scope.dispatchs = result.data;
-				});
+	// initial filter options
+	$scope.filter = {};
+	$scope.filter.options = [{name:'Destinatario', key:'destinatary'},
+													 {name:'Tracking', key:'tracking'},
+													 {name:'Destino', key:'destiny'},
+													 {name:'Nro orden', key:'orderNumber'}];
 
-    		// initial filter options
-        $scope.filter = {};
+	Dispatchs.getDispatchs('HISTORIC', $scope.filter).then(function(result) {
+		$scope.dispatchs = result.data;
+	});
 
         $scope.search = function() {
 

@@ -16,7 +16,7 @@ update previsions set week = 19 where week is null;
 CREATE TABLE dispatchs
 (
    id char(64) PRIMARY KEY NOT NULL,
-   number varchar(64),
+   number int,
    dispatchDate date,
    destinatary varchar(128),
    destiny varchar(128),
@@ -62,3 +62,14 @@ delete previsions from previsions left join plotters on plotters.previsionId = p
 update previsions p join plotters pl on p.id = pl.previsionId set p.deletedProductionOn = '2016-06-01', p.deletedProductionBy = 'script' where pl.cuttedOn < '2016-05-01'
 
 update previsions set percentage = 6 where designed = true and percentage is null;
+
+--
+
+alter table dispatchs add column address varchar(64);
+alter table dispatchs add column value float;
+alter table dispatchs add column tracking varchar(64);
+alter table dispatchs add column notes varchar(1024);
+
+alter table dispatchs modify column number int;
+
+alter table dispatchPrevisions add column orderNumber varchar(64);

@@ -13,7 +13,13 @@ angular.module('vsko.stock')
 					var startDate = filter && filter.startDate ? filter.startDate : "01-01-1000";
 					var endDate = filter && filter.endDate ? filter.endDate : "12-12-2999";
 
-        	return $http.get(url + 'dispatchs_GET.php?expand='+(expand ? expand : 'NONE')+'&startDate='+startDate+"&endDate="+endDate);
+					var filterParam = '';
+					if (filter && filter.selectedOption!=null && filter.value != null && filter.value != '') {
+						filterParam += '&filterKey=' + filter.selectedOption.key;
+						filterParam += '&filterValue=' + filter.value;
+					}
+
+        	return $http.get(url + 'dispatchs_GET.php?expand='+(expand ? expand : 'NONE')+'&startDate='+startDate+"&endDate="+endDate + filterParam);
         };
 
 				this.getDispatch = function(id)
@@ -21,9 +27,19 @@ angular.module('vsko.stock')
         	return $http.get(url + 'dispatchs_GET.php?id='+id);
         };
 
+				this.getNextDispatchNumber = function()
+        {
+        	return $http.get(url + 'dispatchs_GET.php?nextNumber=true');
+        };
+
 				this.getDispatchCarries = function(dispatchId)
         {
         	return $http.get(url + 'dispatchs_GET.php?carriesOf='+dispatchId);
+        };
+
+				this.getDispatchDestinataries = function()
+        {
+        	return $http.get(url + 'dispatchs_GET.php?destinataries=true');
         };
 
         this.save = function(dispatch, loggedUser) {
