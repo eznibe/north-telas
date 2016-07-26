@@ -149,7 +149,7 @@
               <th translate>Boat</th>
               <th translate>Sail</th>
               <th translate>%</th>
-              <th translate>Weight</th>
+              <th nowrap translate>Weight net</th>
               <th translate>Observations</th>
 							<th access-restricted="read-only" translate>Delete</th>
 						</tr>
@@ -157,14 +157,16 @@
 					<tbody>
 						<tr ng-repeat="o in dispatch.previsions">
               <td>
-								<!-- {{o.type == 'BOX' ? (('Box' | translate) + ' ' + o.number) : (o.type == 'TUBE' ? (('Tube' | translate) + ' ' + o.number) : '')}} -->
                 <editable-production-dropdown entity="::o" options="dispatch.carries" field="'carryId'" display="carryDisplayFn" callback="::changedCarry" width="75" style="display:inline-block;"></editable-production-dropdown>
 							</td>
-							<td>
+							<td nowrap>
 								{{o.orderNumber}}
 							</td>
-							<td>
+							<td ng-show="o.previsionId" style="min-width: 110px;">
 								{{o.client}}
+							</td>
+              <td ng-show="!o.previsionId" style="min-width: 110px;">
+								<editable-production-input entity="::o" field="'client'" callback="::changedField" width="100" style="display:inline-block;"></editable-production-input>
 							</td>
               <td>
 								{{o.boat}}
@@ -216,7 +218,7 @@
               <thead>
                 <tr>
                   <th translate>Box</th>
-                  <th translate>Weight</th>
+                  <th translate>Weight gross</th>
                   <th translate>Measures</th>
                   <th access-restricted="read-only"></th>
                   <th access-restricted="read-only"></th>
@@ -265,7 +267,7 @@
               <thead>
                 <tr>
                   <th translate>Tube</th>
-                  <th translate>Weight</th>
+                  <th translate>Weight gross</th>
                   <th translate>Measures</th>
                   <th access-restricted="read-only" translate></th>
                   <th access-restricted="read-only" translate></th>

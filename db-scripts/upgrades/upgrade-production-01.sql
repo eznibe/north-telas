@@ -73,3 +73,4 @@ alter table dispatchs add column notes varchar(1024);
 alter table dispatchs modify column number int;
 
 alter table dispatchPrevisions add column orderNumber varchar(64);
+alter table dispatchPrevisions add column client varchar(64);

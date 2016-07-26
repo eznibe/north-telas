@@ -5,7 +5,7 @@ angular.module('vsko.stock').controller('PrevisionsCtrl', ['$scope', 'Previsions
     	$scope.maxCloths = 3;
 
         // initial list of cloth groups
-    	Previsions.getAll(true).then(function(result) {
+    	Previsions.getAll(true, 'LIST').then(function(result) {
         	$scope.previsions = result.data;
 
 //        	$.each($scope.previsions, function(index) {

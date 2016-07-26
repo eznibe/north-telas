@@ -2,13 +2,14 @@
 
 angular.module('vsko.stock')
 
-.directive('dispatchModal', function($modal, $translate, Utils, Dispatchs, Previsions) {
+.directive('dispatchModal', function($modal, $translate, uuid4, Utils, Dispatchs, Previsions) {
 
     return {
           restrict: 'E',
           link: function postLink(scope, element, attrs) {
 
         	  var $scope = scope;
+            var initialLoad;
 
             Previsions.getAll(true, 'NONE').then(function(result) {
                 $scope.previsions = result.data;
@@ -28,21 +29,29 @@ angular.module('vsko.stock')
 
         	  $scope.showDispatchModal = function(dispatch) {
 
-        		  $scope.dispatch = dispatch ? dispatch : {isNew: true, previsions: [], carries: [], allCarries: []};
+        		  $scope.dispatch = dispatch ? dispatch : {isNew: true, id: uuid4.generate(), previsions: [], carries: [], allCarries: []};
+
+              // clear possible previously chosen autocmolte destinatary
+              delete $scope.acDestinatary;
 
               if (!$scope.dispatch.isNew) {
                 Dispatchs.getDispatchCarries(scope.dispatch.id).then(function(result) {
 
                   $scope.dispatch.allCarries = result.data;
 
-                  // load dispatch info including assigned previsions
+                  // load dispatch info including assigned previsions and carries
                   Dispatchs.getDispatch($scope.dispatch.id).then(function(result) {
-                    $scope.dispatch.previsions = result.data.previsions;
+                    // $scope.dispatch.previsions = result.data.previsions;
+                    // $scope.dispatch = result.data;
+                    for (var attrname in result.data) { $scope.dispatch[attrname] = result.data[attrname]; }
+
                     $scope.dispatch.carries = result.data.boxes.concat(result.data.tubes);
 
-                    if ($scope.dispatch.destinatary) {
+                    // fill destinatary autocomplete with dispatch info if present
+                    if (result.data.destinatary) {
+                      initialLoad = true;
                       $scope.acDestinatary = $scope.destinataries.filter(function(d) {
-                        return $scope.dispatch.destinatary == d.name;
+                        return result.data.destinatary == d.name;
                       })[0];
                     }
                   });
@@ -88,6 +97,7 @@ angular.module('vsko.stock')
             $scope.addPrevision = function(prevision) {
 
               if (prevision) {
+                prevision.originalObject.previsionId = prevision.originalObject.id;
                 Dispatchs.addPrevision(prevision.originalObject, $scope.dispatch.id).then(function(result) {
 
                   if(result.data.successful) {
@@ -239,8 +249,14 @@ angular.module('vsko.stock')
               if(destinatary) {
                 $scope.dispatch.destinatary = destinatary.originalObject.name;
 
-                // update address field
-                $scope.dispatch.address = destinatary.originalObject.address;
+                if (!initialLoad) {
+                  // update address, destiny and notes fields
+                  $scope.dispatch.address = destinatary.originalObject.address;
+                  $scope.dispatch.destiny = destinatary.originalObject.destiny;
+                  $scope.dispatch.notes = destinatary.originalObject.notes;
+                } else {
+                  initialLoad = false;
+                }
               }
             };
 

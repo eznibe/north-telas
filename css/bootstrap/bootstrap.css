@@ -6322,7 +6322,7 @@ mark {
   position: absolute;
   left: 0;
   top: 0;
-  background: url("../img/logo_cloth2.jpg") center top no-repeat #fefefe;
+  background: url("../img/logo_north_go_beyond_medium.png") center top no-repeat #fefefe;
   width: 108px;
   height: 129px;
 }
@@ -6332,7 +6332,7 @@ mark {
     margin-bottom: 20px;
   }
   .navbar-header:before {
-    background: url("../img/logo_cloth2.jpg") center top no-repeat #fefefe;
+    background: url("../img/logo_north_go_beyond_medium.png") center top no-repeat #fefefe;
     height: 90px;
   }
 }

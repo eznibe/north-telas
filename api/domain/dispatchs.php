@@ -19,7 +19,7 @@ function getDispatchs($expand, $startDate, $endDate, $filterKey, $filterValue)
 
 		if (isset($filterKey) && isset($filterValue)) {
 			if ($filterKey == 'orderNumber') {
-				$condition .= " AND $filterKey like '%$filterValue%'";
+				$condition .= " AND (dp.$filterKey like '%$filterValue%' OR p.$filterKey like '%$filterValue%')";
 			} else {
 				$condition .= " AND $filterKey like '%$filterValue%'";
 			}
@@ -28,7 +28,8 @@ function getDispatchs($expand, $startDate, $endDate, $filterKey, $filterValue)
 		$query = "SELECT d.*, DATE_FORMAT(dispatchDate,'%d-%m-%Y') as dispatchDate, d.dispatchDate as unformattedDispatchDate
 							FROM dispatchs d LEFT JOIN dispatchPrevisions dp on d.id = dp.dispatchId LEFT JOIN previsions p on p.id = dp.previsionId
 							WHERE d.archived = true  $condition
-							ORDER BY d.dispatchDate";
+							GROUP BY d.id
+							ORDER BY d.number";
 	}
 
 	$result = mysql_query($query);
@@ -38,7 +39,7 @@ function getDispatchs($expand, $startDate, $endDate, $filterKey, $filterValue)
 		$rows = array();
 		while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
 
-			$query = "SELECT dp.*, coalesce(p.orderNumber, dp.orderNumber) as orderNumber
+			$query = "SELECT dp.*, coalesce(p.orderNumber, dp.orderNumber) as orderNumber, coalesce(p.client, dp.client) as client
 								FROM dispatchs d JOIN dispatchPrevisions dp on dp.dispatchId = d.id LEFT JOIN previsions p on p.id = dp.previsionId
 								WHERE dp.dispatchId = '".$row['id']."'";
 			$subresult = mysql_query($query);
@@ -77,7 +78,7 @@ function getDispatch($id) {
 	}
 
 	// previsions
-	$query = "SELECT dp.*, dp.id as dpId, dc.number, dc.type, coalesce(p.orderNumber, dp.orderNumber) as orderNumber, p.client, p.boat, p.percentage, coalesce(p.sailDescription, p.sailOneDesign, s.description) as sailName
+	$query = "SELECT dp.*, dp.id as dpId, dc.number, dc.type, coalesce(p.orderNumber, dp.orderNumber) as orderNumber, coalesce(p.client, dp.client) as client, p.boat, p.percentage, coalesce(p.sailDescription, p.sailOneDesign, s.description) as sailName
 						FROM dispatchs d JOIN dispatchPrevisions dp on dp.dispatchId = d.id
 						 								 LEFT JOIN dispatchCarries dc on dc.id = dp.carryId
 														 LEFT JOIN previsions p on p.id = dp.previsionId
@@ -128,7 +129,7 @@ function getDispatchCarries($dispatchId)
 function getDispatchDestinataries()
 {
 
-	$query = "SELECT destinatary as name, address FROM dispatchs WHERE destinatary is not null					
+	$query = "SELECT destinatary as name, address, destiny, notes FROM dispatchs WHERE destinatary is not null
 						GROUP BY destinatary
 					  ORDER BY destinatary";
 
