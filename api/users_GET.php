@@ -53,7 +53,20 @@ function getPlotterUsers()
 
 function getRoles() {
 
-	$query = "SELECT * FROM roles";
+	$query = "SELECT * FROM roles ORDER BY id";
+	$result = mysql_query($query);
+
+	$rows = array();
+	while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+		array_push($rows, $row);
+	}
+
+	return $rows;
+}
+
+function getSellerCodes() {
+
+	$query = "SELECT distinct(code) as name FROM usuarios WHERE code is not null ORDER BY code";
 	$result = mysql_query($query);
 
 	$rows = array();
@@ -73,6 +86,9 @@ else if(isset($_GET['roles'])) {
 }
 else if(isset($_GET['plotter'])) {
 	$value = getPlotterUsers();
+}
+else if(isset($_GET['sellerCodes'])) {
+	$value = getSellerCodes();
 }
 else {
 	$value = getUsers();

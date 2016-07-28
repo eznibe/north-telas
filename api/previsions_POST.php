@@ -37,6 +37,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$value = updateAllPrevisionsStates();
 	else if(isset($_GET['acceptStateChange']))
 		$value = acceptStateChange($json);
+	else if(isset($_GET['weeksBySeason']))
+		$value = updateWeeksBySeason($json);
+	else if(isset($_GET['listForProduction'])) {
+		$value = getPrevisions(null, null, $expand, true, null, $_GET['sellerCode'], $_GET['offset'], $json);
+	}
 	else
 		$value = savePrevision($json);
 

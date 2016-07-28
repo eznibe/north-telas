@@ -23,6 +23,7 @@ gulp.task('dependencies', function () {
 'node_modules/angular-animate/angular-animate.js',
 'bower_components/angular-uuid4/angular-uuid4.js',
 'node_modules/angular-loading-bar/src/loading-bar.js',
+'node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js',
 'bower_components/angular-ui-utils/ui-utils.js',
 'node_modules/angular-translate/dist/angular-translate.js',
 'node_modules/angular-translate-loader-static-files/angular-translate-loader-static-files.js',
@@ -35,7 +36,8 @@ gulp.task('dependencies', function () {
 'bower_components/angu-fixed-header-table/angu-fixed-header-table.js',
 'bower_components/ng-stats/ng-stats.js',
 'node_modules/angular-bind-notifier/dist/angular-bind-notifier.min.js',
-'node_modules/moment/moment.js'
+'node_modules/moment/moment.js',
+'node_modules/twbs-pagination/jquery.twbsPagination.js'
 ])
     .pipe(concat('build/dependencies.js'))
     .pipe(gulp.dest('.'))

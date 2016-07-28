@@ -106,8 +106,8 @@
                   <angucomplete-alt id="ex1"
                       placeholder=""
                       pause="100"
-                      selected-object="selectedPrevision"
-                      local-data="previsions"
+                      selected-object="selectedACPrevision"
+                      local-data="previsionOptions"
                       search-fields="orderNumber"
                       title-field="orderNumber"
                       input-changed="orderNumberChanged"
@@ -118,7 +118,7 @@
 
             <div class="col-md-6 nopadding">
               <div class="col-xs-2">
-                <a ng-click="addPrevision(prevision)" class="btn nopadding" style="color: #616161;" ng-disabled="!dispatch.id">
+                <a ng-click="addPrevision(acPrevision)" class="btn nopadding" style="color: #616161;" ng-disabled="!dispatch.id">
                   <span class="glyphicon glyphicon-plus"></span>
                 </a>
               </div>
@@ -132,7 +132,7 @@
 
 						<div class="col-md-2 nopadding" access-restricted="read-only">
 								<div class="col-xs-12">
-									<a ng-click="save(dispatch)" class="btn btn-default floatright edit_person" ng-disabled="!form.$valid" >
+									<a ng-click="saveDispatch(dispatch)" class="btn btn-default floatright edit_person" ng-disabled="!form.$valid" >
 										<span class="glyphicon glyphicon-save"></span>
 									</a>
 								</div>
@@ -166,7 +166,7 @@
 								{{o.client}}
 							</td>
               <td ng-show="!o.previsionId" style="min-width: 110px;">
-								<editable-production-input entity="::o" field="'client'" callback="::changedField" width="100" style="display:inline-block;"></editable-production-input>
+								<editable-production-input entity="::o" field="'client'" callback="::changedDispatch.field" width="100" style="display:inline-block;"></editable-production-input>
 							</td>
               <td>
 								{{o.boat}}
@@ -178,10 +178,10 @@
 								{{o.percentage}}
 							</td>
               <td>
-                <editable-production-input entity="::o" field="'weight'" callback="::changedNumericField" width="20" style="display:inline-block;"></editable-production-input>
+                <editable-production-input entity="::o" field="'weight'" callback="::changedDispatch.numericField" width="20" style="display:inline-block;"></editable-production-input>
 							</td>
               <td>
-                <editable-production-textarea entity="::o" field="'observations'" callback="::changedField" width="100" style="display:inline-block;"></editable-production-textarea>
+                <editable-production-textarea entity="::o" field="'observations'" callback="::changedDispatch.field" width="100" style="display:inline-block;"></editable-production-textarea>
 							</td>
 							<td access-restricted="read-only" style="width:80px; text-align:center;">
 								<a ng-click="showConfirmModal(o, deleteDispatchPrevision)" class="btn btn-default">

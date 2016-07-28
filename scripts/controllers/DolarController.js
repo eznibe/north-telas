@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('vsko.stock').controller('DolarCtrl', ['$scope', '$translate', '$cookieStore', 'Utils', 'Stock', function ($scope, $translate, $cookieStore, Utils, Stock) {
+angular.module('vsko.stock').controller('DolarCtrl', ['$scope', '$translate', '$cookieStore', 'Utils', 'Stock', 'Production', function ($scope, $translate, $cookieStore, Utils, Stock, Production) {
 
         // initial list of providers
     	Stock.getDolar().then(function(result) {
@@ -12,6 +12,12 @@ angular.module('vsko.stock').controller('DolarCtrl', ['$scope', '$translate', '$
       	$scope.pctNac = result.data[0].value;
 				$scope.pctNacOrig = $scope.pctNac;
       });
+
+      Production.getWeeksBySeason().then(function(weeksBySeason) {
+      	$scope.seasonWeeks = weeksBySeason.data[0].value;
+				$scope.seasonWeeksOrig = $scope.seasonWeeks;
+      });
+
 
       $scope.changeLanguage = function(lang) {
         $translate.use(lang);
@@ -32,6 +38,13 @@ angular.module('vsko.stock').controller('DolarCtrl', ['$scope', '$translate', '$
 
 					Stock.savePctNac($scope.pctNac).then(function(result){
             Utils.showMessage('notify.percentage_updated');
+	    		});
+				}
+
+        if($scope.seasonWeeksOrig != $scope.seasonWeeks) {
+
+					Production.saveSeasonWeeks($scope.seasonWeeks).then(function(result){
+            // Utils.showMessage('notify.percentage_updated');
 	    		});
 				}
     	}

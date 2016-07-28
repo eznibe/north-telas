@@ -29,7 +29,9 @@ angular.module('vsko.stock')
 
             $scope.lines = Production.getLines();
 
-            $scope.sellers = Production.getSellers();
+            Production.getSellers().then(function(result) {
+              $scope.sellers = result.data;
+            });
 
             $scope.acceptStateChange = function(p) {
               Previsions.acceptStateChange(p).then(function() {
@@ -128,12 +130,16 @@ angular.module('vsko.stock')
               $scope.prevision.sailOneDesign = $scope.prevision.selectedOneDesignSail.sail;
             }
 
-            if($scope.prevision.selectedSeller.name) {
+            if($scope.prevision.selectedSeller && $scope.prevision.selectedSeller.name) {
               $scope.prevision.seller = $scope.prevision.selectedSeller.name;
+            } else {
+              $scope.prevision.seller = null;
             }
 
-            if($scope.prevision.selectedLine.name) {
+            if($scope.prevision.selectedLine && $scope.prevision.selectedLine.name) {
               $scope.prevision.line = $scope.prevision.selectedLine.name;
+            } else {
+              $scope.prevision.line = null;
             }
 
             var waitForPossiblePrevisionStateChange = false;
@@ -261,8 +267,17 @@ angular.module('vsko.stock')
             $scope.prevision.orderNumber = str;
           }
 
+          $scope.updateFieldsByRule = function() {
+            $scope.updatePrevisionPercentage();
+            $scope.updatePrevisionDeliveryDate();
+          }
+
           $scope.updatePrevisionPercentage = function() {
             Rules.updatePrevisionPercentage($scope.prevision);
+          }
+
+          $scope.updatePrevisionDeliveryDate = function() {
+            Rules.updatePrevisionDeliveryDate($scope.prevision);
           }
 
           $scope.close = function() {

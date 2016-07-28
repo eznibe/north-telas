@@ -6683,7 +6683,7 @@ legend {
   background-position: 0 0;
 }
 .pagination {
-  float: right;
+  /*float: right;*/
 }
 .pagination li > a,
 .pagination li > span {

@@ -1,7 +1,7 @@
 /**
  *
  */
-angular.module('vsko.stock').factory('Rules',[ 'Previsions', function (Previsions) { //eslint-disable-line
+angular.module('vsko.stock').factory('Rules',[ '$q', 'Previsions', 'Production', function ($q, Previsions, Production) { //eslint-disable-line
   var that = {};
 
   that.updatePrevisionPercentage = function (prevision, save) {
@@ -38,6 +38,51 @@ angular.module('vsko.stock').factory('Rules',[ 'Previsions', function (Prevision
       Previsions.editField(prevision, 'percentage');
     }
   };
+
+  that.updatePrevisionDeliveryDate = function (prevision, save) {
+
+    var d = $q.defer();
+
+    var lastDeliveryDate = prevision.deliveryDate
+
+    var selectedLine = prevision.selectedLine ? prevision.selectedLine.name : prevision.line;
+
+    // .
+    if (prevision.infoDate && prevision.advanceDate && selectedLine) {
+      var newDate = moment(prevision.advanceDate, "DD-MM-YYYY");
+
+      Production.getWeeksBySeason().then(function(weeksBySeason) {
+
+        weeks = getCorrespondingWeek(selectedLine, weeksBySeason.data);
+
+        if (weeks != 0) {
+          prevision.deliveryDate = newDate.add(weeks * 7, 'days').format('DD-MM-YYYY');
+          if(lastDeliveryDate != prevision.deliveryDate) {
+            prevision.deliveryDateChanged = true;
+          }
+
+          if (prevision.deliveryDateChanged && save) {
+            Production.updateDate(prevision, 'deliveryDate').then(function() {
+              d.resolve(true);
+            });
+          }
+        }
+      });
+    } else {
+      d.resolve(false);
+    }
+
+    return d.promise;
+  };
+
+  function getCorrespondingWeek(line, weeksBySeason) {
+
+    if (line) {
+      return +weeksBySeason.filter(function(p) { return p.name == 'seasonWeeks'; })[0].value;
+    } 
+
+    return 0;
+  }
 
   return that;
 }]);

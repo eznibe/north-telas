@@ -14,7 +14,6 @@ include_once 'domain/previsionStates.php';
 
 db_connect();
 
-
 $designed = isset($_GET['designed']) ? $_GET['designed'] : null;
 $expand = isset($_GET['expand']) ? $_GET['expand'] : null;
 
@@ -25,7 +24,8 @@ else if(isset($_GET['clothId'])) {
 	$value = getPrevisions($_GET['clothId'], $designed, $expand, null);
 }
 else if(isset($_GET['listForProduction'])) {
-	$value = getPrevisions(null, null, $expand, true);
+	// deprecated - use with POST
+	$value = getPrevisions(null, null, $expand, true, null, $_GET['sellerCode'], $filters);
 }
 else if(isset($_GET['listHistoric'])) {
 	$value = getPrevisions(null, null, $expand, null, true);
@@ -41,6 +41,9 @@ else if(isset($_GET['updateAllPrevisionsStates'])) {
 }
 else if(isset($_GET['updatePrevisionState'])) {
 	$value = updatePrevisionState($_GET['updateClothId']);
+}
+else if(isset($_GET['weeksBySeason'])) {
+	$value = getWeeksBySeason($_GET['weeksBySeason']);
 }
 else {
 	$value = getPrevisions(null, $designed, $expand, null);

@@ -31,32 +31,54 @@
 
 	<div class="row">
 		<div class="col-md-6 nopadding">
-				<label class="control-label col-xs-3" translate>Filter by</label>
-				<div class="col-xs-4">
-					<select name="dd_ty" ng-model="filter.selectedOption" ng-options="sc as sc.name for sc in filter.optionsb" class="form-control small" ng-change="clearFilterOption();">
-			        </select>
+			<label class="control-label col-xs-3" translate>Filter by</label>
+			<div class="col-xs-4">
+				<select name="dd_ty" ng-model="filterOptions.selectedFilter" ng-options="sc as sc.name for sc in filterOptions.columns" class="form-control small" ng-change="clearFilterOption();">
+					<option value="">-- choose one --</option>
+				</select>
+			</div>
+
+			<label class="control-label col-xs-1"></label>
+			<div class="col-xs-4" ng-show="!filterOptions.selectedFilter || filterOptions.selectedFilter.type != 'date'">
+				<input ng-model="filter.value" class="form-control small" />
+			</div>
+			<div class="col-xs-4" ng-show="filterOptions.selectedFilter && filterOptions.selectedFilter.type == 'date'">
+				<div class="input-group input-group-sm date" date-picker>
+					<input name="edit_date_dob" type="text" ng-model="filter.value" class="form-control small">
+					<span class="input-group-addon">
+						<span class="glyphicon-calendar glyphicon"></span>
+					</span>
 				</div>
+			</div>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-md-6 nopadding">
-				<label class="control-label col-xs-3" translate>Order by</label>
-				<div class="col-xs-4">
-					<select name="dd_ty" ng-model="filter.selectedOption" ng-options="sc as sc.name for sc in filter.optionsb" class="form-control small" ng-change="clearFilterOption();">
-			        </select>
-				</div>
+			<label class="control-label col-xs-3" translate>Order by</label>
+			<div class="col-xs-4">
+				<select name="dd_ty" ng-model="filterOptions.selectedOrderBy" ng-options="sc as sc.name for sc in filterOptions.columns" class="form-control small" ng-change="clearFilterOption();">
+					<option value="">-- choose one --</option>
+				</select>
+			</div>
+
+			<label class="control-label col-xs-1"></label>
+			<div class="col-xs-4">
+				<select name="dd_ty" ng-model="filterOptions.selectedOrderType" ng-options="sc as sc.name for sc in filterOptions.orderTypes" class="form-control small" ng-change="clearFilterOption();">
+					<!-- <option value="">-- choose one --</option> -->
+				</select>
+			</div>
 		</div>
 	</div>
 
 	<div class="row">
 		<div class="col-md-6 nopadding">
-				<label class="control-label col-xs-2"></label>
+				<label class="control-label col-xs-3"></label>
 				<div class="col-xs-4">
 				</div>
 
 				<label class="control-label col-xs-1" for="edit_cloth" translate>&nbsp;</label>
 				<div class="col-xs-4">
-					<a ng-click="search()" class="btn btn-default floatright">
+					<a ng-click="search(1)" class="btn btn-default floatright">
 						<span class="glyphicon glyphicon-search"></span>
 						{{'Search' | translate}}
 					</a>
@@ -94,7 +116,8 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="p in previsions | orderBy:'week' | filter:searchBox" my-repeat-directive="start">
+		<!-- <tr ng-repeat="p in previsions | orderBy:'week' | filter:searchBox" my-repeat-directive="start"> -->
+		<tr ng-repeat="p in previsions | filter:searchBox" my-repeat-directive="start">
 			<td ng-show=":refreshColumns:visibility.showColumn('seller')">
 				<!-- {{:refreshColumsValue:getValue(p, 'seller')}} -->
 				<span ng-bind=":refreshColumnsValue:getValue(p, 'seller')"></span>
@@ -104,13 +127,14 @@
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('week')" ng-mouseover="::oneTimeBindings.showPopupList('weeks');" ng-mouseleave="::oneTimeBindings.hidePopupList('weeks');">
 				<!-- {{:refreshColumnsValue:getValue(p, 'week')}} -->
-				<editable-production-input entity="::p" field="'week'" callback="::changedNumericField" width="20" style="display:inline-block;"></editable-production-input>
+				<editable-production-input entity="::p" field="'week'" callback="::changedPrevision.numericField" width="20" style="display:inline-block;"></editable-production-input>
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('priority')">
 				{{:refreshColumnsValue:getValue(p, 'priority')}}
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('dispatch')">
-				{{:refreshColumnsValue:getValue(p, 'dispatch')}}
+				<!-- #{{:refreshColumnsValue:getValue(p, 'dispatch')}} -->
+				<a href="javascript:void(0);" ng-click="showDispatchModal({id: p.dispatchId})">{{:refreshColumnsValue:(p.dispatch ? '#' + p.dispatch : '')}}</a>
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('order')" nowrap>
 				<a href="javascript:void(0);" ng-click="showPrevisionModal(p)">{{:refreshColumnsValue:p.orderNumber}}</a>
@@ -128,7 +152,7 @@
 				{{:refreshColumnsValue:getValue(p, 'line')}}
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('percentage')" style="min-width:30px;" ng-mouseover="::oneTimeBindings.showPopupList('percentages');" ng-mouseleave="::oneTimeBindings.hidePopupList('percentages');">
-				<editable-production-input entity="::p" field="'percentage'" callback="::changedNumericField" width="20" style="display:inline-block;"></editable-production-input>
+				<editable-production-input entity="::p" field="'percentage'" callback="::changedPrevision.numericField" width="20" style="display:inline-block;"></editable-production-input>
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('advance')">
 				{{:refreshColumnsValue:getValue(p, 'advance')}}
@@ -165,7 +189,7 @@
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('productionObservations')" style="min-width:110px;">
 				<!-- {{:refreshColumnsValue:getValue(p, 'productionObservations')}} -->
-				<editable-production-textarea entity="::p" field="'productionObservations'" callback="::changedField" width="82" style="display:inline-block;"></editable-production-textarea>
+				<editable-production-textarea entity="::p" field="'productionObservations'" callback="::changedPrevision.field" width="82" style="display:inline-block;"></editable-production-textarea>
 			</td>
 			<td style="width:80px; text-align:center;" access-allowed="admin,ordenes,plotter">
 				<a ng-click="showArchiveConfirmModal(p, null, removeFromProduction)" class="btn btn-default">
@@ -181,6 +205,8 @@
 	</tbody>
 </table>
 
+<ul id="pagination" class="pagination-sm"></ul>
+
 <div>
 	<production-weeks/>
 </div>
@@ -194,3 +220,5 @@
 <confirm-modal/>
 
 <confirm-archive-modal/>
+
+<dispatch-modal/>

@@ -13,25 +13,25 @@ angular.module('vsko.stock').controller('DispatchsHistoricCtrl', ['$scope', 'Dis
 		$scope.dispatchs = result.data;
 	});
 
-        $scope.search = function() {
+  $scope.search = function() {
 
-       		Dispatchs.getDispatchs('HISTORIC', $scope.filter).then(function(result) {
-       			$scope.dispatchs = result.data;
-        	});
-        };
+ 		Dispatchs.getDispatchs('HISTORIC', $scope.filter).then(function(result) {
+ 			$scope.dispatchs = result.data;
+  	});
+  };
 
-				$scope.restoreDispatch = function(dispatch) {
+	$scope.restoreDispatch = function(dispatch) {
 
-					Dispatchs.restore(dispatch).then(function(result) {
-						if (result.data.successful) {
-							$scope.dispatchs = $scope.dispatchs.filter(function(d) {
-								return d.id != dispatch.id;
-							});
+		Dispatchs.restore(dispatch).then(function(result) {
+			if (result.data.successful) {
+				$scope.dispatchs = $scope.dispatchs.filter(function(d) {
+					return d.id != dispatch.id;
+				});
 
-							Utils.showMessage('notify.dispatch_restored');
-						}
-					});
-				};
+				Utils.showMessage('notify.dispatch_restored');
+			}
+		});
+	};
 
 
 				$scope.clearFilterOption = function() {

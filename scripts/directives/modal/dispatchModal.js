@@ -12,7 +12,7 @@ angular.module('vsko.stock')
             var initialLoad;
 
             Previsions.getAll(true, 'NONE').then(function(result) {
-                $scope.previsions = result.data;
+                $scope.previsionOptions = result.data;
             });
 
             $scope.carryTypes = [{type: 'BOX'}, {type: 'TUBE'}];
@@ -41,8 +41,7 @@ angular.module('vsko.stock')
 
                   // load dispatch info including assigned previsions and carries
                   Dispatchs.getDispatch($scope.dispatch.id).then(function(result) {
-                    // $scope.dispatch.previsions = result.data.previsions;
-                    // $scope.dispatch = result.data;
+                    // merging properties -> TODO see $.extend(..)
                     for (var attrname in result.data) { $scope.dispatch[attrname] = result.data[attrname]; }
 
                     $scope.dispatch.carries = result.data.boxes.concat(result.data.tubes);
@@ -67,7 +66,7 @@ angular.module('vsko.stock')
               $scope.modalDispatch.$promise.then($scope.modalDispatch.show);
         	  };
 
-        	  $scope.save = function(dispatch) {
+        	  $scope.saveDispatch = function(dispatch) {
 
         		  Dispatchs.save(dispatch).then(function(result){
 
@@ -103,7 +102,7 @@ angular.module('vsko.stock')
                   if(result.data.successful) {
                     $scope.dispatch.previsions.push(prevision.originalObject);
 
-                    delete $scope.prevision;
+                    delete $scope.acPrevision;
                   }
                 });
               } else if (!prevision && $scope.orderNumberText) {
@@ -129,17 +128,19 @@ angular.module('vsko.stock')
               });
             };
 
-            $scope.changedField = function(entity, value, fieldName) {
+            $scope.changedDispatch = {
+              field: function(entity, value, fieldName) {
 
-          		Dispatchs.updatePrevisionField(entity, fieldName).then(function() {
-          		});
-          	};
+            		Dispatchs.updatePrevisionField(entity, fieldName).then(function() {
+            		});
+            	},
 
-            $scope.changedNumericField = function(entity, value, fieldName) {
+              numericField: function(entity, value, fieldName) {
 
-          		Dispatchs.updatePrevisionField(entity, fieldName, true).then(function() {
-          		});
-          	};
+            		Dispatchs.updatePrevisionField(entity, fieldName, true).then(function() {
+            		});
+            	}
+            };
 
 
             // Carries modal and action functions
@@ -233,10 +234,10 @@ angular.module('vsko.stock')
 
             // -- Automcomplete  -- //
 
-            $scope.selectedPrevision = function(prevision) {
+            $scope.selectedACPrevision = function(prevision) {
               // autocomplete option selected
               if(prevision) {
-                $scope.prevision = prevision;
+                $scope.acPrevision = prevision;
               }
             };
 

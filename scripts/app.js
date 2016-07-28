@@ -13,6 +13,7 @@ angular.module("vsko.stock", [
 			'angularStats',
 			'angular.bind.notifier',
 			'xeditable'
+			// , 'ui.bootstrap'
     ])
     .run(['$cookieStore', '$rootScope', '$translate', function ($cookieStore, $rootScope, $translate) {
     	console.log('vsko.stock run');

@@ -74,3 +74,30 @@ alter table dispatchs modify column number int;
 
 alter table dispatchPrevisions add column orderNumber varchar(64);
 alter table dispatchPrevisions add column client varchar(64);
+
+--
+
+CREATE TABLE properties
+(
+   name varchar(64),
+   value varchar(64),
+   createdOn timestamp ON UPDATE CURRENT_TIMESTAMP
+)ENGINE=MyISAM
+;
+
+insert into properties (name, value) values ('seasonWeeks', '4');
+
+--
+
+update roles set id=6 where id=5;
+
+insert into roles values (5, 'vendedor');
+
+alter table usuarios add column code varchar(16);
+
+insert into usuarios (id, username, password, name, role, code) values
+('10', 'vendedor.mb', 'mb', 'MB', 'vendedor', 'MB'),
+('11', 'vendedor.hs', 'hs', 'HS', 'vendedor', 'HS'),
+('12', 'vendedor.cc', 'cc', 'CC', 'vendedor', 'CC'),
+('13', 'vendedor.gb', 'gb', 'GB', 'vendedor', 'GB'),
+('14', 'vendedor.ed', 'ed', 'ED', 'vendedor', 'ED');
