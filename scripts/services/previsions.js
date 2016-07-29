@@ -22,16 +22,20 @@ angular.module('vsko.stock')
         	return $http.get(url + 'previsions_GET.php?clothId='+clothId+'&designed=false&expand=FULL');
         };
 
-				this.getPrevisionsForProduction = function(sellerCode, filters, page)
+				this.getPrevisionsForProduction = function(sellerCode, filters, offset)
         {
 					sellerCode = sellerCode ? '&sellerCode=' + sellerCode : '';
+					offset = offset || offset == 0 ? ('&offset=' + offset) : '';
 
-					return $http.post(url + 'previsions_POST.php?listForProduction=true&offset=' + ((page-1) * 50) + sellerCode , filters);
+					return $http.post(url + 'previsions_POST.php?listForProduction=true' + offset + sellerCode , filters);
         };
 
-				this.getPrevisionsHistoric = function()
+				this.getPrevisionsHistoric = function(sellerCode, filters, offset)
         {
-					return $http.get(url + 'previsions_GET.php?listHistoric=true');
+					sellerCode = sellerCode ? '&sellerCode=' + sellerCode : '';
+					offset = offset || offset == 0 ? ('&offset=' + offset) : '';
+
+					return $http.post(url + 'previsions_POST.php?listHistoric=true' + offset + sellerCode, filters);
         };
 
         this.save = function(prevision, loggedUser) {

@@ -4,19 +4,64 @@ angular.module('vsko.stock').controller('HistoricCtrl', ['$scope', '$rootScope',
 
 	$scope.start = Date.now();
 
-	Previsions.getPrevisionsHistoric().then(function(result) {
+	var rows = 100;
+	var firstLoad = true;
+
+	Previsions.getPrevisionsHistoric($rootScope.user.sellerCode, {limit: rows}).then(function(result) {
 
 		console.log('Results in ' + (Date.now() - $scope.start) + ' ms.'); //eslint-disable-line
 
 		$scope.previsions = result.data;
-		var count=0;
-		$scope.previsions.map(function(prev) {
 
-		})
+		if (result.data[0].count > rows) {
+			$('#pagination').twbsPagination({
+		        totalPages: (result.data[0].count / rows) + 1,
+		        visiblePages: 7,
+						startPage: 1,
+						first: '<<',prev: '<',last: '>>',next: '>',
+		        onPageClick: function (event, page) {
+							if (!firstLoad) {
+			          console.log('Page: '+page);
+								$scope.search(page);
+							} else {
+								firstLoad = false;
+							}
+		        }
+		    });
+		}
 	});
 
 	$scope.columns = {seller: true, week: true, priority: true, dispatch: true, order: true, client: true, boat: true, sail: true, line: true, percentage: true, advance: false, deliveryDate: true
-									 ,tentativeDate: false, productionDate: true, infoDate: false, advanceDate: false, cloths: true, state: false, area: true, productionObservations: false};
+									 ,tentativeDate: false, productionDate: true, infoDate: true, advanceDate: true, cloths: true, state: false, area: true, productionObservations: false};
+
+	$scope.search = function(page) {
+
+		Previsions.getPrevisionsHistoric($rootScope.user.sellerCode, {limit: rows}, (page-1) * rows).then(function(result) {
+			$scope.previsions = result.data;
+
+			if ($('#pagination').data("twbs-pagination") && ($scope.page == 1 || result.data[0].count <= rows)) {
+				$('#pagination').twbsPagination('destroy');
+				firstLoad = true;
+			}
+
+			if (result.data[0].count > rows) {
+				$('#pagination').twbsPagination({
+							totalPages: (result.data[0].count / rows) + 1,
+							visiblePages: 7,
+							startPage: 1,
+							first: '<<',prev: '<',last: '>>',next: '>',
+							onPageClick: function (event, page) {
+								if (!firstLoad) {
+									console.log('Page: '+page);
+									$scope.search(page);
+								} else {
+									firstLoad = false;
+								}
+							}
+					});
+			}
+		});
+	}
 
 	$scope.getValue = function(prevision, fieldName) {
 		if (!prevision[fieldName]) {
@@ -25,10 +70,10 @@ angular.module('vsko.stock').controller('HistoricCtrl', ['$scope', '$rootScope',
 		return prevision[fieldName];
 	}
 
-	$scope.onSavePrevision = function(prevision) {
-		$scope.$broadcast('$$rebind::refreshColumnsValue');
-		$scope.$broadcast('$$rebind::refreshLinkValue');
-	}
+	// $scope.onSavePrevision = function(prevision) {
+	// 	$scope.$broadcast('$$rebind::refreshColumnsValue');
+	// 	$scope.$broadcast('$$rebind::refreshLinkValue');
+	// }
 
 	$scope.oneTimeBindings = {
 		showPopupList: function(id) {
@@ -46,13 +91,6 @@ angular.module('vsko.stock').controller('HistoricCtrl', ['$scope', '$rootScope',
 		}
 	}
 
-	$scope.search = function() {
-
-		$scope.filter.type = $scope.filter.selectedType.id;
-		var groupBy = ($scope.filter.selectedGroupBy && $scope.filter.selectedGroupBy.id) ? $scope.filter.selectedGroupBy.id : null;
-
-		$scope.filter.searchedWithGroupBy = groupBy;
-	};
 
 	$scope.updateDate = function(entity, value, fieldName) {
 		// console.log('Updated date ', fieldName, ' to:', value);

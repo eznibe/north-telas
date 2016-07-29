@@ -14,8 +14,10 @@ angular.module('vsko.stock').controller('DolarCtrl', ['$scope', '$translate', '$
       });
 
       Production.getWeeksBySeason().then(function(weeksBySeason) {
-      	$scope.seasonWeeks = weeksBySeason.data[0].value;
-				$scope.seasonWeeksOrig = $scope.seasonWeeks;
+      	$scope.seasonWeeks1 = weeksBySeason.data[0].value;
+				$scope.seasonWeeks1Orig = $scope.seasonWeeks1;
+        $scope.seasonWeeks2 = weeksBySeason.data[1].value;
+				$scope.seasonWeeks2Orig = $scope.seasonWeeks2;
       });
 
 
@@ -41,9 +43,16 @@ angular.module('vsko.stock').controller('DolarCtrl', ['$scope', '$translate', '$
 	    		});
 				}
 
-        if($scope.seasonWeeksOrig != $scope.seasonWeeks) {
+        if($scope.seasonWeeks1Orig != $scope.seasonWeeks1) {
 
-					Production.saveSeasonWeeks($scope.seasonWeeks).then(function(result){
+					Production.saveSeasonWeeks('seasonWeeks.1', $scope.seasonWeeks1).then(function(result){
+            // Utils.showMessage('notify.percentage_updated');
+	    		});
+				}
+
+        if($scope.seasonWeeks2Orig != $scope.seasonWeeks2) {
+
+          Production.saveSeasonWeeks('seasonWeeks.2', $scope.seasonWeeks2).then(function(result){
             // Utils.showMessage('notify.percentage_updated');
 	    		});
 				}

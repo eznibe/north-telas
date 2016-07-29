@@ -37,8 +37,8 @@ angular.module('vsko.stock')
 					return $http.get(url + 'previsions_GET.php?weeksBySeason=true');
 			}
 
-			this.saveSeasonWeeks = function(seasonWeeks) {
-				var seasonWeeks = {value: seasonWeeks};
+			this.saveSeasonWeeks = function(key, seasonWeeks) {
+				var seasonWeeks = {key: key, value: seasonWeeks};
 				return $http.post(url + 'previsions_POST.php?weeksBySeason=true', seasonWeeks);
 			}
 

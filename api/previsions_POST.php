@@ -42,6 +42,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 	else if(isset($_GET['listForProduction'])) {
 		$value = getPrevisions(null, null, $expand, true, null, $_GET['sellerCode'], $_GET['offset'], $json);
 	}
+	else if(isset($_GET['listHistoric'])) {
+		$value = getPrevisions(null, null, $expand, null, true, $_GET['sellerCode'], $_GET['offset'], $json);
+	}
 	else
 		$value = savePrevision($json);
 

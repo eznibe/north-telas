@@ -118,7 +118,7 @@
 
             <div class="col-md-6 nopadding">
               <div class="col-xs-2">
-                <a ng-click="addPrevision(acPrevision)" class="btn nopadding" style="color: #616161;" ng-disabled="!dispatch.id">
+                <a ng-click="addPrevision(acPrevision)" class="btn nopadding" style="color: #616161;" ng-disabled="!dispatch.id" access-restricted="vendedor">
                   <span class="glyphicon glyphicon-plus"></span>
                 </a>
               </div>
@@ -131,7 +131,7 @@
             </div>
 
 						<div class="col-md-2 nopadding" access-restricted="read-only">
-								<div class="col-xs-12">
+								<div class="col-xs-12" access-restricted="vendedor">
 									<a ng-click="saveDispatch(dispatch)" class="btn btn-default floatright edit_person" ng-disabled="!form.$valid" >
 										<span class="glyphicon glyphicon-save"></span>
 									</a>
@@ -151,13 +151,13 @@
               <th translate>%</th>
               <th nowrap translate>Weight net</th>
               <th translate>Observations</th>
-							<th access-restricted="read-only" translate>Delete</th>
+							<th access-restricted="read-only,vendedor" translate>Delete</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr ng-repeat="o in dispatch.previsions">
               <td>
-                <editable-production-dropdown entity="::o" options="dispatch.carries" field="'carryId'" display="carryDisplayFn" callback="::changedCarry" width="75" style="display:inline-block;"></editable-production-dropdown>
+                <editable-production-dropdown entity="::o" options="dispatch.carries" field="'carryId'" display="carryDisplayFn" callback="::changedCarry" width="75" editable-by-role="'admin,produccion'" style="display:inline-block;"></editable-production-dropdown>
 							</td>
 							<td nowrap>
 								{{o.orderNumber}}
@@ -166,7 +166,7 @@
 								{{o.client}}
 							</td>
               <td ng-show="!o.previsionId" style="min-width: 110px;">
-								<editable-production-input entity="::o" field="'client'" callback="::changedDispatch.field" width="100" style="display:inline-block;"></editable-production-input>
+								<editable-production-input entity="::o" field="'client'" callback="::changedDispatch.field" width="100" editable-by-role="'admin,produccion'" style="display:inline-block;"></editable-production-input>
 							</td>
               <td>
 								{{o.boat}}
@@ -178,12 +178,12 @@
 								{{o.percentage}}
 							</td>
               <td>
-                <editable-production-input entity="::o" field="'weight'" callback="::changedDispatch.numericField" width="20" style="display:inline-block;"></editable-production-input>
+                <editable-production-input entity="::o" field="'weight'" callback="::changedDispatch.numericField" width="40" editable-by-role="'admin,produccion'" style="display:inline-block;"></editable-production-input>
 							</td>
               <td>
-                <editable-production-textarea entity="::o" field="'observations'" callback="::changedDispatch.field" width="100" style="display:inline-block;"></editable-production-textarea>
+                <editable-production-textarea entity="::o" field="'observations'" callback="::changedDispatch.field" width="100" editable-by-role="'admin,produccion'" style="display:inline-block;"></editable-production-textarea>
 							</td>
-							<td access-restricted="read-only" style="width:80px; text-align:center;">
+							<td access-restricted="read-only,vendedor" style="width:80px; text-align:center;">
 								<a ng-click="showConfirmModal(o, deleteDispatchPrevision)" class="btn btn-default">
 									<span class="glyphicon glyphicon-trash"></span>
 								</a>
@@ -202,7 +202,7 @@
                 {{ sumPrevisionsWeight() }}
 							</td>
               <td></td>
-							<td></td>
+							<td access-restricted="read-only,vendedor"></td>
 						</tr>
 					</tbody>
 				</table>
@@ -210,7 +210,7 @@
         <div class="row" style="margin-bottom: 25px; margin-top: 25px;">
 
           <div class="col-md-6">
-            <a ng-click="showCarryModal(null, 'BOX')" class="btn btn-info floatleft" style="margin-bottom: 10px;" access-restricted="read-only">
+            <a ng-click="showCarryModal(null, 'BOX')" class="btn btn-info floatleft" style="margin-bottom: 10px;" access-restricted="read-only,vendedor">
       	        <span class="glyphicon glyphicon-plus"></span>&nbsp;
       	        {{'Create new box' | translate}}
       	    </a>
@@ -220,8 +220,8 @@
                   <th translate>Box</th>
                   <th translate>Weight gross</th>
                   <th translate>Measures</th>
-                  <th access-restricted="read-only"></th>
-                  <th access-restricted="read-only"></th>
+                  <th access-restricted="read-only,vendedor"></th>
+                  <th access-restricted="read-only,vendedor"></th>
                 </tr>
               </thead>
               <tbody>
@@ -235,12 +235,12 @@
                   <td>
                     {{b.measures}}
                   </td>
-                  <td access-restricted="read-only" style="width:80px; text-align:center;">
+                  <td access-restricted="read-only,vendedor" style="width:80px; text-align:center;">
                     <a ng-click="showCarryModal(b)" class="btn btn-default">
                       <span class="glyphicon glyphicon-edit"></span>
                     </a>
                   </td>
-                  <td access-restricted="read-only" style="width:80px; text-align:center;">
+                  <td access-restricted="read-only,vendedor" style="width:80px; text-align:center;">
                     <a ng-click="showConfirmModal(b, deleteDispatchCarry)" class="btn btn-default">
                       <span class="glyphicon glyphicon-trash"></span>
                     </a>
@@ -259,7 +259,7 @@
           </div>
 
           <div class="col-md-6">
-            <a ng-click="showCarryModal(null, 'TUBE')" class="btn btn-info floatleft" style="margin-bottom: 10px;" access-restricted="read-only">
+            <a ng-click="showCarryModal(null, 'TUBE')" class="btn btn-info floatleft" style="margin-bottom: 10px;" access-restricted="read-only,vendedor">
       	        <span class="glyphicon glyphicon-plus"></span>&nbsp;
       	        {{'Create new tube' | translate}}
       	    </a>
@@ -269,8 +269,8 @@
                   <th translate>Tube</th>
                   <th translate>Weight gross</th>
                   <th translate>Measures</th>
-                  <th access-restricted="read-only" translate></th>
-                  <th access-restricted="read-only" translate></th>
+                  <th access-restricted="read-only,vendedor" translate></th>
+                  <th access-restricted="read-only,vendedor" translate></th>
                 </tr>
               </thead>
               <tbody>
@@ -284,12 +284,12 @@
                   <td>
                     {{t.measures}}
                   </td>
-                  <td access-restricted="read-only" style="width:80px; text-align:center;">
+                  <td access-restricted="read-only,vendedor" style="width:80px; text-align:center;">
                     <a ng-click="showCarryModal(t)" class="btn btn-default">
                       <span class="glyphicon glyphicon-edit"></span>
                     </a>
                   </td>
-                  <td access-restricted="read-only" style="width:80px; text-align:center;">
+                  <td access-restricted="read-only,vendedor" style="width:80px; text-align:center;">
                     <a ng-click="showConfirmModal(t, deleteDispatchCarry)" class="btn btn-default">
                       <span class="glyphicon glyphicon-trash"></span>
                     </a>

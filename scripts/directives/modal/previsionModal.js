@@ -2,7 +2,7 @@
 
 angular.module('vsko.stock')
 
-.directive('previsionModal', function($modal, $rootScope, $q, $translate, Utils, Stock, Previsions, Files, OneDesign, Lists, Production, Rules) {
+.directive('previsionModal', function($modal, $rootScope, $q, $translate, Utils, Stock, Previsions, Files, OneDesign, Lists, Production, Rules, Dispatchs) {
 
     return {
           restrict: 'E',
@@ -84,6 +84,25 @@ angular.module('vsko.stock')
                 $scope.prevision.hasAdvance = true;
               }
 
+              // load and choose dispatch if already have one
+              Dispatchs.getDispatchs('NONE').then(function(result){
+                // for the drop dropdown only OPEN dispatchs
+          			$scope.openDispatchs = result.data.filter(function(d) {
+                  return d.archived == '0';
+                });
+
+                if (prevision.dispatchId) {
+                  $scope.prevision.selectedDispatch = result.data.filter(function(d) {
+                    return d.id === $scope.prevision.dispatchId;
+                  })[0];
+
+                  if ($scope.prevision.selectedDispatch.archived == '1') {
+                    // in some case the prevision is referring an already closed dispatch -> add it to the options list
+                    $scope.openDispatchs.push($scope.prevision.selectedDispatch);
+                  }
+                }
+          		});
+
           	  $scope.modalPrevision = $modal({template: 'views/modal/prevision.html', show: false, scope: $scope, backdrop:'static', animation:'am-fade-and-slide-top'});
 
               $scope.modalPrevision.$promise.then($scope.modalPrevision.show);
@@ -142,6 +161,12 @@ angular.module('vsko.stock')
               $scope.prevision.line = null;
             }
 
+
+            $scope.prevision.dispatchId = $scope.prevision.selectedDispatch ? $scope.prevision.selectedDispatch.id : null;
+
+            handlePrevisionInDispatch($scope.origPrevision);
+
+
             var waitForPossiblePrevisionStateChange = false;
             var showChangedStateModal = false;
 
@@ -151,6 +176,10 @@ angular.module('vsko.stock')
 
               if($scope.previousModal) {
                 $scope.previousModal.show();
+              }
+
+              if ($scope.onSavePrevision) {
+                $scope.onSavePrevision($scope.prevision);
               }
             }
 
@@ -214,10 +243,10 @@ angular.module('vsko.stock')
                 if($scope.previousModal) {
                   $scope.previousModal.show();
                 }
-              }
 
-              if ($scope.onSavePrevision) {
-                $scope.onSavePrevision($scope.prevision);
+                if ($scope.onSavePrevision) {
+                  $scope.onSavePrevision($scope.prevision);
+                }
               }
         	  });
           };
@@ -442,6 +471,26 @@ angular.module('vsko.stock')
 
             return d.promise;
   				}
+
+          function handlePrevisionInDispatch() {
+
+            // check if the prev was already in some dispatch -> remove from it
+            if ($scope.origPrevision.dispatchId && $scope.origPrevision.dispatchId != $scope.prevision.dispatchId) {
+              Dispatchs.removePrevisionInDispatch($scope.prevision.id, $scope.origPrevision.dispatchId).then(function(result) {
+                //
+              });
+              if ($scope.prevision.dispatchId) {
+                // send insert into dispatch previsionsToUpdate
+                Dispatchs.addPrevision($scope.prevision, $scope.prevision.dispatchId).then(function(result) {
+                  //
+                });
+              }
+            } else if (!$scope.origPrevision.dispatchId && $scope.prevision.dispatchId) {
+              Dispatchs.addPrevision($scope.prevision, $scope.prevision.dispatchId).then(function(result) {
+                //
+              });
+            }
+          }
         }
       };
 	}

@@ -17,7 +17,8 @@ function getPrevisions($clothId, $designed, $expand, $production, $historic, $se
 
 	$historicCondition = "";
 	if(isset($historic)) {
-		$historicCondition = " AND p.deletedProductionOn is not null and p.deletedProductionOn > '2016-06-01' ";
+		$historicCondition = " AND p.deletedProductionOn is not null ";//and p.deletedProductionOn > '2016-06-01' ";
+		$productionOrderBy = "p.orderNumber, ";
 	}
 
 	$sellerCondition = "";
@@ -42,16 +43,19 @@ function getPrevisions($clothId, $designed, $expand, $production, $historic, $se
 							"WHERE 1=1 AND (p.designed = false OR p.stateAccepted = false) ORDER by p.deliveryDate, p.orderNumber "
 							;
 	} else {
-		// for the production list
+		// for the production and historic list
 		$filter = createFilterCondition($filters);
 		$orderBy = createOrderByCondition($filters);
+
+		$limit = isset($filters->limit) ? "LIMIT ".$filters->limit : "";
+		$offset = isset($offset) ? "OFFSET ".$offset : "";
 
 		$select = "SELECT p.*, coalesce(p.sailDescription, p.sailOneDesign, s.description) as sailName, deliveryDate as unformattedDeliveryDate, d.id as dispatchId, d.number as dispatch, ".
 							"       DATE_FORMAT(deliveryDate,'%d-%m-%Y') as deliveryDate, DATE_FORMAT(tentativeDate,'%d-%m-%Y') as tentativeDate, DATE_FORMAT(productionDate,'%d-%m-%Y') as productionDate, DATE_FORMAT(infoDate,'%d-%m-%Y') as infoDate, DATE_FORMAT(advanceDate,'%d-%m-%Y') as advanceDate, DATE_FORMAT(deletedProductionOn,'%d-%m-%Y') as deletedProductionOn ";
 		$body =   "FROM previsions p LEFT JOIN sails s on s.id=p.sailId LEFT JOIN dispatchPrevisions dp on dp.previsionId = p.id LEFT JOIN dispatchs d on d.id = dp.dispatchId ".
 							"WHERE 1=1 $filter $designedCondition $productionCondition $historicCondition $sellerCondition ".
-							"ORDER by $orderBy $productionOrderBy p.deliveryDate, p.orderNumber ";
-		$footer = "LIMIT 50 OFFSET $offset"
+							"ORDER by $orderBy $productionOrderBy -p.deliveryDate desc, p.orderNumber ";
+		$footer = "$limit $offset"
 							;
 
 		$query = $select . $body . $footer;
@@ -202,13 +206,14 @@ function savePrevision($prevision)
 	$productionDate = isset($prevision->productionDate) && trim($prevision->productionDate)!='' ? "STR_TO_DATE('".$prevision->productionDate."', '%d-%m-%Y')" : 'null' ;
 	$infoDate = isset($prevision->infoDate) && trim($prevision->infoDate)!='' ? "STR_TO_DATE('".$prevision->infoDate."', '%d-%m-%Y')" : 'null' ;
 	$advanceDate = isset($prevision->advanceDate) && trim($prevision->advanceDate)!='' ? "STR_TO_DATE('".$prevision->advanceDate."', '%d-%m-%Y')" : 'null' ;
+	$dispatchId = isset($prevision->dispatchId) && trim($prevision->dispatchId)!='' ? "'".$prevision->dispatchId."'" : 'null' ;
 
 	if ($num_results != 0)
 	{
 		// update
 		$update = "UPDATE previsions SET orderNumber = '".$prevision->orderNumber."', deliveryDate = STR_TO_DATE('".$prevision->deliveryDate."', '%d-%m-%Y'), client = '".$client."', sailId = $sailId, sailDescription = $sailDescription, boat = '".$boat."', type = '".$prevision->type."', oneDesign = ".$oneDesign.", greaterThan44 = ".$greaterThan44.
 																		", p = ".$p.", e = ".$e.", i = ".$i.", j = ".$j.", area = ".$area.", sailOneDesign = $sailOneDesign, observations = '$observations'".
-																		", productionObservations = '$productionObservations', designObservations = '$designObservations'".
+																		", productionObservations = '$productionObservations', designObservations = '$designObservations', dispatchId = $dispatchId".
 																		", week = $week, priority = $priority, line = $line, seller = $seller, advance = $advance, percentage = $percentage".
 																		", tentativeDate = $tentativeDate, productionDate = $productionDate, infoDate = $infoDate, advanceDate = $advanceDate".
 																		" WHERE id = '".$prevision->id."'";
@@ -224,10 +229,10 @@ function savePrevision($prevision)
 		// insert
 		$insert = "INSERT INTO previsions (id, orderNumber, deliveryDate, client, sailId, sailDescription, boat,
 				type, designed, oneDesign, greaterThan44, p, e, i,j, area, sailOneDesign, observations, productionObservations, designObservations,
-				week, priority, line, seller, advance, percentage, tentativeDate, productionDate, infoDate, advanceDate)
+				week, priority, line, seller, advance, percentage, tentativeDate, productionDate, infoDate, advanceDate, dispatchId)
 				VALUES ('".$prevision->id."', '".$prevision->orderNumber."', STR_TO_DATE('".$prevision->deliveryDate."', '%d-%m-%Y'), '".$client."', $sailId, $sailDescription, '".$boat."', '".$prevision->type."', false, ".$oneDesign.", ".$greaterThan44.", ".
 								$p.", ".$e.", ".$i.", ".$j.", ".$area.", $sailOneDesign, '$observations', '$productionObservations', '$designObservations',
-								$week, $priority, $line, $seller, $advance, $percentage, $tentativeDate, $productionDate, $infoDate, $advanceDate)" ;
+								$week, $priority, $line, $seller, $advance, $percentage, $tentativeDate, $productionDate, $infoDate, $advanceDate, $dispatchId)" ;
 
 		if(mysql_query($insert)) {
 			$obj->successful = true;
@@ -430,7 +435,7 @@ function editPrevisionDate($prevision, $field) {
 
 function getWeeksBySeason() {
 
-	$query = "SELECT name, value FROM properties WHERE name = 'seasonWeeks'";
+	$query = "SELECT name, value FROM properties WHERE name like 'seasonWeeks%'";
 	$result = mysql_query($query);
 
 	return fetch_array($result);
@@ -441,7 +446,7 @@ function updateWeeksBySeason($weeks) {
 	$obj->successful = true;
 	$obj->method = "updateWeeksBySeason()";
 
-	$update = "UPDATE properties SET value = '".$weeks->value."' WHERE name = 'seasonWeeks'";
+	$update = "UPDATE properties SET value = '".$weeks->value."' WHERE name = '".$weeks->key."'";
 
 	if(!mysql_query($update)) {
 		$obj->successful = false;
@@ -460,7 +465,7 @@ function createFilterCondition($filters) {
 																	? handleSpecialFilterCase($filters->key, $filters->value)
 																	: " AND " . $filters->key . " like '%". $filters->value ."%'";
 	} else if (isset($filters->type) && isset($filters->value) && $filters->type == "nr") {
-		$filter = " AND CONVERT(".$filters->key.", char) like '%". $filters->value."%'";
+		$filter = " AND ".$filters->key." = ". $filters->value;
 	} else if (isset($filters->type) && isset($filters->value) && $filters->type == "date") {
 		$filter = " AND STR_TO_DATE('".$filters->value."', '%d-%m-%Y') = ". $filters->key;
 	}

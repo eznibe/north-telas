@@ -108,6 +108,11 @@ angular.module('vsko.stock')
         	return $http.delete(url + 'dispatchs_DELETE.php?dispatchPrevisionId='+prevision.dpId, prevision);
         };
 
+				this.removePrevisionInDispatch = function(previsionId, dispatchId) {
+
+        	return $http.delete(url + 'dispatchs_DELETE.php?previsionId='+previsionId+'&dispatchId='+dispatchId, null);
+        };
+
 				this.removeCarry = function(carry) {
 
         	return $http.delete(url + 'dispatchs_DELETE.php?carryId='+carry.id, carry);

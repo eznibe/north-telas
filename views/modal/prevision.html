@@ -192,7 +192,7 @@
               <div class="col-xs-6 nopadding">
                 <label class="control-label col-xs-4" translate>Line</label>
                 <div class="col-xs-8">
-                  <select name="dd_line" ng-model="prevision.selectedLine" ng-options="l as l.name for l in lines" class="form-control small" ng-change="updatePrevisionDeliveryDate">
+                  <select name="dd_line" ng-model="prevision.selectedLine" ng-options="l as l.name for l in lines" class="form-control small" ng-change="updatePrevisionDeliveryDate()">
                     <option value="">-- choose one --</option>
                   </select>
                 </div>
@@ -218,15 +218,15 @@
             </div>
             <div class="col-md-6 nopadding">
               <label class="control-label col-xs-3" translate>Dispatch</label>
-              <!-- <div class="col-xs-7">
-                <select name="dd_boat" ng-model="prevision.selectedDispatch" ng-options="b as b.boat for b in dispatchs" class="form-control small" ng-change="">
+              <div class="col-xs-3">
+                <select ng-model="prevision.selectedDispatch" ng-options="d as ('#' + d.number) for d in openDispatchs" class="form-control small" ng-change="">
                   <option value="">-- choose one --</option>
                 </select>
               </div>
-              <span class="glyphicon glyphicon-plus col-xs-1 control-label" ng-click="newDispatch()" style="text-align:center; cursor:pointer;"></span> -->
-              <div class="col-xs-3">
+              <span class="glyphicon glyphicon-folder-open col-xs-1 control-label" ng-click="showDispatchModal({id: prevision.dispatchId})" style="text-align:center; cursor:pointer;" ng-show="prevision.selectedDispatch.id"></span>
+              <!-- <div class="col-xs-3">
                 <a href="javascript:void(0);" ng-click="showDispatchModal({id: prevision.dispatchId})">{{::(prevision.dispatch ? '#' + prevision.dispatch : '')}}</a>
-              </div>
+              </div> -->
             </div>
           </div>
 
@@ -316,7 +316,7 @@
 						<div class="col-md-6 nopadding">
 								<label class="control-label col-xs-4" for="edit_cloth" translate>Cloth</label>
 								<div class="col-xs-8">
-									<select name="dd_cloth" ng-model="c.selectedCloth" ng-options="sc as sc.name for sc in cloths" class="form-control small" required ng-class="{error: innerForm.dd_cloth.$invalid}" ng-disabled="prevision.designed=='1'" >
+									<select name="dd_cloth" ng-model="c.selectedCloth" ng-options="sc as sc.name for sc in cloths" class="form-control small" required ng-class="{error: innerForm.dd_cloth.$invalid}" ng-disabled="prevision.designed=='1' && prevision.id.indexOf('-prev')==-1" >
                       <option value="">-- choose one --</option>
                   </select>
 								</div>
@@ -324,10 +324,10 @@
 						<div class="col-md-6 nopadding">
 								<label class="control-label col-xs-4" for="edit_mts">mts</label>
 								<div class="col-xs-4">
-									<input name="edit_mts" type="text" class="form-control small" required  ng-model="c.mts" ng-class="{error: innerForm.edit_mts.$invalid}" ng-disabled="prevision.designed=='1'">
+									<input name="edit_mts" type="text" class="form-control small" required  ng-model="c.mts" ng-class="{error: innerForm.edit_mts.$invalid}" ng-disabled="prevision.designed=='1' && prevision.id.indexOf('-prev')==-1">
 								</div>
-								<span class="glyphicon glyphicon-trash col-xs-1 control-label" ng-click="removeCloth($index)" style="text-align:center; cursor:pointer;" ng-hide="prevision.designed=='1'"></span>
-								<span class="glyphicon glyphicon-plus col-xs-1 control-label" ng-click="addCloth()" ng-show="$last" style="text-align:center; cursor:pointer;" ng-hide="prevision.designed=='1'"></span>
+								<span class="glyphicon glyphicon-trash col-xs-1 control-label" ng-click="removeCloth($index)" style="text-align:center; cursor:pointer;" ng-hide="prevision.designed=='1' && prevision.id.indexOf('-prev')==-1"></span>
+								<span class="glyphicon glyphicon-plus col-xs-1 control-label" ng-click="addCloth()" ng-show="$last" style="text-align:center; cursor:pointer;" ng-hide="prevision.designed=='1' && prevision.id.indexOf('-prev')==-1"></span>
 						</div>
 						</ng-form>
 					</div>
@@ -341,12 +341,12 @@
 					<span class="glyphicon glyphicon-remove"></span>
 					{{'Cancel' | translate}}
 				</a>
-				<a href="javascript:void(0)" class="btn btn-warning floatleft" ng-show="prevision.id" ng-hide="prevision.designed=='1'" ng-click="showConfirmDeleteModal(prevision)" access-allowed="admin,ordenes,velas-od">
+				<a href="javascript:void(0)" class="btn btn-warning floatleft" ng-show="prevision.id" ng-hide="prevision.designed=='1'" ng-click="showConfirmDeleteModal(prevision)" access-allowed="admin,ordenes,produccion,velas-od">
 					<span class="glyphicon glyphicon-trash"></span>
 					{{'Delete' | translate}}
 				</a>
 
-				<a ng-click="save()" class="btn btn-default floatright edit_person" ng-disabled="!form.$valid || !prevision.orderNumber" access-allowed="admin,ordenes,velas-od" >
+				<a ng-click="save()" class="btn btn-default floatright edit_person" ng-disabled="!form.$valid || !prevision.orderNumber" access-allowed="admin,ordenes,produccion,velas-od" >
 					<span class="glyphicon glyphicon-save"></span>
 					{{'Save' | translate}}
 				</a>

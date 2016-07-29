@@ -77,9 +77,11 @@ angular.module('vsko.stock').factory('Rules',[ '$q', 'Previsions', 'Production',
 
   function getCorrespondingWeek(line, weeksBySeason) {
 
-    if (line) {
-      return +weeksBySeason.filter(function(p) { return p.name == 'seasonWeeks'; })[0].value;
-    } 
+    if (line && (line == 'OD' || line == 'CA' || line == 'REP')) {
+      return +weeksBySeason.filter(function(p) { return p.name == 'seasonWeeks.1'; })[0].value;
+    } else if (line && (line == 'NY' || line == 'RA' || line == 'DA')) {
+      return +weeksBySeason.filter(function(p) { return p.name == 'seasonWeeks.2'; })[0].value;
+    }
 
     return 0;
   }

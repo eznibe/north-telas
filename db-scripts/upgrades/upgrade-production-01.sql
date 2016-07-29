@@ -56,12 +56,12 @@ alter table previsions add column deletedProductionBy varchar(32);
 alter table previsions add column productionObservations varchar(1024);
 alter table previsions add column designObservations varchar(1024);
 
-delete from plotters where clothId is null or clothId = '';
-delete previsions from previsions left join plotters on plotters.previsionId = previsions.id where previsions.designed = true and plotters.id is null
-
-update previsions p join plotters pl on p.id = pl.previsionId set p.deletedProductionOn = '2016-06-01', p.deletedProductionBy = 'script' where pl.cuttedOn < '2016-05-01'
-
 update previsions set percentage = 6 where designed = true and percentage is null;
+
+delete from plotters where clothId is null or clothId = '';
+delete previsions from previsions left join plotters on plotters.previsionId = previsions.id where previsions.designed = true and plotters.id is null;
+
+update previsions p join plotters pl on p.id = pl.previsionId set p.deletedProductionOn = '2016-06-01', p.deletedProductionBy = 'script' where pl.cuttedOn < '2016-05-01';
 
 --
 
@@ -69,8 +69,6 @@ alter table dispatchs add column address varchar(64);
 alter table dispatchs add column value float;
 alter table dispatchs add column tracking varchar(64);
 alter table dispatchs add column notes varchar(1024);
-
-alter table dispatchs modify column number int;
 
 alter table dispatchPrevisions add column orderNumber varchar(64);
 alter table dispatchPrevisions add column client varchar(64);
@@ -85,13 +83,14 @@ CREATE TABLE properties
 )ENGINE=MyISAM
 ;
 
-insert into properties (name, value) values ('seasonWeeks', '4');
+insert into properties (name, value) values ('seasonWeeks.1', '4');
+insert into properties (name, value) values ('seasonWeeks.2', '6');
 
 --
 
-update roles set id=6 where id=5;
-
+update roles set id = 7 where id = 5;
 insert into roles values (5, 'vendedor');
+insert into roles values (6, 'produccion');
 
 alter table usuarios add column code varchar(16);
 
@@ -100,4 +99,5 @@ insert into usuarios (id, username, password, name, role, code) values
 ('11', 'vendedor.hs', 'hs', 'HS', 'vendedor', 'HS'),
 ('12', 'vendedor.cc', 'cc', 'CC', 'vendedor', 'CC'),
 ('13', 'vendedor.gb', 'gb', 'GB', 'vendedor', 'GB'),
-('14', 'vendedor.ed', 'ed', 'ED', 'vendedor', 'ED');
+('14', 'vendedor.ed', 'ed', 'ED', 'vendedor', 'ED'),
+('15', 'prod.hernan', 'hernan', 'Hernan Prod', 'produccion', null);

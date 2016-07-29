@@ -17,6 +17,8 @@ if($_SERVER['REQUEST_METHOD'] == 'DELETE') {
 		$response = deleteDispatch($_GET['id']);
 	} else if (isset($_GET['dispatchPrevisionId'])) {
 		$response = deleteDispatchPrevision($_GET['dispatchPrevisionId']);
+	} else if (isset($_GET['previsionId'])) {
+		$response = deleteDispatchPrevisionExtended($_GET['previsionId'], $_GET['dispatchId']);
 	} else if (isset($_GET['carryId'])) {
 		$response = deleteCarry($_GET['carryId']);
 	}

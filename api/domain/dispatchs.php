@@ -343,6 +343,20 @@ function deleteDispatchPrevision($dispatchPrevisionId) {
 	return $obj;
 }
 
+function deleteDispatchPrevisionExtended($previsionId, $dispatchId) {
+
+	$obj->successful = true;
+
+	// delete
+	$query = "DELETE FROM dispatchPrevisions WHERE previsionId = '".$previsionId."' AND dispatchId = '".$dispatchId."'";
+	if (! mysql_query($query)) {
+		$obj->successful = false;
+	}
+
+	return $obj;
+}
+
+
 function deleteCarry($carryId) {
 
 	$obj->successful = true;

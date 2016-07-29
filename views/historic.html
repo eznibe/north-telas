@@ -1,7 +1,7 @@
 <div class="nopaddingright jumbotron clearfix">
 	<div class="row">
 		<h1 class="col-md-11"><span translate>Historics</span></h1>
-		<div class="col-md-1 text-right">
+		<div class="col-md-1 text-right" style="display:none;">
 			<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span></a>
 			<ul class="columns-settings-dropdown dropdown-menu form-horizontal" role="menu">
 				<li class="row" ng-click="::$event.stopPropagation(); visibility.refreshColumns();"><label class="col-xs-10" translate>Seller col</label><input class="col-xs-2" type="checkbox" ng-model="columns.seller"/></li>
@@ -72,7 +72,7 @@
 		<tr>
 			<th ng-show=":refreshColumns:visibility.showColumn('seller')" translate>Seller col</th>
 			<th ng-show=":refreshColumns:visibility.showColumn('week')" translate>Week col</th>
-			<th ng-show=":refreshColumns:visibility.showColumn('priority')" translate>Priority col</th>
+			<th ng-show=":refreshColumns:visibility.showColumn('priority')" translate access-restricted="vendedor">Priority col</th>
 			<th ng-show=":refreshColumns:visibility.showColumn('dispatch')" translate>Dispatch</th>
 			<th ng-show=":refreshColumns:visibility.showColumn('order')" translate>Order</th>
 			<th ng-show=":refreshColumns:visibility.showColumn('client')" translate>Client</th>
@@ -83,15 +83,15 @@
 			<th ng-show=":refreshColumns:visibility.showColumn('advance')" translate>Advance</th>
 			<th ng-show=":refreshColumns:visibility.showColumn('deliveryDate')" translate style="min-width:95px;">Delivery date min</th>
 			<th ng-show=":refreshColumns:visibility.showColumn('tentativeDate')" translate style="min-width:95px;">Tentative date min</th>
-			<th ng-show=":refreshColumns:visibility.showColumn('productionDate')" translate style="min-width:95px;">Production date min</th>
+			<th ng-show=":refreshColumns:visibility.showColumn('productionDate')" translate style="min-width:95px;" access-restricted="vendedor">Production date min</th>
 			<th ng-show=":refreshColumns:visibility.showColumn('infoDate')" translate style="min-width:95px;">Info date min</th>
 			<th ng-show=":refreshColumns:visibility.showColumn('advanceDate')" translate style="min-width:95px;">Advance date min</th>
 			<th ng-show=":refreshColumns:visibility.showColumn('cloths')" translate>Cloths</th>
-			<th ng-show=":refreshColumns:visibility.showColumn('state')" translate>State col</th>
-			<th ng-show=":refreshColumns:visibility.showColumn('area')" translate>Area</th>
-			<th ng-show=":refreshColumns:visibility.showColumn('productionObservations')" translate>Observations</th>
+			<th ng-show=":refreshColumns:visibility.showColumn('state')" translate access-restricted="vendedor">State col</th>
+			<th ng-show=":refreshColumns:visibility.showColumn('area')" translate access-restricted="vendedor">Area</th>
+			<th ng-show=":refreshColumns:visibility.showColumn('productionObservations')" translate access-restricted="vendedor">Observations</th>
 			<th translate>Archived date min</th>
-			<th access-allowed="admin,ordenes,plotter" translate>Restore</th>
+			<th access-allowed="admin,produccion" translate>Restore</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -102,11 +102,11 @@
 			<td>
 				{{:refreshColumnsValue:getValue(p, 'week')}}
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('priority')">
+			<td ng-show=":refreshColumns:visibility.showColumn('priority')" access-restricted="vendedor">
 				{{:refreshColumnsValue:getValue(p, 'priority')}}
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('dispatch')">
-				{{:refreshColumnsValue:getValue(p, 'dispatch')}}
+				{{::(p.dispatch ? '#' + p.dispatch : '')}}
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('order')" nowrap>
 				{{:refreshColumnsValue:getValue(p, 'orderNumber')}}
@@ -137,7 +137,7 @@
 				{{:refreshColumnsValue:getValue(p, 'tentativeDate')}}
 				<!-- <editable-date entity="::p" field="tentativeDate" callback="::updateDate" editable-by-role="admin" style="display:inline-block;"></editable-date> -->
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('productionDate')" nowrap>
+			<td ng-show=":refreshColumns:visibility.showColumn('productionDate')" nowrap access-restricted="vendedor">
 				{{:refreshColumnsValue:getValue(p, 'productionDate')}}
 				<!-- <editable-date entity="::p" field="productionDate" callback="::updateDate" editable-by-role="admin" style="display:inline-block;"></editable-date> -->
 			</td>
@@ -152,19 +152,19 @@
 			<td ng-show=":refreshColumns:visibility.showColumn('cloths')">
 				<prevision-cloths prevision="p" style="display:inline-block;"></prevision-cloths>
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('state')">
+			<td ng-show=":refreshColumns:visibility.showColumn('state')" access-restricted="vendedor">
 				{{:refreshColumnsValue:getValue(p, 'state')}}
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('area')">
+			<td ng-show=":refreshColumns:visibility.showColumn('area')" access-restricted="vendedor">
 				{{:refreshColumnsValue:getValue(p, 'area')}}
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('productionObservations')">
+			<td ng-show=":refreshColumns:visibility.showColumn('productionObservations')" access-restricted="vendedor">
 				{{:refreshColumnsValue:getValue(p, 'productionObservations')}}
 			</td>
 			<td>
 				{{:refreshColumnsValue:getValue(p, 'deletedProductionOn')}}
 			</td>
-			<td style="width:80px; text-align:center;" access-allowed="admin,ordenes,plotter">
+			<td style="width:80px; text-align:center;" access-allowed="admin,produccion">
 				<a ng-click="showConfirmModal(p, restoreToProduction)" class="btn btn-default">
 					<span class="glyphicon glyphicon-refresh"></span>
 				</a>
@@ -177,6 +177,8 @@
 		</tr>
 	</tbody>
 </table>
+
+<ul id="pagination" class="pagination-sm"></ul>
 
 
 <confirm-modal/>

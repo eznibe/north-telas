@@ -28,7 +28,8 @@ else if(isset($_GET['listForProduction'])) {
 	$value = getPrevisions(null, null, $expand, true, null, $_GET['sellerCode'], $filters);
 }
 else if(isset($_GET['listHistoric'])) {
-	$value = getPrevisions(null, null, $expand, null, true);
+	// deprecated - use with POST
+	$value = getPrevisions(null, null, $expand, null, true, $_GET['sellerCode']);
 }
 else if(isset($_GET['expand']) && $_GET['expand'] == 'NONE') {
 	$value = getPrevisionsBasic();

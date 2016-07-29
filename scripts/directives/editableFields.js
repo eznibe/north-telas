@@ -342,7 +342,7 @@ angular.module('vsko.stock')
               scope.$broadcast('$$rebind::refreshPencil');
             },
             showPencil: function() {
-              return !scope.entity[scope.field] && scope.over && !scope.editable;
+              return !scope.entity[scope.field] && scope.over && !scope.editable && !scope.readonly;
             },
 
             getExtraLabel: function() {
@@ -450,7 +450,7 @@ angular.module('vsko.stock')
               scope.$broadcast('$$rebind::refreshPencil');
             },
             showPencil: function() {
-              return !scope.entity[scope.field] && scope.over && !scope.editable;
+              return !scope.entity[scope.field] && scope.over && !scope.editable && !scope.readonly;
             },
 
             getExtraLabel: function() {
@@ -560,7 +560,7 @@ angular.module('vsko.stock')
               scope.$broadcast('$$rebind::refreshPencil');
             },
             showPencil: function() {
-              return !scope.entity[scope.field] && scope.over && !scope.editable;
+              return !scope.entity[scope.field] && scope.over && !scope.editable && !scope.readonly;
             },
 
             getExtraLabel: function() {
@@ -645,7 +645,7 @@ angular.module('vsko.stock')
         	field: '@',
         	entity: '=',
         	callback: '=',
-          editableByRole: '@',
+          editableByRole: '=',
           tooltipText: '@',
           width: '@',
           required: '@',
@@ -679,7 +679,7 @@ angular.module('vsko.stock')
               scope.$broadcast('$$rebind::refreshPencil');
             },
             showPencil: function() {
-              return !scope.entity[scope.field] && scope.over && !scope.editable;
+              return !scope.entity[scope.field] && scope.over && !scope.editable && !scope.readonly;
             },
 
             getExtraLabel: function() {
