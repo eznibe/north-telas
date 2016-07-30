@@ -91,7 +91,8 @@ angular.module('vsko.stock')
                   return d.archived == '0';
                 });
 
-                if (prevision.dispatchId) {
+                if ($scope.prevision.dispatchId) {
+                  // load the the already saved one
                   $scope.prevision.selectedDispatch = result.data.filter(function(d) {
                     return d.id === $scope.prevision.dispatchId;
                   })[0];
@@ -292,7 +293,7 @@ angular.module('vsko.stock')
             }
           };
 
-          $scope.orderNumberChanged = function(str) {
+          $scope.orderNumberInputChanged = function(str) {
             $scope.prevision.orderNumber = str;
           }
 

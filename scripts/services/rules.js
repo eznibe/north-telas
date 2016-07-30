@@ -49,7 +49,11 @@ angular.module('vsko.stock').factory('Rules',[ '$q', 'Previsions', 'Production',
 
     // .
     if (prevision.infoDate && prevision.advanceDate && selectedLine) {
-      var newDate = moment(prevision.advanceDate, "DD-MM-YYYY");
+
+      var dateToStartFrom = moment(prevision.advanceDate, "DD-MM-YYYY").valueOf() > moment(prevision.infoDate, "DD-MM-YYYY").valueOf()
+                                  ? prevision.advanceDate
+                                  : prevision.infoDate;
+      var newDate = moment(dateToStartFrom, "DD-MM-YYYY");
 
       Production.getWeeksBySeason().then(function(weeksBySeason) {
 
