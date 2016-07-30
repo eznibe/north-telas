@@ -9,19 +9,21 @@ include_once '../include/main.php';
 db_connect();
 
 function addOrUpdateUser($user) {
-	
+
 	$methodResult = true;
-	
+
 	if(isset($user->id)) $id = $user->id; else $id = 'notexistent';
 
 	$query = "SELECT * FROM usuarios WHERE id = '".$id."'";
 	$result = mysql_query($query);
 	$num_results = mysql_num_rows($result);
-	
+
+	$code = isset($user->code) ? "'".$user->code."'" : 'null' ;
+
 	if ($num_results != 0)
 	{
 		// update
-		$query = "UPDATE usuarios SET username = '".$user->username."', password = '".$user->password."', name = '".$user->name."', role = '".$user->role."' WHERE id = '".$user->id."'";
+		$query = "UPDATE usuarios SET username = '".$user->username."', password = '".$user->password."', name = '".$user->name."', role = '".$user->role."', code = $code WHERE id = '".$user->id."'";
 		if (! mysql_query($query)) {
 			// error en update
 			$methodResult = false;
@@ -29,7 +31,7 @@ function addOrUpdateUser($user) {
 	}
 	else {
 		// insert
-		$query = "INSERT INTO usuarios (id, username, password, name, role) VALUES ('".$user->id."', '".$user->username."', '".$user->password."', '".$user->name."', '".$user->role."')";
+		$query = "INSERT INTO usuarios (id, username, password, name, role, code) VALUES ('".$user->id."', '".$user->username."', '".$user->password."', '".$user->name."', '".$user->role."', $code)";
 		if (! mysql_query($query)) {
 			// error en insert
 			$methodResult = false;

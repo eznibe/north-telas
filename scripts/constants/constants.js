@@ -7,7 +7,9 @@ angular.module('vsko.stock')
 	ordenes: [2, '/previsions'], // 010
 	plotter: [1, '/plotter'], // 001
 	'velas-od': [1, '/groups'], // 001
-	'read-only': [1, '/groups'] // 001
+	'read-only': [1, '/groups'], // 001
+	vendedor: [1, '/production'], // 001
+	produccion: [2, '/production'] // 100
 })
 
 .constant('accessLevels', {

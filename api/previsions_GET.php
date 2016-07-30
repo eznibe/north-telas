@@ -14,21 +14,37 @@ include_once 'domain/previsionStates.php';
 
 db_connect();
 
-
 $designed = isset($_GET['designed']) ? $_GET['designed'] : null;
 $expand = isset($_GET['expand']) ? $_GET['expand'] : null;
 
 if(isset($_GET['id'])) {
 	$value = getPrevision($_GET['id']);
 }
-if(isset($_GET['clothId'])) {
+else if(isset($_GET['clothId'])) {
 	$value = getPrevisions($_GET['clothId'], $designed, $expand, null);
+}
+else if(isset($_GET['listForProduction'])) {
+	// deprecated - use with POST
+	$value = getPrevisions(null, null, $expand, true, null, $_GET['sellerCode'], $filters);
+}
+else if(isset($_GET['listHistoric'])) {
+	// deprecated - use with POST
+	$value = getPrevisions(null, null, $expand, null, true, $_GET['sellerCode']);
+}
+else if(isset($_GET['expand']) && $_GET['expand'] == 'NONE') {
+	$value = getPrevisionsBasic();
+}
+else if(isset($_GET['checkAllClothsCutted'])) {
+	$value = checkAllClothsCutted($_GET['previsionId']);
 }
 else if(isset($_GET['updateAllPrevisionsStates'])) {
 	$value = updateAllPrevisionsStates($_GET['updateClothId'], $_GET['limit'], $_GET['offset']);
 }
 else if(isset($_GET['updatePrevisionState'])) {
 	$value = updatePrevisionState($_GET['updateClothId']);
+}
+else if(isset($_GET['weeksBySeason'])) {
+	$value = getWeeksBySeason($_GET['weeksBySeason']);
 }
 else {
 	$value = getPrevisions(null, $designed, $expand, null);

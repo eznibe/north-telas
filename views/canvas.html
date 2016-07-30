@@ -1,0 +1,152 @@
+<div class="nopaddingright jumbotron clearfix">
+	<h1><span translate>Between dates</span></h1>
+	<div class="row">
+		<div class="col-md-6 nopadding">
+				<label class="control-label col-xs-2" for="edit_cloth" translate>Between</label>
+				<div class="col-xs-4">
+					<div class="input-group input-group-sm date" date-picker>
+						<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="filter.startDate" class="form-control small" required>
+						<span class="input-group-addon">
+							<span class="glyphicon-calendar glyphicon"></span>
+						</span>
+					</div>
+				</div>
+
+				<label class="control-label col-xs-1" for="edit_cloth" translate>and</label>
+				<div class="col-xs-4">
+					<div class="input-group input-group-sm date" date-picker>
+						<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="filter.endDate" class="form-control small" required>
+						<span class="input-group-addon">
+							<span class="glyphicon-calendar glyphicon"></span>
+						</span>
+					</div>
+				</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6 nopadding">
+				<label class="control-label col-xs-2" translate>Type</label>
+				<div class="col-xs-4">
+					<select name="dd_cloth" ng-model="filter.selectedType" ng-options="sc as sc.name for sc in filter.types" class="form-control small" ng-change="filer.selectedGroupBy=null; updateFilterOptions();">
+	        </select>
+				</div>
+
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6 nopadding">
+				<label class="control-label col-xs-2" translate>Filter by</label>
+				<div class="col-xs-4">
+					<select name="dd_ty" ng-model="filter.selectedOption" ng-options="sc as sc.name for sc in filter.options" class="form-control small" ng-change="clearFilterOption();">
+			        </select>
+				</div>
+
+				<label class="control-label col-xs-1"></label>
+				<div class="col-xs-4" ng-show="filter.selectedOption.id == 'OPTION_CLOTH'">
+					<select name="dd_cloth" ng-model="filter.selectedCloth" ng-options="sc as sc.name for sc in cloths" class="form-control small">
+	            <option value="">-- choose one --</option>
+	        </select>
+				</div>
+
+				<div class="col-xs-4" ng-show="filter.selectedOption.id == 'OPTION_INVOICE'">
+					<input name="i_inv" type="text" ng-model="filter.invoice" class="form-control small"/>
+				</div>
+
+				<div class="col-xs-4" ng-show="filter.selectedOption.id == 'OPTION_USER'">
+					<select name="dd_user" ng-model="filter.selectedUser" ng-options="su as su.name for su in users" class="form-control small">
+	            <option value="">-- choose one --</option>
+	        </select>
+				</div>
+
+				<div class="col-xs-4" ng-show="filter.selectedOption.id == 'OPTION_GROUP'">
+					<select name="dd_user" ng-model="filter.selectedGroup" ng-options="g as g.name for g in groups" class="form-control small">
+	            <option value="">-- choose one --</option>
+	        </select>
+				</div>
+
+				<div class="col-xs-4" ng-show="filter.selectedOption.id == 'OPTION_PROVIDER'">
+					<select name="dd_user" ng-model="filter.selectedProvider" ng-options="p as p.name for p in providers" class="form-control small">
+	            <option value="">-- choose one --</option>
+	        </select>
+				</div>
+		</div>
+	</div>
+	<div class="row" ng-show="filter.selectedType.id == 'TYPE_PLOTTERS'">
+		<div class="col-md-6 nopadding">
+				<label class="control-label col-xs-2" translate>Group by</label>
+				<div class="col-xs-4">
+					<select name="dd_ty" ng-model="filter.selectedGroupBy" ng-options="sc as sc.name for sc in filter.groupByOptions" class="form-control small" ng-change="">
+						<option value="">-- choose one --</option>
+		      </select>
+				</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-6 nopadding">
+				<label class="control-label col-xs-2"></label>
+				<div class="col-xs-4">
+				</div>
+
+				<label class="control-label col-xs-1" for="edit_cloth" translate>&nbsp;</label>
+				<div class="col-xs-4">
+					<a ng-click="search()" class="btn btn-default floatright">
+						<span class="glyphicon glyphicon-search"></span>
+						{{'Search' | translate}}
+					</a>
+				</div>
+		</div>
+	</div>
+</div>
+
+<!-- Consumos -->
+<table id="production" class="table table-bordered table-striped table-hover" ng-show="filter.type=='TYPE_PLOTTERS' && !filter.searchedWithGroupBy">
+	<thead>
+		<tr>
+			<th style="min-width:90px;" translate>Date</th>
+			<th style="min-width: 200px;" translate>Cloth</th>
+			<th translate>Sail</th>
+			<th translate>Boat</th>
+			<th translate>Client</th>
+			<th translate>Order</th>
+			<th translate>Observations</th>
+			<th title="Cortados" translate>Mts</th>
+			<th translate>Rolls</th>
+			<th translate>User</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="p in plotters | filter:searchBox">
+			<td style="min-width:90px;">
+				{{p.formattedDate}}
+			</td>
+			<td>
+				{{p.name}}
+			</td>
+			<td>
+				{{p.sailName}}
+			</td>
+			<td>
+				{{p.boat}}
+			</td>
+			<td>
+				{{p.client}}
+			</td>
+			<td>
+				{{p.orderNumber}}
+			</td>
+			<td>
+				{{p.observations}}
+			</td>
+			<td>
+				{{p.sumMtsCutted}}
+			</td>
+			<td>
+				{{showRolls(p.rolls)}}
+			</td>
+			<td>
+				<span my-tooltip="p.cuttedTimestamp">{{p.cuttedBy}}</span>
+			</td>
+		</tr>
+	</tbody>
+</table>

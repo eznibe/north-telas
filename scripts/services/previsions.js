@@ -8,18 +8,34 @@ angular.module('vsko.stock')
 
 		var url = telasAPIUrl;
 
-        this.getAll = function(includeDesigned)
+        this.getAll = function(includeDesigned, expand)
         {
 					var designedCondition = "";
         	if(!includeDesigned)
-        		designedCondition = "designed=false&";
+        		designedCondition = "&designed=false";
 
-        	return $http.get(url + 'previsions_GET.php?'+designedCondition+'&expand=FULL');
+        	return $http.get(url + 'previsions_GET.php?expand='+(expand ? expand : 'FULL') + designedCondition);
         };
 
         this.getPrevisions = function(clothId)
         {
         	return $http.get(url + 'previsions_GET.php?clothId='+clothId+'&designed=false&expand=FULL');
+        };
+
+				this.getPrevisionsForProduction = function(sellerCode, filters, offset)
+        {
+					sellerCode = sellerCode ? '&sellerCode=' + sellerCode : '';
+					offset = offset || offset == 0 ? ('&offset=' + offset) : '';
+
+					return $http.post(url + 'previsions_POST.php?listForProduction=true' + offset + sellerCode , filters);
+        };
+
+				this.getPrevisionsHistoric = function(sellerCode, filters, offset)
+        {
+					sellerCode = sellerCode ? '&sellerCode=' + sellerCode : '';
+					offset = offset || offset == 0 ? ('&offset=' + offset) : '';
+
+					return $http.post(url + 'previsions_POST.php?listHistoric=true' + offset + sellerCode, filters);
         };
 
         this.save = function(prevision, loggedUser) {
@@ -84,6 +100,11 @@ angular.module('vsko.stock')
         	return $http.get(url + 'rolls_GET.php?clothId='+plotter.clothId+'&possibleRolls=true');
         };
 
+				this.checkAllClothsCutted = function(previsionId)
+        {
+        	return $http.get(url + 'previsions_GET.php?checkAllClothsCutted=true&previsionId='+previsionId);
+        };
+
 
         this.saveManualPlotter = function(plotter) {
 
@@ -96,6 +117,11 @@ angular.module('vsko.stock')
 				this.editObservations = function(prevision) {
 
         	return $http.post(url + 'previsions_POST.php?edit=true&field=observations', prevision);
+        };
+
+				this.editField = function(prevision, field) {
+
+        	return $http.post(url + 'previsions_POST.php?edit=true&field='+field, prevision);
         };
 
 				this.updatePrevisionState = function(clothIds) {

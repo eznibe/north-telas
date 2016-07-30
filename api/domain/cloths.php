@@ -25,7 +25,7 @@ function getCloths($groupId, $expand)
 	while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
 
 		$row['providers'] = getProviders($row['id'], $expand);
-		$row['previsions'] = getPrevisions($row['id'], 'false', $expand, null);
+		$row['previsions'] = getPrevisions($row['id'], 'false', $expand, null, null, null, null, null);
 		$row['plotters'] = getPlotters($row['id'], 'false', null, null);
 		$row['djais'] = getDjais($row['id'], $expand);
 		if($expand=='WITH_ROLLS')
@@ -123,7 +123,7 @@ function getClothsUpToDate($groupId, $date, $includeStock0, $joinProviders) {
 								group by r2.id
 							) cuts ON cuts.id = r.id
 							WHERE c.groupId='$groupId' and r.incoming=true and o.arriveDate is null and o.inTransitDate is not null
-							and o.inTransitDate <= STR_TO_DATE('".$date."', '%d-%m-%Y') 
+							and o.inTransitDate <= STR_TO_DATE('".$date."', '%d-%m-%Y')
 							GROUP BY p.clothId	";
 	}
 

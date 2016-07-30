@@ -1,0 +1,107 @@
+<div class="nopaddingright jumbotron clearfix">
+	<h1><span translate>Dispatchs historic</span></h1>
+	<div class="row">
+		<div class="col-md-6 nopadding">
+				<label class="control-label col-xs-2" for="edit_cloth" translate>Between</label>
+				<div class="col-xs-4">
+					<div class="input-group input-group-sm date" date-picker>
+						<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="filter.startDate" class="form-control small" required>
+						<span class="input-group-addon">
+							<span class="glyphicon-calendar glyphicon"></span>
+						</span>
+					</div>
+				</div>
+
+				<label class="control-label col-xs-1" for="edit_cloth" translate>and</label>
+				<div class="col-xs-4">
+					<div class="input-group input-group-sm date" date-picker>
+						<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="filter.endDate" class="form-control small" required>
+						<span class="input-group-addon">
+							<span class="glyphicon-calendar glyphicon"></span>
+						</span>
+					</div>
+				</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6 nopadding">
+				<label class="control-label col-xs-2" translate>Filter by</label>
+				<div class="col-xs-4">
+					<select name="dd_ty" ng-model="filter.selectedOption" ng-options="sc as sc.name for sc in filter.options" class="form-control small" ng-change="clearFilterOption();">
+						<option value="">-- choose one --</option>
+		      </select>
+				</div>
+
+				<label class="control-label col-xs-1"></label>
+				<div class="col-xs-4">
+					<input ng-model="filter.value" class="form-control small" />
+				</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-6 nopadding">
+				<label class="control-label col-xs-2"></label>
+				<div class="col-xs-4">
+				</div>
+
+				<label class="control-label col-xs-1" for="edit_cloth" translate>&nbsp;</label>
+				<div class="col-xs-4">
+					<a ng-click="search()" class="btn btn-default floatright">
+						<span class="glyphicon glyphicon-search"></span>
+						{{'Search' | translate}}
+					</a>
+				</div>
+		</div>
+	</div>
+</div>
+
+<!-- Consumos -->
+<table class="table table-bordered table-striped table-hover">
+	<thead>
+		<tr>
+			<th translate>Dispatch number</th>
+			<th translate>Dispatch date col</th>
+			<th translate>Destinatary</th>
+			<th translate>Destiny</th>
+			<th translate>Transport</th>
+			<th translate>Tracking</th>
+			<th translate>Orders</th>
+			<th access-restricted="read-only" translate>Restore</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="d in dispatchs | filter:searchBox ">
+			<td>
+				<span><a href="javascript:void(0);" ng-click="showDispatchModal(d)">#{{d.number}}</a></span>
+			</td>
+			<td>
+				{{d.dispatchDate}}
+			</td>
+			<td>
+				{{d.destinatary}}
+			</td>
+			<td>
+				{{d.destiny}}
+			</td>
+			<td>
+				{{d.transport}}
+			</td>
+			<td>
+				{{d.tracking}}
+			</td>
+			<td>
+				<dispatch-orders dispatch="d" open="showDispatchModal" style="display:inline-block;"></dispatch-orders>
+			</td>
+			<td access-restricted="read-only" style="width:80px; text-align:center;">
+				<a ng-click="showConfirmModal(d, restoreDispatch)" class="btn btn-default">
+					<span class="glyphicon glyphicon-refresh"></span>
+				</a>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<confirm-modal/>
+
+<dispatch-modal/>

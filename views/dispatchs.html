@@ -1,0 +1,60 @@
+<div class="jumbotron clearfix">
+	<h1><span translate>Dispatchs</span></h1>
+	<p class="bigmargin">
+	    <a ng-click="showDispatchModal()" class="btn btn-info floatright" access-restricted="read-only">
+	        <span class="glyphicon glyphicon-plus"></span>&nbsp;
+	        {{'Create new dispatch' | translate}}
+	    </a>
+	</p>
+</div>
+
+<table class="table table-bordered table-striped table-hover">
+	<thead>
+		<tr>
+			<th translate>Dispatch number</th>
+			<th translate>Dispatch date col</th>
+			<th translate>Destinatary</th>
+			<th translate>Destiny</th>
+			<th translate>Transport</th>
+			<th translate>Orders</th>
+			<th access-restricted="read-only" translate>Archive</th>
+			<th access-restricted="read-only" translate>Delete</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="d in dispatchs | filter:searchBox ">
+			<td>
+				<span><a href="javascript:void(0);" ng-click="showDispatchModal(d)">#{{d.number}}</a></span>
+			</td>
+			<td>
+				{{d.dispatchDate}}
+			</td>
+			<td>
+				{{d.destinatary}}
+			</td>
+			<td>
+				{{d.destiny}}
+			</td>
+			<td>
+				{{d.transport}}
+			</td>
+			<td>
+				<dispatch-orders dispatch="d" open="showDispatchModal" style="display:inline-block;"></dispatch-orders>
+			</td>
+			<td access-restricted="read-only" style="width:80px; text-align:center;">
+				<a ng-click="showConfirmModal(d, archiveDispatch)" class="btn btn-default" ng-disabled="!d.dispatchDate">
+					<span class="glyphicon glyphicon-ok"></span>
+				</a>
+			</td>
+			<td access-restricted="read-only" style="width:80px; text-align:center;">
+				<a ng-click="showConfirmModal(d, deleteDispatch)" class="btn btn-default">
+					<span class="glyphicon glyphicon-trash"></span>
+				</a>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<confirm-modal/>
+
+<dispatch-modal/>

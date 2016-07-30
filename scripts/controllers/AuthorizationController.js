@@ -1,21 +1,22 @@
 'use strict';
-	
-angular.module('vsko.stock').controller('AuthorizationCtrl', ['$scope', '$rootScope', '$cookieStore', '$location', '$route', 'Users', 'userRoles', 
+
+angular.module('vsko.stock').controller('AuthorizationCtrl', ['$scope', '$rootScope', '$cookieStore', '$location', '$route', 'Users', 'userRoles',
                                                              function ($scope, $rootScope, $cookieStore, $location, $route, Users, userRoles) {
 
 		$scope.login = function(user, passw) {
-			
+
 			Users.login(user, passw).then(function(response){
-				
+
 				if(response.data.successful) {
-					
+
 					$rootScope.user.name = user;
 					$rootScope.user.password = "";
 					$rootScope.user.role = response.data.role;
-					
+					$rootScope.user.sellerCode = response.data.sellerCode;
+
 					// store in cookie to have access after a f5 reload
 					$cookieStore.put('user', $rootScope.user);
-					
+
 					if($location.path() != '/login') {
 						// reload the same view the user tried to enter
 						$route.reload();
@@ -24,7 +25,7 @@ angular.module('vsko.stock').controller('AuthorizationCtrl', ['$scope', '$rootSc
 						// come from login -> redirect to the default page for the user role
 						$location.path(userRoles[$rootScope.user.role][1]);
 					}
-					
+
 					$rootScope.login_error = false;
 				}
 				else {
@@ -32,13 +33,12 @@ angular.module('vsko.stock').controller('AuthorizationCtrl', ['$scope', '$rootSc
 				}
 			});
 		};
-		
+
 		$scope.logout = function() {
-			
+
 			$rootScope.user = {};
-			
+
 			$cookieStore.remove('user');
 		};
-        
-}]);
 
+}]);

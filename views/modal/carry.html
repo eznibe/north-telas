@@ -1,0 +1,59 @@
+<div class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-md" style="margin-top: 0px;">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<div class="edit_person">
+					<h2>
+						<span class="glyphicon glyphicon-file"></span>
+						<span>{{'Carry' | translate}}</span>
+					</h2>
+				</div>
+				<a href="javascript:void(0)" class="btn btn-lg closebtn" ng-click="$hide()">
+					<span class="glyphicon glyphicon-remove"></span>
+				</a>
+		</div>
+
+			<div class="modal-body">
+
+				<form class="form-horizontal ng-pristine ng-valid" name="form" novalidate>
+
+					<div class="row">
+						<div class="col-md-12 nopadding">
+								<label class="control-label col-xs-3" for="edit_order" translate>Number</label>
+								<div class="col-xs-3">
+									<input type="text" class="form-control small" ng-model="carry.number" required ng-class="{error: form.edit_amount.$dirty && form.edit_amount.$invalid}"/>
+								</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-12 nopadding">
+								<label class="control-label col-xs-3" for="edit_client" translate>Weight</label>
+								<div class="col-xs-3">
+									<input name="edit_amount" type="text" class="form-control small" ng-model="carry.weight" />
+								</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12 nopadding">
+								<label class="control-label col-xs-3" for="edit_order" translate>Measures</label>
+								<div class="col-xs-3">
+									<input name="edit_amount" class="form-control small" ng-model="carry.measures"/>
+								</div>
+						</div>
+					</div>
+
+				</form>
+			</div>
+
+			<div class="modal-footer">
+				<a ng-click="saveCarry(carry)" class="btn btn-default floatright edit_person" ng-disabled="!form.$valid" >
+					<span class="glyphicon glyphicon-ok"></span>
+					{{'Save' | translate}}
+				</a>
+			</div>
+
+		</div>
+	</div>
+</div>

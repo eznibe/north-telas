@@ -17,8 +17,9 @@ function getUser($user, $passw)
 	{
 		$row = mysql_fetch_array($result);
 
-		$obj->successful = true;	
+		$obj->successful = true;
 		$obj->role = $row['role'];
+		$obj->sellerCode = $row['code'];
 	}
 	else {
 		$obj->successful = false;
@@ -26,11 +27,11 @@ function getUser($user, $passw)
 
 	$obj->user = $user;
 
-	return $obj;	
+	return $obj;
 }
 
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
-	
+
 	$request_payload = file_get_contents('php://input');
 
 	//var_dump($request_payload);

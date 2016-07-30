@@ -56,12 +56,18 @@ angular.module('vsko.stock')
 
         link: function(scope, elem, attr) {
 
-        	elem.datepicker( {
+        	elem.datepicker({
         		format: "dd-mm-yyyy",
-                autoclose: true,
-                todayHighlight: true,
-        		language: "en"
-        	} );
+            autoclose: true,
+            todayHighlight: true,
+        		language: "en",
+						// clearBtn: true,
+						forceParse: false
+        	});
+
+					// elem.datepicker().on('changeDate', function (ev) {
+					//     console.log('date changed');
+					// });
         }
     };
 })
@@ -232,4 +238,18 @@ angular.module('vsko.stock')
       });
     }
   };
-});
+})
+
+.directive('myRepeatDirective', function() {
+  return {
+			restrict: 'AC',
+			scope: { start: '=myRepeatDirective' },
+		link: function(scope, element, attrs) {
+	    if (scope.$parent.$last){
+				console.log('Last repeat row ' + (Date.now() - scope.start) + ' ms.'); //eslint-disable-line
+				scope.$parent.$parent.hideLoading = true;
+	    }
+		}
+  };
+})
+;

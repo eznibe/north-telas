@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('vsko.stock').controller('DesignCtrl', ['$scope', 'Utils', 'Previsions', '$modal', function ($scope, Utils, Previsions, $modal) {
+angular.module('vsko.stock').controller('DesignCtrl', ['$scope', 'Utils', 'Previsions', 'Rules', '$modal', function ($scope, Utils, Previsions, Rules, $modal) {
 
         // initial list of previsions
         Previsions.getAll(false).then(function(result) {
@@ -9,21 +9,25 @@ angular.module('vsko.stock').controller('DesignCtrl', ['$scope', 'Utils', 'Previ
 
         $scope.designed = function(prevision) {
 
-        	Previsions.designed(prevision).then(function(result) {
-            	$scope.previsions.remove(prevision);
+          Previsions.designed(prevision).then(function(result) {
+            $scope.previsions.remove(prevision);
 
-            	console.log('Designed: '+prevision.orderNumber);
+            console.log('Designed: '+prevision.orderNumber);
 
-              Utils.showMessage('notify.order_to_plotter');
+            Utils.showMessage('notify.order_to_plotter');
 
-              var clothsIds = prevision.cloths.map(function(c) { return c.clothId; }).join(',');
+            var clothsIds = prevision.cloths.map(function(c) { return c.clothId; }).join(',');
 
-              Previsions.updatePrevisionState(clothsIds).then(function() {
-                Utils.showMessage('notify.previsions_state_updated');
-  						});
+            Previsions.updatePrevisionState(clothsIds).then(function() {
+              Utils.showMessage('notify.previsions_state_updated');
             });
 
-        	//prevision.designed = prevision.designed ? !prevision.designed : true;
+            prevision.designed = true;
+
+            Rules.updatePrevisionPercentage(prevision, true);
+          });
+
+          //prevision.designed = prevision.designed ? !prevision.designed : true;
         };
 
         $scope.editObservations = function(prevision) {

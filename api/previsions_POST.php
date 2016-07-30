@@ -27,6 +27,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$value = setDesigned($json);
 	else if(isset($_GET['updateMts']))
 		$value = updateMts($json);
+	else if(isset($_GET['edit']) && isset($_GET['isNumber']))
+		$value = editPrevisionNumberField($json, $_GET['field']);
 	else if(isset($_GET['edit']))
 		$value = editPrevisionField($json, $_GET['field']);
 	else if(isset($_GET['updatePrevisionState']))
@@ -35,6 +37,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$value = updateAllPrevisionsStates();
 	else if(isset($_GET['acceptStateChange']))
 		$value = acceptStateChange($json);
+	else if(isset($_GET['weeksBySeason']))
+		$value = updateWeeksBySeason($json);
+	else if(isset($_GET['listForProduction'])) {
+		$value = getPrevisions(null, null, $expand, true, null, $_GET['sellerCode'], $_GET['offset'], $json);
+	}
+	else if(isset($_GET['listHistoric'])) {
+		$value = getPrevisions(null, null, $expand, null, true, $_GET['sellerCode'], $_GET['offset'], $json);
+	}
 	else
 		$value = savePrevision($json);
 

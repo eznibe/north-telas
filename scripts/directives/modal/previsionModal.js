@@ -2,7 +2,7 @@
 
 angular.module('vsko.stock')
 
-.directive('previsionModal', function($modal, $rootScope, $q, $translate, Utils, Stock, Previsions, Files, OneDesign, Lists) {
+.directive('previsionModal', function($modal, $rootScope, $q, $translate, Utils, Stock, Previsions, Files, OneDesign, Lists, Production, Rules, Dispatchs) {
 
     return {
           restrict: 'E',
@@ -11,21 +11,27 @@ angular.module('vsko.stock')
         	  var $scope = scope;
 
 
-        	  Stock.getAllCloths().then(function(result) {
+        	  Stock.getAllCloths(true).then(function(result) {
         		  $scope.cloths = result.data;
-          	  });
+        	  });
 
         	  Stock.getAllSails().then(function(result) {
         		  $scope.sails = result.data;
-          	  });
+        	  });
 
         	  OneDesign.getBoats().then(function(result) {
         		  $scope.boats = result.data;
-          	  });
+        	  });
 
         	  OneDesign.getSails().then(function(result) {
-        		  $scope.oneDesignSails = result.data;
-          	  });
+      		    $scope.oneDesignSails = result.data;
+        	  });
+
+            $scope.lines = Production.getLines();
+
+            Production.getSellers().then(function(result) {
+              $scope.sellers = result.data;
+            });
 
             $scope.acceptStateChange = function(p) {
               Previsions.acceptStateChange(p).then(function() {
@@ -63,6 +69,41 @@ angular.module('vsko.stock')
           	  $scope.prevision.selectedOneDesignSail = $scope.prevision.oneDesign ? $scope.oneDesignSails.findAll({sail:$scope.prevision.sailOneDesign})[0] : {};
 
 
+              $scope.prevision.selectedLine = $scope.prevision.line ? $scope.lines.findAll({name:$scope.prevision.line})[0] : {};
+              $scope.prevision.selectedSeller = $scope.prevision.seller ? $scope.sellers.findAll({name:$scope.prevision.seller})[0] : {};
+
+              if (!$scope.prevision.week) {
+                $scope.prevision.week = 19;
+              }
+
+              if ($scope.prevision.infoDate) {
+                $scope.prevision.hasInfo = true;
+              }
+
+              if ($scope.prevision.advanceDate) {
+                $scope.prevision.hasAdvance = true;
+              }
+
+              // load and choose dispatch if already have one
+              Dispatchs.getDispatchs('NONE').then(function(result){
+                // for the drop dropdown only OPEN dispatchs
+          			$scope.openDispatchs = result.data.filter(function(d) {
+                  return d.archived == '0';
+                });
+
+                if ($scope.prevision.dispatchId) {
+                  // load the the already saved one
+                  $scope.prevision.selectedDispatch = result.data.filter(function(d) {
+                    return d.id === $scope.prevision.dispatchId;
+                  })[0];
+
+                  if ($scope.prevision.selectedDispatch.archived == '1') {
+                    // in some case the prevision is referring an already closed dispatch -> add it to the options list
+                    $scope.openDispatchs.push($scope.prevision.selectedDispatch);
+                  }
+                }
+          		});
+
           	  $scope.modalPrevision = $modal({template: 'views/modal/prevision.html', show: false, scope: $scope, backdrop:'static', animation:'am-fade-and-slide-top'});
 
               $scope.modalPrevision.$promise.then($scope.modalPrevision.show);
@@ -88,35 +129,58 @@ angular.module('vsko.stock')
 
           $scope.save = function() {
 
-        	  // save changes in each cloth (extending current values only if a new cloth was selected)
-          	  $scope.prevision.cloths.each(function( item ) {
-          		if(item.selectedCloth && item.id != item.selectedCloth.id) {
-          			$.extend(item, item.selectedCloth);
-          			item.clothId = item.selectedCloth.id;
-          			item.previsionId = $scope.prevision.id; // when the cloth is new the previsionid is not set, other cases will have no effect
-          		}
-          	  });
+            // save changes in each cloth (extending current values only if a new cloth was selected)
+            $scope.prevision.cloths.each(function( item ) {
+              if(item.selectedCloth && item.id != item.selectedCloth.id) {
+                $.extend(item, item.selectedCloth);
+                item.clothId = item.selectedCloth.id;
+                item.previsionId = $scope.prevision.id; // when the cloth is new the previsionid is not set, other cases will have no effect
+              }
+            });
 
-          	  if($scope.prevision.selectedSail.id) {
-          		  $scope.prevision.sailId = $scope.prevision.selectedSail.id;
-          	  }
+            if($scope.prevision.selectedSail.id) {
+              $scope.prevision.sailId = $scope.prevision.selectedSail.id;
+            }
 
-          	  if($scope.prevision.selectedBoat.boat) {
-          		  $scope.prevision.boat = $scope.prevision.selectedBoat.boat;
-          	  }
+            if($scope.prevision.selectedBoat.boat) {
+              $scope.prevision.boat = $scope.prevision.selectedBoat.boat;
+            }
 
-          	  if($scope.prevision.selectedOneDesignSail && $scope.prevision.selectedOneDesignSail.sail) {
-        		  $scope.prevision.sailOneDesign = $scope.prevision.selectedOneDesignSail.sail;
-        	  }
+            if($scope.prevision.selectedOneDesignSail && $scope.prevision.selectedOneDesignSail.sail) {
+              $scope.prevision.sailOneDesign = $scope.prevision.selectedOneDesignSail.sail;
+            }
+
+            if($scope.prevision.selectedSeller && $scope.prevision.selectedSeller.name) {
+              $scope.prevision.seller = $scope.prevision.selectedSeller.name;
+            } else {
+              $scope.prevision.seller = null;
+            }
+
+            if($scope.prevision.selectedLine && $scope.prevision.selectedLine.name) {
+              $scope.prevision.line = $scope.prevision.selectedLine.name;
+            } else {
+              $scope.prevision.line = null;
+            }
+
+
+            $scope.prevision.dispatchId = $scope.prevision.selectedDispatch ? $scope.prevision.selectedDispatch.id : null;
+
+            handlePrevisionInDispatch($scope.origPrevision);
+
 
             var waitForPossiblePrevisionStateChange = false;
             var showChangedStateModal = false;
 
             function newStateClose() {
+              // called after the new state warning modal is closed, or called just after save if state is not changed
               $scope.modalPrevision.hide();
 
               if($scope.previousModal) {
                 $scope.previousModal.show();
+              }
+
+              if ($scope.onSavePrevision) {
+                $scope.onSavePrevision($scope.prevision);
               }
             }
 
@@ -180,6 +244,10 @@ angular.module('vsko.stock')
                 if($scope.previousModal) {
                   $scope.previousModal.show();
                 }
+
+                if ($scope.onSavePrevision) {
+                  $scope.onSavePrevision($scope.prevision);
+                }
               }
         	  });
           };
@@ -225,8 +293,21 @@ angular.module('vsko.stock')
             }
           };
 
-          $scope.orderNumberChanged = function(str) {
+          $scope.orderNumberInputChanged = function(str) {
             $scope.prevision.orderNumber = str;
+          }
+
+          $scope.updateFieldsByRule = function() {
+            $scope.updatePrevisionPercentage();
+            $scope.updatePrevisionDeliveryDate();
+          }
+
+          $scope.updatePrevisionPercentage = function() {
+            Rules.updatePrevisionPercentage($scope.prevision);
+          }
+
+          $scope.updatePrevisionDeliveryDate = function() {
+            Rules.updatePrevisionDeliveryDate($scope.prevision);
           }
 
           $scope.close = function() {
@@ -391,6 +472,26 @@ angular.module('vsko.stock')
 
             return d.promise;
   				}
+
+          function handlePrevisionInDispatch() {
+
+            // check if the prev was already in some dispatch -> remove from it
+            if ($scope.origPrevision.dispatchId && $scope.origPrevision.dispatchId != $scope.prevision.dispatchId) {
+              Dispatchs.removePrevisionInDispatch($scope.prevision.id, $scope.origPrevision.dispatchId).then(function(result) {
+                //
+              });
+              if ($scope.prevision.dispatchId) {
+                // send insert into dispatch previsionsToUpdate
+                Dispatchs.addPrevision($scope.prevision, $scope.prevision.dispatchId).then(function(result) {
+                  //
+                });
+              }
+            } else if (!$scope.origPrevision.dispatchId && $scope.prevision.dispatchId) {
+              Dispatchs.addPrevision($scope.prevision, $scope.prevision.dispatchId).then(function(result) {
+                //
+              });
+            }
+          }
         }
       };
 	}

@@ -1,0 +1,271 @@
+'use strict';
+
+angular.module('vsko.stock')
+
+.directive('dispatchModal', function($modal, $translate, uuid4, Utils, Dispatchs, Previsions) {
+
+    return {
+          restrict: 'E',
+          link: function postLink(scope, element, attrs) {
+
+        	  var $scope = scope;
+            var initialLoad;
+
+            Previsions.getAll(true, 'NONE').then(function(result) {
+                $scope.previsionOptions = result.data;
+            });
+
+            $scope.carryTypes = [{type: 'BOX'}, {type: 'TUBE'}];
+            $scope.carryTypes.map(function(c) {
+              $translate(c.type).then(function(value) {
+                c.translation = value;
+              })
+            });
+
+            Dispatchs.getDispatchDestinataries().then(function(result) {
+              $scope.destinataries = result.data;
+            });
+
+
+        	  $scope.showDispatchModal = function(dispatch) {
+
+        		  $scope.dispatch = dispatch ? dispatch : {isNew: true, id: uuid4.generate(), previsions: [], carries: [], allCarries: []};
+
+              // clear possible previously chosen autocmolte destinatary
+              delete $scope.acDestinatary;
+
+              if (!$scope.dispatch.isNew) {
+                Dispatchs.getDispatchCarries(scope.dispatch.id).then(function(result) {
+
+                  $scope.dispatch.allCarries = result.data;
+
+                  // load dispatch info including assigned previsions and carries
+                  Dispatchs.getDispatch($scope.dispatch.id).then(function(result) {
+                    // merging properties -> TODO see $.extend(..)
+                    for (var attrname in result.data) { $scope.dispatch[attrname] = result.data[attrname]; }
+
+                    $scope.dispatch.carries = result.data.boxes.concat(result.data.tubes);
+
+                    // fill destinatary autocomplete with dispatch info if present
+                    if (result.data.destinatary) {
+                      initialLoad = true;
+                      $scope.acDestinatary = $scope.destinataries.filter(function(d) {
+                        return result.data.destinatary == d.name;
+                      })[0];
+                    }
+                  });
+                });
+              } else {
+                Dispatchs.getNextDispatchNumber().then(function(result) {
+                  $scope.dispatch.number = result.data;
+                });
+              }
+
+              $scope.modalDispatch = $modal({template: 'views/modal/dispatchDetails.html', show: false, scope: $scope});
+
+              $scope.modalDispatch.$promise.then($scope.modalDispatch.show);
+        	  };
+
+        	  $scope.saveDispatch = function(dispatch) {
+
+        		  Dispatchs.save(dispatch).then(function(result){
+
+    			  	  if(result.data.successful) {
+
+    			  		  if(result.data.isNew) {
+                    $scope.dispatchs.push($scope.dispatch);
+
+                    delete $scope.dispatch.isNew;
+
+                    Utils.showMessage('notify.dispatch_added');
+                  } else {
+                    Utils.showMessage('notify.dispatch_updated');
+                  }
+    			  	  }
+    			  	  else {
+                  Utils.showMessage('Error', 'error');
+    			  	  }
+
+         			 //  $scope.modalDispatch.hide();
+
+        		  });
+        	  };
+
+            // Dispatch prevision functions
+
+            $scope.addPrevision = function(prevision) {
+
+              if (prevision) {
+                prevision.originalObject.previsionId = prevision.originalObject.id;
+                Dispatchs.addPrevision(prevision.originalObject, $scope.dispatch.id).then(function(result) {
+
+                  if(result.data.successful) {
+                    $scope.dispatch.previsions.push(prevision.originalObject);
+
+                    delete $scope.acPrevision;
+                  }
+                });
+              } else if (!prevision && $scope.orderNumberText) {
+                prevision = {orderNumber: $scope.orderNumberText};
+                Dispatchs.addPrevision(prevision, $scope.dispatch.id).then(function(result) {
+
+                  if(result.data.successful) {
+                    $scope.dispatch.previsions.push(prevision);
+        						prevision.id = prevision.dpId;
+                  }
+                });
+              }
+            };
+
+            $scope.deleteDispatchPrevision = function(prevision) {
+
+              Dispatchs.removePrevision(prevision).then(function(result) {
+                if (result.data.successful) {
+                  $scope.dispatch.previsions = $scope.dispatch.previsions.filter(function(p) {
+                    return p.dpId != prevision.dpId;
+                  });
+                }
+              });
+            };
+
+            $scope.changedDispatch = {
+              field: function(entity, value, fieldName) {
+
+            		Dispatchs.updatePrevisionField(entity, fieldName).then(function() {
+            		});
+            	},
+
+              numericField: function(entity, value, fieldName) {
+
+            		Dispatchs.updatePrevisionField(entity, fieldName, true).then(function() {
+            		});
+            	}
+            };
+
+
+            // Carries modal and action functions
+            $scope.showCarryModal = function(carry, type) {
+
+              $scope.carry = carry ? carry : {isNew: true, type: type, dispatchId: $scope.dispatch.id};
+
+              $scope.modalCarry = $modal({template: 'views/modal/carry.html', show: false, scope: $scope, animation:'am-fade-and-slide-top'});
+
+              $scope.modalCarry.$promise.then($scope.modalCarry.show);
+            }
+
+            $scope.saveCarry = function(carry) {
+
+              Dispatchs.saveCarry(carry).then(function() {
+
+                if(carry.isNew) {
+                  $scope.dispatch.carries.push(carry);
+                  delete carry.isNew;
+                }
+
+                $scope.modalCarry.hide();
+              });
+            }
+
+            $scope.deleteDispatchCarry = function(carry) {
+
+              Dispatchs.removeCarry(carry).then(function(result) {
+                if (result.data.successful) {
+                  $scope.dispatch.carries = $scope.dispatch.carries.filter(function(c) {
+                    return c.id != carry.id;
+                  });
+                }
+              });
+            };
+
+            $scope.carryDisplayFn = function(c) {
+              if (!c) {
+                return '';
+              }
+
+              var type = $scope.carryTypes.filter(function(fc) {
+                return fc.type == c.type;
+              })[0].translation;
+
+              return type + ' ' + c.number;
+            };
+
+            $scope.changedCarry = function(prevision) {
+              Dispatchs.updatePrevisionCarry(prevision).then(function() {
+
+                console.log('new carry selection: '+ prevision.carryId);
+              });
+            };
+
+            // Utils functions
+
+            $scope.sumBoxesWeight = function(dispatch) {
+              var result = 0;
+              if (dispatch && dispatch.carries) {
+                for(var i=0; i < dispatch.carries.length; i++) {
+                  if (dispatch.carries[i].type == 'BOX') {
+                    result += +dispatch.carries[i].weight;
+                  }
+                }
+              }
+              return result;
+            }
+
+            $scope.sumAllWeights = function(dispatch) {
+              var result = $scope.sumBoxesWeight(dispatch);
+              if (dispatch && dispatch.carries) {
+                for(var i=0; i < dispatch.carries.length; i++) {
+                  if (dispatch.carries[i].type == 'TUBE') {
+                    result += +dispatch.carries[i].weight;
+                  }
+                }
+              }
+              return result;
+            };
+
+            $scope.sumPrevisionsWeight = function() {
+              var result = 0;
+              if ($scope.dispatch && $scope.dispatch.previsions) {
+                for(var i=0; i < $scope.dispatch.previsions.length; i++) {
+                  result += $scope.dispatch.previsions[i].weight ? +$scope.dispatch.previsions[i].weight : 0;
+                }
+              }
+              return result != 0 ? result : '';
+            };
+
+            // -- Automcomplete  -- //
+
+            $scope.selectedACPrevision = function(prevision) {
+              // autocomplete option selected
+              if(prevision) {
+                $scope.acPrevision = prevision;
+              }
+            };
+
+            $scope.orderNumberChanged = function(value) {
+              $scope.orderNumberText = value;
+            }
+
+            $scope.selectedDestinatary = function(destinatary) {
+              // autocomplete option selected
+              if(destinatary) {
+                $scope.dispatch.destinatary = destinatary.originalObject.name;
+
+                if (!initialLoad) {
+                  // update address, destiny and notes fields
+                  $scope.dispatch.address = destinatary.originalObject.address;
+                  $scope.dispatch.destiny = destinatary.originalObject.destiny;
+                  $scope.dispatch.notes = destinatary.originalObject.notes;
+                } else {
+                  initialLoad = false;
+                }
+              }
+            };
+
+            $scope.destinataryChanged = function(value) {
+              $scope.dispatch.destinatary = value;
+            }
+
+          }
+        };
+	}
+);

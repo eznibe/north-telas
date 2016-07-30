@@ -12,7 +12,7 @@
 			<th translate>Cloths</th>
 			<th translate>Type</th>
 			<th translate>Observations</th>
-			<th access-allowed="admin,ordenes,velas-od" translate>Designed</th>
+			<th access-allowed="admin,ordenes,produccion,produccion,velas-od" translate>Designed</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -30,16 +30,16 @@
 				{{p.boat}}
 			</td>
 			<td>
-				<design-cloths-tags cloths="p.cloths" editable-by-role="'admin,ordenes,velas-od'" ng-model="p.cloths"/>
+				<design-cloths-tags cloths="p.cloths" editable-by-role="'admin,ordenes,produccion,velas-od'" ng-model="p.cloths"/>
 			</td>
 			<td>
 				{{p.type}}
 			</td>
 			<td ng-mouseover="over = true" ng-mouseleave="over = false" >
 				{{p.observations}}
-				<span class="glyphicon glyphicon-pencil col-xs-1 control-label" ng-click="showEditModal(p, editObservations)" style="text-align:center; cursor:pointer; float:none; padding-left:5px; padding-right:5px;" ng-show="over" access-allowed="admin,ordenes,velas-od">&nbsp;</span>
+				<span class="glyphicon glyphicon-pencil col-xs-1 control-label" ng-click="showEditModal(p, editObservations)" style="text-align:center; cursor:pointer; float:none; padding-left:5px; padding-right:5px;" ng-show="over" access-allowed="admin,ordenes,produccion,velas-od">&nbsp;</span>
 			</td>
-			<td style="width:80px; text-align:center;" access-allowed="admin,ordenes,velas-od">
+			<td style="width:80px; text-align:center;" access-allowed="admin,ordenes,produccion,velas-od">
 				<a ng-click="showConfirmModal(p, designed)" class="btn btn-default" ng-disabled="user.role=='velas-od' && !p.oneDesign">
 					<span class="glyphicon glyphicon-ok" ng-show="!p.designed"></span>
 					<span class="glyphicon glyphicon-remove" ng-show="p.designed"></span>

@@ -109,6 +109,7 @@ function buy($provider)
 {
 	$obj->successful = false;
 	$obj->isNew = false;
+	$obj->method = 'buy';
 
 	// search order in BUY status for same provider -> if no exists create new order
 	$query = "SELECT o.orderId FROM orders o WHERE o.status = 'TO_BUY' and o.providerId = '".$provider->providerId."'";
@@ -131,6 +132,7 @@ function buy($provider)
 		if(mysql_query($insert)) {
 			$obj->successful = true;
 			$obj->isNew = true;
+			$obj->insert = $insert;
 		}
 		else {
 			$obj->insert = $insert;

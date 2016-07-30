@@ -3,13 +3,17 @@
 angular.module("vsko.stock", [
 	    'ngRoute',
 	    'ngCookies',
-        'mgcrea.ngStrap.modal',
-        'pascalprecht.translate',
-        'uuid4',
-        'toaster',
-        'angular-loading-bar',
-				'angucomplete-alt',
-				'anguFixedHeaderTable'
+      'mgcrea.ngStrap',
+      'pascalprecht.translate',
+      'uuid4',
+      'toaster',
+      // 'angular-loading-bar',
+			'angucomplete-alt',
+			'anguFixedHeaderTable',
+			'angularStats',
+			'angular.bind.notifier',
+			'xeditable'
+			// , 'ui.bootstrap'
     ])
     .run(['$cookieStore', '$rootScope', '$translate', function ($cookieStore, $rootScope, $translate) {
     	console.log('vsko.stock run');
@@ -132,6 +136,26 @@ angular.module("vsko.stock", [
                 controller: 'PlotterCtrl',
                 access: 'public'
             })
+						.when('/production', {
+                templateUrl: 'views/production.html',
+                controller: 'ProductionCtrl',
+                access: 'public'
+            })
+						.when('/historic', {
+                templateUrl: 'views/historic.html',
+                controller: 'HistoricCtrl',
+                access: 'public'
+            })
+						.when('/dispatch', {
+                templateUrl: 'views/dispatchs.html',
+                controller: 'DispatchCtrl',
+                access: 'public'
+            })
+						.when('/canvas', {
+                templateUrl: 'views/canvas.html',
+                controller: 'CanvasCtrl',
+                access: 'public'
+            })
             .when('/orders/:type', {
                 templateUrl: 'views/orders.html',
                 controller: 'OrdersCtrl',
@@ -195,6 +219,11 @@ angular.module("vsko.stock", [
 						.when('/lists/clothsValuedStock', {
                 templateUrl: 'views/lists/clothsValuedStock.html',
                 controller: 'ClothsValuedStockCtrl',
+                access: 'public'
+            })
+						.when('/lists/dispatchsHistoric', {
+                templateUrl: 'views/lists/dispatchsHistoric.html',
+                controller: 'DispatchsHistoricCtrl',
                 access: 'public'
             })
             .when('/accessdenied', {

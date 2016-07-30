@@ -1,7 +1,7 @@
 <div class="modal" tabindex="-1" role="dialog">
 	<div class="modal-dialog modal-lg" style="margin-top: 0px;">
 		<div class="modal-content">
-			
+
 			<div class="modal-header">
 				<div class="edit_person">
 					<h2>
@@ -13,7 +13,7 @@
 					<span class="glyphicon glyphicon-remove"></span>
 				</a>
 			</div>
-						
+
 			<div class="modal-body nopaddingside">
 				<form class="form-horizontal" name="form" ng-init="setModalCtrl(this)">
 					<div class="row">
@@ -59,21 +59,27 @@
 				                    </select>
 								</div>
 						</div>
+						<div class="col-md-6 nopadding" ng-show="user.role == 'vendedor'">
+								<label class="control-label col-xs-4" for="edit_order" translate>Code</label>
+								<div class="col-xs-8">
+									<input type="text" class="form-control small" ng-model="user.code">
+								</div>
+						</div>
 					</div>
 				</form>
 			</div>
-						
+
 			<div class="modal-footer">
 				<a href="javascript:void(0);" class="btn btn-info floatleft" ng-click="close()">
 					<span class="glyphicon glyphicon-remove"></span>
 					{{'Cancel' | translate}}
 				</a>
-				
+
 				<a href="javascript:void(0);" ng-click="save(user)" class="btn btn-default floatright edit_person" ng-disabled="!form.$valid" >
 					<span class="glyphicon glyphicon-ok"></span>
 					{{'Save' | translate}}
 				</a>
-			</div>				
+			</div>
 		</div>
 	</div>
 </div>
