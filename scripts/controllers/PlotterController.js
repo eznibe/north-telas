@@ -141,6 +141,12 @@ angular.module('vsko.stock').controller('PlotterCtrl', ['$scope', '$rootScope', 
         		$scope.plotters.remove(plotter);
 
 						Utils.showMessage('notify.plotter_deleted');
+
+						Previsions.checkAllClothsCutted(plotter.previsionId).then(function(prevision) {
+							if (prevision.data.allCutted) {
+								Rules.updatePrevisionPercentage(prevision.data, true);
+							}
+						});
         	});
         };
 

@@ -25,8 +25,8 @@ angular.module('vsko.stock').factory('Rules',[ '$q', 'Previsions', 'Production',
       prevision.percentage = 6;
     }
 
-    // . de 6 a 25% una vez que se corta.
-    if (prevision.allCutted) {
+    // . a 25% una vez que se corta. (no importa % anterior)
+    if (prevision.percentage < 25 && prevision.allCutted) {
       prevision.percentage = 25;
     }
 

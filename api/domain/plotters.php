@@ -351,6 +351,10 @@ function deletePlotter($plotterId) {
 		$obj->query = $query;
 	}
 
+	// TODO possible after removing a plotter the prevision get in allCutted state -> include info in response
+	$prevision = checkAllClothsCutted($rows[0]['previsionId']);
+	$obj->allCutted = $prevision['allCutted'];
+	
 	return $obj;
 }
 

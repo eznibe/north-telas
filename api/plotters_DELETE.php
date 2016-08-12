@@ -7,6 +7,7 @@ include_once '../include/dbutils.php';
 include_once '../include/main.php';
 
 include_once 'domain/plotters.php';
+include_once 'domain/previsions.php';
 
 db_connect();
 
