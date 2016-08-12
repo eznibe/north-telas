@@ -140,12 +140,22 @@ function getDispatchDestinataries()
 
 
 function getNextDispatchNumber() {
+	$count = "SELECT count(*) as count FROM dispatchs";
+
 	$query = "SELECT (max(number) + 1) as number FROM dispatchs";
+
+	$countResult = mysql_query($count);
+
+	$countArr = fetch_array($countResult);
+	if ($countArr[0]['count'] == 0) {
+		return '1';
+	}
 
 	$result = mysql_query($query);
 
 	$arr = fetch_array($result);
 
+	// return mysql_num_rows($result) > 0 ? $arr[0]['number'] : '1';
 	return $arr[0]['number'];
 }
 
