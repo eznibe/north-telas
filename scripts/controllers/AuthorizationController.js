@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('vsko.stock').controller('AuthorizationCtrl', ['$scope', '$rootScope', '$cookieStore', '$location', '$route', 'Users', 'userRoles',
-                                                             function ($scope, $rootScope, $cookieStore, $location, $route, Users, userRoles) {
+angular.module('vsko.stock').controller('AuthorizationCtrl', ['$scope', '$rootScope', '$cookieStore', '$location', '$route', '$window', 'Users', 'userRoles',
+                                                             function ($scope, $rootScope, $cookieStore, $location, $route, $window, Users, userRoles) {
 
 		$scope.login = function(user, passw) {
 
@@ -19,7 +19,8 @@ angular.module('vsko.stock').controller('AuthorizationCtrl', ['$scope', '$rootSc
 
 					if($location.path() != '/login') {
 						// reload the same view the user tried to enter
-						$route.reload();
+						// $route.reload();
+            $window.location.reload();
 					}
 					else {
 						// come from login -> redirect to the default page for the user role
