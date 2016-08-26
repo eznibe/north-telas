@@ -234,7 +234,7 @@
             <div class="col-md-6 nopadding">
                 <label class="control-label col-xs-3" translate>Info</label>
                 <div class="col-xs-1">
-									<input type="checkbox" style="margin-top:8px;" ng-model="prevision.hasInfo">
+									<input type="checkbox" style="margin-top:8px;" ng-model="prevision.hasInfo" ng-change="::hasInfoChanged()">
 								</div>
                 <div class="col-xs-8" ng-show="prevision.hasInfo">
 									<div class="input-group input-group-sm date" date-picker>
@@ -248,7 +248,7 @@
             <div class="col-md-6 nopadding">
                 <label class="control-label col-xs-3" translate>Advance</label>
                 <div class="col-xs-1">
-									<input type="checkbox" style="margin-top:8px;" ng-model="prevision.hasAdvance">
+									<input type="checkbox" style="margin-top:8px;" ng-model="prevision.hasAdvance" ng-change="::hasAdvanceChanged()">
 								</div>
                 <div class="col-xs-5" ng-show="prevision.hasAdvance">
 									<div class="input-group input-group-sm date" date-picker>

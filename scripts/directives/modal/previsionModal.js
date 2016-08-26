@@ -310,6 +310,22 @@ angular.module('vsko.stock')
             Rules.updatePrevisionDeliveryDate($scope.prevision);
           }
 
+          $scope.hasInfoChanged = function() {
+            if (!$scope.prevision.hasInfo) {
+              delete $scope.prevision.infoDate;
+              $scope.updatePrevisionPercentage();
+              $scope.updatePrevisionDeliveryDate();
+            }
+          }
+
+          $scope.hasAdvanceChanged = function() {
+            if (!$scope.prevision.hasAdvance) {
+              delete $scope.prevision.advanceDate;
+              $scope.updatePrevisionPercentage();
+              $scope.updatePrevisionDeliveryDate();
+            }
+          }
+
           $scope.close = function() {
 
         	  $.extend($scope.prevision, $scope.origPrevision);

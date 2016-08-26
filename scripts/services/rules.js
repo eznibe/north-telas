@@ -7,16 +7,20 @@ angular.module('vsko.stock').factory('Rules',[ '$q', 'Previsions', 'Production',
   that.updatePrevisionPercentage = function (prevision, save) {
     var lastPercentage = prevision.percentage
 
+    // . a 0% si no tiene nada cargado
+    if (!prevision.infoDate && !prevision.advanceDate && prevision.percentage < 6) {
+      prevision.percentage = 0;
+    }
     // . de 0 pasa a 3% si se le tilda SOLO el anticipo.
-    if (!prevision.infoDate && prevision.advanceDate) {
+    if (!prevision.infoDate && prevision.advanceDate && prevision.percentage < 6) {
       prevision.percentage = 3;
     }
 		// . de 0 a 4% si se le tilda SOLO la INFO.
-    if (prevision.infoDate && !prevision.advanceDate) {
+    if (prevision.infoDate && !prevision.advanceDate && prevision.percentage < 6) {
       prevision.percentage = 4;
     }
 		// . de 0/3 o 4 pasa a 5% si se tilda INFO y ANTICIPO.
-    if (prevision.infoDate && prevision.advanceDate) {
+    if (prevision.infoDate && prevision.advanceDate && prevision.percentage < 6) {
       prevision.percentage = 5;
     }
 
