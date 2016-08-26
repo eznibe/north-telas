@@ -2,6 +2,8 @@
 
 error_reporting(E_ERROR);
 
+include_once 'previsions.php';
+
 // Used refernces in this file
 // UFA: used from available (mts used from the available stock)
 // UFT: used from transit (mts used from the orders in transit)
@@ -504,6 +506,8 @@ function calculateAndUpdateState($prevision, $skipUpdateStateAccepted, &$clothsD
 
 	$previsionId = $prevision['id'];
 
+	logPrevisionUpdateFull($previsionId, 'calculateAndUpdateState');
+
 	$update = "UPDATE previsions
 						    SET prevState = state,
 										state = '$state',
@@ -542,6 +546,8 @@ function acceptStateChange($prevision) {
 
 	$obj->successful = true;
 	$obj->method = 'acceptStateChange()';
+
+	logPrevisionUpdateFull($prevision->id, 'acceptStateChange');
 
 	$update = "UPDATE previsions
 						    SET stateAccepted = true,

@@ -210,6 +210,7 @@ function savePrevision($prevision)
 
 	if ($num_results != 0)
 	{
+		logPrevisionUpdateFull($prevision->id, 'savePrevision');
 		// update
 		$update = "UPDATE previsions SET orderNumber = '".$prevision->orderNumber."', deliveryDate = STR_TO_DATE('".$prevision->deliveryDate."', '%d-%m-%Y'), client = '".$client."', sailId = $sailId, sailDescription = $sailDescription, boat = '".$boat."', type = '".$prevision->type."', oneDesign = ".$oneDesign.", greaterThan44 = ".$greaterThan44.
 																		", p = ".$p.", e = ".$e.", i = ".$i.", j = ".$j.", area = ".$area.", sailOneDesign = $sailOneDesign, observations = '$observations'".
@@ -357,6 +358,8 @@ function setDesigned($prevision) {
 		else {
 			$obj->successfulInsert = true;
 
+			logPrevisionUpdateFull($prevision->id, 'setDesigned');
+
 			$update = "UPDATE previsions SET designed = true, designedOn = CURRENT_DATE WHERE id = '".$prevision->id."'";
 
 			if(!mysql_query($update))
@@ -389,6 +392,8 @@ function editPrevisionField($prevision, $field) {
 	$obj->method = "editPrevisionField($field)";
 	$obj->prevision = $prevision;
 
+	logPrevisionUpdateFull($prevision->id, 'editPrevisionField('.$field.')');
+
 	$update = "UPDATE previsions SET $field = '".$prevision->$field."' WHERE id = '".$prevision->id."'";
 
 	if(!mysql_query($update)) {
@@ -404,6 +409,8 @@ function editPrevisionNumberField($prevision, $field) {
 	$obj->successful = true;
 	$obj->method = "editPrevisionNumberField($field)";
 	$obj->prevision = $prevision;
+
+	logPrevisionUpdateFull($prevision->id, 'editPrevisionNumberField('.$field.')');
 
 	$update = "UPDATE previsions SET $field = ".$prevision->$field." WHERE id = '".$prevision->id."'";
 
@@ -422,6 +429,8 @@ function editPrevisionDate($prevision, $field) {
 	$obj->prevision = $prevision;
 
 	$setStr = isset($prevision->$field) ? "STR_TO_DATE('".$prevision->$field."', '%d-%m-%Y')" : 'null';
+
+	logPrevisionUpdateFull($prevision->id, 'editPrevisionDate('.$field.')');
 
 	$update = "UPDATE previsions SET $field = $setStr WHERE id = '".$prevision->id."'";
 
@@ -498,6 +507,21 @@ function handleSpecialFilterCase($key, $value) {
 	}
 
 	return "";
+}
+
+// will log the state of the prevision just before an update will be perfomed
+function logPrevisionUpdateFull($previsionId, $method) {
+
+	$update = "INSERT INTO previsionfulllogs (id,orderNumber,deliveryDate,client,sailId,sailDescription,boat,type,designed,oneDesign,greaterThan44,p,e,i,j,area,sailOneDesign,observations,designedOn,createdOn,state,prevState,stateAccepted,stateChanged,stateAcceptedDate,seller,dispatchId,line,week,priority,percentage,advance,tentativeDate,productionDate,infoDate,advanceDate,deletedProductionOn,deletedProductionBy,productionObservations,designObservations,method,insertedon)
+	 						SELECT *, '$method', now() FROM previsions WHERE id = '$previsionId'";
+
+	$obj->successful = true;
+	if(!mysql_query($update)) {
+		$obj->successful = false;
+		$obj->update = $update;
+	}
+
+	return $obj;
 }
 
 ?>

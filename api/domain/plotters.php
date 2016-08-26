@@ -1,5 +1,7 @@
 <?php
 
+include_once 'previsions.php';
+
 function getPlotters($clothId, $cutted, $search, $upToDate) {
 
 	$orderCondition = "";
@@ -216,6 +218,8 @@ function editPlotterPrevision($plotter, $field) {
 		$field = 'sailDescription';
 	}
 
+	logPrevisionUpdateFull($plotter->previsionId, 'editPlotterPrevision('.$field.')');
+
 	$update = "UPDATE previsions SET $field = '".$plotter->$field."' WHERE id = '".$plotter->previsionId."'";
 
 	if(!mysql_query($update)) {
@@ -260,6 +264,8 @@ function toDesignPlotter($plotter) {
 
 	$obj->successful = true;
 	$obj->method = 'toDesignPlotter';
+
+	logPrevisionUpdateFull($plotter->previsionId, 'toDesignPlotter');
 
 	// prevision back to in design state
 	$update = "UPDATE previsions set designed = false where id = '".$plotter->previsionId."'";
@@ -354,7 +360,7 @@ function deletePlotter($plotterId) {
 	// TODO possible after removing a plotter the prevision get in allCutted state -> include info in response
 	$prevision = checkAllClothsCutted($rows[0]['previsionId']);
 	$obj->allCutted = $prevision['allCutted'];
-	
+
 	return $obj;
 }
 
