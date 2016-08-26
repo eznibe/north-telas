@@ -25,7 +25,7 @@ angular.module('vsko.stock').factory('Rules',[ '$q', 'Previsions', 'Production',
     }
 
     // . de 5 a 6% si se tilda DISEÑADA.
-    if (prevision.designed) {
+    if (prevision.designed && prevision.percentage < 6) {
       prevision.percentage = 6;
     }
 

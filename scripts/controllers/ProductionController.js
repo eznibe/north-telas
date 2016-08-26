@@ -274,7 +274,7 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 				// console.log('Sorted', column.options);
 			});
 
-			console.log('Final filter group', $scope.filterOptions.columns);
+			// console.log('Final filter group', $scope.filterOptions.columns);
 
 			function alreadyContains(options, value) {
 				var found = false;

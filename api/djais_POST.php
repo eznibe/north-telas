@@ -12,19 +12,18 @@ function saveDjai($djai)
 	$query = "SELECT * FROM djais d WHERE d.number = '".$djai->number."'";
 	$result = mysql_query($query);
 	$num_results = mysql_num_rows($result);
-	
+
 	$rows = fetch_array($result);
 
-	$obj->successful = false;	
+	$obj->successful = false;
 	$obj->isNew = false;
 
 	if ($num_results != 0)
 	{
 		// update (no fields for the moment to update)
-//		$update = "UPDATE previsions SET deliveryDate = '".$prevision->deliveryDate."', client = '".$prevision->client."', sail = '".$prevision->sail."', boat = '".$prevision->boat."', type = '".$prevision->type."' WHERE id = '".$prevision->id."'";
 		
 //		if(mysql_query($update))
-			$obj->successful = true;	
+			$obj->successful = true;
 	}
 	else {
 		// insert
@@ -34,7 +33,7 @@ function saveDjai($djai)
 
 			if(mysql_query($insert)) {
 				$obj->successful = true;
-				$obj->isNew = true;			
+				$obj->isNew = true;
 			}
 		}
 	}
@@ -45,19 +44,19 @@ function saveDjai($djai)
 
 	$obj->djai = $djai;
 
-	return $obj;	
+	return $obj;
 }
 
 function handleCloths($djai, $currentDjais, $obj) {
-	
+
 	$obj->successfulCloths = true;
 
 	foreach ($djai->cloths as $cloth) {
-	    
+
 		$exists = existsCloth($cloth, $currentDjais);
-		
+
 		if($exists) {
-			// update c 
+			// update c
 			$query = "UPDATE djais SET clothId = '".$cloth->id."', amount = ".$cloth->amount." WHERE id = '".$cloth->djaiId."'";
 		}
 		else {
@@ -66,16 +65,16 @@ function handleCloths($djai, $currentDjais, $obj) {
 		}
 
 var_dump("debug (exists $exists) check: ".$query);
-		
+
 		if($query && !mysql_query($query)) {
 			$obj->successfulCloths = false;
 		}
-	}	
+	}
 
 	// check to remove deleted cloth
 	foreach ($currentDjais as $row) {
-		
-		$found=false;		
+
+		$found=false;
 		foreach ($djai->cloths as $cloth) {
 
 			if(isset($row['id']) && $row['id'] == $cloth->djaiId)
@@ -105,7 +104,7 @@ function existsCloth($cloth, $currentDjais) {
 
 
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
-	
+
 	$request_payload = file_get_contents('php://input');
 
 	//var_dump($request_payload);
