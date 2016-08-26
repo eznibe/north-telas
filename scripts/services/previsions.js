@@ -4,7 +4,7 @@
 
 angular.module('vsko.stock')
 
-.factory('Previsions', ['$http', 'uuid4', function ($http, uuid4) {
+.factory('Previsions', ['$http', 'uuid4', '$q', 'Utils', function ($http, uuid4, $q, Utils) {
 
 		var url = telasAPIUrl;
 
@@ -14,12 +14,30 @@ angular.module('vsko.stock')
         	if(!includeDesigned)
         		designedCondition = "&designed=false";
 
-        	return $http.get(url + 'previsions_GET.php?expand='+(expand ? expand : 'FULL') + designedCondition);
+						var d = $q.defer();
+						var startTime = Date.now();
+
+						$http.get(url + 'previsions_GET.php?expand='+(expand ? expand : 'FULL') + designedCondition).then(function(result) {
+							Utils.logTiming(startTime, url + 'previsions_GET.php?expand='+(expand ? expand : 'FULL') + designedCondition, 'previsions.getAll', 'GET');
+							d.resolve(result);
+						});
+
+						return d.promise;
+        	// return $http.get(url + 'previsions_GET.php?expand='+(expand ? expand : 'FULL') + designedCondition);
         };
 
         this.getPrevisions = function(clothId)
         {
-        	return $http.get(url + 'previsions_GET.php?clothId='+clothId+'&designed=false&expand=FULL');
+					var d = $q.defer();
+					var startTime = Date.now();
+
+					$http.get(url + 'previsions_GET.php?clothId='+clothId+'&designed=false&expand=FULL').then(function(result) {
+						Utils.logTiming(startTime, url + 'previsions_GET.php?clothId='+clothId+'&designed=false&expand=FULL', 'previsions.getPrevisions', 'GET');
+						d.resolve(result);
+					});
+
+					return d.promise;
+        	// return $http.get(url + 'previsions_GET.php?clothId='+clothId+'&designed=false&expand=FULL');
         };
 
 				this.getPrevisionsForProduction = function(sellerCode, filters, offset)
@@ -27,7 +45,16 @@ angular.module('vsko.stock')
 					sellerCode = sellerCode ? '&sellerCode=' + sellerCode : '';
 					offset = offset || offset == 0 ? ('&offset=' + offset) : '';
 
-					return $http.post(url + 'previsions_POST.php?listForProduction=true' + offset + sellerCode , filters);
+					var d = $q.defer();
+					var startTime = Date.now();
+
+					$http.post(url + 'previsions_POST.php?listForProduction=true' + offset + sellerCode, filters).then(function(result) {
+						Utils.logTiming(startTime, url + 'previsions_POST.php?listForProduction=true' + offset + sellerCode, 'previsions.getPrevisionsForProduction', 'POST', filters);
+						d.resolve(result);
+					});
+
+					return d.promise;
+					// return $http.post(url + 'previsions_POST.php?listForProduction=true' + offset + sellerCode , filters);
         };
 
 				this.getPrevisionsHistoric = function(sellerCode, filters, offset)
@@ -54,7 +81,16 @@ angular.module('vsko.stock')
 
 					prevision.modifiedBy = loggedUser;
 
-        	return $http.post(url + 'previsions_POST.php', prevision);
+					var d = $q.defer();
+					var startTime = Date.now();
+
+					$http.post(url + 'previsions_POST.php', prevision).then(function(result) {
+						Utils.logTiming(startTime, url + 'previsions_POST.php', 'previsions.save', 'POST', prevision);
+						d.resolve(result);
+					});
+
+					return d.promise;
+					// return $http.post(url + 'previsions_POST.php', prevision);
         };
 
         this.designed = function(prevision) {
@@ -69,7 +105,16 @@ angular.module('vsko.stock')
 
         this.updateClothMts = function(cloth) {
 
-        	return $http.post(url + 'previsions_POST.php?updateMts=true', cloth);
+					var d = $q.defer();
+					var startTime = Date.now();
+
+					$http.post(url + 'previsions_POST.php?updateMts=true', cloth).then(function(result) {
+						Utils.logTiming(startTime, url + 'previsions_POST.php?updateMts=true', 'previsions.updateClothMts', 'POST', cloth);
+						d.resolve(result);
+					});
+
+					return d.promise;
+					// return $http.post(url + 'previsions_POST.php?updateMts=true', cloth);
         };
 
         //-- PLOTTERS --//
@@ -84,15 +129,34 @@ angular.module('vsko.stock')
 
         this.savePlotterCut = function(cut) {
 
-        	if(!cut.id)
+        	if(!cut.id) {
         		cut.id = uuid4.generate();
+					}
 
-        	return $http.post(url + 'plotters_POST.php?saveCut=true', cut);
+					var d = $q.defer();
+					var startTime = Date.now();
+
+					$http.post(url + 'plotters_POST.php?saveCut=true', cut).then(function(result) {
+						Utils.logTiming(startTime, url + 'plotters_POST.php?saveCut=true', 'previsions.savePlotterCut', 'POST', cut);
+						d.resolve(result);
+					});
+
+					return d.promise;
+        	// return $http.post(url + 'plotters_POST.php?saveCut=true', cut);
         };
 
         this.removePlotterCut = function(cut) {
 
-        	return $http.delete(url + 'plotters_DELETE.php?cutId='+ cut.id);
+					var d = $q.defer();
+					var startTime = Date.now();
+
+					$http.delete(url + 'plotters_DELETE.php?cutId='+ cut.id).then(function(result) {
+						Utils.logTiming(startTime, url + 'plotters_DELETE.php?cutId='+ cut.id, 'previsions.removePlotterCut', 'DELETE');
+						d.resolve(result);
+					});
+
+					return d.promise;
+        	// return $http.delete(url + 'plotters_DELETE.php?cutId='+ cut.id);
         };
 
         this.getPossibleRolls = function(plotter)
@@ -121,12 +185,30 @@ angular.module('vsko.stock')
 
 				this.editField = function(prevision, field) {
 
-        	return $http.post(url + 'previsions_POST.php?edit=true&field='+field, prevision);
+					var d = $q.defer();
+					var startTime = Date.now();
+
+					$http.post(url + 'previsions_POST.php?edit=true&field='+field, prevision).then(function(result) {
+						Utils.logTiming(startTime, url + 'previsions_POST.php?edit=true&field='+field, 'previsions.editField('+field+')', 'POST', prevision);
+						d.resolve(result);
+					});
+
+					return d.promise;
+        	// return $http.post(url + 'previsions_POST.php?edit=true&field='+field, prevision);
         };
 
 				this.updatePrevisionState = function(clothIds) {
 
-        	return $http.post(url + 'previsions_POST.php?updatePrevisionState=true&clothIds='+clothIds, clothIds);
+					var d = $q.defer();
+					var startTime = Date.now();
+
+					$http.post(url + 'previsions_POST.php?updatePrevisionState=true&clothIds='+clothIds, clothIds).then(function(result) {
+						Utils.logTiming(startTime, url + 'previsions_POST.php?updatePrevisionState=true&clothIds='+clothIds, 'previsions.updatePrevisionState', 'POST', clothIds);
+						d.resolve(result);
+					});
+
+					return d.promise;
+        	// return $http.post(url + 'previsions_POST.php?updatePrevisionState=true&clothIds='+clothIds, clothIds);
         };
 
 				this.updateAllPrevisionsStates = function() {
@@ -136,7 +218,16 @@ angular.module('vsko.stock')
 
 				this.acceptStateChange = function(prevision) {
 
-        	return $http.post(url + 'previsions_POST.php?acceptStateChange=true', prevision);
+					var d = $q.defer();
+					var startTime = Date.now();
+
+					$http.post(url + 'previsions_POST.php?acceptStateChange=true', prevision).then(function(result) {
+						Utils.logTiming(startTime, url + 'previsions_POST.php?acceptStateChange=true', 'previsions.acceptStateChange', 'POST', prevision);
+						d.resolve(result);
+					});
+
+					return d.promise;
+        	// return $http.post(url + 'previsions_POST.php?acceptStateChange=true', prevision);
         };
 
         return this;

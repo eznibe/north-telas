@@ -4,7 +4,7 @@
 
 angular.module('vsko.stock')
 
-.factory('Production', ['$http', 'uuid4', function ($http, uuid4) {
+.factory('Production', ['$http', 'uuid4', '$q', 'Utils', function ($http, uuid4, $q, Utils) {
 
 		var url = telasAPIUrl;
 
@@ -16,10 +16,6 @@ angular.module('vsko.stock')
 
 			this.getSellers = function()
       {
-				// var sellers = [{name: 'GB'}, {name: 'MB'}, {name: 'HS'}, {name: 'CC'}, {name: 'FL'}, {name: 'SA'}, {name: 'DS'}, {name: 'MU'}, {name: 'RH'}, {name: 'PN'},
-				// 							 {name: 'LF'}, {name: 'LS'}, {name: 'GBA'}, {name: 'TB'}, {name: 'PC'}, {name: 'OS'}, {name: 'GC'}, {name: 'ED'}, {name: 'OJ'}, {name: 'RZ'},
-				// 							 {name: 'AN'}, {name: 'LB'}, {name: 'RF'}, {name: 'PB'}, {name: 'MRC'}, {name: 'IA'}, {name: 'RM'}, {name: 'GRV'}, {name: 'JPM'}, {name: 'CS'}, {name: 'HM'}];
-      	// return sellers;
 				return $http.get(url + 'users_GET.php?sellerCodes=true');
       };
 
@@ -30,7 +26,16 @@ angular.module('vsko.stock')
 
       this.updateDate = function(prevision, fieldName) {
 
-      	return $http.post(url + 'production_POST.php?updateDate=true&field='+fieldName, prevision);
+				var d = $q.defer();
+				var startTime = Date.now();
+
+				$http.post(url + 'production_POST.php?updateDate=true&field='+fieldName, prevision).then(function(result) {
+					Utils.logTiming(startTime, url + 'production_POST.php?updateDate=true&field='+fieldName, 'production.updateDate('+fieldName+')', 'POST', prevision);
+					d.resolve(result);
+				});
+
+				return d.promise;
+      	// return $http.post(url + 'production_POST.php?updateDate=true&field='+fieldName, prevision);
       };
 
 			this.getWeeksBySeason = function() {
@@ -49,7 +54,16 @@ angular.module('vsko.stock')
 					numeric = '&isNumber=true';
 				}
 
-      	return $http.post(url + 'previsions_POST.php?edit=true&field='+fieldName + numeric, prevision);
+				var d = $q.defer();
+				var startTime = Date.now();
+
+				$http.post(url + 'previsions_POST.php?edit=true&field='+fieldName + numeric, prevision).then(function(result) {
+					Utils.logTiming(startTime, url + 'previsions_POST.php?edit=true&field='+fieldName + numeric, 'production.updateField('+fieldName+')', 'POST', prevision);
+					d.resolve(result);
+				});
+
+				return d.promise;
+      	// return $http.post(url + 'previsions_POST.php?edit=true&field='+fieldName + numeric, prevision);
       };
 
       return this;

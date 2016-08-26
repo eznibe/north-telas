@@ -4,7 +4,7 @@
 
 angular.module('vsko.stock')
 
-.factory('Stock', ['$http', '$q', 'uuid4', function ($http, $q, uuid4) {
+.factory('Stock', ['$http', '$q', 'uuid4', 'Utils', function ($http, $q, uuid4, Utils) {
 
 		var url = telasAPIUrl;
 
@@ -72,7 +72,16 @@ angular.module('vsko.stock')
 
         this.getGroup = function(groupId, expansion)
         {
-        	return $http.get(url + 'groups_GET.php?id='+groupId+'&expand='+expansion);
+					var d = $q.defer();
+					var startTime = Date.now();
+
+					$http.get(url + 'groups_GET.php?id='+groupId+'&expand='+expansion).then(function(result) {
+						Utils.logTiming(startTime, url + 'groups_GET.php?id='+groupId+'&expand='+expansion, 'stock.getGroup', 'GET');
+						d.resolve(result);
+					});
+
+					return d.promise;
+        	// return $http.get(url + 'groups_GET.php?id='+groupId+'&expand='+expansion);
         };
 
         this.getAllCloths = function(light)
@@ -81,7 +90,17 @@ angular.module('vsko.stock')
 					if(!light) {
 						expand = '?expand=FULL';
 					}
-        	return $http.get(url + 'cloths_GET.php'+expand);
+
+					var d = $q.defer();
+					var startTime = Date.now();
+
+					$http.get(url + 'cloths_GET.php'+expand).then(function(result) {
+						Utils.logTiming(startTime, url + 'cloths_GET.php'+expand, 'stock.getAllCloths', 'GET');
+						d.resolve(result);
+					});
+
+					return d.promise;
+        	// return $http.get(url + 'cloths_GET.php'+expand);
         };
 
         this.getProviders = function(clothId)
