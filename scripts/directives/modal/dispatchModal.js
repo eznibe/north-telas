@@ -210,8 +210,8 @@ angular.module('vsko.stock')
               return result;
             }
 
-            $scope.sumAllWeights = function(dispatch) {
-              var result = $scope.sumBoxesWeight(dispatch);
+            $scope.sumTubesWeights = function(dispatch) {
+              var result = 0;
               if (dispatch && dispatch.carries) {
                 for(var i=0; i < dispatch.carries.length; i++) {
                   if (dispatch.carries[i].type == 'TUBE') {
@@ -230,6 +230,14 @@ angular.module('vsko.stock')
                 }
               }
               return result != 0 ? result : '';
+            };
+
+            $scope.sumAllWeights = function(dispatch) {
+              var result = $scope.sumBoxesWeight(dispatch);
+              if (dispatch) {
+                result = $scope.sumPrevisionsWeight() + $scope.sumTubesWeights(dispatch) + $scope.sumBoxesWeight(dispatch);
+              }
+              return result;
             };
 
             // -- Automcomplete  -- //
