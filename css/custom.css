@@ -30,11 +30,44 @@ td.column-date {
 
 table#production th {
 	text-align: center;
+	font-size: 12px;
 }
 
 table#production td {
-	font-size: 12px;
+	font-size: 11px;
+	padding: 4px;
+	color: black;
 }
+
+table#production td span {
+	color: black;
+}
+
+table#production td a span.save-ok {
+	color: red;
+}
+
+table#production th {
+  /* Something you can count on */
+  height: 80px;
+  white-space: nowrap;
+}
+
+table#production th > div.rotate {
+  transform:
+    translate(0px, 30px)
+    rotate(270deg);
+  width: 10px;
+}
+table#production th > div.rotate > span {
+  /*border-bottom: 1px solid #ccc;*/
+  padding: 5px 10px;
+}
+
+table#production th > div.editable {
+  width: 30px;
+}
+
 
 #percentages {
 	border: 0px solid rgb(204, 204, 204);
@@ -65,4 +98,16 @@ table#production td {
 #percentages tr.title,
 #weeks tr.title {
 	background-color: #edccaa;
+}
+
+.small-button {
+	padding-top: 1px;
+	padding-bottom: 1px;
+	padding-left: 4px;
+	padding-right: 4px;
+}
+
+#production.table-striped > tbody > tr:nth-child(odd) > td, #production.table-striped > tbody > tr:nth-child(odd) > th,
+#production.table-hover > tbody > tr:hover > td, #production.table-hover > tbody > tr:hover > th {
+	background-color: inherit;
 }
