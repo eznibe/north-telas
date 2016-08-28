@@ -26,6 +26,8 @@ angular.module("vsko.stock", [
 	    	$translate.use(lang);
 			}
 
+			$rootScope.searchBoxChangedObservers = [];
+
 	}])
 	.factory('Authorization', ['$rootScope', function($rootScope) {
 	    var authorization = {

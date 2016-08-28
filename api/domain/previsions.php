@@ -62,6 +62,7 @@ function getPrevisions($clothId, $designed, $expand, $production, $historic, $se
 	}
 
  // 	return $query;
+
  	$count = "SELECT count(*) as count " . $body;
 	$result = mysql_query($count);
 	$count = fetch_array($result);
@@ -477,6 +478,10 @@ function createFilterCondition($filters) {
 		$filter = " AND ".$filters->key." = ". $filters->value;
 	} else if (isset($filters->type) && isset($filters->value) && $filters->type == "date") {
 		$filter = " AND STR_TO_DATE('".$filters->value."', '%d-%m-%Y') = ". $filters->key;
+	}
+
+	if (isset($filters->searchBox)) {
+		$filter .= " AND (p.orderNumber LIKE '%". $filters->searchBox . "%' OR p.client LIKE '%". $filters->searchBox . "%' OR p.boat LIKE '%". $filters->searchBox . "%')";
 	}
 
 	return $filter;

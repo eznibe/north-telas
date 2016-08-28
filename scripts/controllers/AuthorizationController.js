@@ -42,4 +42,11 @@ angular.module('vsko.stock').controller('AuthorizationCtrl', ['$scope', '$rootSc
 			$cookieStore.remove('user');
 		};
 
+    $scope.searchBoxChanged = function() {
+
+      $rootScope.searchBoxChangedObservers.map(function(fn) {
+        fn($scope.searchBox);
+      });
+		};
+
 }]);

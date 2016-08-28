@@ -4,6 +4,15 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 
 	$scope.start = Date.now();
 
+	$scope.refreshBySearchBox = function(value) {
+		// console.log('Notified search box', value);
+		if (value.length >= 4 || value == '') {
+			$scope.searchBox = value;
+			$scope.search(1);
+		}
+	}
+	$rootScope.searchBoxChangedObservers.push($scope.refreshBySearchBox);
+
 	var rows = 50;
 	var firstLoad = true;
 
@@ -100,6 +109,7 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 		$scope.filter.orderByKey = $scope.filterOptions.selectedOrderBy ? $scope.filterOptions.selectedOrderBy.key : null;
 		$scope.filter.orderByKeyType = $scope.filterOptions.selectedOrderBy ? $scope.filterOptions.selectedOrderBy.type : null;
 		$scope.filter.orderType = $scope.filterOptions.selectedOrderType.key;
+		$scope.filter.searchBox = $scope.searchBox;
 		$scope.filter.limit = rows;
 
 		$scope.start = Date.now();
@@ -109,6 +119,10 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 		Previsions.getPrevisionsForProduction($rootScope.user.sellerCode, $scope.filter, ($scope.page-1) * rows).then(function(result) {
 
 			console.log('Results in ' + (Date.now() - $scope.start) + ' ms.'); //eslint-disable-line
+
+			if (result.data.length == 0) {
+				$scope.hideLoading = true;
+			}
 
 			$scope.previsions = result.data;
 
@@ -221,6 +235,19 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 			$scope.filter.options = optionsBoth;
 		}
     $scope.filter.selectedOption = $scope.filter.options[0];
+	}
+
+	$scope.weekBackgroundColor = function(prevision) {
+		var colorsByWeek = [{week: 1, color: '#ddee99'/*'#f2dbc4'*/}, {week: 2, color: '#ffff99'}, {week: 3, color: '#a3d3ac'}, {week: 4, color: '#ffdab9'}, {week: 5, color: '#ffee99'}];
+
+		function getColor(week) {
+			var filter = colorsByWeek.filter(function(c) {
+				return c.week == week;
+			});
+			return filter.length > 0 ? filter[0].color : '';
+		}
+
+		return prevision.week ? getColor(prevision.week) : '';
 	}
 
 	function translateOptions(options) {

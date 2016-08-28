@@ -85,17 +85,17 @@
 <table id="production" class="table table-bordered table-striped table-hover">
 	<thead>
 		<tr>
-			<th ng-show=":refreshColumns:visibility.showColumn('seller')" translate>Seller col</th>
-			<th ng-show=":refreshColumns:visibility.showColumn('week')" translate>Week col</th>
-			<th ng-show=":refreshColumns:visibility.showColumn('priority')"  access-restricted="vendedor" translate>Priority col</th>
-			<th ng-show=":refreshColumns:visibility.showColumn('dispatch')" translate>Dispatch</th>
+			<th ng-show=":refreshColumns:visibility.showColumn('seller')"><div class="rotate"><span translate>Seller col</span></div></th>
+			<th ng-show=":refreshColumns:visibility.showColumn('week')"><div class="rotate"><span translate>Week col</span></div></th>
+			<th ng-show=":refreshColumns:visibility.showColumn('priority')" access-restricted="vendedor"><div class="rotate"><span translate>Priority col</span></div></th>
+			<th ng-show=":refreshColumns:visibility.showColumn('dispatch')"><div class="rotate"><span translate>Dispatch</span></div></th>
 			<th ng-show=":refreshColumns:visibility.showColumn('order')" translate>Order</th>
 			<th ng-show=":refreshColumns:visibility.showColumn('client')" translate>Client</th>
 			<th ng-show=":refreshColumns:visibility.showColumn('boat')" translate>Boat</th>
 			<th ng-show=":refreshColumns:visibility.showColumn('sail')" translate>Sail</th>
-			<th ng-show=":refreshColumns:visibility.showColumn('line')" translate>Line</th>
-			<th ng-show=":refreshColumns:visibility.showColumn('percentage')">%</th>
-			<th ng-show=":refreshColumns:visibility.showColumn('advance')" translate>Advance</th>
+			<th ng-show=":refreshColumns:visibility.showColumn('line')"><div class="rotate"><span translate>Line</span></div></th>
+			<th ng-show=":refreshColumns:visibility.showColumn('percentage')"><div><span translate>%</span></div></th>
+			<th ng-show=":refreshColumns:visibility.showColumn('advance')"><div class="rotate"><span translate>Advance</span></div></th>
 			<th ng-show=":refreshColumns:visibility.showColumn('deliveryDate')" translate style="min-width:95px;">Delivery date min</th>
 			<th ng-show=":refreshColumns:visibility.showColumn('tentativeDate')" translate style="min-width:95px;">Tentative date min</th>
 			<th ng-show=":refreshColumns:visibility.showColumn('productionDate')"  access-restricted="vendedor" translate style="min-width:95px;">Production date min</th>
@@ -110,7 +110,7 @@
 	</thead>
 	<tbody>
 		<!-- <tr ng-repeat="p in previsions | orderBy:'week' | filter:searchBox" my-repeat-directive="start"> -->
-		<tr ng-repeat="p in previsions | filter:searchBox" my-repeat-directive="start">
+		<tr ng-repeat="p in previsions" my-repeat-directive="start" ng-style="::{'background-color': weekBackgroundColor(p)}">
 			<td ng-show=":refreshColumns:visibility.showColumn('seller')">
 				<!-- {{:refreshColumsValue:getValue(p, 'seller')}} -->
 				<span ng-bind=":refreshColumnsValue:getValue(p, 'seller')"></span>
@@ -133,13 +133,13 @@
 				<a href="javascript:void(0);" ng-click="showPrevisionModal(p)" access-restricted="vendedor">{{:refreshColumnsValue:p.orderNumber}}</a>
 				<span access-allowed="vendedor">{{:refreshColumnsValue:p.orderNumber}}</span>
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('client')">
+			<td ng-show=":refreshColumns:visibility.showColumn('client')" nowrap>
 				{{:refreshColumnsValue:getValue(p, 'client')}}
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('boat')">
+			<td ng-show=":refreshColumns:visibility.showColumn('boat')" nowrap>
 				{{:refreshColumnsValue:getValue(p, 'boat')}}
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('sail')">
+			<td ng-show=":refreshColumns:visibility.showColumn('sail')" nowrap>
 				{{:refreshColumnsValue:getValue(p, 'sailName')}}
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('line')">
@@ -174,7 +174,7 @@
 				<span style="color:black; float:right; padding:2px;" ng-style="{'background-color': (p.stateAccepted=='0' ? 'orange' : '')}">
 					{{:refreshColumnsValue:getValue(p, 'state')}}
 					<a href="javascript:void(0)" ng-show=":refreshStateValue:p.stateAccepted=='0'" ng-click="::oneTimeBindings.acceptStateChange(p); $event.stopPropagation();" style="cursor:pointer;" class="tag-control" access-allowed="admin,produccion">
-						<span class="glyphicon glyphicon-ok control-label" style="text-align:center; margin-left:4px;"></span>
+						<span class="glyphicon glyphicon-ok save-ok control-label" style="text-align:center; margin-left:4px;"></span>
 					</a>
 				</span>
 			</td>
@@ -185,7 +185,7 @@
 				<editable-production-textarea entity="::p" field="'productionObservations'" callback="::changedPrevision.field" editable-by-role="'admin,produccion'" width="82" style="display:inline-block;"></editable-production-textarea>
 			</td>
 			<td style="width:80px; text-align:center;" access-allowed="admin,produccion">
-				<a ng-click="showArchiveConfirmModal(p, null, removeFromProduction)" class="btn btn-default">
+				<a ng-click="showArchiveConfirmModal(p, null, removeFromProduction)" class="btn btn-default small-button">
 					<span class="glyphicon glyphicon-ok"></span>
 				</a>
 			</td>
