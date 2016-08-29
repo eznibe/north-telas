@@ -111,3 +111,7 @@ table#production th > div.editable {
 #production.table-hover > tbody > tr:hover > td, #production.table-hover > tbody > tr:hover > th {
 	background-color: inherit;
 }
+
+.pagination {
+  margin: 0;
+}

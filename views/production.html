@@ -62,6 +62,14 @@
 			</div>
 		</div>
 	</div>
+	<div class="row">
+		<div class="col-md-6 nopadding">
+			<label class="control-label col-xs-3" translate>Show all</label>
+			<div class="col-xs-4">
+				<input type="checkbox" ng-model="filterOptions.showAll">
+			</div>
+		</div>
+	</div>
 
 	<div class="row">
 		<div class="col-md-6 nopadding">
@@ -154,16 +162,16 @@
 			<td ng-show=":refreshColumns:visibility.showColumn('deliveryDate')" class="column-date" nowrap>
 				<editable-date entity="::p" field="deliveryDate" callback="::updateDate" editable-by-role="'admin,produccion'" style="display:inline-block;" required="true"></editable-date>
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('tentativeDate')" nowrap>
+			<td ng-show=":refreshColumns:visibility.showColumn('tentativeDate')" class="column-date" nowrap>
 				<editable-date entity="::p" field="tentativeDate" callback="::updateDate" editable-by-role="'admin,produccion'" style="display:inline-block;"></editable-date>
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('productionDate')" nowrap access-restricted="vendedor">
+			<td ng-show=":refreshColumns:visibility.showColumn('productionDate')" class="column-date" nowrap access-restricted="vendedor">
 				<editable-date entity="::p" field="productionDate" callback="::updateDate" editable-by-role="'admin,produccion'" style="display:inline-block;"></editable-date>
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('infoDate')" nowrap>
+			<td ng-show=":refreshColumns:visibility.showColumn('infoDate')" class="column-date" nowrap>
 				<editable-date entity="::p" field="infoDate" callback="::updateDate" editable-by-role="'admin,produccion'" style="display:inline-block;"></editable-date>
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('advanceDate')" nowrap>
+			<td ng-show=":refreshColumns:visibility.showColumn('advanceDate')" class="column-date" nowrap>
 				<editable-date entity="::p" field="advanceDate" callback="::updateDate" editable-by-role="'admin,produccion'" style="display:inline-block;"></editable-date>
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('cloths')">
@@ -191,7 +199,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td colspan="20" ng-show="!hideLoading">
+			<td colspan="21" ng-show="!hideLoading">
 				Cargando...
 			</td>
 		</tr>
@@ -199,6 +207,10 @@
 </table>
 
 <ul id="pagination" class="pagination-sm"></ul>
+
+<!-- <ul id="pagination" class="pagination-sm ng-scope pagination" ng-show="previsions.length == rows">
+	<li class="page"><a href="javascript:void(0)" ng-click="::showAll()" translate>Show all</a></li>
+</ul> -->
 
 <div>
 	<production-weeks/>

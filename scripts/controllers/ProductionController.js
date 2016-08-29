@@ -13,10 +13,10 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 	}
 	$rootScope.searchBoxChangedObservers.push($scope.refreshBySearchBox);
 
-	var rows = 50;
+	$scope.rows = 50;
 	var firstLoad = true;
 
-	var defaultFilters = {orderByKey: 'week', orderByKeyType: 'nr', orderType: 'order.ascending', limit: rows};
+	var defaultFilters = {orderByKey: 'week', orderByKeyType: 'nr', orderType: 'order.ascending', limit: $scope.rows};
 
 	Previsions.getPrevisionsForProduction($rootScope.user.sellerCode, defaultFilters, 0).then(function(result) {
 
@@ -24,9 +24,9 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 
 		$scope.previsions = result.data;
 
-		if (result.data[0] && result.data[0].count > rows) {
+		if (result.data[0] && result.data[0].count > $scope.rows) {
 			$('#pagination').twbsPagination({
-		        totalPages: (result.data[0].count / rows) + 1,
+		        totalPages: (result.data[0].count / $scope.rows) + 1,
 		        visiblePages: 7,
 						startPage: 1,
 						first: '<<',prev: '<',last: '>>',next: '>',
@@ -48,13 +48,13 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 	// $scope.totalitems = 30;
 	// $scope.currentPage = 1;
 
-	 // initial filter options
+	// initial filter options
  	$scope.filter = {};
 	$scope.filterOptions = {};
  	$scope.filterOptions.columns = [{name: 'Seller', key:'seller', type:'str', options: []}, {name: 'Week', key:'week', type:'nr', options: []}, {name: 'Priority', key:'priority', type:'nr', options: []}, {name: 'Dispatch', key:'d.number', column: 'dispatch', type:'nr', options: []},
 													{name: 'Order', key:'p.orderNumber', column: 'orderNumber', type:'str', options: []}, {name: 'Client', key:'p.client', column: 'client', type:'str', options: []}, {name: 'Boat', key:'boat', type:'str', options: []}, {name: 'Sail', key:'sailName', type:'str', options: []}, {name: 'Line', key:'line', type:'str', options: []}, {name: '%', key:'percentage', type:'nr', options: []},
-													{name: 'Advance', key:'advance', type:'nr', options: []}, {name: 'Delivery date', key:'deliveryDate', type:'date', options: []}, {name: 'Tentative date', key:'tentativeDate', type:'date', options: []}, {name: 'Production date', key:'productionDate', type:'date', options: []}, {name: 'Info date', key:'infoDate', type:'date', options: []},
-													{name: 'Advance date', key:'advanceDate', type:'date', options: []}, {name: 'State', key:'state', type:'str', options: []}, {name: 'Area', key:'area', type:'nr', options: []}];
+													{name: 'Advance', key:'advance', type:'nr', options: []}, {name: 'Delivery date', key:'p.deliveryDate', type:'date', options: []}, {name: 'Tentative date', key:'p.tentativeDate', type:'date', options: []}, {name: 'Production date', key:'p.productionDate', type:'date', options: []}, {name: 'Info date', key:'p.infoDate', type:'date', options: []},
+													{name: 'Advance date', key:'p.advanceDate', type:'date', options: []}, {name: 'State', key:'state', type:'str', options: []}, {name: 'Area', key:'area', type:'nr', options: []}];
 
 	$scope.filterOptions.orderTypes = [{name: 'Order ascending', key:'order.ascending'},
   													 				 {name: 'Order descending', key:'order.descending'}];
@@ -103,6 +103,8 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 			$scope.page = page;
 		}
 
+		var ignorePagination = $scope.filterOptions.showAll;
+
 		$scope.filter.key = $scope.filterOptions.selectedFilter ? $scope.filterOptions.selectedFilter.key : null;
 		$scope.filter.type = $scope.filterOptions.selectedFilter ? $scope.filterOptions.selectedFilter.type : null;
 		$scope.filter.value = $scope.filterOptions.selectedFilterOption ? $scope.filterOptions.selectedFilterOption.value : null;
@@ -110,13 +112,17 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 		$scope.filter.orderByKeyType = $scope.filterOptions.selectedOrderBy ? $scope.filterOptions.selectedOrderBy.type : null;
 		$scope.filter.orderType = $scope.filterOptions.selectedOrderType.key;
 		$scope.filter.searchBox = $scope.searchBox;
-		$scope.filter.limit = rows;
+		if (!ignorePagination) {
+			$scope.filter.limit = $scope.rows;
+		} else {
+			delete $scope.filter.limit;
+		}
 
 		$scope.start = Date.now();
 		$scope.previsions = [];
 		$scope.hideLoading = false;
 
-		Previsions.getPrevisionsForProduction($rootScope.user.sellerCode, $scope.filter, ($scope.page-1) * rows).then(function(result) {
+		Previsions.getPrevisionsForProduction($rootScope.user.sellerCode, $scope.filter, ($scope.page-1) * $scope.rows).then(function(result) {
 
 			console.log('Results in ' + (Date.now() - $scope.start) + ' ms.'); //eslint-disable-line
 
@@ -126,14 +132,14 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 
 			$scope.previsions = result.data;
 
-			if ($('#pagination').data("twbs-pagination") && ($scope.page == 1 || result.data[0].count <= rows)) {
+			if ($('#pagination').data("twbs-pagination") && ($scope.page == 1 || result.data[0].count <= $scope.rows)) {
 				$('#pagination').twbsPagination('destroy');
 				firstLoad = true;
 			}
 
-			if (result.data[0] && result.data[0].count > rows) {
+			if (result.data[0] && result.data[0].count > $scope.rows && !ignorePagination) {
 				$('#pagination').twbsPagination({
-			        totalPages: (result.data[0].count / rows) + 1,
+			        totalPages: (result.data[0].count / $scope.rows) + 1,
 			        visiblePages: 7,
 							startPage: 1,
 							first: '<<',prev: '<',last: '>>',next: '>',
@@ -152,43 +158,54 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 
 	$scope.updateDate = function(entity, value, fieldName) {
 		// console.log('Updated date ', fieldName, ' to:', value);
-		Production.updateDate(entity, fieldName).then(function() {
-			// entity[fieldName] = value;
-			Rules.updatePrevisionPercentage(entity, true);
-			if (entity.percentageChanged) {
-				$scope.$broadcast('$$rebind::refreshColumnsValue');
-				delete entity.percentageChanged;
-			}
+		Production.updateDate(entity, fieldName).then(function(result) {
 
-			Rules.updatePrevisionDeliveryDate(entity, true).then(function() {
-
-				if (entity.deliveryDateChanged) {
+			if (result.data.successful) {
+				Rules.updatePrevisionPercentage(entity, true);
+				if (entity.percentageChanged) {
 					$scope.$broadcast('$$rebind::refreshColumnsValue');
-					$scope.$broadcast('$$rebind::refreshLinkValue');
-					delete entity.deliveryDateChanged;
-
-					if ($scope.filterOptions.selectedOrderBy && $scope.filterOptions.selectedOrderBy.key == 'deliveryDate') {
-						$scope.search(1);
-					}
+					delete entity.percentageChanged;
 				}
-			});
+
+				Rules.updatePrevisionDeliveryDate(entity, true).then(function() {
+
+					if (entity.deliveryDateChanged) {
+						$scope.$broadcast('$$rebind::refreshColumnsValue');
+						$scope.$broadcast('$$rebind::refreshLinkValue');
+						delete entity.deliveryDateChanged;
+
+						if ($scope.filterOptions.selectedOrderBy && $scope.filterOptions.selectedOrderBy.key == 'deliveryDate') {
+							$scope.search(1);
+						}
+					}
+				});
+			} else {
+				Utils.showMessage('notify.save_field_error', 'error');
+			}
 		});
 	};
 
 	$scope.changedPrevision = {
 		numericField: function(entity, value, fieldName) {
 
-			Production.updateField(entity, fieldName, true).then(function() {
-				if (fieldName == 'week' && $scope.filterOptions.selectedOrderBy && $scope.filterOptions.selectedOrderBy.key == 'week') {
-					// only research after inline edit number if it is the week and we have selected the order by week
-					$scope.search(1);
+			Production.updateField(entity, fieldName, true).then(function(result) {
+				if (result.data.successful) {
+					if (fieldName == 'week' && $scope.filterOptions.selectedOrderBy && $scope.filterOptions.selectedOrderBy.key == 'week') {
+						// only research after inline edit number if it is the week and we have selected the order by week
+						$scope.search(1);
+					}
+				} else {
+					Utils.showMessage('notify.save_field_error', 'error');
 				}
 			});
 		},
 
 		field: function(entity, value, fieldName) {
 
-			Production.updateField(entity, fieldName).then(function() {
+			Production.updateField(entity, fieldName).then(function(result) {
+				if (!result.data.successful) {
+					Utils.showMessage('notify.save_field_error', 'error');
+				}
 			});
 		}
 	};

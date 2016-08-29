@@ -43,7 +43,7 @@ angular.module('vsko.stock')
 				this.getPrevisionsForProduction = function(sellerCode, filters, offset)
         {
 					sellerCode = sellerCode ? '&sellerCode=' + sellerCode : '';
-					offset = offset || offset == 0 ? ('&offset=' + offset) : '';
+					offset = ((offset || offset == 0) && filters.limit) ? ('&offset=' + offset) : '';
 
 					var d = $q.defer();
 					var startTime = Date.now();
