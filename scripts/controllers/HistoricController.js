@@ -1,13 +1,15 @@
 'use strict';
 
-angular.module('vsko.stock').controller('HistoricCtrl', ['$scope', '$rootScope', 'Production', 'Previsions', 'Users', 'Rules', function ($scope, $rootScope, Production, Previsions, Users, Rules) {
+angular.module('vsko.stock').controller('HistoricCtrl', ['$scope', '$rootScope', '$translate', 'Production', 'Previsions', 'Users', 'Rules', function ($scope, $rootScope, $translate, Production, Previsions, Users, Rules) {
 
 	$scope.start = Date.now();
 
 	var rows = 100;
 	var firstLoad = true;
 
-	Previsions.getPrevisionsHistoric($rootScope.user.sellerCode, {limit: rows}).then(function(result) {
+	var defaultFilters = {orderByKey: 'p.deletedProductionOn', orderByKeyType: 'date', orderType: 'order.descending', limit: rows};
+
+	Previsions.getPrevisionsHistoric($rootScope.user.sellerCode, defaultFilters).then(function(result) {
 
 		console.log('Results in ' + (Date.now() - $scope.start) + ' ms.'); //eslint-disable-line
 
@@ -32,11 +34,35 @@ angular.module('vsko.stock').controller('HistoricCtrl', ['$scope', '$rootScope',
 	});
 
 	$scope.columns = {seller: true, week: true, priority: true, dispatch: true, order: true, client: true, boat: true, sail: true, line: true, percentage: true, advance: false, deliveryDate: true
-									 ,tentativeDate: false, productionDate: true, infoDate: true, advanceDate: true, cloths: true, state: false, area: true, productionObservations: false};
+									 ,tentativeDate: false, productionDate: true, infoDate: true, advanceDate: true, cloths: true, state: false, area: true, productionObservations: false, archivedDate: true};
+
+	 // initial filter options
+	 $scope.filter = {};
+	 $scope.filterOptions = {};
+	 $scope.filterOptions.columns = [{name: 'Seller', key:'seller', type:'str', options: []}, {name: 'Week', key:'week', type:'nr', options: []}, {name: 'Priority', key:'priority', type:'nr', options: []}, {name: 'Dispatch', key:'d.number', column: 'dispatch', type:'nr', options: []},
+	 												{name: 'Order', key:'p.orderNumber', column: 'orderNumber', type:'str', options: []}, {name: 'Client', key:'p.client', column: 'client', type:'str', options: []}, {name: 'Boat', key:'boat', type:'str', options: []}, {name: 'Sail', key:'sailName', type:'str', options: []}, {name: 'Line', key:'line', type:'str', options: []}, {name: '%', key:'percentage', type:'nr', options: []},
+	 												{name: 'Advance', key:'advance', type:'nr', options: []}, {name: 'Delivery date', key:'p.deliveryDate', type:'date', options: []}, {name: 'Tentative date', key:'p.tentativeDate', type:'date', options: []}, {name: 'Production date', key:'p.productionDate', type:'date', options: []}, {name: 'Info date', key:'p.infoDate', type:'date', options: []},
+	 												{name: 'Advance date', key:'p.advanceDate', type:'date', options: []}, {name: 'State', key:'state', type:'str', options: []}, {name: 'Area', key:'area', type:'nr', options: []}, {name: 'Archived date', key:'p.deletedProductionOn', type:'date', options: []}];
+
+	 $scope.filterOptions.orderTypes = [{name: 'Order ascending', key:'order.ascending'},
+	 																	  {name: 'Order descending', key:'order.descending'}];
+	 $scope.filterOptions.selectedOrderBy = $scope.filterOptions.columns[18];
+	 $scope.filterOptions.selectedOrderType = $scope.filterOptions.orderTypes[1];
+
+	 translateOptions($scope.filterOptions.columns);
+	 translateOptions($scope.filterOptions.orderTypes);
+
+	//  loadFilterOptions();
 
 	$scope.search = function(page) {
 
-		Previsions.getPrevisionsHistoric($rootScope.user.sellerCode, {limit: rows}, (page-1) * rows).then(function(result) {
+		$scope.filter.orderByKey = $scope.filterOptions.selectedOrderBy ? $scope.filterOptions.selectedOrderBy.key : null;
+		$scope.filter.orderByKeyType = $scope.filterOptions.selectedOrderBy ? $scope.filterOptions.selectedOrderBy.type : null;
+		$scope.filter.orderType = $scope.filterOptions.selectedOrderType.key;
+		$scope.filter.searchBox = $scope.searchBox;
+		$scope.filter.limit = rows;
+
+		Previsions.getPrevisionsHistoric($rootScope.user.sellerCode, $scope.filter, (page-1) * rows).then(function(result) {
 			$scope.previsions = result.data;
 
 			if ($('#pagination').data("twbs-pagination") && ($scope.page == 1 || result.data[0].count <= rows)) {
@@ -152,5 +178,23 @@ angular.module('vsko.stock').controller('HistoricCtrl', ['$scope', '$rootScope',
 			$scope.filter.options = optionsBoth;
 		}
     $scope.filter.selectedOption = $scope.filter.options[0];
+	}
+
+	$scope.refreshHistoricsBySearchBox = function(value) {
+		// console.log('Notified search box', value);
+		if (value.length >= 4 || value == '') {
+			$scope.searchBox = value;
+			$scope.search(1);
+		}
+	}
+	$rootScope.searchBoxChangedObservers.push($scope.refreshHistoricsBySearchBox);
+
+	function translateOptions(options) {
+
+		options.map(function(o) {
+			$translate(o.name).then(function(value) {
+				o.name = value;
+			})
+		});
 	}
 }]);

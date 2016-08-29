@@ -41,6 +41,7 @@
   "Dispatch date": "Día despacho",
   "Dispatch date col": "F.Despacho",
   "Archived date min": "F.Archivada",
+  "Archived date": "Fecha archivada",
   "Destinatary": "Destinatario",
   "Destiny": "Destino",
   "Transport": "Emp. transporte",
@@ -72,6 +73,7 @@
   "Season weeks 2": "Semanas NY/DA/RA",
   "Order ascending": "Ascendiente",
   "Order descending": "Descendiente",
+  "Show all": "Mostrar todos",
   "": "",
   "Month": {
     "1": "Enero",
@@ -247,6 +249,7 @@
     "state_accepted_prevision": "Cambio de estado aceptado",
     "previsions_state_updated": "Estado de previsiones actualizado.",
     "unknown_error": "Prevision, error desconocido, ver log.",
+    "save_field_error": "Error guardando el cambio, intente de nuevo.",
     "order_to_plotter": "Orden pasada a plotter.",
     "dolar_updated": "Valor del dolar actualizado.",
     "percentage_updated": "Valor del % actualizado.",
