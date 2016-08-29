@@ -154,7 +154,7 @@
 				{{:refreshColumnsValue:getValue(p, 'line')}}
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('percentage')" style="min-width:30px;" ng-mouseover="::oneTimeBindings.showPopupList('percentages');" ng-mouseleave="::oneTimeBindings.hidePopupList('percentages');">
-				<editable-production-input entity="::p" field="'percentage'" callback="::changedPrevision.numericField" editable-by-role="'admin,produccion'" width="20" style="display:inline-block;"></editable-production-input>
+				<editable-production-input entity="::p" field="'percentage'" callback="::changedPrevision.numericField" editable-by-role="'admin,produccion,velas-od'" width="20" style="display:inline-block;"></editable-production-input>
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('advance')">
 				{{:refreshColumnsValue:getValue(p, 'advance')}}

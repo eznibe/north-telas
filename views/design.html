@@ -40,7 +40,7 @@
 				<span class="glyphicon glyphicon-pencil col-xs-1 control-label" ng-click="showEditModal(p, editObservations)" style="text-align:center; cursor:pointer; float:none; padding-left:5px; padding-right:5px;" ng-show="over" access-allowed="admin,ordenes,produccion,velas-od">&nbsp;</span>
 			</td>
 			<td style="width:80px; text-align:center;" access-allowed="admin,ordenes,produccion,velas-od">
-				<a ng-click="showConfirmModal(p, designed)" class="btn btn-default" ng-disabled="user.role=='velas-od' && !p.oneDesign">
+				<a ng-click="showConfirmModal(p, designed)" class="btn btn-default">
 					<span class="glyphicon glyphicon-ok" ng-show="!p.designed"></span>
 					<span class="glyphicon glyphicon-remove" ng-show="p.designed"></span>
 				</a>
