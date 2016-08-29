@@ -12,7 +12,7 @@ function logTiming($log) {
 
 	$obj->successful = true;
 
-	$query = "INSERT INTO timinglogs(method, url, service, time, entity) VALUES ('".$log->method."', '".$log->url."', '".$log->service."', ".$log->time.", '".$log->entity."')";
+	$query = "INSERT INTO timinglogs(method, url, service, time, user, entity) VALUES ('".$log->method."', '".$log->url."', '".$log->service."', ".$log->time.", '".$log->user."', '".$log->entity."')";
 	if (! mysql_query($query)) {
 		// error en insert
 		$obj->successful = false;
