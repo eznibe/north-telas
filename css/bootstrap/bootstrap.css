@@ -6233,7 +6233,7 @@ mark {
 }
 .navbar,
 .navbar-inverse {
-  margin-bottom: 70px;
+  margin-bottom: 50px;
 }
 .navbar .foldbtn,
 .navbar-inverse .foldbtn {
@@ -6324,7 +6324,7 @@ mark {
   top: 0;
   background: url("../img/logo_north_go_beyond_medium.png") center top no-repeat #fefefe;
   width: 108px;
-  height: 129px;
+  height: 75px;
 }
 @media screen and (max-width: 991px) {
   .navbar,
@@ -6333,7 +6333,7 @@ mark {
   }
   .navbar-header:before {
     background: url("../img/logo_north_go_beyond_medium.png") center top no-repeat #fefefe;
-    height: 90px;
+    height: 75px;
   }
 }
 @media screen and (max-width: 767px) {

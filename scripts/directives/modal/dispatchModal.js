@@ -2,7 +2,7 @@
 
 angular.module('vsko.stock')
 
-.directive('dispatchModal', function($modal, $translate, uuid4, Utils, Dispatchs, Previsions) {
+.directive('dispatchModal', function($modal, $translate, $rootScope, uuid4, Utils, Dispatchs, Previsions) {
 
     return {
           restrict: 'E',
@@ -68,7 +68,7 @@ angular.module('vsko.stock')
 
         	  $scope.saveDispatch = function(dispatch) {
 
-        		  Dispatchs.save(dispatch).then(function(result){
+        		  Dispatchs.save(dispatch, $rootScope.user).then(function(result){
 
     			  	  if(result.data.successful) {
 

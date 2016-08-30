@@ -52,6 +52,8 @@ angular.module('vsko.stock')
         			this.dpId = uuid4.generate();
         	});
 
+					dispatch.userId = loggedUser.id;
+
         	return $http.post(url + 'dispatchs_POST.php', dispatch);
         };
 

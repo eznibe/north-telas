@@ -13,6 +13,7 @@ angular.module('vsko.stock').controller('AuthorizationCtrl', ['$scope', '$rootSc
 					$rootScope.user.password = "";
 					$rootScope.user.role = response.data.role;
 					$rootScope.user.sellerCode = response.data.sellerCode;
+          $rootScope.user.id = response.data.id;
 
 					// store in cookie to have access after a f5 reload
 					$cookieStore.put('user', $rootScope.user);

@@ -74,7 +74,7 @@
   "Order ascending": "Ascendiente",
   "Order descending": "Descendiente",
   "Show all": "Mostrar todos",
-  "": "",
+  "Dispatch alert": "Se creó un nuevo despacho con número #{{dispatchNumber}}",
   "Month": {
     "1": "Enero",
     "2": "Febrero",

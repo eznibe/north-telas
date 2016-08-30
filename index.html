@@ -34,7 +34,7 @@
 </head>
 <body ng-app="vsko.stock" ng-controller='AuthorizationCtrl'>
 		<!-- Fixed navbar -->
-		<div google-analytics>
+		<div google-analytics ng-cloak>
 			<div class="navbar-inverse" role="navigation">
 				<div class="container">
 					<div class="navbar-header">
@@ -131,6 +131,11 @@
 			</div>
 		</div>
 
+    <div class="container dispatch-alert" ng-cloak ng-controller='DispatchAlertCtrl' ng-hide="hideAlert">
+      <span style="padding-left: 20px;" ng-bind="message"></span>
+      <span style="padding-right: 20px; float: right;"><a href="javascript:void(0);" ng-click="::closeDispatchAlert();">x</a></span>
+    </div>
+
 		<div class="container" style="margin:0; width:100%;" ng-view>
 
 		<br>
@@ -190,6 +195,7 @@
         <script src="scripts/controllers/AuthorizationController.js"></script>
         <script src="scripts/controllers/UsersController.js"></script>
         <script src="scripts/controllers/QueryController.js"></script>
+        <script src="scripts/controllers/DispatchAlertController.js"></script>
         <script src="scripts/controllers/lists/OldPrevisionsController.js"></script>
         <script src="scripts/controllers/lists/BetweenDatesController.js"></script>
         <script src="scripts/controllers/lists/UnderStockController.js"></script>

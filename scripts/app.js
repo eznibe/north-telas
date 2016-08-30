@@ -27,6 +27,14 @@ angular.module("vsko.stock", [
 			}
 
 			$rootScope.searchBoxChangedObservers = [];
+			$rootScope.pageChangedObservers = [];
+
+			// notify of a view change to all registered observers
+			$rootScope.$on('$locationChangeStart', function(event) {
+			  $rootScope.pageChangedObservers.map(function(fn) {
+					fn();
+				})
+			});
 
 	}])
 	.factory('Authorization', ['$rootScope', function($rootScope) {
