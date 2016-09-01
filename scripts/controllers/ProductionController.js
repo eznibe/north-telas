@@ -255,7 +255,9 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 	}
 
 	$scope.weekBackgroundColor = function(prevision) {
-		var colorsByWeek = [{week: 1, color: '#ddee99'/*'#f2dbc4'*/}, {week: 2, color: '#ffff99'}, {week: 3, color: '#a3d3ac'}, {week: 4, color: '#ffdab9'}, {week: 5, color: '#ffee99'}];
+		var colorsByWeek = [{week: 1, color: '#ddee99'}, {week: 2, color: '#ffff99'}, {week: 3, color: '#a3d3ac'}, {week: 4, color: '#ffdab9'}, {week: 5, color: '#ffee99'},
+											  {week: 6, color: '#aaee99'}, {week: 7, color: '#849FE8'}, {week: 8, color: '#A9B67E'}, {week: 18, color: '#7AEEB6'},
+											 	{week: 90, color: '#7AEEB6'}, {week: 98, color: '#BCBCDB'}, {week: 99, color: '#bbaa11'}];
 
 		function getColor(week) {
 			var filter = colorsByWeek.filter(function(c) {

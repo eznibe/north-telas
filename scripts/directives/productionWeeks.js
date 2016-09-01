@@ -10,19 +10,21 @@ angular.module('vsko.stock')
           templateUrl: 'views/directives/productionWeeks.html',
           link: function postLink(scope, element, attrs) {
 
-            scope.nextWeeks = calculateNextWeeks(7);
+            scope.nextWeeks = calculateNextWeeks(8);
 
-            scope.weeks = [{number: 1, startDay: scope.nextWeeks[0].start, endDay: scope.nextWeeks[0].end, month: 'Month.'+scope.nextWeeks[0].month},
+            scope.weeks = [{number: 1, startDay: scope.nextWeeks[0].start, endDay: scope.nextWeeks[0].end, month: 'Month.'+scope.nextWeeks[0].month, backgroundColor: '#ddee99'},
                            {number: 2, startDay: scope.nextWeeks[1].start, endDay: scope.nextWeeks[1].end, month: 'Month.'+scope.nextWeeks[1].month, backgroundColor: '#ffff99'},
                            {number: 3, startDay: scope.nextWeeks[2].start, endDay: scope.nextWeeks[2].end, month: 'Month.'+scope.nextWeeks[2].month, backgroundColor: '#a3d3ac'},
                            {number: 4, startDay: scope.nextWeeks[3].start, endDay: scope.nextWeeks[3].end, month: 'Month.'+scope.nextWeeks[3].month, backgroundColor: '#ffdab9'},
                            {number: 5, startDay: scope.nextWeeks[4].start, endDay: scope.nextWeeks[4].end, month: 'Month.'+scope.nextWeeks[4].month, backgroundColor: '#ffee99'},
-                           {number: 6, startDay: scope.nextWeeks[5].start, endDay: scope.nextWeeks[5].end, month: 'Month.'+scope.nextWeeks[5].month},
-                           {number: 7, startDay: scope.nextWeeks[6].start, endDay: scope.nextWeeks[6].end, month: 'Month.'+scope.nextWeeks[6].month},
-                           {number: 8, label: 'Sri Lanka'},
-                           {number: 9, label: 'Velas sin prog.'},
-                           {number: 10, label: 'Ords.en susp.'},
-                           {number: 11, label: 'Velas p/entregar'},];
+                           {number: 6, startDay: scope.nextWeeks[5].start, endDay: scope.nextWeeks[5].end, month: 'Month.'+scope.nextWeeks[5].month, backgroundColor: '#aaee99'},
+                           {number: 7, startDay: scope.nextWeeks[6].start, endDay: scope.nextWeeks[6].end, month: 'Month.'+scope.nextWeeks[6].month, backgroundColor: '#849FE8'},
+                           {number: 8, startDay: scope.nextWeeks[7].start, endDay: scope.nextWeeks[7].end, month: 'Month.'+scope.nextWeeks[7].month, backgroundColor: '#A9B67E'},
+                           {number: 18, label: 'Stand by', backgroundColor: '#7AEEB6'},
+                           {number: 19, label: 'Sin programar'},
+                           {number: 90, label: 'Detenida en produccion', backgroundColor: '#7AEEB6'},
+                           {number: 98, label: 'Terminada con faltantes', backgroundColor: '#BCBCDB'},
+                           {number: 99, label: 'Para entregar', backgroundColor: '#bbaa11'}];
 
              function calculateNextWeeks(nr) {
                var result = [];
