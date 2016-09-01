@@ -85,7 +85,7 @@ table#production th > div.editable {
 	position: fixed;
 	right: 10px;
 	top: 10px;
-	width: 150px;
+	/*width: 150px;*/
 	z-index: 25;
 }
 

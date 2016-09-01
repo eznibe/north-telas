@@ -113,12 +113,12 @@
 			<th ng-show=":refreshColumns:visibility.showColumn('state')" access-restricted="vendedor" translate>State col</th>
 			<th ng-show=":refreshColumns:visibility.showColumn('area')" access-restricted="vendedor" translate>Area</th>
 			<th ng-show=":refreshColumns:visibility.showColumn('productionObservations')" access-restricted="vendedor" translate>Observations</th>
-			<th access-allowed="admin,produccion" access-restricted="vendedor" translate>Archive</th>
+			<th access-allowed="admin,produccion,velas-od" access-restricted="vendedor" translate>Archive</th>
 		</tr>
 	</thead>
 	<tbody>
 		<!-- <tr ng-repeat="p in previsions | orderBy:'week' | filter:searchBox" my-repeat-directive="start"> -->
-		<tr ng-repeat="p in previsions" my-repeat-directive="start" ng-style="::{'background-color': weekBackgroundColor(p)}">
+		<tr ng-repeat="p in previsions track by p.id" my-repeat-directive="start" ng-style="::{'background-color': weekBackgroundColor(p)}">
 			<td ng-show=":refreshColumns:visibility.showColumn('seller')">
 				<!-- {{:refreshColumsValue:getValue(p, 'seller')}} -->
 				<span ng-bind=":refreshColumnsValue:getValue(p, 'seller')"></span>
@@ -192,7 +192,7 @@
 			<td ng-show=":refreshColumns:visibility.showColumn('productionObservations')" style="min-width:110px;" access-restricted="vendedor">
 				<editable-production-textarea entity="::p" field="'productionObservations'" callback="::changedPrevision.field" editable-by-role="'admin,produccion'" width="82" style="display:inline-block;"></editable-production-textarea>
 			</td>
-			<td style="width:80px; text-align:center;" access-allowed="admin,produccion">
+			<td style="width:80px; text-align:center;" access-allowed="admin,produccion,velas-od">
 				<a ng-click="showArchiveConfirmModal(p, null, removeFromProduction)" class="btn btn-default small-button">
 					<span class="glyphicon glyphicon-ok"></span>
 				</a>
