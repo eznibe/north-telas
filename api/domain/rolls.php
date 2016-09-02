@@ -1,5 +1,7 @@
 <?php
 
+include_once 'logs.php';
+
 function saveRolls($orderProduct) {
 
 	$obj->successful = true;
@@ -18,6 +20,8 @@ function saveRolls($orderProduct) {
 
 		if($exists) {
 			// update roll
+			logRollPreviousModification($roll->id, 'rolls.saveRolls', null);
+
 			$query = "UPDATE rolls SET number = '".$roll->number."', lote = '".$roll->lote."', mtsOriginal = ".$roll->mts.", mts = ".$roll->mts." WHERE id = '".$roll->id."'";
 		}
 		else if(!$exists && isset($roll->id)){
@@ -64,6 +68,8 @@ function existsRoll($roll, $rows) {
 
 function arriveRolls($orderId, $type) {
 
+	logRollPreviousModification(null, 'rolls.arriveRolls', "orderId = $orderId");
+
 	$update = "UPDATE rolls SET incoming = false, type = '$type' WHERE orderId = '$orderId'";
 
 	mysql_query($update);
@@ -74,6 +80,8 @@ function updateRollType($roll) {
 	$obj->successful = true;
 	$obj->method = "updateRollType";
 	$obj->roll = $roll;
+
+	logRollPreviousModification($roll->id, 'rolls.updateRollType', null);
 
 	$update = "UPDATE rolls SET type = '".$roll->type."' WHERE id = '".$roll->id."'";
 
@@ -112,6 +120,8 @@ function updateRollField($roll, $rollField, $value) {
 
 		$obj->roll->mts = $newMts;
 	}
+
+	$obj->log = logRollPreviousModification($roll->id, "rolls.updateRollField($rollField)", null);
 
 	$update = "UPDATE rolls SET $rollField = '".$value."' $extraUpdate WHERE id = '".$roll->id."'";
 

@@ -8,19 +8,8 @@ include_once '../include/main.php';
 
 db_connect();
 
-function addLog($log) {
+include_once 'domain/logs.php';
 
-	$methodResult->successful = true;
-
-	$insert = "INSERT INTO logs (type, log) VALUES ('".$log->type."', \"".$log->log."\")";
-	if (! mysql_query($insert)) {
-			// error en insert
-			$methodResult->successful = false;
-			$methodResult->insert = $insert;
-	}
-
-	return $methodResult;
-}
 
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
