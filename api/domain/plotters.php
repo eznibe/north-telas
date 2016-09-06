@@ -151,7 +151,7 @@ function finishPlotter($plotter) {
 		// discount mts from the mts of the rolls of the plotter
 		foreach ($plotter->cuts as $cut) {
 
-			logRollPreviousModification($cut->rollId, 'plotters.finishPlotter', null);
+			logRollPreviousModification($cut->rollId, 'plotters.finishPlotter('+$plotter->id+')', null);
 
 			$update = "UPDATE rolls set mts = if(mts-".$cut->mtsCutted." < 0, 0, mts-".$cut->mtsCutted.") where id = '".$cut->rollId."'";
 
@@ -186,7 +186,7 @@ function restorePlotter($plotter) {
 	// increment mts from the mts of the rolls of the plotter
 	foreach ($plotter->cuts as $cut) {
 
-		logRollPreviousModification($cut->rollId, 'plotters.restorePlotter', null);
+		logRollPreviousModification($cut->rollId, 'plotters.restorePlotter('+$plotter->id+')', null);
 
 		$update = "UPDATE rolls SET mts = mts + ".$cut->mtsCutted." WHERE id = '".$cut->rollId."'";
 
@@ -282,8 +282,8 @@ function toDesignPlotter($plotter) {
 		$obj->updatePrevision = $update;
 	}
 
-	// remove all plotters with the same order number
-	$query = "SELECT p.* FROM plotters p join previsions pre on pre.id = p.previsionId WHERE pre.orderNumber = '".$plotter->orderNumber."'";
+	// remove all plotters with the same prevision id
+	$query = "SELECT p.* FROM plotters p join previsions pre on pre.id = p.previsionId WHERE pre.id = '".$plotter->previsionId."'";
 
 	$result = mysql_query($query);
 
