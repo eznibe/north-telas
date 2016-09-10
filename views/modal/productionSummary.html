@@ -1,0 +1,99 @@
+<div class="modal" tabindex="-1" role="dialog" >
+  <div class="modal-dialog modal-lg" style="margin-top: 0px;">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<div class="edit_person">
+					<h2>
+						<span class="glyphicon glyphicon-file"></span>
+						<span>{{'Production summary' | translate}}</span>
+					</h2>
+				</div>
+				<a href="javascript:void(0)" class="btn btn-lg closebtn" ng-click="$hide()">
+					<span class="glyphicon glyphicon-remove"></span>
+				</a>
+			</div>
+
+			<div class="modal-body">
+				<table id="groups" class="table table-bordered table-striped table-hover table-summary-production">
+					<thead>
+						<tr>
+							<th></th>
+							<th>NMO</th>
+							<th colspan="3" style="text-align:center;" translate>Line</th>
+							<th colspan="2" style="text-align:center;" translate>Design</th>
+              <th colspan="2" style="text-align:center;" translate>Plotter</th>
+              <th translate>Stick</th>
+              <th translate>OD</th>
+              <th translate>Rep.</th>
+              <th translate>Canvas</th>
+              <th translate>Logos</th>
+              <th translate>Total</th>
+						</tr>
+            <tr>
+							<th translate>Week small</th>
+							<th></th>
+							<th>DA</th>
+							<th>RA</th>
+              <th>NY</th>
+              <th>PEND</th>
+              <th>6%</th>
+              <th>PROG</th>
+              <th>25%</th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th>items</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="d in summary.weeksData">
+							<td style="font-weight: bold;">{{::d.week}}</td>
+              <td>{{::d.nmo(d)}}</td>
+              <td>{{::d.DA}}</td>
+              <td>{{::d.RA}}</td>
+              <td>{{::d.NY}}</td>
+              <td>{{::d.pend}}</td>
+              <td>{{::d.perc6}}</td>
+              <td>{{::d.prog}}</td>
+              <td>{{::d.perc25}}</td>
+              <td>{{::d.stick}}</td>
+              <td>{{::d.OD}}</td>
+              <td>{{::d.REP}}</td>
+              <td>{{::d.CA}}</td>
+              <td>{{::d.LO}}</td>
+              <td>{{::d.sumWeekTotal(d)}}</td>
+						</tr>
+            <tr id="total1">
+							<td>Tot</td>
+              <td>{{::sumCol('nmo')}}</td>
+              <td>{{::sumCol('DA')}}</td>
+              <td>{{::sumCol('RA')}}</td>
+              <td>{{::sumCol('NY')}}</td>
+              <td>{{::sumCol('pend')}}</td>
+              <td>{{::sumCol('perc6')}}</td>
+              <td>{{::sumCol('prog')}}</td>
+              <td>{{::sumCol('perc25')}}</td>
+              <td>{{::sumCol('stick')}}</td>
+              <td>{{::sumCol('OD')}}</td>
+              <td>{{::sumCol('REP')}}</td>
+              <td>{{::sumCol('CA')}}</td>
+              <td>{{::sumCol('LO')}}</td>
+              <td>{{::sumCol('sumWeekTotal')}}</td>
+						</tr>
+            <tr id="totAvailable">
+							<td>OK Dis.</td>
+              <td colspan="4"></td>
+              <td>{{sumOkDis}}</td>
+              <td colspan="9"></td>
+						</tr>
+					</tbody>
+				</table>
+
+			</div>
+
+		</div>
+	</div>
+</div>

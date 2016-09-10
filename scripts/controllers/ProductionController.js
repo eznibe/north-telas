@@ -286,6 +286,8 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 		Previsions.getPrevisionsForProduction($rootScope.user.sellerCode, {}).then(function(result) {
 			console.log('All results in ' + (Date.now() - start) + ' ms.'); //eslint-disable-line
 
+			$scope.allProduction = result.data;
+			
 			result.data.map(function(row) {
 				var key;
 				for (key in row) {

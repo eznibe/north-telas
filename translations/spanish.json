@@ -75,6 +75,13 @@
   "Order descending": "Descendiente",
   "Show all": "Mostrar todos",
   "Dispatch alert": "Se creó un nuevo despacho con número #{{dispatchNumber}}",
+  "Files": "Archivos",
+  "Browse": "Seleccionar...",
+  "Production summary": "Tabla resumen",
+  "Columns filter": "Filtrar columnas",
+  "Stick": "Pegado",
+  "Week small": "SEM",
+  "": "",
   "Month": {
     "1": "Enero",
     "2": "Febrero",
