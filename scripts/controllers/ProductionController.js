@@ -107,6 +107,13 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 		return prevision[fieldName];
 	}
 
+	$scope.getOptions = function(column) {
+		var res = $scope.filterOptions.columns.filter(function(c) {
+			return c.column == column || c.key == column;
+		});
+		return res.length > 0 && res[0].options.length > 0 ? res[0].options : undefined;
+	}
+
 	$scope.onSavePrevision = function(prevision) {
 		// $scope.$broadcast('$$rebind::refreshColumnsValue');
 		// $scope.$broadcast('$$rebind::refreshLinkValue');
@@ -142,12 +149,14 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 
 		var ignorePagination = $scope.filterOptions.showAll;
 
-		$scope.filter.key = $scope.filterOptions.selectedFilter ? $scope.filterOptions.selectedFilter.key : null;
-		$scope.filter.type = $scope.filterOptions.selectedFilter ? $scope.filterOptions.selectedFilter.type : null;
-		$scope.filter.value = $scope.filterOptions.selectedFilterOption ? $scope.filterOptions.selectedFilterOption.value : null;
+		// $scope.filter.key = $scope.filterOptions.selectedFilter ? $scope.filterOptions.selectedFilter.key : null;
+		// $scope.filter.type = $scope.filterOptions.selectedFilter ? $scope.filterOptions.selectedFilter.type : null;
+		// $scope.filter.value = $scope.filterOptions.selectedFilterOption ? $scope.filterOptions.selectedFilterOption.value : null;
+
 		$scope.filter.orderByKey = $scope.filterOptions.selectedOrderBy ? $scope.filterOptions.selectedOrderBy.key : null;
 		$scope.filter.orderByKeyType = $scope.filterOptions.selectedOrderBy ? $scope.filterOptions.selectedOrderBy.type : null;
 		$scope.filter.orderType = $scope.filterOptions.selectedOrderType.key;
+
 		$scope.filter.searchBox = $scope.searchBox;
 		if (!ignorePagination) {
 			$scope.filter.limit = $scope.rows;
@@ -192,6 +201,46 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 			}
 		});
 	};
+
+	$scope.searchByFilter = function(selection, column) {
+
+		// console.log('Filter selected', selection);
+
+		// eg. [{key:, type:, value:}, ..]
+		$scope.filter.list = generateFiltersList(selection, column);
+
+		console.log('Generated filter list', $scope.filter.list);
+
+		$scope.search(1);
+	};
+
+	$scope.clearFilters = function(selection) {
+
+		$scope.filter.list = [];
+
+		$scope.search(1);
+	};
+
+	function generateFiltersList(selection, column) {
+
+		var filters = $scope.filter.list ? $scope.filter.list : [];
+
+		// always reset current filter for column
+		filters = filters.filter(function(item) {
+			return (item.key != column && item.column != column);// || (selection && item.key != selection.column && item.column != selection.column);
+		});
+
+		if (selection) {
+			// selected column filter -> add to the filter list
+			$scope.filterOptions.columns.map(function(col) {
+				if (selection.value != '-' && (col.key == selection.column || col.column == selection.column)) {
+					filters.push({key: col.key, type: col.type, column: selection.column, value: selection.value});
+				}
+			});
+		}
+
+		return filters;
+	}
 
 	$scope.updateDate = function(entity, value, fieldName) {
 		// console.log('Updated date ', fieldName, ' to:', value);
@@ -344,7 +393,10 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 					$scope.filterOptions.columns.map(function(opt) {
 
 						if ((opt.column == key || opt.key == key) && row[key] && !alreadyContains(opt.options, row[key])) {
-							opt.options.push({value: row[key]});
+							if (opt.options.length == 0) {
+								// opt.options.push({value: '-', column: opt.column ? opt.column : opt.key});
+							}
+							opt.options.push({value: row[key], column: opt.column ? opt.column : opt.key});
 						}
 					});
 				}

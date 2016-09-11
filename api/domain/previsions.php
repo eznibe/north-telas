@@ -470,18 +470,21 @@ function createFilterCondition($filters) {
 
 	$filter = "";
 
-	if (isset($filters->type) && isset($filters->value) && $filters->type == "str") {
-		$filter = isSpecialFilterCase($filters->key)
-																	? handleSpecialFilterCase($filters->key, $filters->value)
-																	: " AND " . $filters->key . " like '%". $filters->value ."%'";
-	} else if (isset($filters->type) && isset($filters->value) && $filters->type == "nr") {
-		$filter = " AND ".$filters->key." = ". $filters->value;
-	} else if (isset($filters->type) && isset($filters->value) && $filters->type == "date") {
-		$filter = " AND STR_TO_DATE('".$filters->value."', '%d-%m-%Y') = ". $filters->key;
-	}
+	foreach ($filters->list as $selection) {
 
-	if (isset($filters->searchBox)) {
-		$filter .= " AND (p.orderNumber LIKE '%". $filters->searchBox . "%' OR p.client LIKE '%". $filters->searchBox . "%' OR p.boat LIKE '%". $filters->searchBox . "%')";
+		if (isset($selection->type) && isset($selection->value) && $selection->type == "str") {
+			$filter .= isSpecialFilterCase($selection->key)
+																		? handleSpecialFilterCase($selection->key, $selection->value)
+																		: " AND " . $selection->key . " like '%". $selection->value ."%'";
+		} else if (isset($selection->type) && isset($selection->value) && $selection->type == "nr") {
+			$filter .= " AND ".$selection->key." = ". $selection->value;
+		} else if (isset($selection->type) && isset($selection->value) && $selection->type == "date") {
+			$filter .= " AND STR_TO_DATE('".$selection->value."', '%d-%m-%Y') = ". $selection->key;
+		}
+
+		if (isset($selection->searchBox)) {
+			$filter .= " AND (p.orderNumber LIKE '%". $selection->searchBox . "%' OR p.client LIKE '%". $selection->searchBox . "%' OR p.boat LIKE '%". $selection->searchBox . "%')";
+		}
 	}
 
 	return $filter;
