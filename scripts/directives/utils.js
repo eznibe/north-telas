@@ -109,7 +109,8 @@ angular.module('vsko.stock')
         			$(elem).hide();
         		}
         		else {
-        			$(elem).show();
+							// if enabled it brings problems in production list, force show to columns that can be selected to be hidden
+        			// $(elem).show();
         		}
         	});
         }

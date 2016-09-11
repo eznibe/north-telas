@@ -1,0 +1,16 @@
+<div id="columnsSelector">
+ <table width="100%" valign="top" cellspacing="0" cellpadding="2" border="1" style="border-width:1px; border-style:solid; border-collapse:collapse;">
+	 <tbody>
+		 <tr class="title">
+			 <td align="center" translate>Column</td>
+       <td align="center" style="cursor: pointer;" ng-click="::oneTimeBindings.togglePopupList('columnsSelector')">x</td>
+		 </tr>
+		 <tr ng-repeat="c in filterOptions.columns" ng-hide="::hideFromSeller(c)">
+       <td>{{ ::c.name }}</td>
+			 <td style="padding-left: 4px; padding-right: 4px;">
+         <input type="checkbox" ng-model="c.selected" ng-click="visibility.clickColumnSelector(c);"/>
+       </td>
+		 </tr>
+ 		</tbody>
+	</table>
+</div>

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope', '$translate', '$timeout', 'Production', 'Previsions', 'Users', 'Rules', function ($scope, $rootScope, $translate, $timeout, Production, Previsions, Users, Rules) {
+angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope', '$translate', '$timeout', '$cookieStore', 'Production', 'Previsions', 'Users', 'Rules', function ($scope, $rootScope, $translate, $timeout, $cookieStore, Production, Previsions, Users, Rules) {
 
 	$scope.start = Date.now();
 
@@ -42,8 +42,40 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 		}
 	});
 
-	$scope.columns = {seller: true, week: true, priority: true, dispatch: true, order: true, client: true, boat: true, sail: true, line: true, percentage: true, advance: true, deliveryDate: true
-									 ,tentativeDate: true, productionDate: true, infoDate: true, advanceDate: true, cloths: true, state: true, area: true, productionObservations: true};
+	$scope.visibility = {
+
+		toggleColumn: function(column) {
+			$('.'+column).toggle();
+		},
+
+		showColumn: function(column) {
+			$('.'+column).show();
+			$('.'+column).removeClass('ng-hide');
+		},
+		hideColumn: function(column) {
+			$('.'+column).hide();
+		},
+
+		clickColumnSelector: function(c) {
+			if (c.selected) {
+				$scope.visibility.showColumn(c.column ? c.column : c.key);
+			} else {
+				$scope.visibility.hideColumn(c.column ? c.column : c.key);
+			}
+
+			$scope.storeColumnsSelectedState($scope.filterOptions.columns);
+		},
+
+		selected: function(column) {
+			var res = $scope.filterOptions.columns.filter(function(c) {
+				return c.column == column || c.key == column;
+			});
+			return res.length > 0 ? res[0].selected : true;
+		}
+	};
+
+	// $scope.columns = {seller: true, week: true, priority: true, dispatch: true, order: true, client: true, boat: true, sail: true, line: true, percentage: true, advance: true, deliveryDate: true
+	// 								 ,tentativeDate: true, productionDate: true, infoDate: true, advanceDate: true, cloths: true, state: true, area: true, productionObservations: true};
 
 	// $scope.totalitems = 30;
 	// $scope.currentPage = 1;
@@ -51,10 +83,10 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 	// initial filter options
  	$scope.filter = {};
 	$scope.filterOptions = {};
- 	$scope.filterOptions.columns = [{name: 'Seller', key:'seller', type:'str', options: []}, {name: 'Week', key:'week', type:'nr', options: []}, {name: 'Priority', key:'priority', type:'nr', options: []}, {name: 'Dispatch', key:'d.number', column: 'dispatch', type:'nr', options: []},
-													{name: 'Order', key:'p.orderNumber', column: 'orderNumber', type:'str', options: []}, {name: 'Client', key:'p.client', column: 'client', type:'str', options: []}, {name: 'Boat', key:'boat', type:'str', options: []}, {name: 'Sail', key:'sailName', type:'str', options: []}, {name: 'Line', key:'line', type:'str', options: []}, {name: '%', key:'percentage', type:'nr', options: []},
-													{name: 'Advance', key:'advance', type:'nr', options: []}, {name: 'Delivery date', key:'p.deliveryDate', type:'date', options: []}, {name: 'Tentative date', key:'p.tentativeDate', type:'date', options: []}, {name: 'Production date', key:'p.productionDate', type:'date', options: []}, {name: 'Info date', key:'p.infoDate', type:'date', options: []},
-													{name: 'Advance date', key:'p.advanceDate', type:'date', options: []}, {name: 'State', key:'state', type:'str', options: []}, {name: 'Area', key:'area', type:'nr', options: []}];
+ 	$scope.filterOptions.columns = [{name: 'Seller', key:'seller', type:'str', options: []}, {name: 'Week', key:'week', type:'nr', options: []}, {name: 'Priority', key:'priority', type:'nr', hideFromSeller: true, options: []}, {name: 'Dispatch', key:'d.number', column: 'dispatch', type:'nr', options: []},
+													{name: 'Order', key:'p.orderNumber', column: 'orderNumber', type:'str', options: []}, {name: 'Client', key:'p.client', column: 'client', type:'str', options: []}, {name: 'Boat', key:'boat', type:'str', options: []}, {name: 'Sail', key:'sailName', column: 'sailName', type:'str', options: []}, {name: 'Line', key:'line', type:'str', options: []}, {name: '%', key:'percentage', type:'nr', options: []},
+													{name: 'Advance', key:'advance', type:'nr', options: []}, {name: 'Delivery date', key:'p.deliveryDate', column: 'deliveryDate', type:'date', options: []}, {name: 'Tentative date', key:'p.tentativeDate', column: 'tentativeDate', type:'date', options: []}, {name: 'Production date', key:'p.productionDate', column: 'productionDate', type:'date', hideFromSeller: true, options: []}, {name: 'Info date', key:'p.infoDate', column: 'infoDate', type:'date', options: []},
+													{name: 'Advance date', key:'p.advanceDate', column: 'advanceDate', type:'date', options: []}, {name: 'Cloths', column:'cloths', type:'str', options: []}, {name: 'State', key:'state', type:'str', hideFromSeller: true, options: []}, {name: 'Area', key:'area', type:'nr', hideFromSeller: true, options: []}];
 
 	$scope.filterOptions.orderTypes = [{name: 'Order ascending', key:'order.ascending'},
   													 				 {name: 'Order descending', key:'order.descending'}];
@@ -63,6 +95,8 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 
   translateOptions($scope.filterOptions.columns);
 	translateOptions($scope.filterOptions.orderTypes);
+
+	loadColumnsSelectedState($scope.filterOptions.columns);
 
 	loadFilterOptions();
 
@@ -87,6 +121,9 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 		},
 		hidePopupList: function(id) {
 			$('#'+id).hide();
+		},
+		togglePopupList: function(id) {
+			$('#'+id).toggle();
 		},
 		acceptStateChange: function(prevision) {
 			Previsions.acceptStateChange(prevision).then(function() {
@@ -223,16 +260,7 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 		Previsions.editField(prevision, 'deletedProductionBy');
 	};
 
-	$scope.visibility = {
-		showColumn: function(column) {
-			// return false;
-			return $scope.columns[column];
-		},
 
-		refreshColumns() {
-			$scope.$broadcast('$$rebind::refreshColumns');
-		}
-	}
 
 	$scope.clearFilterOption = function() {
 		$scope.filter.invoice = null;
@@ -278,6 +306,28 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 		});
 	}
 
+	// get from cookies the last state of the columns visibility saved by the user and update the list
+	function loadColumnsSelectedState(columns) {
+
+		var state = $cookieStore.get('columnsState');
+
+		columns.map(function(c) {
+			var res = state ? state.filter(function(s) {
+				return s.column == c.column || s.column == c.key;
+			}) : [];
+			c.selected = res.length > 0 ? res[0].selected : true;
+			if (!c.selected) {
+				$scope.visibility.toggleColumn(c.column ? c.column : c.key);
+			}
+		});
+	}
+
+	$scope.storeColumnsSelectedState = function(columns) {
+		$cookieStore.put('columnsState', columns.map(function(c) {
+			return {column: c.column ? c.column : c.key, selected: c.selected};
+		}));
+	};
+
 	// do a search for production list without limit and group the results by key to set the list of options in each case
 	function loadFilterOptions() {
 
@@ -287,7 +337,7 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 			console.log('All results in ' + (Date.now() - start) + ' ms.'); //eslint-disable-line
 
 			$scope.allProduction = result.data;
-			
+
 			result.data.map(function(row) {
 				var key;
 				for (key in row) {

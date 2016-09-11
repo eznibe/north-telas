@@ -79,7 +79,8 @@ table#production th > div.editable {
 	z-index: 100;
 }
 
-#weeks {
+#weeks,
+#columnsSelector {
 	border: 0px solid rgb(204, 204, 204);
 	display: none;
 	position: fixed;
@@ -90,13 +91,15 @@ table#production th > div.editable {
 }
 
 #percentages tr,
-#weeks tr {
+#weeks tr,
+#columnsSelector tr {
 	background-color: #f2dbc4;
 	font-size: 12px;
 }
 
 #percentages tr.title,
-#weeks tr.title {
+#weeks tr.title,
+#columnsSelector tr.title {
 	background-color: #edccaa;
 }
 

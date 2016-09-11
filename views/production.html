@@ -1,33 +1,5 @@
 <div class="nopaddingright jumbotron clearfix">
-	<div class="row">
-		<h1 class="col-md-11"><span translate>Production</span></h1>
-		<div class="col-md-1 text-right" style="display:none;">
-			<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span></a>
-			<ul class="columns-settings-dropdown dropdown-menu form-horizontal" role="menu">
-				<li class="row" ng-click="::$event.stopPropagation(); visibility.refreshColumns();"><label class="col-xs-10" translate>Seller col</label><input class="col-xs-2" type="checkbox" ng-model="columns.seller"/></li>
-				<li class="row" ng-click="::$event.stopPropagation(); visibility.refreshColumns();"><label class="col-xs-10" translate>Week col</label><input class="col-xs-2" type="checkbox" ng-model="columns.week"/></li>
-				<li class="row" ng-click="::$event.stopPropagation(); visibility.refreshColumns();"><label class="col-xs-10" translate>Priority col</label><input class="col-xs-2" type="checkbox" ng-model="columns.priority"/></li>
-				<li class="row" ng-click="::$event.stopPropagation(); visibility.refreshColumns();"><label class="col-xs-10" translate>Dispatch</label><input class="col-xs-2" type="checkbox" ng-model="columns.dispatch"/></li>
-				<li class="row" ng-click="::$event.stopPropagation(); visibility.refreshColumns();"><label class="col-xs-10" translate>Order</label><input class="col-xs-2" type="checkbox" ng-model="columns.order"/></li>
-				<li class="row" ng-click="::$event.stopPropagation(); visibility.refreshColumns();"><label class="col-xs-10" translate>Client</label><input class="col-xs-2" type="checkbox" ng-model="columns.client"/></li>
-				<li class="row" ng-click="::$event.stopPropagation(); visibility.refreshColumns();"><label class="col-xs-10" translate>Boat</label><input class="col-xs-2" type="checkbox" ng-model="columns.boat"/></li>
-				<li class="row" ng-click="::$event.stopPropagation(); visibility.refreshColumns();"><label class="col-xs-10" translate>Sail</label><input class="col-xs-2" type="checkbox" ng-model="columns.sail"/></li>
-				<li class="row" ng-click="::$event.stopPropagation(); visibility.refreshColumns();"><label class="col-xs-10" translate>Line</label><input class="col-xs-2" type="checkbox" ng-model="columns.line"/></li>
-				<li class="row" ng-click="::$event.stopPropagation(); visibility.refreshColumns();"><label class="col-xs-10" translate>%</label><input class="col-xs-2" type="checkbox" ng-model="columns.percentage"/></li>
-				<li class="row" ng-click="::$event.stopPropagation(); visibility.refreshColumns();"><label class="col-xs-10" translate>Advance</label><input class="col-xs-2" type="checkbox" ng-model="columns.advance"/></li>
-				<li class="row" ng-click="::$event.stopPropagation(); visibility.refreshColumns();"><label class="col-xs-10" translate>Delivery date min</label><input class="col-xs-2" type="checkbox" ng-model="columns.deliveryDate"/></li>
-				<li class="row" ng-click="::$event.stopPropagation(); visibility.refreshColumns();"><label class="col-xs-10" translate>Tentative date min</label><input class="col-xs-2" type="checkbox" ng-model="columns.tentativeDate"/></li>
-				<li class="row" ng-click="::$event.stopPropagation(); visibility.refreshColumns();"><label class="col-xs-10" translate>Production date min</label><input class="col-xs-2" type="checkbox" ng-model="columns.productionDate"/></li>
-				<li class="row" ng-click="::$event.stopPropagation(); visibility.refreshColumns();"><label class="col-xs-10" translate>Info date min</label><input class="col-xs-2" type="checkbox" ng-model="columns.infoDate"/></li>
-				<li class="row" ng-click="::$event.stopPropagation(); visibility.refreshColumns();"><label class="col-xs-10" translate>Advance date min</label><input class="col-xs-2" type="checkbox" ng-model="columns.advanceDate"/></li>
-				<li class="row" ng-click="::$event.stopPropagation(); visibility.refreshColumns();"><label class="col-xs-10" translate>Cloths</label><input class="col-xs-2" type="checkbox" ng-model="columns.cloths"/></li>
-				<li class="row" ng-click="::$event.stopPropagation(); visibility.refreshColumns();"><label class="col-xs-10" translate>State col</label><input class="col-xs-2" type="checkbox" ng-model="columns.state"/></li>
-				<li class="row" ng-click="::$event.stopPropagation(); visibility.refreshColumns();"><label class="col-xs-10" translate>Area</label><input class="col-xs-2" type="checkbox" ng-model="columns.area"/></li>
-				<li class="row" ng-click="::$event.stopPropagation(); visibility.refreshColumns();"><label class="col-xs-10" translate>Observations</label><input class="col-xs-2" type="checkbox" ng-model="columns.productionObservations"/></li>
-			</ul>
-		</div>
-	</div>
-
+	<h1><span translate>Production</span></h1>
 
 	<div class="row">
 		<div class="col-md-6 nopadding">
@@ -71,7 +43,7 @@
 		<div class="col-md-6 nopadding">
 			<label class="control-label col-xs-3" translate>Columns filter</label>
 			<div class="col-xs-4">
-				<span class="glyphicon glyphicon-cog control-label" ng-click="showProductionSummaryModal()" style="text-align:center; cursor:pointer;"></span>
+				<span class="glyphicon glyphicon-cog control-label" ng-click="::oneTimeBindings.togglePopupList('columnsSelector');" style="text-align:center; cursor:pointer;"></span>
 			</div>
 		</div>
 	</div>
@@ -106,91 +78,91 @@
 <table id="production" class="table table-bordered table-striped table-hover">
 	<thead>
 		<tr>
-			<th ng-show=":refreshColumns:visibility.showColumn('seller')"><div class="rotate"><span translate>Seller col</span></div></th>
-			<th ng-show=":refreshColumns:visibility.showColumn('week')"><div class="rotate"><span translate>Week col</span></div></th>
-			<th ng-show=":refreshColumns:visibility.showColumn('priority')" access-restricted="vendedor"><div class="rotate"><span translate>Priority col</span></div></th>
-			<th ng-show=":refreshColumns:visibility.showColumn('dispatch')"><div class="rotate"><span translate>Dispatch</span></div></th>
-			<th ng-show=":refreshColumns:visibility.showColumn('order')" translate>Order</th>
-			<th ng-show=":refreshColumns:visibility.showColumn('client')" translate>Client</th>
-			<th ng-show=":refreshColumns:visibility.showColumn('boat')" translate>Boat</th>
-			<th ng-show=":refreshColumns:visibility.showColumn('sail')" translate>Sail</th>
-			<th ng-show=":refreshColumns:visibility.showColumn('line')"><div class="rotate"><span translate>Line</span></div></th>
-			<th ng-show=":refreshColumns:visibility.showColumn('percentage')"><div><span translate>%</span></div></th>
-			<th ng-show=":refreshColumns:visibility.showColumn('advance')"><div class="rotate"><span translate>Advance</span></div></th>
-			<th ng-show=":refreshColumns:visibility.showColumn('deliveryDate')" translate style="min-width:95px;">Delivery date min</th>
-			<th ng-show=":refreshColumns:visibility.showColumn('tentativeDate')" translate style="min-width:95px;">Tentative date min</th>
-			<th ng-show=":refreshColumns:visibility.showColumn('productionDate')"  access-restricted="vendedor" translate style="min-width:95px;">Production date min</th>
-			<th ng-show=":refreshColumns:visibility.showColumn('infoDate')" translate style="min-width:95px;">Info date min</th>
-			<th ng-show=":refreshColumns:visibility.showColumn('advanceDate')" translate style="min-width:95px;">Advance date min</th>
-			<th ng-show=":refreshColumns:visibility.showColumn('cloths')" translate>Cloths</th>
-			<th ng-show=":refreshColumns:visibility.showColumn('state')" access-restricted="vendedor" translate>State col</th>
-			<th ng-show=":refreshColumns:visibility.showColumn('area')" access-restricted="vendedor" translate>Area</th>
-			<th ng-show=":refreshColumns:visibility.showColumn('productionObservations')" access-restricted="vendedor" translate>Observations</th>
+			<th class="seller"><div class="rotate"><span translate>Seller col</span></div></th>
+			<th class="week"><div class="rotate"><span translate>Week col</span></div></th>
+			<th class="priority" access-restricted="vendedor"><div class="rotate"><span translate>Priority col</span></div></th>
+			<th class="dispatch"><div class="rotate"><span translate>Dispatch</span></div></th>
+			<th class="orderNumber" translate>Order</th>
+			<th class="client" translate>Client</th>
+			<th class="boat" translate>Boat</th>
+			<th class="sailName" translate>Sail</th>
+			<th class="line"><div class="rotate"><span translate>Line</span></div></th>
+			<th class="percentage"><div><span translate>%</span></div></th>
+			<th class="advance"><div class="rotate"><span translate>Advance</span></div></th>
+			<th class="deliveryDate" translate style="min-width:95px;">Delivery date min</th>
+			<th class="tentativeDate" translate style="min-width:95px;">Tentative date min</th>
+			<th class="productionDate" access-restricted="vendedor" translate style="min-width:95px;">Production date min</th>
+			<th class="infoDate" translate style="min-width:95px;">Info date min</th>
+			<th class="advanceDate" translate style="min-width:95px;">Advance date min</th>
+			<th class="cloths" translate>Cloths</th>
+			<th class="state" access-restricted="vendedor" translate>State col</th>
+			<th class="area" access-restricted="vendedor" translate>Area</th>
+			<th class="productionObservations" access-restricted="vendedor" translate>Observations</th>
 			<th access-allowed="admin,produccion,velas-od" access-restricted="vendedor" translate>Archive</th>
 		</tr>
 	</thead>
 	<tbody>
 		<!-- <tr ng-repeat="p in previsions | orderBy:'week' | filter:searchBox" my-repeat-directive="start"> -->
 		<tr ng-repeat="p in previsions track by p.id" my-repeat-directive="start" ng-style="::{'background-color': weekBackgroundColor(p)}">
-			<td ng-show=":refreshColumns:visibility.showColumn('seller')">
+			<td class="seller" ng-show="::visibility.selected('seller')">
 				<!-- {{:refreshColumsValue:getValue(p, 'seller')}} -->
 				<span ng-bind=":refreshColumnsValue:getValue(p, 'seller')"></span>
 				<!-- <div class="popover-wrapper">
 			    <a href="#" editable-text="p.seller">{{p.seller || '' }}</a>
 			  </div> -->
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('week')" ng-mouseover="::oneTimeBindings.showPopupList('weeks');" ng-mouseleave="::oneTimeBindings.hidePopupList('weeks');">
+			<td class="week" ng-show="::visibility.selected('week')" ng-mouseover="::oneTimeBindings.showPopupList('weeks');" ng-mouseleave="::oneTimeBindings.hidePopupList('weeks');">
 				<!-- {{:refreshColumnsValue:getValue(p, 'week')}} -->
 				<editable-production-input entity="::p" field="'week'" callback="::changedPrevision.numericField" editable-by-role="'admin,produccion'" width="20" style="display:inline-block;"></editable-production-input>
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('priority')" access-restricted="vendedor">
+			<td class="priority" ng-show="::visibility.selected('priority')" access-restricted="vendedor">
 				{{:refreshColumnsValue:getValue(p, 'priority')}}
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('dispatch')">
+			<td class="dispatch" ng-show="::visibility.selected('dispatch')">
 				<!-- #{{:refreshColumnsValue:getValue(p, 'dispatch')}} -->
 				<a href="javascript:void(0);" ng-click="showDispatchModal({id: p.dispatchId})">{{:refreshColumnsValue:(p.dispatch ? '#' + p.dispatch : '')}}</a>
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('order')" nowrap>
+			<td class="orderNumber" ng-show="::visibility.selected('orderNumber')" nowrap>
 				<a href="javascript:void(0);" ng-click="showPrevisionModal(p)" access-restricted="vendedor">{{:refreshColumnsValue:p.orderNumber}}</a>
 				<span access-allowed="vendedor">{{:refreshColumnsValue:p.orderNumber}}</span>
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('client')" nowrap>
+			<td class="client" ng-show="::visibility.selected('client')" nowrap>
 				{{:refreshColumnsValue:getValue(p, 'client')}}
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('boat')" nowrap>
+			<td class="boat" ng-show="::visibility.selected('boat')" nowrap>
 				{{:refreshColumnsValue:getValue(p, 'boat')}}
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('sail')" nowrap>
+			<td class="sailName" ng-show="::visibility.selected('sailName')" nowrap>
 				{{:refreshColumnsValue:getValue(p, 'sailName')}}
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('line')">
+			<td class="line" ng-show="::visibility.selected('line')">
 				{{:refreshColumnsValue:getValue(p, 'line')}}
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('percentage')" style="min-width:30px;" ng-mouseover="::oneTimeBindings.showPopupList('percentages');" ng-mouseleave="::oneTimeBindings.hidePopupList('percentages');">
+			<td class="percentage" ng-show="::visibility.selected('percentage')" style="min-width:30px;" ng-mouseover="::oneTimeBindings.showPopupList('percentages');" ng-mouseleave="::oneTimeBindings.hidePopupList('percentages');">
 				<editable-production-input entity="::p" field="'percentage'" callback="::changedPrevision.numericField" editable-by-role="'admin,produccion,velas-od'" width="20" style="display:inline-block;"></editable-production-input>
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('advance')">
+			<td class="advance" ng-show="::visibility.selected('advance')">
 				{{:refreshColumnsValue:getValue(p, 'advance')}}
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('deliveryDate')" class="column-date" nowrap>
+			<td class="deliveryDate" ng-show="::visibility.selected('deliveryDate')" class="column-date" nowrap>
 				<editable-date entity="::p" field="deliveryDate" callback="::updateDate" editable-by-role="'admin,produccion'" style="display:inline-block;" required="true"></editable-date>
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('tentativeDate')" class="column-date" nowrap>
+			<td class="tentativeDate" ng-show="::visibility.selected('tentativeDate')" class="column-date" nowrap>
 				<editable-date entity="::p" field="tentativeDate" callback="::updateDate" editable-by-role="'admin,produccion'" style="display:inline-block;"></editable-date>
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('productionDate')" class="column-date" nowrap access-restricted="vendedor">
+			<td class="productionDate" ng-show="::visibility.selected('productionDate')" class="column-date" nowrap access-restricted="vendedor">
 				<editable-date entity="::p" field="productionDate" callback="::updateDate" editable-by-role="'admin,produccion'" style="display:inline-block;"></editable-date>
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('infoDate')" class="column-date" nowrap>
+			<td class="infoDate" ng-show="::visibility.selected('infoDate')" class="column-date" nowrap>
 				<editable-date entity="::p" field="infoDate" callback="::updateDate" editable-by-role="'admin,produccion'" style="display:inline-block;"></editable-date>
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('advanceDate')" class="column-date" nowrap>
+			<td class="advanceDate" ng-show="::visibility.selected('advanceDate')" class="column-date" nowrap>
 				<editable-date entity="::p" field="advanceDate" callback="::updateDate" editable-by-role="'admin,produccion'" style="display:inline-block;"></editable-date>
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('cloths')">
+			<td class="cloths" ng-show="::visibility.selected('cloths')">
 				<prevision-cloths prevision="p" style="display:inline-block;"></prevision-cloths>
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('state')" access-restricted="vendedor">
+			<td class="state" ng-show="::visibility.selected('state')" access-restricted="vendedor">
 				<!-- {{:refreshColumnsValue:getValue(p, 'state')}} -->
 				<span style="color:black; float:right; padding:2px;" ng-style="{'background-color': (p.stateAccepted=='0' ? 'orange' : '')}">
 					{{:refreshColumnsValue:getValue(p, 'state')}}
@@ -199,10 +171,10 @@
 					</a>
 				</span>
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('area')" access-restricted="vendedor">
+			<td class="area" ng-show="::visibility.selected('area')" access-restricted="vendedor">
 				{{:refreshColumnsValue:getValue(p, 'area')}}
 			</td>
-			<td ng-show=":refreshColumns:visibility.showColumn('productionObservations')" style="min-width:110px;" access-restricted="vendedor">
+			<td class="productionObservations" ng-show="::visibility.selected('productionObservations')" style="min-width:110px;" access-restricted="vendedor">
 				<editable-production-textarea entity="::p" field="'productionObservations'" callback="::changedPrevision.field" editable-by-role="'admin,produccion'" width="82" style="display:inline-block;"></editable-production-textarea>
 			</td>
 			<td style="width:80px; text-align:center;" access-allowed="admin,produccion,velas-od">
@@ -231,6 +203,10 @@
 
 <div>
 	<production-percentages/>
+</div>
+
+<div>
+	<production-columns-selector/>
 </div>
 
 <prevision-modal/>
