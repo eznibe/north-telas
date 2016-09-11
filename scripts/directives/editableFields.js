@@ -238,7 +238,7 @@ angular.module('vsko.stock')
 	}
 )
 
-.directive('editableInput', function($modal, $rootScope) {
+.directive('editableInput', function($modal, $rootScope, $timeout) {
 
 	return {
         restrict: 'E',
@@ -259,8 +259,11 @@ angular.module('vsko.stock')
           scope.readonly = scope.editableByRole && scope.editableByRole.split(',').lastIndexOf($rootScope.user.role) == -1;
 
           scope.$watch('entity.id', function(value){
-            if(scope.tooltipText && scope.entity.id)
-              $('#entityDisplay-'+scope.entity.id+'-'+scope.field).tooltip({title: scope.tooltipText });
+            if(scope.tooltipText && scope.entity.id) {
+              $timeout(function() {
+          			$('#entityDisplay-'+scope.entity.id+'-'+scope.field).tooltip({title: scope.tooltipText });
+          		}, 500);
+            }
           });
 
 
@@ -285,7 +288,7 @@ angular.module('vsko.stock')
 	      				  });
 
                   if(scope.tooltipText)
-                    $('#value-'+scope.entity.id+'-'+scope.field).tooltip({title: scope.tooltipText });
+                    $('#entityDisplay-'+scope.entity.id+'-'+scope.field).tooltip({title: scope.tooltipText });
       		  	}
       		  	else {
       		  		$('#entityDisplay-'+entity.id+'-'+scope.field).fadeOut('fast', function() {
