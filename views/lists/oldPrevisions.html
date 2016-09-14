@@ -15,7 +15,7 @@
 <table id="groups" class="table table-bordered table-striped table-hover">
 	<thead>
 		<tr>
-			<th translate>Date</th>	
+			<th translate>Date</th>
 			<th translate>Sail</th>
 			<th translate>Boat</th>
 			<th translate>Client</th>
@@ -27,12 +27,12 @@
 	</thead>
 	<tbody>
 		<tr ng-repeat="p in plotters | filter:searchBox">
-			<td>
+			<td nowrap>
 				{{p.formattedDate}}
 			</td>
 			<td>
 				{{p.sailName}}
-			</td>	
+			</td>
 			<td>
 				{{p.boat}}
 			</td>
@@ -54,4 +54,3 @@
 		</tr>
 	</tbody>
 </table>
-
