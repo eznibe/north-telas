@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope', '$translate', '$timeout', '$cookieStore', 'Production', 'Previsions', 'Users', 'Rules', function ($scope, $rootScope, $translate, $timeout, $cookieStore, Production, Previsions, Users, Rules) {
+angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope', '$translate', '$timeout', '$cookieStore', 'Production', 'Previsions', 'Users', 'Rules', 'Files', function ($scope, $rootScope, $translate, $timeout, $cookieStore, Production, Previsions, Users, Rules, Files) {
 
 	$scope.start = Date.now();
 
@@ -12,6 +12,9 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 		}
 	}
 	$rootScope.searchBoxChangedObservers.push($scope.refreshBySearchBox);
+
+	// column filters selections are stored here as eg. selectionObject.week
+	$scope.selectionObject = {};
 
 	$scope.rows = 50;
 	var firstLoad = true;
@@ -90,6 +93,7 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 
 	$scope.filterOptions.orderTypes = [{name: 'Order ascending', key:'order.ascending'},
   													 				 {name: 'Order descending', key:'order.descending'}];
+  $scope.filterOptions.orderMode = 'order.ascending';
 	$scope.filterOptions.selectedOrderBy = $scope.filterOptions.columns[1];
   $scope.filterOptions.selectedOrderType = $scope.filterOptions.orderTypes[0];
 
@@ -153,9 +157,17 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 		// $scope.filter.type = $scope.filterOptions.selectedFilter ? $scope.filterOptions.selectedFilter.type : null;
 		// $scope.filter.value = $scope.filterOptions.selectedFilterOption ? $scope.filterOptions.selectedFilterOption.value : null;
 
-		$scope.filter.orderByKey = $scope.filterOptions.selectedOrderBy ? $scope.filterOptions.selectedOrderBy.key : null;
-		$scope.filter.orderByKeyType = $scope.filterOptions.selectedOrderBy ? $scope.filterOptions.selectedOrderBy.type : null;
-		$scope.filter.orderType = $scope.filterOptions.selectedOrderType.key;
+		// $scope.filter.orderByKey = $scope.filterOptions.selectedOrderBy ? $scope.filterOptions.selectedOrderBy.key : null;
+		// $scope.filter.orderByKeyType = $scope.filterOptions.selectedOrderBy ? $scope.filterOptions.selectedOrderBy.key : null;
+		// $scope.filter.orderType = $scope.filterOptions.selectedOrderType.key;
+
+		$scope.filter.orderList = [];
+		if ($scope.filterOptions.selectedOrderBy) {
+			$scope.filter.orderList.push({key: $scope.filterOptions.selectedOrderBy.key, type: $scope.filterOptions.selectedOrderBy.type, mode: $scope.filterOptions.orderMode});
+		}
+		if ($scope.filterOptions.selectedOrderBy2) {
+			$scope.filter.orderList.push({key: $scope.filterOptions.selectedOrderBy2.key, type: $scope.filterOptions.selectedOrderBy2.type, mode: $scope.filterOptions.orderMode});
+		}
 
 		$scope.filter.searchBox = $scope.searchBox;
 		if (!ignorePagination) {
@@ -202,40 +214,64 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 		});
 	};
 
-	$scope.searchByFilter = function(selection, column) {
+	$scope.searchByFilter = function(column) {
 
 		// console.log('Filter selected', selection);
 
 		// eg. [{key:, type:, value:}, ..]
-		$scope.filter.list = generateFiltersList(selection, column);
+		$scope.filter.list = generateFiltersList($scope.selectionObject[column], column);
 
 		console.log('Generated filter list', $scope.filter.list);
 
 		$scope.search(1);
 	};
 
+	$scope.logSelection = function(column) {
+		console.log($scope.selectionObject[column]);
+	}
+
+	$scope.headerBackgroundColor = function(selection) {
+		return selection && selection.length  ? '#ff6666' : 'none';
+	}
+
 	$scope.clearFilters = function(selection) {
 
 		$scope.filter.list = [];
 
+		$scope.selectionObject = {};
+
 		$scope.search(1);
 	};
 
-	function generateFiltersList(selection, column) {
+	// generate the list of selected filters to be used as payload in the request to the search api
+	function generateFiltersList(selections, column) {
 
 		var filters = $scope.filter.list ? $scope.filter.list : [];
 
-		// always reset current filter for column
+		// always reset current filter for column first
 		filters = filters.filter(function(item) {
 			return (item.key != column && item.column != column);// || (selection && item.key != selection.column && item.column != selection.column);
 		});
 
-		if (selection) {
+		if (selections && selections.length) {
 			// selected column filter -> add to the filter list
 			$scope.filterOptions.columns.map(function(col) {
-				if (selection.value != '-' && (col.key == selection.column || col.column == selection.column)) {
-					filters.push({key: col.key, type: col.type, column: selection.column, value: selection.value});
-				}
+				// selection multiple allowed -> it's an array
+				selections.map(function(selection) {
+
+					if (selection.value != '-' && (col.key == selection.column || col.column == selection.column)) {
+
+						var filterWithSameKey = filters.filter(function(item) {
+							return item.key == col.key;
+						});
+
+						if (filterWithSameKey.length) {
+							filterWithSameKey[0].values = filterWithSameKey[0].values.concat(selection.value);
+						} else {
+							filters.push({key: col.key, type: col.type, column: selection.column, values: [selection.value]});
+						}
+					}
+				});
 			});
 		}
 
@@ -312,12 +348,13 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 
 
 	$scope.clearFilterOption = function() {
-		$scope.filter.invoice = null;
-		$scope.filter.selectedCloth = null;
-		$scope.filter.selectedUser = null;
-		$scope.filter.selectedProvider = null;
-		$scope.filter.selectedGroup = null;
 	};
+
+	$scope.changeSortOrder = function() {
+
+		$scope.filterOptions.orderMode = $scope.filterOptions.orderMode == 'order.ascending' ? 'order.descending' : 'order.ascending';
+		$scope.search(1);
+	}
 
 	$scope.updateFilterOptions = function() {
 		$scope.clearFilterOption();
@@ -386,6 +423,11 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 			console.log('All results in ' + (Date.now() - start) + ' ms.'); //eslint-disable-line
 
 			$scope.allProduction = result.data;
+
+			if (!result.data[0].driveIdProduction) {
+				// doesnt work, it get a api rate limit
+				// Files.batchCreateInDrive(result.data);
+			}
 
 			result.data.map(function(row) {
 				var key;

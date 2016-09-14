@@ -83,6 +83,10 @@
   "Week small": "SEM",
   "Column": "Columna",
   "Clear filters": "Limpiar filtros",
+  "Clear": "Limpiar",
+  "Filter": "Filtro",
+  "": "",
+  "": "",
   "": "",
   "": "",
   "Month": {
@@ -225,6 +229,7 @@
   "Sort": "Ordenar",
   "Order number": "Número de orden",
   "Order by": "Ordenar por",
+  "Then order by": "Luego por",
   "Name": "Nombre",
   "Value": "Valor",
   "New sail": "Nueva vela",

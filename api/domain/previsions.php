@@ -472,14 +472,35 @@ function createFilterCondition($filters) {
 
 	foreach ($filters->list as $selection) {
 
-		if (isset($selection->type) && isset($selection->value) && $selection->type == "str") {
-			$filter .= isSpecialFilterCase($selection->key)
-																		? handleSpecialFilterCase($selection->key, $selection->value)
-																		: " AND " . $selection->key . " like '%". $selection->value ."%'";
-		} else if (isset($selection->type) && isset($selection->value) && $selection->type == "nr") {
-			$filter .= " AND ".$selection->key." = ". $selection->value;
-		} else if (isset($selection->type) && isset($selection->value) && $selection->type == "date") {
-			$filter .= " AND STR_TO_DATE('".$selection->value."', '%d-%m-%Y') = ". $selection->key;
+		if (isset($selection->type) && isset($selection->values) && $selection->type == "str") {
+			if (isSpecialFilterCase($selection->key)) {
+				$filter .= handleSpecialFilterCase($selection->key, $selection->values);
+			} else {
+				$filter .= " AND ( ";
+				foreach ($selection->values as $value) {
+					$filter .= $selection->key . " like '%". $value ."%'";
+					$filter .= " OR ";
+				}
+				$filter = substr($filter, 0, -3) . " ) ";
+			}
+
+		} else if (isset($selection->type) && isset($selection->values) && $selection->type == "nr") {
+			// $filter .= " AND ".$selection->key." = ". $selection->value;
+			$filter .= " AND ( ";
+			foreach ($selection->values as $value) {
+				$filter .= $selection->key . " = " . $value;
+				$filter .= " OR ";
+			}
+			$filter = substr($filter, 0, -3) . " ) ";
+
+		} else if (isset($selection->type) && isset($selection->values) && $selection->type == "date") {
+			// $filter .= " AND STR_TO_DATE('".$selection->value."', '%d-%m-%Y') = ". $selection->key;
+			$filter .= " AND ( ";
+			foreach ($selection->values as $value) {
+				$filter .= " STR_TO_DATE('".$value."', '%d-%m-%Y') = ". $selection->key;
+				$filter .= " OR ";
+			}
+			$filter = substr($filter, 0, -3) . " ) ";
 		}
 
 		if (isset($selection->searchBox)) {
@@ -494,11 +515,14 @@ function createOrderByCondition($filters) {
 
 	$orderBy = "";
 
-	if (isset($filters->orderByKey) && ($filters->orderByKeyType == "date" || $filters->orderByKeyType == "nr")) {
-		// note: use '-' to move null date values to the end
-		$orderBy = ($filters->orderType == "order.ascending" ? '-' : '') . $filters->orderByKey . " desc, ";
-	} else if (isset($filters->orderByKey) && $filters->orderByKeyType == "str") {
-		$orderBy = "ISNULL(".$filters->orderByKey."), " . $filters->orderByKey . ($filters->orderType == "order.ascending" ? ' asc' : ' desc') . ", ";
+	foreach ($filters->orderList as $selection) {
+
+		if (isset($selection->key) && ($selection->type == "date" || $selection->type == "nr")) {
+			// note: use '-' to move null date values to the end
+			$orderBy .= ($selection->mode == "order.ascending" ? '-' : '') . $selection->key . " desc, ";
+		} else if (isset($selection->key) && $selection->type == "str") {
+			$orderBy .= "ISNULL(".$selection->key."), " . $selection->key . ($selection->mode == "order.ascending" ? ' asc' : ' desc') . ", ";
+		}
 	}
 
 	return $orderBy;
@@ -508,10 +532,17 @@ function isSpecialFilterCase($key) {
 	return $key == 'sailName';
 }
 
-function handleSpecialFilterCase($key, $value) {
+function handleSpecialFilterCase($key, $values) {
 
 	if ($key == "sailName") {
-		return " AND (p.sailDescription like '%". $value ."%' OR p.sailOneDesign like '%". $value ."%' OR s.description like '%". $value ."%')";
+		// return " AND (p.sailDescription like '%". $value ."%' OR p.sailOneDesign like '%". $value ."%' OR s.description like '%". $value ."%')";
+		$filter = " AND ( ";
+		foreach ($values as $value) {
+			$filter .= "(p.sailDescription like '%". $value ."%' OR p.sailOneDesign like '%". $value ."%' OR s.description like '%". $value ."%')";
+			$filter .= " OR ";
+		}
+		$filter = substr($filter, 0, -3) . " ) ";
+		return $filter;
 	}
 
 	return "";

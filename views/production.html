@@ -19,17 +19,26 @@
 		</div> -->
 		<div class="col-md-6 nopadding">
 			<label class="control-label col-xs-3" translate>Order by</label>
-			<div class="col-xs-4">
-				<select name="dd_ty" ng-model="filterOptions.selectedOrderBy" ng-options="sc as sc.name for sc in filterOptions.columns" class="form-control small" ng-change="clearFilterOption();">
+			<div class="col-xs-3">
+				<select name="dd_ty" ng-model="filterOptions.selectedOrderBy" ng-options="sc as sc.name for sc in filterOptions.columns" class="form-control small">
 					<option value="">-- choose one --</option>
 				</select>
 			</div>
 
-			<label class="control-label col-xs-1"></label>
-			<div class="col-xs-4">
-				<select name="dd_ty" ng-model="filterOptions.selectedOrderType" ng-options="sc as sc.name for sc in filterOptions.orderTypes" class="form-control small" ng-change="clearFilterOption();">
+			<label class="control-label col-xs-2" translate>Then order by</label>
+			<div class="col-xs-3">
+				<select name="dd_ty" ng-model="filterOptions.selectedOrderBy2" ng-options="sc as sc.name for sc in filterOptions.columns" class="form-control small">
+					<option value="">-- choose one --</option>
 				</select>
 			</div>
+
+			<div class="col-xs-1">
+				<span class="glyphicon glyphicon-sort control-label" ng-click="::changeSortOrder();" style="text-align:center; cursor:pointer;"></span>
+			</div>
+			<!-- <div class="col-xs-4">
+				<select name="dd_ty" ng-model="filterOptions.selectedOrderType" ng-options="sc as sc.name for sc in filterOptions.orderTypes" class="form-control small" ng-change="clearFilterOption();">
+				</select>
+			</div> -->
 		</div>
 
 		<div class="col-md-6 nopadding">
@@ -84,8 +93,7 @@
 	</div>
 </div>
 
-<!-- Consumos -->
-<!-- <table id="production" class="table table-bordered table-striped table-hover" fixed-header table-height="500px"> -->
+
 <table id="production" class="table table-bordered table-striped table-hover">
 	<thead>
 		<tr>
@@ -112,25 +120,26 @@
 			<th access-allowed="admin,produccion,velas-od" access-restricted="vendedor" translate>Archive</th>
 		</tr>
 		<tr class="production-filter">
-			<th class="seller"><div><select ng-model="sc.selectedFilterOption1" ng-options="sc as sc.value for sc in ::getOptions('seller')" ng-change="searchByFilter(sc.selectedFilterOption1, 'seller')"><option value="">-</option></select></div></th>
-			<th class="week"><div><select ng-model="sc.selectedFilterOption2" ng-options="sc as sc.value for sc in ::getOptions('week')" ng-change="searchByFilter(sc.selectedFilterOption2, 'week')"><option value="">-</option></select></div></th>
-			<th class="priority" access-restricted="vendedor"><div><select ng-model="sc.selectedFilterOption3" ng-options="sc as sc.value for sc in ::getOptions('priority')" ng-change="searchByFilter(sc.selectedFilterOption3, 'priority')"><option value="">-</option></select></div></th>
-			<th class="dispatch"><div><select ng-model="sc.selectedFilterOption4" ng-options="sc as sc.value for sc in ::getOptions('dispatch')" ng-change="searchByFilter(sc.selectedFilterOption4, 'dispatch')"><option value="">-</option></select></div></th>
-			<th class="orderNumber"><div><select ng-model="sc.selectedFilterOption5" ng-options="sc as sc.value for sc in ::getOptions('orderNumber')" ng-change="searchByFilter(sc.selectedFilterOption5, 'orderNumber')"><option value="">-</option></select></div></th>
-			<th class="client"><div><select ng-model="sc.selectedFilterOption6" ng-options="sc as sc.value for sc in ::getOptions('client')" ng-change="searchByFilter(sc.selectedFilterOption6, 'client')"><option value="">-</option></select></div></th>
-			<th class="boat"><div><select ng-model="sc.selectedFilterOption7" ng-options="sc as sc.value for sc in ::getOptions('boat')" ng-change="searchByFilter(sc.selectedFilterOption7, 'boat')"><option value="">-</option></select></div></th>
-			<th class="sailName"><div><select ng-model="sc.selectedFilterOption8" ng-options="sc as sc.value for sc in ::getOptions('sailName')" ng-change="searchByFilter(sc.selectedFilterOption8, 'sailName')"><option value="">-</option></select></div></th>
-			<th class="line"><div><select ng-model="sc.selectedFilterOption9" ng-options="sc as sc.value for sc in ::getOptions('line')" ng-change="searchByFilter(sc.selectedFilterOption9, 'line')"><option value="">-</option></select></div></th>
-			<th class="percentage"><div><select ng-model="sc.selectedFilterOption10" ng-options="sc as sc.value for sc in ::getOptions('percentage')" ng-change="searchByFilter(sc.selectedFilterOption10, 'percentage')"><option value="">-</option></select></div></th>
-			<th class="advance"><div><select ng-model="sc.selectedFilterOption11" ng-options="sc as sc.value for sc in ::getOptions('advance')" ng-change="searchByFilter(sc.selectedFilterOption11, 'advance')"><option value="">-</option></select></div></th>
-			<th class="deliveryDate" style="min-width:95px;"><div><select ng-model="sc.selectedFilterOption12" ng-options="sc as sc.value for sc in ::getOptions('deliveryDate')" ng-change="searchByFilter(sc.selectedFilterOption12, 'deliveryDate')"><option value="">-</option></select></div></th>
-			<th class="tentativeDate" style="min-width:95px;"><div><select ng-model="sc.selectedFilterOption13" ng-options="sc as sc.value for sc in ::getOptions('tentativeDate')" ng-change="searchByFilter(sc.selectedFilterOption13, 'tentativeDate')"><option value="">-</option></select></div></th>
-			<th class="productionDate" access-restricted="vendedor" style="min-width:95px;"><div><select ng-model="sc.selectedFilterOption14" ng-options="sc as sc.value for sc in ::getOptions('productionDate')" ng-change="searchByFilter(sc.selectedFilterOption14, 'productionDate')"><option value="">-</option></select></div></th>
-			<th class="infoDate" style="min-width:95px;"><div><select ng-model="sc.selectedFilterOption15" ng-options="sc as sc.value for sc in ::getOptions('infoDate')" ng-change="searchByFilter(sc.selectedFilterOption15, 'infoDate')"><option value="">-</option></select></div></th>
-			<th class="advanceDate" style="min-width:95px;"><div><select ng-model="sc.selectedFilterOption16" ng-options="sc as sc.value for sc in ::getOptions('advanceDate')" ng-change="searchByFilter(sc.selectedFilterOption16, 'advanceDate')"><option value="">-</option></select></div></th>
+			<!-- <th class="seller" ng-style="{'background-color': headerBackgroundColor(selectionObject.seller)}"><div><select ng-model="selectionObject.seller" ng-options="sc as sc.value for sc in ::getOptions('seller')" ng-change="logSelection('seller')"><option value="">-</option></select></div></th> -->
+			<th class="seller" ng-style="{'background-color': headerBackgroundColor(selectionObject.seller)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('seller');" style="text-align:center; cursor:pointer;"></span></div></th>
+			<th class="week" ng-style="{'background-color': headerBackgroundColor(selectionObject.week)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('week');" style="text-align:center; cursor:pointer;"></span></div></th>
+			<th class="priority" ng-style="{'background-color': headerBackgroundColor(selectionObject.priority)}" access-restricted="vendedor"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('priority');" style="text-align:center; cursor:pointer;"></span></div></th>
+			<th class="dispatch" ng-style="{'background-color': headerBackgroundColor(selectionObject.dispatch)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('dispatch');" style="text-align:center; cursor:pointer;"></div></th>
+			<th class="orderNumber" ng-style="{'background-color': headerBackgroundColor(selectionObject.orderNumber)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('orderNumber');" style="text-align:center; cursor:pointer;"></div></th>
+			<th class="client" ng-style="{'background-color': headerBackgroundColor(selectionObject.client)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('client');" style="text-align:center; cursor:pointer;"></span></div></th>
+			<th class="boat" ng-style="{'background-color': headerBackgroundColor(selectionObject.boat)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('boat');" style="text-align:center; cursor:pointer;"></div></th>
+			<th class="sailName" ng-style="{'background-color': headerBackgroundColor(selectionObject.sailName)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('sailName');" style="text-align:center; cursor:pointer;"></div></th>
+			<th class="line" ng-style="{'background-color': headerBackgroundColor(selectionObject.line)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('line');" style="text-align:center; cursor:pointer;"></div></th>
+			<th class="percentage" ng-style="{'background-color': headerBackgroundColor(selectionObject.percentage)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('percentage');" style="text-align:center; cursor:pointer;"></div></th>
+			<th class="advance" ng-style="{'background-color': headerBackgroundColor(selectionObject.advance)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('advance');" style="text-align:center; cursor:pointer;"></div></th>
+			<th class="deliveryDate" ng-style="{'background-color': headerBackgroundColor(selectionObject.deliveryDate)}" style="min-width:95px;"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('deliveryDate');" style="text-align:center; cursor:pointer;"></span></div></th>
+			<th class="tentativeDate" ng-style="{'background-color': headerBackgroundColor(selectionObject.tentativeDate)}" style="min-width:95px;"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('tentativeDate');" style="text-align:center; cursor:pointer;"></div></th>
+			<th class="productionDate" ng-style="{'background-color': headerBackgroundColor(selectionObject.productionDate)}" access-restricted="vendedor" style="min-width:95px;"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('productionDate');" style="text-align:center; cursor:pointer;"></div></th>
+			<th class="infoDate" ng-style="{'background-color': headerBackgroundColor(selectionObject.infoDate)}" style="min-width:95px;"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('infoDate');" style="text-align:center; cursor:pointer;"></div></th>
+			<th class="advanceDate" ng-style="{'background-color': headerBackgroundColor(selectionObject.advanceDate)}" style="min-width:95px;"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('advanceDate');" style="text-align:center; cursor:pointer;"></div></th>
 			<th class="cloths"></th>
-			<th class="state" access-restricted="vendedor"><div><select ng-model="sc.selectedFilterOption17" ng-options="sc as sc.value for sc in ::getOptions('state')" ng-change="searchByFilter(sc.selectedFilterOption17, 'state')"><option value="">-</option></select></div></th>
-			<th class="area" access-restricted="vendedor"><div><select ng-model="sc.selectedFilterOption18" ng-options="sc as sc.value for sc in ::getOptions('area')" ng-change="searchByFilter(sc.selectedFilterOption18, 'area')"><option value="">-</option></select></div></th>
+			<th class="state" ng-style="{'background-color': headerBackgroundColor(selectionObject.state)}" access-restricted="vendedor"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('state');" style="text-align:center; cursor:pointer;"></div></th>
+			<th class="area" ng-style="{'background-color': headerBackgroundColor(selectionObject.area)}" access-restricted="vendedor"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('area');" style="text-align:center; cursor:pointer;"></div></th>
 			<th class="productionObservations" access-restricted="vendedor"></th>
 			<th class="production-filter" access-allowed="admin,produccion,velas-od" access-restricted="vendedor"></th>
 		</tr>
@@ -252,3 +261,5 @@
 <dispatch-modal/>
 
 <production-summary-modal/>
+
+<filter-selection-modal/>

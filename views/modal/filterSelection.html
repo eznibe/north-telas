@@ -1,0 +1,34 @@
+<div class="modal" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-sm" style="margin-top: 0px; width: 450px;">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<div class="edit_person">
+					<h2>
+						<span class="glyphicon glyphicon-file"></span>
+						<span translate>Filter</span>
+					</h2>
+				</div>
+				<a href="javascript:void(0)" class="btn btn-lg closebtn" ng-click="$hide()">
+					<span class="glyphicon glyphicon-remove"></span>
+				</a>
+			</div>
+
+			<div class="modal-body" style="text-align: center;">
+				<select multiple ng-model="selectionObject[column]" ng-options="sc as sc.value for sc in getOptionsModal(column)" ng-change="selectionChanged()" style="min-width: 100px;" size="10"><option value="">-</option></select>
+			</div>
+
+			<div class="modal-footer">
+				<a href="javascript:void(0);" class="btn btn-info floatleft" ng-click="clearOptions()">
+					<span class="glyphicon glyphicon-remove"></span>
+					{{'Clear' | translate}}
+				</a>
+
+				<a href="javascript:void(0);" ng-click="selectOptions()" class="btn btn-default floatright">
+					<span class="glyphicon glyphicon-ok"></span>
+					Ok
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
