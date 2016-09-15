@@ -75,6 +75,7 @@ function getPrevisions($clothId, $designed, $expand, $production, $historic, $se
 	while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
 
 		$query = "SELECT * FROM previsioncloth pc JOIN cloths c on c.id=pc.clothId WHERE pc.previsionId = '".$row['id']."'";
+
 		$subresult = mysql_query($query);
 
 		$subrows = array();
@@ -83,6 +84,8 @@ function getPrevisions($clothId, $designed, $expand, $production, $historic, $se
 		}
 
 		$row['cloths'] = $subrows;
+
+		// $row['subquery'] = $query;
 
 		$row['designed'] = $row['designed']==1 ? true : false;
 		$row['oneDesign'] = $row['oneDesign']==1 ? true : false;
@@ -466,13 +469,29 @@ function updateWeeksBySeason($weeks) {
 	return $obj;
 }
 
+function createPrevisionClothsFilterCondition($values) {
+
+	$filter = "";
+
+	if (isset($values) && count($values) > 0) {
+		$filter .= " AND ( ";
+		foreach ($values as $value) {
+			$filter .= " cloths like '%". $value ."%'";
+			$filter .= " OR ";
+		}
+		$filter = substr($filter, 0, -3) . " ) ";
+	}
+
+	return $filter;
+}
+
 function createFilterCondition($filters) {
 
 	$filter = "";
 
 	foreach ($filters->list as $selection) {
 
-		if (isset($selection->type) && isset($selection->values) && $selection->type == "str") {
+		if (isset($selection->type) && isset($selection->values) && ($selection->type == "str" || $selection->type == "arr")) {
 			if (isSpecialFilterCase($selection->key)) {
 				$filter .= handleSpecialFilterCase($selection->key, $selection->values);
 			} else {
@@ -505,7 +524,7 @@ function createFilterCondition($filters) {
 
 	}
 
-	if (isset($filters->searchBox)) {
+	if (isset($filters->searchBox) && $filters->searchBox != "") {
 		$filter .= " AND (p.orderNumber LIKE '%". $filters->searchBox . "%' OR p.client LIKE '%". $filters->searchBox . "%' OR p.boat LIKE '%". $filters->searchBox . "%')";
 	}
 
@@ -530,7 +549,7 @@ function createOrderByCondition($filters) {
 }
 
 function isSpecialFilterCase($key) {
-	return $key == 'sailName';
+	return $key == 'sailName' || $key == "cloths";
 }
 
 function handleSpecialFilterCase($key, $values) {
@@ -544,6 +563,28 @@ function handleSpecialFilterCase($key, $values) {
 		}
 		$filter = substr($filter, 0, -3) . " ) ";
 		return $filter;
+
+	} else if ($key = "cloths") {
+		$previsionClothsFilter = createPrevisionClothsFilterCondition($values);
+
+		if ($previsionClothsFilter != "") {
+
+			// $query = "SELECT p.id FROM previsions p join previsioncloth pc on pc.previsionId=p.id JOIN cloths c on c.id=pc.clothId
+			// 					WHERE 1=1 $previsionClothsFilter
+			// 					GROUP BY p.id";
+			//
+			// $filter .= " AND p.id in ( ";
+			//
+			// $result = mysql_query($query);
+			// while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+			// 	$filter .= "'" . $row['id'] . "', ";
+			// }
+			//
+			// $filter = substr($filter, 0, -2) . " ) ";
+			// return $filter;
+
+			return " AND p.id in (SELECT id FROM v_grouped_previsioncloths WHERE 1=1 $previsionClothsFilter) ";
+		}
 	}
 
 	return "";

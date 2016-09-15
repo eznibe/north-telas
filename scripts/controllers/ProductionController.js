@@ -90,7 +90,7 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
  	$scope.filterOptions.columns = [{name: 'Seller', key:'seller', type:'str', options: []}, {name: 'Week', key:'week', type:'nr', options: []}, {name: 'Priority', key:'priority', type:'nr', hideFromSeller: true, options: []}, {name: 'Dispatch', key:'d.number', column: 'dispatch', type:'nr', options: []},
 													{name: 'Order', key:'p.orderNumber', column: 'orderNumber', type:'str', options: []}, {name: 'Client', key:'p.client', column: 'client', type:'str', options: []}, {name: 'Boat', key:'boat', type:'str', options: []}, {name: 'Sail', key:'sailName', column: 'sailName', type:'str', options: []}, {name: 'Line', key:'line', type:'str', options: []}, {name: '%', key:'percentage', type:'nr', options: []},
 													{name: 'Advance', key:'advance', type:'nr', options: []}, {name: 'Delivery date', key:'p.deliveryDate', column: 'deliveryDate', type:'date', options: []}, {name: 'Tentative date', key:'p.tentativeDate', column: 'tentativeDate', type:'date', options: []}, {name: 'Production date', key:'p.productionDate', column: 'productionDate', type:'date', hideFromSeller: true, options: []}, {name: 'Info date', key:'p.infoDate', column: 'infoDate', type:'date', options: []},
-													{name: 'Advance date', key:'p.advanceDate', column: 'advanceDate', type:'date', options: []}, {name: 'Cloths', column:'cloths', type:'str', options: []}, {name: 'State', key:'state', type:'str', hideFromSeller: true, options: []}, {name: 'Area', key:'area', type:'nr', hideFromSeller: true, options: []}];
+													{name: 'Advance date', key:'p.advanceDate', column: 'advanceDate', type:'date', options: []}, {name: 'Cloths', key:'cloths', type:'arr', options: []}, {name: 'State', key:'state', type:'str', hideFromSeller: true, options: []}, {name: 'Area', key:'area', type:'nr', hideFromSeller: true, options: []}];
 
 	$scope.filterOptions.orderTypes = [{name: 'Order ascending', key:'order.ascending'},
   													 				 {name: 'Order descending', key:'order.descending'}];
@@ -143,6 +143,9 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 				prevision.stateAccepted = true;
 				$scope.$broadcast('$$rebind::refreshStateValue');
 			});
+		},
+		stateStyle: function(p) {
+			return {'background-color': (p.stateAccepted=='0' ? 'orange' : '')};
 		}
 	}
 
@@ -153,14 +156,6 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 		}
 
 		var ignorePagination = $scope.filterOptions.showAll;
-
-		// $scope.filter.key = $scope.filterOptions.selectedFilter ? $scope.filterOptions.selectedFilter.key : null;
-		// $scope.filter.type = $scope.filterOptions.selectedFilter ? $scope.filterOptions.selectedFilter.type : null;
-		// $scope.filter.value = $scope.filterOptions.selectedFilterOption ? $scope.filterOptions.selectedFilterOption.value : null;
-
-		// $scope.filter.orderByKey = $scope.filterOptions.selectedOrderBy ? $scope.filterOptions.selectedOrderBy.key : null;
-		// $scope.filter.orderByKeyType = $scope.filterOptions.selectedOrderBy ? $scope.filterOptions.selectedOrderBy.key : null;
-		// $scope.filter.orderType = $scope.filterOptions.selectedOrderType.key;
 
 		$scope.filter.orderList = [];
 		if ($scope.filterOptions.selectedOrderBy) {
@@ -425,22 +420,18 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 
 			$scope.allProduction = result.data;
 
-			if (!result.data[0].driveIdProduction) {
-				// doesnt work, it get a api rate limit
-				// Files.batchCreateInDrive(result.data);
-			}
-
 			result.data.map(function(row) {
 				var key;
 				for (key in row) {
 					$scope.filterOptions.columns.map(function(opt) {
 
-						if ((opt.column == key || opt.key == key) && row[key] && !alreadyContains(opt.options, row[key])) {
-							if (opt.options.length == 0) {
-								// opt.options.push({value: '-', column: opt.column ? opt.column : opt.key});
+						[].concat(row[key]).map(function(value) { // posibble row[key] is an array of values (eg. cloths)
+
+							if ((opt.column == key || opt.key == key) && row[key] && !alreadyContains(opt.options, value.name ? value.name : value)) {
+
+								opt.options.push({value: value.name ? value.name : value, column: opt.column ? opt.column : opt.key});
 							}
-							opt.options.push({value: row[key], column: opt.column ? opt.column : opt.key});
-						}
+						});
 					});
 				}
 			});
@@ -451,7 +442,7 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 
 					if (column.type == 'nr') {
 						return +a.value - +b.value;
-					} else if (column.type == 'str') {
+					} else if (column.type == 'str' || column.type == 'arr') {
 						if (a.value > b.value) {
 							return 1;
 						}

@@ -313,9 +313,7 @@ angular.module('vsko.stock')
         	entity: '=',
         	callback: '=',
           editableByRole: '=',
-          tooltipText: '=',
-          width: '=',
-          extraLabel: "="
+          width: '='
         },
         templateUrl: 'views/directives/editableProductionInput.html',
         link: function postLink(scope, element, attrs) {
@@ -327,13 +325,6 @@ angular.module('vsko.stock')
           }
 
           scope.readonly = scope.editableByRole && scope.editableByRole.split(',').lastIndexOf($rootScope.user.role) == -1;
-
-          // scope.$watch('entity.id', function(value){
-          //   if(scope.tooltipText && scope.entity.id)
-          //     $('#entityDisplay-'+scope.entity.id+'-'+scope.field).tooltip({title: scope.tooltipText });
-          // });
-
-      	  /*scope.value = scope.entity[scope.field];*/
 
           scope.oneTimeBindings = {
             mouseOver: function(entity) {
@@ -359,7 +350,12 @@ angular.module('vsko.stock')
                 return '';
               }
               return scope.entity[scope.field];
-              // return 'n';
+            },
+            textareaStyle: function() {
+              return {'width': scope.width ? scope.width+'px' : '100px', height: '20px', 'font-size': '10px'};
+            },
+            boxStyle: function() {
+              return {'width': scope.width ? (+scope.width+5)+'px' : '100px', 'height': '20px', display: 'inline'};
             }
           };
 
@@ -421,9 +417,7 @@ angular.module('vsko.stock')
         	entity: '=',
         	callback: '=',
           editableByRole: '=',
-          tooltipText: '=',
-          width: '=',
-          extraLabel: "="
+          width: '='
         },
         templateUrl: 'views/directives/editableProductionTextarea.html',
         link: function postLink(scope, element, attrs) {
@@ -468,6 +462,12 @@ angular.module('vsko.stock')
               }
               return scope.entity[scope.field];
               // return 'n';
+            },
+            textareaStyle: function() {
+              return {'width': scope.width ? scope.width+'px' : '100px', 'font-size': '10px'};
+            },
+            boxStyle: function() {
+              return {'width': scope.width ? (+scope.width+5)+'px' : '100px', 'height': '20px'};
             }
           };
 

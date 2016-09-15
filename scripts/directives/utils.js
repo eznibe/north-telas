@@ -267,16 +267,17 @@ angular.module('vsko.stock')
   };
 })
 
-.directive('myRepeatDirective', function() {
+.directive('myRepeatDirective', ['Utils', function(Utils) {
   return {
 			restrict: 'AC',
 			scope: { start: '=myRepeatDirective' },
 		link: function(scope, element, attrs) {
 	    if (scope.$parent.$last){
+				Utils.logTiming(scope.start, 'ui.render', 'repeat-directive-last', 'directive', {countPrevisions: scope.$parent.$parent.previsions ? scope.$parent.$parent.previsions.length : 0});
 				console.log('Last repeat row ' + (Date.now() - scope.start) + ' ms.'); //eslint-disable-line
 				scope.$parent.$parent.hideLoading = true;
 	    }
 		}
   };
-})
+}])
 ;

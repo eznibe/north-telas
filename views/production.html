@@ -136,6 +136,7 @@
 			<th class="productionDate" ng-style="{'background-color': headerBackgroundColor(selectionObject.productionDate)}" access-restricted="vendedor" style="min-width:95px;"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('productionDate');" style="text-align:center; cursor:pointer;"></div></th>
 			<th class="infoDate" ng-style="{'background-color': headerBackgroundColor(selectionObject.infoDate)}" style="min-width:95px;"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('infoDate');" style="text-align:center; cursor:pointer;"></div></th>
 			<th class="advanceDate" ng-style="{'background-color': headerBackgroundColor(selectionObject.advanceDate)}" style="min-width:95px;"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('advanceDate');" style="text-align:center; cursor:pointer;"></div></th>
+			<!-- <th class="cloths" ng-style="{'background-color': headerBackgroundColor(selectionObject.cloths)}" style="min-width:95px;"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('cloths');" style="text-align:center; cursor:pointer;"></div></th> -->
 			<th class="cloths"></th>
 			<th class="state" ng-style="{'background-color': headerBackgroundColor(selectionObject.state)}" access-restricted="vendedor"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('state');" style="text-align:center; cursor:pointer;"></div></th>
 			<th class="area" ng-style="{'background-color': headerBackgroundColor(selectionObject.area)}" access-restricted="vendedor"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('area');" style="text-align:center; cursor:pointer;"></div></th>
@@ -144,7 +145,6 @@
 		</tr>
 	</thead>
 	<tbody>
-		<!-- <tr ng-repeat="p in previsions | orderBy:'week' | filter:searchBox" my-repeat-directive="start"> -->
 		<tr ng-repeat="p in previsions track by p.id" my-repeat-directive="start" ng-style="::{'background-color': weekBackgroundColor(p)}">
 			<td class="seller" ng-show="::visibility.selected('seller')">
 				<span ng-bind=":refreshColumnsValue:getValue(p, 'seller')"></span>
@@ -156,7 +156,7 @@
 				{{:refreshColumnsValue:getValue(p, 'priority')}}
 			</td>
 			<td class="dispatch" ng-show="::visibility.selected('dispatch')">
-				<a href="javascript:void(0);" ng-click="showDispatchModal({id: p.dispatchId})">{{:refreshColumnsValue:(p.dispatch ? '#' + p.dispatch : '')}}</a>
+				<a href="javascript:void(0);" ng-click="::showDispatchModal({id: p.dispatchId})">{{:refreshColumnsValue:(p.dispatch ? '#' + p.dispatch : '')}}</a>
 			</td>
 			<td class="orderNumber" ng-show="::visibility.selected('orderNumber')" nowrap>
 				<a href="javascript:void(0);" ng-click="showPrevisionModal(p)" access-restricted="vendedor">{{:refreshColumnsValue:p.orderNumber}}</a>
@@ -196,10 +196,10 @@
 				<editable-date entity="::p" field="advanceDate" callback="::updateDate" editable-by-role="'admin,produccion'" style="display:inline-block;"></editable-date>
 			</td>
 			<td class="cloths" ng-show="::visibility.selected('cloths')">
-				<prevision-cloths prevision="p" style="display:inline-block;"></prevision-cloths>
+				<prevision-cloths prevision="::p" style="display:inline-block;"></prevision-cloths>
 			</td>
 			<td class="state" ng-show="::visibility.selected('state')" access-restricted="vendedor">
-				<span style="color:black; float:right; padding:2px;" ng-style="{'background-color': (p.stateAccepted=='0' ? 'orange' : '')}">
+				<span style="color:black; float:right; padding:2px;" ng-style="::oneTimeBindings.stateStyle(p)">
 					{{:refreshColumnsValue:getValue(p, 'state')}}
 					<a href="javascript:void(0)" ng-show=":refreshStateValue:p.stateAccepted=='0'" ng-click="::oneTimeBindings.acceptStateChange(p); $event.stopPropagation();" style="cursor:pointer;" class="tag-control" access-allowed="admin,produccion">
 						<span class="glyphicon glyphicon-ok save-ok control-label" style="text-align:center; margin-left:4px;"></span>
