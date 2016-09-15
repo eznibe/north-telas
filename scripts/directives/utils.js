@@ -78,10 +78,10 @@ angular.module('vsko.stock')
         restrict: 'A',
 
         link: function(scope, elem, attrs) {
-            // show/hide element depending on the accesslevel set for it, watching the role of the logged user
-        	$rootScope.$watch('user.role', function(role){
+          // show/hide element depending on the accesslevel set for it, watching the role of the logged user
 
-        		var elemAccessLevel = attrs.accessLevel;
+					function toggleElementVisibility(role) {
+						var elemAccessLevel = attrs.accessLevel;
 
         		if(userRoles[role] && userRoles[role][0] & accessLevels[elemAccessLevel]) { // eg. 100 (4/admin) & 110 (6/design) = true
         			$(elem).show();
@@ -89,7 +89,15 @@ angular.module('vsko.stock')
         		else {
         			$(elem).hide();
         		}
-        	});
+					}
+
+					if (!$rootScope.user.role) {
+						$rootScope.$watch('user.role', function(role){
+							toggleElementVisibility(role);
+						});
+					} else {
+						toggleElementVisibility($rootScope.user.role);
+					}
         }
     };
 }])
@@ -101,18 +109,27 @@ angular.module('vsko.stock')
 
         link: function(scope, elem, attrs) {
             // show/hide element depending on the accesslevel set for it, watching the role of the logged user
-        	$rootScope.$watch('user.role', function(role){
 
-        		var elemsAccessRestricted = attrs.accessRestricted.split(',');
+					function toggleElementVisibility(role) {
+						var elemsAccessRestricted = attrs.accessRestricted.split(',');
 
-        		if(elemsAccessRestricted.lastIndexOf(role) != -1) { // contains
+						if(elemsAccessRestricted.lastIndexOf(role) != -1) { // contains
         			$(elem).hide();
         		}
         		else {
 							// if enabled it brings problems in production list, force show to columns that can be selected to be hidden
         			// $(elem).show();
         		}
-        	});
+					}
+
+					if (!$rootScope.user.role) {
+						// console.log('accees-restricted watch role');
+						$rootScope.$watch('user.role', function(role){
+							toggleElementVisibility(role);
+						});
+					} else {
+						toggleElementVisibility($rootScope.user.role);
+					}
         }
     };
 }])
@@ -124,17 +141,26 @@ angular.module('vsko.stock')
 
         link: function(scope, elem, attrs) {
             // show/hide element depending on the accesslevel set for it, watching the role of the logged user
-        	$rootScope.$watch('user.role', function(role){
 
-        		var elemsAccessAllowed = attrs.accessAllowed.split(',');
+						function toggleElementVisibility(role) {
+							var elemsAccessAllowed = attrs.accessAllowed.split(',');
 
-        		if(elemsAccessAllowed.lastIndexOf(role) != -1) { // contains
-        			$(elem).show();
-        		}
-        		else {
-        			$(elem).hide();
-        		}
-        	});
+							if(elemsAccessAllowed.lastIndexOf(role) != -1) { // contains
+								$(elem).show();
+							}
+							else {
+								$(elem).hide();
+							}
+						}
+
+						if (!$rootScope.user.role) {
+							// console.log('accees-allowed watch role');
+		        	$rootScope.$watch('user.role', function(role){
+        				toggleElementVisibility(role);
+		        	});
+						} else {
+							toggleElementVisibility($rootScope.user.role);
+						}
         }
     };
 }])

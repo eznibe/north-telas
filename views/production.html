@@ -120,7 +120,6 @@
 			<th access-allowed="admin,produccion,velas-od" access-restricted="vendedor" translate>Archive</th>
 		</tr>
 		<tr class="production-filter">
-			<!-- <th class="seller" ng-style="{'background-color': headerBackgroundColor(selectionObject.seller)}"><div><select ng-model="selectionObject.seller" ng-options="sc as sc.value for sc in ::getOptions('seller')" ng-change="logSelection('seller')"><option value="">-</option></select></div></th> -->
 			<th class="seller" ng-style="{'background-color': headerBackgroundColor(selectionObject.seller)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('seller');" style="text-align:center; cursor:pointer;"></span></div></th>
 			<th class="week" ng-style="{'background-color': headerBackgroundColor(selectionObject.week)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('week');" style="text-align:center; cursor:pointer;"></span></div></th>
 			<th class="priority" ng-style="{'background-color': headerBackgroundColor(selectionObject.priority)}" access-restricted="vendedor"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('priority');" style="text-align:center; cursor:pointer;"></span></div></th>
@@ -148,21 +147,15 @@
 		<!-- <tr ng-repeat="p in previsions | orderBy:'week' | filter:searchBox" my-repeat-directive="start"> -->
 		<tr ng-repeat="p in previsions track by p.id" my-repeat-directive="start" ng-style="::{'background-color': weekBackgroundColor(p)}">
 			<td class="seller" ng-show="::visibility.selected('seller')">
-				<!-- {{:refreshColumsValue:getValue(p, 'seller')}} -->
 				<span ng-bind=":refreshColumnsValue:getValue(p, 'seller')"></span>
-				<!-- <div class="popover-wrapper">
-			    <a href="#" editable-text="p.seller">{{p.seller || '' }}</a>
-			  </div> -->
 			</td>
 			<td class="week" ng-show="::visibility.selected('week')" ng-mouseover="::oneTimeBindings.showPopupList('weeks');" ng-mouseleave="::oneTimeBindings.hidePopupList('weeks');">
-				<!-- {{:refreshColumnsValue:getValue(p, 'week')}} -->
 				<editable-production-input entity="::p" field="'week'" callback="::changedPrevision.numericField" editable-by-role="'admin,produccion'" width="20" style="display:inline-block;"></editable-production-input>
 			</td>
 			<td class="priority" ng-show="::visibility.selected('priority')" access-restricted="vendedor">
 				{{:refreshColumnsValue:getValue(p, 'priority')}}
 			</td>
 			<td class="dispatch" ng-show="::visibility.selected('dispatch')">
-				<!-- #{{:refreshColumnsValue:getValue(p, 'dispatch')}} -->
 				<a href="javascript:void(0);" ng-click="showDispatchModal({id: p.dispatchId})">{{:refreshColumnsValue:(p.dispatch ? '#' + p.dispatch : '')}}</a>
 			</td>
 			<td class="orderNumber" ng-show="::visibility.selected('orderNumber')" nowrap>
@@ -206,7 +199,6 @@
 				<prevision-cloths prevision="p" style="display:inline-block;"></prevision-cloths>
 			</td>
 			<td class="state" ng-show="::visibility.selected('state')" access-restricted="vendedor">
-				<!-- {{:refreshColumnsValue:getValue(p, 'state')}} -->
 				<span style="color:black; float:right; padding:2px;" ng-style="{'background-color': (p.stateAccepted=='0' ? 'orange' : '')}">
 					{{:refreshColumnsValue:getValue(p, 'state')}}
 					<a href="javascript:void(0)" ng-show=":refreshStateValue:p.stateAccepted=='0'" ng-click="::oneTimeBindings.acceptStateChange(p); $event.stopPropagation();" style="cursor:pointer;" class="tag-control" access-allowed="admin,produccion">

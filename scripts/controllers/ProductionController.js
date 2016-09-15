@@ -19,7 +19,8 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 	$scope.rows = 50;
 	var firstLoad = true;
 
-	var defaultFilters = {orderByKey: 'week', orderByKeyType: 'nr', orderType: 'order.ascending', limit: $scope.rows};
+	var defaultFilters = {orderList: [], limit: $scope.rows, default: true};
+	defaultFilters.orderList.push({key: 'week', type: 'str', mode: 'order.ascending'});
 
 	Previsions.getPrevisionsForProduction($rootScope.user.sellerCode, defaultFilters, 0).then(function(result) {
 
@@ -177,7 +178,7 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 		}
 
 		$scope.start = Date.now();
-		$scope.previsions = [];
+		delete $scope.previsions;// = null;
 		$scope.hideLoading = false;
 
 		Previsions.getPrevisionsForProduction($rootScope.user.sellerCode, $scope.filter, ($scope.page-1) * $scope.rows).then(function(result) {
