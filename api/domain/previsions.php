@@ -503,9 +503,10 @@ function createFilterCondition($filters) {
 			$filter = substr($filter, 0, -3) . " ) ";
 		}
 
-		if (isset($selection->searchBox)) {
-			$filter .= " AND (p.orderNumber LIKE '%". $selection->searchBox . "%' OR p.client LIKE '%". $selection->searchBox . "%' OR p.boat LIKE '%". $selection->searchBox . "%')";
-		}
+	}
+
+	if (isset($filters->searchBox)) {
+		$filter .= " AND (p.orderNumber LIKE '%". $filters->searchBox . "%' OR p.client LIKE '%". $filters->searchBox . "%' OR p.boat LIKE '%". $filters->searchBox . "%')";
 	}
 
 	return $filter;
