@@ -13,6 +13,7 @@ angular.module("vsko.stock", [
 			'angularStats',
 			'angular.bind.notifier',
 			'xeditable'
+			, 'lk-google-picker'
 			// , 'ui.bootstrap'
     ])
     .run(['$cookieStore', '$rootScope', '$translate', function ($cookieStore, $rootScope, $translate) {
@@ -87,6 +88,33 @@ angular.module("vsko.stock", [
 	    };
 	    return authorization;
 	}])
+	.factory('AvoidCache', ['$rootScope', function($rootScope) {
+	    var random = {
+        request: function(config) {
+
+					// add a random number to the end of the php GET calls to avoid Cache-Control
+          if(config.url.indexOf('php') != -1 && config.url.indexOf('_GET') != -1) {
+
+	          config.url += (config.url.substr(config.url.length-4, config.url.length)=='.php' ? '?' : '&') + Math.random();
+          }
+
+          return config;
+        }
+	    };
+	    return random;
+	}])
+	.config(['lkGoogleSettingsProvider', function (lkGoogleSettingsProvider) {
+
+	  lkGoogleSettingsProvider.configure({
+	    apiKey   : drive_api_key,
+	    clientId : drive_client_id,
+	    scopes   : ['https://www.googleapis.com/auth/drive'],
+	    locale   : 'es'
+			// ,
+			// views: ["DocsView().setParent('"+folder+"')",
+			// 			  "DocsUploadView().setParent('"+folder+"')"]
+	  });
+	}])
     .config(['$httpProvider', function ($httpProvider) {
         $httpProvider.defaults.useXDomain = true;
         delete $httpProvider.defaults.headers.common['X-Requested-With'];
@@ -94,6 +122,7 @@ angular.module("vsko.stock", [
         $httpProvider.interceptors.push('Authorization');
         $httpProvider.interceptors.push('PageAccess');
         $httpProvider.interceptors.push('ClearSearchBox');
+				$httpProvider.interceptors.push('AvoidCache');
     }
     ])
 		.config(['$httpProvider', function ($httpProvider) {

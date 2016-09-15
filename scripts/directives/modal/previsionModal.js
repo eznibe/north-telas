@@ -2,13 +2,32 @@
 
 angular.module('vsko.stock')
 
-.directive('previsionModal', function($modal, $rootScope, $q, $translate, Utils, Stock, Previsions, Files, OneDesign, Lists, Production, Rules, Dispatchs) {
+.directive('previsionModal', function($modal, $rootScope, $q, $translate, Utils, Stock, Previsions, Files, OneDesign, Lists, Production, Rules, Dispatchs, DriveAPI, lkGoogleSettings) {
 
     return {
           restrict: 'E',
           link: function postLink(scope, element, attrs) {
 
         	  var $scope = scope;
+
+
+            // DriveAPI.init();
+
+            $scope.files = [];
+
+            $scope.onLoaded = function () {
+             console.log('Google Picker loaded!');
+            }
+
+            $scope.onPicked = function (docs) {
+             angular.forEach(docs, function (file, index) {
+               $scope.files.push(file);
+             });
+            }
+
+            $scope.onCancel = function () {
+             console.log('Google picker close/cancel!');
+            }
 
 
         	  Stock.getAllCloths(true).then(function(result) {
@@ -40,13 +59,44 @@ angular.module('vsko.stock')
               });
             };
 
+            $scope.listFiles = function() {
+              DriveAPI.init().then(function() {
+                // DriveAPI.findPrevisionFolder('0B85OZZCDsYWNMnEyNTBfZUZpUTg');
+                DriveAPI.listFiles();
+              },
+              function() {
+                console.log('Loaded rejected!');
+              });
+
+            };
+
         	  $scope.showPrevisionModal = function(prevision, previousModal) {
+
+
 
         		  $scope.prevision = prevision ? prevision : {oneDesign: false, greaterThan44: false};
 
         		  $scope.origPrevision = prevision ? $.extend(true, {}, prevision) : {}; // used when the user cancel the modifications (close the modal)
 
               $scope.prevision.startedAsOD = prevision ? prevision.oneDesign : true;
+
+              // handle creation of drive folders if they dont exists yet
+              if ($scope.prevision.id) {
+
+                if (!$scope.prevision.driveIdProduction) {
+                  Files.createFolders(prevision).then(function() {
+                    $scope.origPrevision.driveIdProduction = prevision.driveIdProduction;
+                    $scope.origPrevision.driveIdDesign = prevision.driveIdDesign;
+
+                    lkGoogleSettings.views = ["DocsView().setParent('"+prevision.driveIdProduction+"')",
+                                              "DocsUploadView().setParent('"+prevision.driveIdProduction+"')"] ;
+                  });
+                } else {
+
+                  lkGoogleSettings.views = ["DocsView().setParent('"+prevision.driveIdProduction+"')",
+                                            "DocsUploadView().setParent('"+prevision.driveIdProduction+"')"] ;
+                }
+              }
 
         		  if(!$scope.prevision.cloths || $scope.prevision.cloths.length == 0) {
         			  // init with one cloth empty, useful for creating new prevision
@@ -193,6 +243,11 @@ angular.module('vsko.stock')
                 Utils.showMessage('notify.prevision_created');
 
                 waitForPossiblePrevisionStateChange = true;
+
+                // create folders in google drive for porduction and design files
+                Files.createFolders($scope.prevision).then(function() {
+
+                });
 
                 updatePrevisionState($scope.prevision).then(function(state) {
                   console.log('Ended update prev state (new):', state);
@@ -412,7 +467,7 @@ angular.module('vsko.stock')
 
         		  $scope.prevision.cloths = new Array();
 
-        		  OneDesign.findCloths($scope.prevision.selectedBoat.boat, $scope.prevision.selectedOneDesignSail.sail).then(function(result) {
+        		  OneDesign.findCloths($scope.prevision.selectedBoat.boat, escape($scope.prevision.selectedOneDesignSail.sail)).then(function(result) {
 
         			  	$scope.prevision.cloths = new Array();
 

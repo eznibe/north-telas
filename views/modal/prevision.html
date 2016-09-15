@@ -127,143 +127,181 @@
 
 					</div>
 
-					<div class="row border-top">
-						<div class="col-md-6 nopadding">
-								<label class="control-label col-xs-4" for="edit_type" translate>Observations</label>
-								<!-- <div class="col-xs-8">
-									<input name="edit_obs" type="text" class="form-control small" ng-model="prevision.observations">
-								</div> -->
-                <span class="glyphicon glyphicon-chevron-down col-xs-1 control-label" ng-click="showObservations = showObservations ? !showObservations : true;" ng-show="!showObservations" style="text-align:center; cursor:pointer;"></span>
-                <span class="glyphicon glyphicon-chevron-up col-xs-1 control-label" ng-click="showObservations = showObservations ? !showObservations : true;" ng-show="showObservations" style="text-align:center; cursor:pointer;"></span>
-						</div>
-						<div class="col-md-6 nopadding">
-						</div>
-
-					</div>
-
-          <div class="row" ng-show="showObservations">
-						<div class="col-md-4 nopadding">
-							<label class="control-label col-xs-12" for="edit_type" translate>General observations</label>
-						</div>
-						<div class="col-md-4 nopadding">
-              <label class="control-label col-xs-12" for="edit_type" translate>Production observations</label>
-						</div>
-            <div class="col-md-4 nopadding">
-              <label class="control-label col-xs-12" for="edit_type" translate>Design observations</label>
-						</div>
-					</div>
-
-          <div class="row" ng-show="showObservations">
-						<div class="col-md-4">
-							<textarea class="control-label col-xs-12" rows="5" ng-model="prevision.observations"></textarea>
-						</div>
-						<div class="col-md-4">
-              <textarea class="control-label col-xs-12" rows="5" ng-model="prevision.productionObservations"></textarea>
-						</div>
-            <div class="col-md-4">
-              <textarea class="control-label col-xs-12" rows="5" ng-model="prevision.designObservations"></textarea>
-						</div>
-					</div>
-
-          <div class="row border-top">
-            <div class="col-md-6 nopadding">
-              <div class="col-xs-6 nopadding">
-                <label class="control-label col-xs-6" translate>Seller</label>
-                <div class="col-xs-6">
-                  <select name="dd_seller" ng-model="prevision.selectedSeller" ng-options="s as s.name for s in sellers" class="form-control small" ng-change="">
-                    <option value="">-- choose one --</option>
-                  </select>
-                </div>
-              </div>
-              <div class="col-xs-6 nopadding">
-                <label class="control-label col-xs-6" translate>Week</label>
-                <div class="col-xs-6">
-                  <input type="text" class="form-control small" ng-model="prevision.week">
-                </div>
-              </div>
+          <div class="panel panel-default ng-scope">
+            <div class="panel-heading nopadding">
+              <h2 class="panel-title panel-title-prevision fullwidth">
+                <a data-toggle="collapse" data-target="#collapse2" href="javascript:void(0)" class="collapsed">
+                  <span translate>Observations</span>
+                </a>
+              </h2>
             </div>
-            <div class="col-md-6 nopadding">
-              <div class="col-xs-6 nopadding">
-                <label class="control-label col-xs-6" translate>Priority</label>
-                <div class="col-xs-6">
-                  <input type="text" class="form-control small" ng-model="prevision.priority">
-                </div>
+
+            <div id="collapse2" class="panel-collapse collapse" style="height: auto;">
+              <div class="panel-body">
+
+                <!-- <div class="row border-top">
+      						<div class="col-md-6 nopadding">
+      								<label class="control-label col-xs-4" for="edit_type" translate>Observations</label>
+                      <span class="glyphicon glyphicon-chevron-down col-xs-1 control-label" ng-click="showObservations = showObservations ? !showObservations : true;" ng-show="!showObservations" style="text-align:center; cursor:pointer;"></span>
+                      <span class="glyphicon glyphicon-chevron-up col-xs-1 control-label" ng-click="showObservations = showObservations ? !showObservations : true;" ng-show="showObservations" style="text-align:center; cursor:pointer;"></span>
+      						</div>
+      						<div class="col-md-6 nopadding">
+      						</div>
+      					</div> -->
+
+                <div class="row" >
+      						<div class="col-md-4 nopadding">
+      							<label class="control-label col-xs-12" for="edit_type" translate>General observations</label>
+      						</div>
+      						<div class="col-md-4 nopadding">
+                    <label class="control-label col-xs-12" for="edit_type" translate>Production observations</label>
+      						</div>
+                  <div class="col-md-4 nopadding">
+                    <label class="control-label col-xs-12" for="edit_type" translate>Design observations</label>
+      						</div>
+      					</div>
+
+                <div class="row" >
+      						<div class="col-md-4">
+      							<textarea class="control-label col-xs-12" rows="5" ng-model="prevision.observations"></textarea>
+      						</div>
+      						<div class="col-md-4">
+                    <textarea class="control-label col-xs-12" rows="5" ng-model="prevision.productionObservations"></textarea>
+      						</div>
+                  <div class="col-md-4">
+                    <textarea class="control-label col-xs-12" rows="5" ng-model="prevision.designObservations"></textarea>
+      						</div>
+      					</div>
+
               </div>
-              <div class="col-xs-6 nopadding">
-                <label class="control-label col-xs-4" translate>Line</label>
-                <div class="col-xs-8">
-                  <select name="dd_line" ng-model="prevision.selectedLine" ng-options="l as l.name for l in lines" class="form-control small" ng-change="updatePrevisionDeliveryDate()">
-                    <option value="">-- choose one --</option>
-                  </select>
-                </div>
-              </div>
+
             </div>
           </div>
 
-          <div class="row">
-            <div class="col-md-6 nopadding">
-                <label class="control-label col-xs-3" translate>Tentative date min</label>
-                <div class="col-xs-5">
-									<div class="input-group input-group-sm date" date-picker>
-										<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="prevision.tentativeDate" class="form-control small">
-										<span class="input-group-addon">
-											<span class="glyphicon-calendar glyphicon"></span>
-										</span>
-									</div>
-								</div>
-                <label class="control-label col-xs-1">%</label>
-                <div class="col-xs-3">
-                  <input type="text" class="form-control small" ng-model="prevision.percentage" ng-style="{'background-color': (prevision.percentageChanged===true ? 'orange' : '')}">
-                </div>
-            </div>
-            <div class="col-md-6 nopadding">
-              <label class="control-label col-xs-3" translate>Dispatch</label>
-              <div class="col-xs-3">
-                <select ng-model="prevision.selectedDispatch" ng-options="d as ('#' + d.number) for d in openDispatchs" class="form-control small" ng-change="">
-                  <option value="">-- choose one --</option>
-                </select>
-              </div>
-              <span class="glyphicon glyphicon-folder-open col-xs-1 control-label" ng-click="showDispatchModal({id: prevision.dispatchId})" style="text-align:center; cursor:pointer;" ng-show="prevision.selectedDispatch.id"></span>
-              <!-- <div class="col-xs-3">
-                <a href="javascript:void(0);" ng-click="showDispatchModal({id: prevision.dispatchId})">{{::(prevision.dispatch ? '#' + prevision.dispatch : '')}}</a>
-              </div> -->
-            </div>
-          </div>
 
-          <div class="row" style="min-height: 32px;">
-            <div class="col-md-6 nopadding">
-                <label class="control-label col-xs-3" translate>Info</label>
-                <div class="col-xs-1">
-									<input type="checkbox" style="margin-top:8px;" ng-model="prevision.hasInfo" ng-change="::hasInfoChanged()">
-								</div>
-                <div class="col-xs-8" ng-show="prevision.hasInfo">
-									<div class="input-group input-group-sm date" date-picker>
-										<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="prevision.infoDate" class="form-control small" ng-change="updateFieldsByRule()">
-										<span class="input-group-addon">
-											<span class="glyphicon-calendar glyphicon"></span>
-										</span>
-									</div>
-								</div>
-            </div>
-            <div class="col-md-6 nopadding">
-                <label class="control-label col-xs-3" translate>Advance</label>
-                <div class="col-xs-1">
-									<input type="checkbox" style="margin-top:8px;" ng-model="prevision.hasAdvance" ng-change="::hasAdvanceChanged()">
-								</div>
-                <div class="col-xs-5" ng-show="prevision.hasAdvance">
-									<div class="input-group input-group-sm date" date-picker>
-										<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="prevision.advanceDate" class="form-control small" ng-change="updateFieldsByRule()">
-										<span class="input-group-addon">
-											<span class="glyphicon-calendar glyphicon"></span>
-										</span>
-									</div>
-								</div>
-                <label class="control-label col-xs-1" ng-show="prevision.hasAdvance">%</label>
-                <div class="col-xs-2">
-                  <input type="text" class="form-control small" ng-model="prevision.advance" ng-show="prevision.hasAdvance">
+          <div class="panel panel-default ng-scope">
+  					<div class="panel-heading nopadding">
+  						<h2 class="panel-title panel-title-prevision fullwidth">
+  							<a data-toggle="collapse" data-target="#collapse1" href="javascript:void(0)">
+  								<span translate>Production</span>
+  							</a>
+  						</h2>
+  					</div>
+
+  					<div id="collapse1" class="panel-collapse collapse in" style="height: auto;">
+  						<div class="panel-body">
+
+                <div class="row">
+                  <div class="col-md-6 nopadding">
+                    <div class="col-xs-6 nopadding">
+                      <label class="control-label col-xs-6" translate>Seller</label>
+                      <div class="col-xs-6">
+                        <select name="dd_seller" ng-model="prevision.selectedSeller" ng-options="s as s.name for s in sellers" class="form-control small" ng-change="">
+                          <option value="">-- choose one --</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-xs-6 nopadding">
+                      <label class="control-label col-xs-6" translate>Week</label>
+                      <div class="col-xs-6">
+                        <input type="text" class="form-control small" ng-model="prevision.week">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 nopadding">
+                    <div class="col-xs-6 nopadding">
+                      <label class="control-label col-xs-6" translate>Priority</label>
+                      <div class="col-xs-6">
+                        <input type="text" class="form-control small" ng-model="prevision.priority">
+                      </div>
+                    </div>
+                    <div class="col-xs-6 nopadding">
+                      <label class="control-label col-xs-4" translate>Line</label>
+                      <div class="col-xs-8">
+                        <select name="dd_line" ng-model="prevision.selectedLine" ng-options="l as l.name for l in lines" class="form-control small" ng-change="updatePrevisionDeliveryDate()">
+                          <option value="">-- choose one --</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-            </div>
-          </div>
+
+                <div class="row">
+                  <div class="col-md-6 nopadding">
+                      <label class="control-label col-xs-3" translate>Tentative date min</label>
+                      <div class="col-xs-5">
+      									<div class="input-group input-group-sm date" date-picker>
+      										<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="prevision.tentativeDate" class="form-control small">
+      										<span class="input-group-addon">
+      											<span class="glyphicon-calendar glyphicon"></span>
+      										</span>
+      									</div>
+      								</div>
+                      <label class="control-label col-xs-1">%</label>
+                      <div class="col-xs-3">
+                        <input type="text" class="form-control small" ng-model="prevision.percentage" ng-style="{'background-color': (prevision.percentageChanged===true ? 'orange' : '')}">
+                      </div>
+                  </div>
+                  <div class="col-md-6 nopadding">
+                    <label class="control-label col-xs-3" translate>Dispatch</label>
+                    <div class="col-xs-3">
+                      <select ng-model="prevision.selectedDispatch" ng-options="d as ('#' + d.number) for d in openDispatchs" class="form-control small" ng-change="">
+                        <option value="">--</option>
+                      </select>
+                    </div>
+                    <div class="col-xs-2">
+                      <span class="glyphicon glyphicon-eye-open control-label" ng-click="showDispatchModal({id: prevision.dispatchId})" style="text-align:center; cursor:pointer;" ng-show="prevision.selectedDispatch.id"></span>
+                    </div>
+
+                    <label class="control-label col-xs-2" translate>Files</label>
+              			<div class="col-xs-1" ng-show="prevision.driveIdProduction">
+              				<span class="glyphicon glyphicon-folder-open control-label" style="text-align:center; cursor:pointer;" lk-google-picker on-picked="onPicked(docs)" on-loaded="onLoaded()" on-cancel="onCancel()"></span>
+              			</div>
+
+                    <!-- <span class="col-xs-2"><a href="javascript:;" ng-click="::listFiles();">List</a></span> -->
+                  </div>
+                </div>
+
+                <div class="row" style="min-height: 32px;">
+                  <div class="col-md-6 nopadding">
+                      <label class="control-label col-xs-3" translate>Info</label>
+                      <div class="col-xs-1">
+      									<input type="checkbox" style="margin-top:8px;" ng-model="prevision.hasInfo" ng-change="::hasInfoChanged()">
+      								</div>
+                      <div class="col-xs-8" ng-show="prevision.hasInfo">
+      									<div class="input-group input-group-sm date" date-picker>
+      										<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="prevision.infoDate" class="form-control small" ng-change="updateFieldsByRule()">
+      										<span class="input-group-addon">
+      											<span class="glyphicon-calendar glyphicon"></span>
+      										</span>
+      									</div>
+      								</div>
+                  </div>
+                  <div class="col-md-6 nopadding">
+                      <label class="control-label col-xs-3" translate>Advance</label>
+                      <div class="col-xs-1">
+      									<input type="checkbox" style="margin-top:8px;" ng-model="prevision.hasAdvance" ng-change="::hasAdvanceChanged()">
+      								</div>
+                      <div class="col-xs-5" ng-show="prevision.hasAdvance">
+      									<div class="input-group input-group-sm date" date-picker>
+      										<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="prevision.advanceDate" class="form-control small" ng-change="updateFieldsByRule()">
+      										<span class="input-group-addon">
+      											<span class="glyphicon-calendar glyphicon"></span>
+      										</span>
+      									</div>
+      								</div>
+                      <label class="control-label col-xs-1" ng-show="prevision.hasAdvance">%</label>
+                      <div class="col-xs-2">
+                        <input type="text" class="form-control small" ng-model="prevision.advance" ng-show="prevision.hasAdvance">
+                      </div>
+                  </div>
+                </div>
+
+  						</div>
+  					</div>
+  				</div>
+
+
 
           <!-- <div class="row">
             <div class="col-md-6 nopadding">
@@ -361,3 +399,5 @@
 </div>
 
 <dispatch-modal/>
+
+<prevision-files-modal/>
