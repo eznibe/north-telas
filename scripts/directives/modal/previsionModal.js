@@ -5,28 +5,41 @@ angular.module('vsko.stock')
 .directive('previsionModal', function($modal, $rootScope, $q, $translate, Utils, Stock, Previsions, Files, OneDesign, Lists, Production, Rules, Dispatchs, DriveAPI, lkGoogleSettings) {
 
     return {
-          restrict: 'E',
+          restrict: 'E',          
           link: function postLink(scope, element, attrs) {
 
         	  var $scope = scope;
 
-
-            // DriveAPI.init();
-
             $scope.files = [];
 
             $scope.onLoaded = function () {
-             console.log('Google Picker loaded!');
+            //  console.log('Google Picker loaded!');
             }
 
             $scope.onPicked = function (docs) {
-             angular.forEach(docs, function (file, index) {
-               $scope.files.push(file);
-             });
+
+              // show selection popup, download or delete (only if it doesnt come from upload action)
+              if (docs && !docs[0].isNew) {
+
+                $scope.showPrevisionFilesModal(docs);
+              } else {
+
+                angular.forEach(docs, function (file, index) {
+                  // console.log('Selected', file);
+                  if (file.isNew) {
+                    Utils.logFiles(file.id, file.name, 'upload', 'production', $scope.prevision.driveIdProduction, $scope.prevision.id);
+                  }
+                });
+              }
+
             }
 
             $scope.onCancel = function () {
-             console.log('Google picker close/cancel!');
+              // console.log('Google picker close/cancel!');
+            }
+
+            $scope.openSelection = function() {
+              scope.showPrevisionFilesModal([]);
             }
 
 
@@ -63,6 +76,16 @@ angular.module('vsko.stock')
               DriveAPI.init().then(function() {
                 // DriveAPI.findPrevisionFolder('0B85OZZCDsYWNMnEyNTBfZUZpUTg');
                 DriveAPI.listFiles();
+              },
+              function() {
+                console.log('Loaded rejected!');
+              });
+
+            };
+
+            $scope.downloadFile = function() {
+              DriveAPI.init().then(function() {
+                DriveAPI.downloadFile('0B85OZZCDsYWNbWo3RmFPdHpxYmc'); // cehck.sql
               },
               function() {
                 console.log('Loaded rejected!');
@@ -244,9 +267,9 @@ angular.module('vsko.stock')
 
                 waitForPossiblePrevisionStateChange = true;
 
-                // create folders in google drive for porduction and design files
+                // new prevision -> create folders in google drive for production and design files
                 Files.createFolders($scope.prevision).then(function() {
-
+                  // nothing to do here
                 });
 
                 updatePrevisionState($scope.prevision).then(function(state) {

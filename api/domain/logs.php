@@ -14,6 +14,21 @@ function addLog($log) {
 	return $methodResult;
 }
 
+function addFilesLog($log) {
+
+	$methodResult->successful = true;
+
+	$insert = "INSERT INTO fileslogs (fileId, fileName, action, folder, parentId, previsionId, user)
+						 VALUES ('".$log->fileId."', '".$log->fileName."', '".$log->action."', '".$log->folder."', '".$log->parentId."', '".$log->previsionId."', '".$log->user."')";
+	if (! mysql_query($insert)) {
+			// error en insert
+			$methodResult->successful = false;
+			$methodResult->insert = $insert;
+	}
+
+	return $methodResult;
+}
+
 function logQueryError($query, $method) {
 
 	$res->successful = true;

@@ -2,58 +2,41 @@
 
 angular.module('vsko.stock')
 
-.directive('previsionFilesModal', function($modal, $translate, $rootScope, uuid4, DriveAPI) {
+.directive('previsionFilesModal', function($modal, Utils, DriveAPI) {
 
   return {
           restrict: 'E',
           link: function postLink(scope, element, attrs) {
 
-        	  var $scope = scope;
+            // weird, to add this directive functions to the modal windows that it's calling it we should seek in 2 parents
+        	  var $scope = scope.$parent.$parent;
 
-            // $scope.files = [{name: 'File1'}, {name: 'File2'}, {name: 'File3'}];
-            $scope.files = [];
+            $scope.showPrevisionFilesModal = function(files) {
 
-            // DriveAPI.init().then(function() {
-            //   DriveAPI.listFiles($scope.files);
-            // });
-
-            // $scope.files = [];
-
-               $scope.onLoaded = function () {
-                 console.log('Google Picker loaded!');
-               }
-
-               $scope.onPicked = function (docs) {
-                 angular.forEach(docs, function (file, index) {
-                   $scope.files.push(file);
-                 });
-               }
-
-               $scope.onCancel = function () {
-                 console.log('Google picker close/cancel!');
-               }
-
-
-        	  $scope.showPrevisionFilesModal = function(prevision) {
-
-              $scope.previsionId = prevision.id;
+              $scope.selectedFiles = files;
 
               $scope.modalPrevisionFiles = $modal({template: 'views/modal/previsionFiles.html', show: false, scope: $scope});
 
               $scope.modalPrevisionFiles.$promise.then($scope.modalPrevisionFiles.show);
-        	  };
+            };
 
-        	  $scope.uploadFile = function() {
-              DriveAPI.uploadFile($scope.file).then(function() {
+        	  $scope.download = function() {
 
+              angular.forEach($scope.selectedFiles, function (file, index) {
+                window.open('https://drive.google.com/uc?export=download&id='+file.id);
               });
+              $scope.modalPrevisionFiles.hide();
         	  };
 
-            $scope.$watch('file.name', function() {
-              if ($scope.file && $scope.file.size) {
+            $scope.delete = function() {
 
-              }
-            });
+              angular.forEach($scope.selectedFiles, function (file, index) {
+                DriveAPI.deleteFile(file, {folder: 'production', parentId: $scope.prevision.driveIdProduction, previsionId: $scope.prevision.id}).then(function() {
+                  Utils.showMessage('notify.file_deleted');
+                });
+              });
+              $scope.modalPrevisionFiles.hide();
+        	  };
           }
   };
 }

@@ -258,9 +258,14 @@
               				<span class="glyphicon glyphicon-folder-open control-label" style="text-align:center; cursor:pointer;" lk-google-picker on-picked="onPicked(docs)" on-loaded="onLoaded()" on-cancel="onCancel()"></span>
               			</div>
 
-                    <!-- <span class="col-xs-2"><a href="javascript:;" ng-click="::listFiles();">List</a></span> -->
                   </div>
                 </div>
+
+                <!-- <div class="row">
+                  <span class="col-xs-2"><a href="javascript:;" ng-click="::listFiles();">List</a></span>
+                  <span class="col-xs-2"><a href="javascript:;" ng-click="::downloadFile();">Download</a></span>
+                  <span class="col-xs-2"><a href="javascript:;" ng-click="::showPrevisionFilesModal([]);">Open</a></span>
+                </div> -->
 
                 <div class="row" style="min-height: 32px;">
                   <div class="col-md-6 nopadding">
@@ -393,11 +398,10 @@
 		</div>
 	</div>
 
-	<documents-modal/>
-
-	<confirm-modal callback="deletePrevision"/>
 </div>
 
-<dispatch-modal/>
-
 <prevision-files-modal/>
+
+<confirm-modal callback="deletePrevision"/>
+
+<dispatch-modal/>

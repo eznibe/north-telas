@@ -21,5 +21,16 @@ angular.module('vsko.stock').factory('Utils',[ '$translate', '$http', '$rootScop
     $http.post(baseUrl + 'timing_POST.php', payload);
   };
 
+  that.logFiles = function (fileId, fileName, action, folder, parentId, previsionId) {
+    var payload = {fileId: fileId,
+                   fileName: fileName,
+                   action: action,
+                   folder: folder,
+                   parentId: parentId,
+                   previsionId: previsionId,
+                   user: $rootScope.user.name};
+    $http.post(baseUrl + 'log_POST.php?files=true', payload);
+  };
+
   return that;
 }]);

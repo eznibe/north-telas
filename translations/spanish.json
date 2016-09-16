@@ -85,7 +85,7 @@
   "Clear filters": "Limpiar filtros",
   "Clear": "Limpiar",
   "Filter": "Filtro",
-  "": "",
+  "Download": "Descargar",
   "": "",
   "": "",
   "": "",
@@ -301,6 +301,7 @@
     "dispatch_updated": "Despacho actualizado.",
     "dispatch_removed": "Despacho borrado.",
     "dispatch_archived": "Despacho archivado.",
-    "dispatch_restored": "Despacho restaurado."
+    "dispatch_restored": "Despacho restaurado.",
+    "file_deleted": "Archivo eliminado."
   }
 }

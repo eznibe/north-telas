@@ -14,6 +14,7 @@ angular.module('vsko.stock')
         folderTypes.map(function(metadata) {
           // metadata.name = metadata.type + '_' + prevision.id;
           metadata.name = prevision.orderNumber;
+          metadata.previsionId = prevision.id;
           promises.push(DriveAPI.createFolder(metadata));
         });
 
@@ -36,6 +37,7 @@ angular.module('vsko.stock')
       return d.promise;
     };
 
+    // deprecated
     this.batchCreateInDrive = function(previsions) {
 
       var folderTypes = [{type: 'produccion', parentFolderId: productionFilesFolder, column: 'driveIdProduction'}, {type: 'diseno', parentFolderId: designFilesFolder, column: 'driveIdDesign'}];

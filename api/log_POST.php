@@ -17,7 +17,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 	$log = json_decode($request_payload);
 
-	$response = addLog($log);
+	if(isset($_GET['files'])) {
+		$response = addFilesLog($log);
+	} else {
+		$response = addLog($log);
+	}
 
 	//return JSON array
 	exit(json_encode($response));

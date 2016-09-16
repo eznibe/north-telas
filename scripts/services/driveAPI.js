@@ -1,7 +1,7 @@
 /**
  *
  */
-angular.module('vsko.stock').factory('DriveAPI',[ '$q', function ($q) { //eslint-disable-line
+angular.module('vsko.stock').factory('DriveAPI',[ '$q', 'Utils', function ($q, Utils) { //eslint-disable-line
   var that = {};
 
   var SCOPES = ['https://www.googleapis.com/auth/drive'];
@@ -78,6 +78,37 @@ angular.module('vsko.stock').factory('DriveAPI',[ '$q', function ($q) { //eslint
       });
   };
 
+  that.downloadFile = function(file) {
+    // var dest = fs.createWriteStream('/tmp/photo.jpg');
+    gapi.client.drive.files.get({
+       fileId: file.id,
+       alt: 'media'
+    }).execute(function(res, file) {
+      if(res) {
+        console.log(res, file);
+
+      } else {
+
+      }
+    });
+  };
+
+  that.deleteFile = function(file, metadata) {
+    var d = $q.defer();
+    gapi.client.drive.files.delete({
+       fileId: file.id
+    }).execute(function(res, resfile) {
+      if(res) {
+        console.log(res, resfile);
+        Utils.logFiles(file.id, file.name, 'delete', metadata.folder, metadata.parentId, metadata.previsionId);
+        d.resolve(file);
+      } else {
+        d.reject();
+      }
+    });
+    return d.promise;
+  };
+
   that.createFolder = function(metadata) {
     var d = $q.defer();
     var fileMetadata = {
@@ -92,6 +123,8 @@ angular.module('vsko.stock').factory('DriveAPI',[ '$q', function ($q) { //eslint
         if(res) {
           console.log(res);
           metadata.driveId = res.id;
+
+          Utils.logFiles(metadata.driveId, metadata.name, 'create', metadata.type, metadata.parentFolderId, metadata.previsionId);
           d.resolve(metadata);
         } else {
           d.reject();
@@ -104,6 +137,12 @@ angular.module('vsko.stock').factory('DriveAPI',[ '$q', function ($q) { //eslint
   that.init = function() {
     defer = $q.defer();
     if (gapi.auth) {
+
+      if (gapi.client && gapi.client.drive && gapi.client.drive.kB.servicePath.indexOf('v2') != -1) {
+        // patch to fix problem when opening first the google picker then the gapi version loaded is v2
+        gapi.client.drive.kB.servicePath = 'drive/v3/';
+      }
+
       gapi.auth.authorize(
           {
             'client_id': drive_client_id,

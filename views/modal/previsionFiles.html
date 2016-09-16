@@ -1,5 +1,5 @@
 <div class="modal" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-lg" style="margin-top: 0px;">
+  <div class="modal-dialog modal-sm" style="margin-top: 0px;">
 		<div class="modal-content">
 
 			<div class="modal-header">
@@ -13,22 +13,11 @@
 					<span class="glyphicon glyphicon-remove"></span>
 				</a>
 
-				<!-- <div class="row" style="margin-top:10px; padding-right: 15px;" access-level="admin">
-            <span class="col-sm-2">
-              <span class="btn btn-primary btn-file">
-                  Browse...
-                  <input id="docx" type="file" file="docx"/>
-              </span>
-            </span>
-            <span class="col-sm-10">
-              <input type="text" class="form-control small" ng-model="docx.name" readonly/>
-            </span>
-				</div> -->
 			</div>
 
-			<div class="modal-body">
+			<div class="modal-body form-horizontal">
 
-        <div class="row">
+        <!-- <div class="row">
           <div class="col-sm-2">
             <span class="btn btn-primary btn-file">
                 {{'Browse' | translate}}
@@ -44,33 +33,19 @@
     					<span class="glyphicon glyphicon-export"></span>
     				</a>
           </div>
-        </div>
-
-        <div class="row border-top">
-  				<div class="user_cards">
-  					<ul style="padding: 15px;">
-  						<li class="cards">
-  							<ul>
-  								<li ng-repeat="f in files" style="min-height: 0px;">
-  									<h3><span style="min-width:85px; display:inline-block;">{{f.name}}</h3>
-  								</li>
-  							</ul>
-  						</li>
-  					</ul>
-  				</div>
-        </div>
+        </div> -->
 
         <div class="row">
-          <a href="javascript:;" lk-google-picker on-picked="onPicked(docs)" on-loaded="onLoaded()" on-cancel="onCancel()">Open my Google Drive</a>
+          <a ng-click="delete()" class="btn btn-warning">
+            <span class="glyphicon glyphicon-trash"></span>
+            {{'Delete' | translate}}
+          </a>
+          <a ng-click="download()" class="btn btn-default floatright">
+            <span class="glyphicon glyphicon-download"></span>
+            {{'Download' | translate}}
+          </a>
         </div>
-			</div>
 
-			<div class="modal-footer">
-
-				<a ng-click="$hide()" class="btn btn-default floatright" >
-					<span class="glyphicon glyphicon-ok"></span>
-					Ok
-				</a>
 			</div>
 
 		</div>
