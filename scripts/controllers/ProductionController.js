@@ -60,6 +60,10 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 			$('.'+column).hide();
 		},
 
+		isSeller: function() {
+			return $rootScope.user.role == 'vendedor';
+		},
+
 		clickColumnSelector: function(c) {
 			if (c.selected) {
 				$scope.visibility.showColumn(c.column ? c.column : c.key);

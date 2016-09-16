@@ -160,6 +160,7 @@
 			</td>
 			<td class="orderNumber" ng-show="::visibility.selected('orderNumber')" nowrap>
 				<a href="javascript:void(0);" ng-click="showPrevisionModal(p)" access-restricted="vendedor">{{:refreshColumnsValue:p.orderNumber}}</a>
+				<span ng-show="::visibility.isSeller()">{{:refreshColumnsValue:p.orderNumber}}</span>
 			</td>
 			<td class="client" ng-show="::visibility.selected('client')" nowrap>
 				{{:refreshColumnsValue:getValue(p, 'client')}}

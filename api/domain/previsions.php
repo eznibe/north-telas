@@ -469,17 +469,25 @@ function updateWeeksBySeason($weeks) {
 	return $obj;
 }
 
-function createPrevisionClothsFilterCondition($values) {
+function createPrevisionClothsFilterCondition($values, $column) {
 
 	$filter = "";
 
+	// if (isset($values) && count($values) > 0) {
+	// 	$filter .= " AND ( ";
+	// 	foreach ($values as $value) {
+	// 		$filter .= " $column like '%". $value ."%'";
+	// 		$filter .= " OR ";
+	// 	}
+	// 	$filter = substr($filter, 0, -3) . " ) ";
+	// }
+
 	if (isset($values) && count($values) > 0) {
-		$filter .= " AND ( ";
+		$filter .= " AND $column IN ( ";
 		foreach ($values as $value) {
-			$filter .= " cloths like '%". $value ."%'";
-			$filter .= " OR ";
+			$filter .= "'". $value ."', ";
 		}
-		$filter = substr($filter, 0, -3) . " ) ";
+		$filter = substr($filter, 0, -2) . " ) ";
 	}
 
 	return $filter;
@@ -565,7 +573,7 @@ function handleSpecialFilterCase($key, $values) {
 		return $filter;
 
 	} else if ($key = "cloths") {
-		$previsionClothsFilter = createPrevisionClothsFilterCondition($values);
+		$previsionClothsFilter = createPrevisionClothsFilterCondition($values, 'c2.name');
 
 		if ($previsionClothsFilter != "") {
 
@@ -583,7 +591,9 @@ function handleSpecialFilterCase($key, $values) {
 			// $filter = substr($filter, 0, -2) . " ) ";
 			// return $filter;
 
-			return " AND p.id in (SELECT id FROM v_grouped_previsioncloths WHERE 1=1 $previsionClothsFilter) ";
+			return " AND p.id in (SELECT p2.id FROM previsions p2 join previsioncloth pc2 on pc2.previsionId=p2.id JOIN cloths c2 on c2.id=pc2.clothId WHERE 1=1 $previsionClothsFilter GROUP BY p2.id ) ";
+
+			// return " AND p.id in (SELECT id FROM v_grouped_previsioncloths WHERE 1=1 $previsionClothsFilter) ";
 		}
 	}
 
