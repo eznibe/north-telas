@@ -141,15 +141,18 @@ angular.module('vsko.stock')
 
         link: function(scope, elem, attrs) {
             // show/hide element depending on the accesslevel set for it, watching the role of the logged user
+						var elemIsVisible = true;
 
 						function toggleElementVisibility(role) {
 							var elemsAccessAllowed = attrs.accessAllowed.split(',');
 
-							if(elemsAccessAllowed.lastIndexOf(role) != -1) { // contains
+							if(elemsAccessAllowed.lastIndexOf(role) != -1 && !elemIsVisible) { // contains
 								$(elem).show();
+								elemIsVisible = true;
 							}
-							else {
+							else if (elemsAccessAllowed.lastIndexOf(role) == -1 && elemIsVisible){
 								$(elem).hide();
+								elemIsVisible = false;
 							}
 						}
 
