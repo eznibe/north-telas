@@ -42,14 +42,15 @@
 				<dispatch-orders dispatch="d" open="showDispatchModal" style="display:inline-block;"></dispatch-orders>
 			</td>
 			<td access-restricted="read-only" style="width:80px; text-align:center;">
-				<a ng-click="showConfirmModal(d, archiveDispatch)" class="btn btn-default" ng-disabled="!d.dispatchDate">
-					<span class="glyphicon glyphicon-ok"></span>
-				</a>
+				<!-- <a ng-click="showConfirmModal(d, archiveDispatch)" class="btn btn-default" ng-disabled="!d.dispatchDate"> -->
+					<span class="glyphicon glyphicon-ok icon-link" ng-click="showConfirmModal(d, archiveDispatch)" ng-show="d.dispatchDate"></span>
+					<span class="glyphicon glyphicon-ok icon-disabled" ng-show="!d.dispatchDate"></span>
+				<!-- </a> -->
 			</td>
 			<td access-restricted="read-only" style="width:80px; text-align:center;">
-				<a ng-click="showConfirmModal(d, deleteDispatch)" class="btn btn-default">
-					<span class="glyphicon glyphicon-trash"></span>
-				</a>
+				<!-- <a ng-click="showConfirmModal(d, deleteDispatch)" class="btn btn-default"> -->
+					<span class="glyphicon glyphicon-trash icon-link" ng-click="showConfirmModal(d, deleteDispatch)"></span>
+				<!-- </a> -->
 			</td>
 		</tr>
 	</tbody>

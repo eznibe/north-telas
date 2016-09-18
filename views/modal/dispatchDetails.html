@@ -116,21 +116,21 @@
 								</div>
 						</div>
 
-            <div class="col-md-6 nopadding">
+            <div class="col-md-7 nopadding">
               <div class="col-xs-2">
                 <a ng-click="addPrevision(acPrevision)" class="btn nopadding" style="color: #616161;" ng-disabled="!dispatch.id" access-restricted="vendedor">
                   <span class="glyphicon glyphicon-plus"></span>
                 </a>
               </div>
               <div class="col-xs-10">
-                <label class="control-label col-xs-4" translate>Notes</label>
-                <div class="col-xs-8">
-                  <textarea name="edit_order" type="text" class="form-control small" ng-model="dispatch.notes"></textarea>
+                <label class="control-label col-xs-2" translate>Notes</label>
+                <div class="col-xs-10">
+                  <textarea name="edit_order" style="height: 34px;" type="text" class="form-control small" ng-model="dispatch.notes"></textarea>
                 </div>
               </div>
             </div>
 
-						<div class="col-md-2 nopadding" access-restricted="read-only">
+						<div class="col-md-1 nopadding" access-restricted="read-only">
 								<div class="col-xs-12" access-restricted="vendedor">
 									<a ng-click="saveDispatch(dispatch)" class="btn btn-default floatright edit_person" ng-disabled="!form.$valid" >
 										<span class="glyphicon glyphicon-save"></span>
@@ -184,9 +184,9 @@
                 <editable-production-textarea entity="::o" field="'observations'" callback="::changedDispatch.field" width="100" editable-by-role="'admin,produccion'" style="display:inline-block;"></editable-production-textarea>
 							</td>
 							<td access-restricted="read-only,vendedor" style="width:80px; text-align:center;">
-								<a ng-click="showConfirmModal(o, deleteDispatchPrevision)" class="btn btn-default">
-									<span class="glyphicon glyphicon-trash"></span>
-								</a>
+								<!-- <a ng-click="showConfirmModal(o, deleteDispatchPrevision)" class="btn btn-default"> -->
+									<span class="glyphicon glyphicon-trash icon-link" ng-click="showConfirmModal(o, deleteDispatchPrevision)"></span>
+								<!-- </a> -->
 							</td>
 						</tr>
             <tr ng-show="dispatch.previsions && dispatch.previsions.length > 0">
@@ -210,7 +210,7 @@
         <div class="row" style="margin-bottom: 25px; margin-top: 25px;">
 
           <div class="col-md-6">
-            <a ng-click="showCarryModal(null, 'BOX')" class="btn btn-info floatleft" style="margin-bottom: 10px;" access-restricted="read-only,vendedor">
+            <a ng-click="showCarryModal(null, 'BOX')" class="btn btn-default floatleft" style="margin-bottom: 10px;" access-restricted="read-only,vendedor">
       	        <span class="glyphicon glyphicon-plus"></span>&nbsp;
       	        {{'Create new box' | translate}}
       	    </a>
@@ -236,14 +236,14 @@
                     {{b.measures}}
                   </td>
                   <td access-restricted="read-only,vendedor" style="width:80px; text-align:center;">
-                    <a ng-click="showCarryModal(b)" class="btn btn-default">
-                      <span class="glyphicon glyphicon-edit"></span>
-                    </a>
+                    <!-- <a ng-click="showCarryModal(b)" class="btn btn-default"> -->
+                      <span class="glyphicon glyphicon-edit icon-link" ng-click="showCarryModal(b)"></span>
+                    <!-- </a> -->
                   </td>
                   <td access-restricted="read-only,vendedor" style="width:80px; text-align:center;">
-                    <a ng-click="showConfirmModal(b, deleteDispatchCarry)" class="btn btn-default">
-                      <span class="glyphicon glyphicon-trash"></span>
-                    </a>
+                    <!-- <a ng-click="showConfirmModal(b, deleteDispatchCarry)" class="btn btn-default"> -->
+                      <span class="glyphicon glyphicon-trash icon-link" ng-click="showConfirmModal(b, deleteDispatchCarry)"></span>
+                    <!-- </a> -->
                   </td>
                 </tr>
                 <tr>
@@ -259,7 +259,7 @@
           </div>
 
           <div class="col-md-6">
-            <a ng-click="showCarryModal(null, 'TUBE')" class="btn btn-info floatleft" style="margin-bottom: 10px;" access-restricted="read-only,vendedor">
+            <a ng-click="showCarryModal(null, 'TUBE')" class="btn btn-default floatleft" style="margin-bottom: 10px;" access-restricted="read-only,vendedor">
       	        <span class="glyphicon glyphicon-plus"></span>&nbsp;
       	        {{'Create new tube' | translate}}
       	    </a>
@@ -285,14 +285,14 @@
                     {{t.measures}}
                   </td>
                   <td access-restricted="read-only,vendedor" style="width:80px; text-align:center;">
-                    <a ng-click="showCarryModal(t)" class="btn btn-default">
-                      <span class="glyphicon glyphicon-edit"></span>
-                    </a>
+                    <!-- <a ng-click="showCarryModal(t)" class="btn btn-default"> -->
+                      <span class="glyphicon glyphicon-edit icon-link" ng-click="showCarryModal(t)"></span>
+                    <!-- </a> -->
                   </td>
                   <td access-restricted="read-only,vendedor" style="width:80px; text-align:center;">
-                    <a ng-click="showConfirmModal(t, deleteDispatchCarry)" class="btn btn-default">
-                      <span class="glyphicon glyphicon-trash"></span>
-                    </a>
+                    <!-- <a ng-click="showConfirmModal(t, deleteDispatchCarry)" class="btn btn-default"> -->
+                      <span class="glyphicon glyphicon-trash icon-link" ng-click="showConfirmModal(t, deleteDispatchCarry)"></span>
+                    <!-- </a> -->
                   </td>
                 </tr>
                 <tr>

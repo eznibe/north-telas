@@ -158,14 +158,14 @@ table#production th > div.editable {
 }
 
 
-.panel-title-prevision > a {
+.panel-title-minimalist > a {
 	padding-top: 8px;
 	padding-bottom: 8px;
 	background-color: white;
 	border-color: transparent;
 }
 
-.panel-title-prevision > a:hover, .panel-title-prevision > a:focus, .panel-title-prevision > a:active {
+.panel-title-minimalist > a:hover, .panel-title-minimalist > a:focus, .panel-title-minimalist > a:active {
 	background-color: white;
 }
 
@@ -184,4 +184,13 @@ table#production th > div.editable {
 
 .production-filter th > div > select {
 	width: 20px;
+}
+
+.icon-link {
+	text-align: center;
+	cursor: pointer;
+}
+
+.icon-disabled {
+	color: lightgray;
 }

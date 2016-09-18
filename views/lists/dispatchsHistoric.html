@@ -94,9 +94,9 @@
 				<dispatch-orders dispatch="d" open="showDispatchModal" style="display:inline-block;"></dispatch-orders>
 			</td>
 			<td access-restricted="read-only" style="width:80px; text-align:center;">
-				<a ng-click="showConfirmModal(d, restoreDispatch)" class="btn btn-default">
-					<span class="glyphicon glyphicon-refresh"></span>
-				</a>
+				<!-- <a ng-click="showConfirmModal(d, restoreDispatch)" class="btn btn-default"> -->
+					<span class="glyphicon glyphicon-refresh icon-link" ng-click="showConfirmModal(d, restoreDispatch)"></span>
+				<!-- </a> -->
 			</td>
 		</tr>
 	</tbody>
