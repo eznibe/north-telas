@@ -11,6 +11,10 @@ angular.module('vsko.stock').factory('Utils',[ '$translate', '$http', '$rootScop
     });
   };
 
+  that.translate = function(key, params) {
+    return $translate(key, params ? params : {});
+  };
+
   that.logTiming = function (startTime, url, service, method, entity) {
     var payload = {time: (Date.now() - startTime),
                    url: url,

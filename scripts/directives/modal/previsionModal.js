@@ -5,12 +5,13 @@ angular.module('vsko.stock')
 .directive('previsionModal', function($modal, $rootScope, $q, $translate, Utils, Stock, Previsions, Files, OneDesign, Lists, Production, Rules, Dispatchs, DriveAPI, lkGoogleSettings) {
 
     return {
-          restrict: 'E',          
+          restrict: 'E',
           link: function postLink(scope, element, attrs) {
 
         	  var $scope = scope;
 
             $scope.files = [];
+
 
             $scope.onLoaded = function () {
             //  console.log('Google Picker loaded!');
@@ -18,17 +19,22 @@ angular.module('vsko.stock')
 
             $scope.onPicked = function (docs) {
 
-              // show selection popup, download or delete (only if it doesnt come from upload action)
               if (docs && !docs[0].isNew) {
-
+                // show selection popup, download or delete (only if it doesnt come from upload action)
                 $scope.showPrevisionFilesModal(docs);
               } else {
-
+                // new files uploaded
                 angular.forEach(docs, function (file, index) {
                   // console.log('Selected', file);
                   if (file.isNew) {
                     Utils.logFiles(file.id, file.name, 'upload', 'production', $scope.prevision.driveIdProduction, $scope.prevision.id);
                   }
+                });
+                // refersh count of files in folder
+                DriveAPI.listFiles($scope.prevision.driveIdProduction).then(function(files) {
+                  Utils.translate('Files count', {count: files.length}).then(function(value) {
+                    $scope.filesLbl = value;
+                  });
                 });
               }
 
@@ -95,8 +101,6 @@ angular.module('vsko.stock')
 
         	  $scope.showPrevisionModal = function(prevision, previousModal) {
 
-
-
         		  $scope.prevision = prevision ? prevision : {oneDesign: false, greaterThan44: false};
 
         		  $scope.origPrevision = prevision ? $.extend(true, {}, prevision) : {}; // used when the user cancel the modifications (close the modal)
@@ -113,11 +117,32 @@ angular.module('vsko.stock')
 
                     lkGoogleSettings.views = ["DocsView().setParent('"+prevision.driveIdProduction+"')",
                                               "DocsUploadView().setParent('"+prevision.driveIdProduction+"')"] ;
+
+                    Utils.translate('Files count', {count: 0}).then(function(value) {
+                      $scope.filesLbl = value;
+                    });
                   });
+
+                  Utils.translate('Files').then(function(value) {
+                    $scope.filesLbl = value;
+                  });
+
                 } else {
 
                   lkGoogleSettings.views = ["DocsView().setParent('"+prevision.driveIdProduction+"')",
                                             "DocsUploadView().setParent('"+prevision.driveIdProduction+"')"] ;
+
+                  // get number of files in prevision folder to show in label
+                  DriveAPI.listFiles($scope.prevision.driveIdProduction).then(function(files) {
+                    Utils.translate('Files count', {count: files.length}).then(function(value) {
+                      $scope.filesLbl = value;
+                    });
+                  }, function() {
+                    // rejected list files, possible because the gapi is not loaded yet
+                    Utils.translate('Files').then(function(value) {
+                      $scope.filesLbl = value;
+                    });
+                  });
                 }
               }
 

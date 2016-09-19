@@ -76,6 +76,7 @@
   "Show all": "Mostrar todos",
   "Dispatch alert": "Se creó un nuevo despacho con número #{{dispatchNumber}}",
   "Files": "Archivos",
+  "Files count": "Archivos ({{count}})",
   "Browse": "Seleccionar...",
   "Production summary": "Tabla resumen",
   "Columns filter": "Filtrar columnas",

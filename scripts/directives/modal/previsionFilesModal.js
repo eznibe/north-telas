@@ -33,6 +33,12 @@ angular.module('vsko.stock')
               angular.forEach($scope.selectedFiles, function (file, index) {
                 DriveAPI.deleteFile(file, {folder: 'production', parentId: $scope.prevision.driveIdProduction, previsionId: $scope.prevision.id}).then(function() {
                   Utils.showMessage('notify.file_deleted');
+                  // refersh count of files in folder
+                  DriveAPI.listFiles($scope.prevision.driveIdProduction).then(function(files) {
+                    Utils.translate('Files count', {count: files.length}).then(function(value) {
+                      $scope.filesLbl = value;
+                    });
+                  });
                 });
               });
               $scope.modalPrevisionFiles.hide();

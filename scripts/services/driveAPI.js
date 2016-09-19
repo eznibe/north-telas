@@ -52,14 +52,20 @@ angular.module('vsko.stock').factory('DriveAPI',[ '$q', 'Utils', function ($q, U
       return d.promise;
   };
 
-  that.listFiles = function(loadedFiles) {
-    var request = gapi.client.drive.files.list({
-        'pageSize': 10,
-        // 'q': "name contains 'V8888'", // works fine
-        // 'q': "'0B85OZZCDsYWNWDhqWkF0djU2R2c' in parents", // Previsions
-        // 'q': "'0B85OZZCDsYWNMnEyNTBfZUZpUTg' in parents",  // V8888
-        'fields': "nextPageToken, files(id, name)"
-      });
+  that.listFiles = function(parentId) {
+    var d = $q.defer();
+    var params = {
+      'pageSize': 10,
+      // 'q': "name contains 'V8888'", // works fine
+      // 'q': "'0B85OZZCDsYWNWDhqWkF0djU2R2c' in parents", // Previsions
+      // 'q': "'0B85OZZCDsYWNMnEyNTBfZUZpUTg' in parents",  // V8888
+      'fields': "nextPageToken, files(id, name)"
+    };
+    if (parentId) {
+      params.q = "'" + parentId + "' in parents";
+    }
+    if (gapi.client && gapi.client.drive) {
+      var request = gapi.client.drive.files.list(params);
 
       request.execute(function(resp) {
         console.log('Files:');
@@ -68,14 +74,17 @@ angular.module('vsko.stock').factory('DriveAPI',[ '$q', 'Utils', function ($q, U
           for (var i = 0; i < files.length; i++) {
             var file = files[i];
             console.log(file.name + ' (' + file.id + ')');
-            if (loadedFiles) {
-              loadedFiles.push(file);
-            }
           }
+          d.resolve(files);
         } else {
           console.log('No files found.');
+          d.resolve([]);
         }
       });
+    } else {
+      d.reject();
+    }
+    return d.promise;
   };
 
   that.downloadFile = function(file) {
@@ -150,6 +159,7 @@ angular.module('vsko.stock').factory('DriveAPI',[ '$q', 'Utils', function ($q, U
             'immediate': true
           }, handleAuthResult);
     } else {
+      console.log('Rejected init, no gapi.auth');
       defer.reject(false);
     }
 

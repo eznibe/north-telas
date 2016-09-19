@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('vsko.stock').controller('PrevisionsCtrl', ['$scope', 'Previsions', 'DriveAPI', '$modal', function ($scope, Previsions, DriveAPI, $modal) {
+angular.module('vsko.stock').controller('PrevisionsCtrl', ['$scope', '$timeout', 'Previsions', 'DriveAPI', '$modal', function ($scope, $timeout, Previsions, DriveAPI, $modal) {
 
     	$scope.maxCloths = 3;
 
@@ -10,7 +10,9 @@ angular.module('vsko.stock').controller('PrevisionsCtrl', ['$scope', 'Previsions
       });
 
       // just init the drive api to ensure we have the v3 loaded (avoiding problems with v2 loaded by the google picker)
-      DriveAPI.init();
+      $timeout(function() {
+  			DriveAPI.init();
+  		}, 2500);
 
     	$scope.sortOptions = [{id:'unformattedDeliveryDate', name:'Fecha'}, {id:'orderNumber', name:'Numero de orden'}];
 

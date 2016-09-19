@@ -1,5 +1,5 @@
 <div class="modal" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-sm" style="margin-top: 0px;">
+  <div class="modal-dialog modal-md" style="margin-top: 0px;">
 		<div class="modal-content">
 
 			<div class="modal-header">
@@ -18,13 +18,13 @@
 			<div class="modal-body form-horizontal">
 
         <!-- <div class="row">
-          <div class="col-sm-2">
+          <div class="col-sm-3 nopadding">
             <span class="btn btn-primary btn-file">
                 {{'Browse' | translate}}
                 <input id="docx" type="file" file="file"/>
             </span>
           </div>
-          <div class="col-sm-6">
+          <div class="col-sm-5">
             <input type="text" class="form-control small" ng-model="file.name" readonly style="height: 34px;"/>
           </div>
 
@@ -34,6 +34,14 @@
     				</a>
           </div>
         </div> -->
+
+        <div class="row" ng-show="selectedFiles.length">
+          <ul>
+            <li ng-repeat="f in selectedFiles">
+              {{f.name}}
+            </li>
+          </ul>
+        </div>
 
         <div class="row">
           <a ng-click="delete()" class="btn btn-warning">
