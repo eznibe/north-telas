@@ -38,7 +38,7 @@ gulp.task('dependencies', function () {
 'node_modules/angular-bind-notifier/dist/angular-bind-notifier.min.js',
 'node_modules/moment/moment.js',
 'node_modules/twbs-pagination/jquery.twbsPagination.js',
-'node_modules/angular-google-picker/dist/google-picker.min.js'
+'node_modules/angular-google-picker/dist/google-picker.js'
 ])
     .pipe(concat('build/dependencies.js'))
     .pipe(gulp.dest('.'))
