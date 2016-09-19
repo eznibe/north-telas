@@ -10,7 +10,7 @@ angular.module('vsko.stock')
 
       this.getLines = function()
       {
-				var lines = [{name: 'OD'}, {name: 'CA'}, {name: 'NY'}, {name: 'RA'}, {name: 'DA'}, {name: 'REP'}];
+				var lines = [{name: 'OD'}, {name: 'CA'}, {name: 'NY'}, {name: 'RA'}, {name: 'DA'}, {name: 'REP'}, {name: 'LO'}];
       	return lines;
       };
 
