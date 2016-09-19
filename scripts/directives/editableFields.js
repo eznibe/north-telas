@@ -355,7 +355,8 @@ angular.module('vsko.stock')
               return {'width': scope.width ? scope.width+'px' : '100px', height: '20px', 'font-size': '10px'};
             },
             boxStyle: function() {
-              return {'width': scope.width ? (+scope.width+5)+'px' : '100px', 'height': '20px', display: 'inline'};
+              var style = scope.editable ? {'width': scope.width ? (+scope.width+5)+'px' : '100px', 'height': '20px', display: 'inline'} : {'width': scope.width ? (+scope.width+5)+'px' : '100px', 'height': '20px', display: 'inline-block'};
+              return style;
             }
           };
 
@@ -401,6 +402,8 @@ angular.module('vsko.stock')
       		  	}
 
       		  	scope.editable = !scope.editable;
+
+              scope.$broadcast('$$rebind::refreshBoxStyle');
             }
       	  };
         }
