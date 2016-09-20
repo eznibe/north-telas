@@ -18,39 +18,22 @@ angular.module('vsko.stock').factory('DriveAPI',[ '$q', 'Utils', function ($q, U
   }
 
   function handleAuthResult(authResult) {
-        if (authResult && !authResult.error) {
-          loaded = true;
-          loadDriveApi();
-        } else {
-          console.log(authResult);
-        }
-      }
+    if (authResult && !authResult.error) {
+      loaded = true;
+      loadDriveApi();
+    } else {
+      console.log(authResult);
+    }
+  }
 
-  that.findPrevisionFolder = function(previsionId) {
-    var d = $q.defer();
-    console.log('Search prevId', previsionId)
-    var request = gapi.client.drive.files.list({
-        'pageSize': 10,
-        'q': "name = '"+previsionId+"'", // works fine
-        // 'q': "'"+previsionId+"' in parents",
-        'fields': "nextPageToken, files(id, name)"
-      });
+  function updateApiVersion() {
+    if (gapi.client && gapi.client.drive && gapi.client.drive.kB.servicePath.indexOf('v2') != -1) {
+      // patch to fix problem when opening first the google picker then the gapi version loaded is v2
+      gapi.client.drive.kB.servicePath = 'drive/v3/';
+    }
+  }
 
-      request.execute(function(resp) {
-        console.log('Files:');
-        var files = resp.files;
-        if (files && files.length == 1) {
-          var file = files[0];
-          console.log(file.name + ' (' + file.id + ')');
-          d.resolve(file);
-        } else {
-          console.log('No prevision folder found.');
-          d.reject();
-        }
-      });
-
-      return d.promise;
-  };
+  // ---- Interface functions ---- //
 
   that.listFiles = function(parentId) {
     var d = $q.defer();
@@ -67,6 +50,9 @@ angular.module('vsko.stock').factory('DriveAPI',[ '$q', 'Utils', function ($q, U
     if (typeof gapi != 'undefined') { // check of not gapi defined needed for offline or problems loading client
 
       if (gapi && gapi.client && gapi.client.drive) {
+
+        updateApiVersion();
+
         var request = gapi.client.drive.files.list(params);
 
         request.execute(function(resp) {
@@ -141,7 +127,10 @@ angular.module('vsko.stock').factory('DriveAPI',[ '$q', 'Utils', function ($q, U
     gapi.client.drive.files.delete({
        fileId: file.id
     }).execute(function(res, resfile) {
-      if(res) {
+      if(res.code > 400) {
+        console.log('Rejected:', res);
+        d.reject(res.code);
+      } else if(res) {
         console.log(res, resfile);
         Utils.logFiles(file.id, file.name, 'delete', metadata.folder, metadata.parentId, metadata.previsionId);
         d.resolve(file);
@@ -186,10 +175,7 @@ angular.module('vsko.stock').factory('DriveAPI',[ '$q', 'Utils', function ($q, U
     if (typeof gapi != 'undefined') { // check of not gapi defined needed for offline or problems loading client
       if (gapi.auth) {
 
-        if (gapi.client && gapi.client.drive && gapi.client.drive.kB.servicePath.indexOf('v2') != -1) {
-          // patch to fix problem when opening first the google picker then the gapi version loaded is v2
-          gapi.client.drive.kB.servicePath = 'drive/v3/';
-        }
+        updateApiVersion();
 
         gapi.auth.authorize(
             {
@@ -204,57 +190,6 @@ angular.module('vsko.stock').factory('DriveAPI',[ '$q', 'Utils', function ($q, U
     } else {
       defer.reject(false);
     }
-
-    return defer.promise;
-  };
-
-  that.uploadFile = function() {
-        var request = gapi.client.storage.objects.insert(
-      {
-
-      'bucket': bucket,
-
-      'name': "test.uploadFile",
-
-      'body': {
-
-      "media": {
-
-      "contentType": "application/json",
-
-      "data": $.base64.encode( "{id:1, name: 'content file'}" )
-
-      }
-
-      }
-      });
-      request.execute( function(res) {
-        console.log(res);
-      } );
-  }
-
-  that.uploadFilezz = function (input) {
-    var defer = $q.defer();
-
-    var fd = new FormData();
-    fd.append('attachment', input.file, input.file.name);
-    fd.append('type', input.type);
-
-    $http.post('',
-      fd, {
-        transformRequest: angular.identity, //eslint-disable-line
-        headers: {'Content-Type': undefined} //eslint-disable-line
-      })
-    .success(function(data, status) {
-      var resp = {
-        status: status
-      };
-      defer.resolve(resp);
-
-    }).error(function(resp, status) {
-
-      defer.resolve(resp);
-    });
 
     return defer.promise;
   };

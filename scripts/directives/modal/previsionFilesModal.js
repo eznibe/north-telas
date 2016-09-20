@@ -39,6 +39,9 @@ angular.module('vsko.stock')
                       $scope.filesLbl = value;
                     });
                   });
+                }, function(code) {
+                  // delete file rejected, possible because not permission to do it
+                  Utils.showMessage('notify.file_delete_error', 'error', {fileName: file.name});
                 });
               });
               $scope.modalPrevisionFiles.hide();

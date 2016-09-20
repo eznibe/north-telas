@@ -125,73 +125,9 @@ angular.module('vsko.stock')
 
               $scope.prevision.startedAsOD = prevision ? prevision.oneDesign : true;
 
-              // handle creation of drive folders if they dont exists yet
-              if ($scope.prevision.id) {
+              // handle creation/load of drive folders if they dont exists yet
+              handlePrevisionDriveFolders(prevision);
 
-                if (!$scope.prevision.driveIdProduction) {
-                  DriveAPI.hasPermissions(productionFilesFolder).then(function(hasDrivePermissions) {
-
-                    if (hasDrivePermissions) {
-
-                      Files.createFolders(prevision).then(function() {
-                        $scope.origPrevision.driveIdProduction = prevision.driveIdProduction;
-                        $scope.origPrevision.driveIdDesign = prevision.driveIdDesign;
-
-                        lkGoogleSettings.views = ["DocsView().setParent('"+prevision.driveIdProduction+"')",
-                                                  "DocsUploadView().setParent('"+prevision.driveIdProduction+"')"] ;
-
-                        Utils.translate('Files count', {count: 0}).then(function(value) {
-                          $scope.filesLbl = value;
-                        });
-                      }, function(code) {
-                        // show error message?
-                      });
-                    } else {
-                      $scope.insufficientPermissions = true;
-                      if ("admin,produccion,ordenes,plotter".split(',').lastIndexOf($rootScope.user.role) != -1) {
-                        // allowed access to files but no permission in drive
-                        Utils.showMessage('notify.drive_not_allowed', 'error');
-                      }
-                    }
-                  });
-
-                  Utils.translate('Files').then(function(value) {
-                    $scope.filesLbl = value;
-                  });
-
-                } else {
-
-                  lkGoogleSettings.views = ["DocsView().setParent('"+prevision.driveIdProduction+"')",
-                                            "DocsUploadView().setParent('"+prevision.driveIdProduction+"')"] ;
-
-                  // get number of files in prevision folder to show in label
-                  DriveAPI.hasPermissions(productionFilesFolder).then(function(hasDrivePermissions) {
-
-                    if (hasDrivePermissions) {
-                      // list files only if the user logged in google has permissions to see the prevision prod folder
-                      DriveAPI.listFiles(prevision.driveIdProduction).then(function(files) {
-                        Utils.translate('Files count', {count: files.length}).then(function(value) {
-                          $scope.filesLbl = value;
-                        });
-                      }, function(code) {
-                        // rejected list files, possible because the gapi is not loaded yet
-                        Utils.translate('Files').then(function(value) {
-                          $scope.filesLbl = value;
-                        });
-                      });
-                    } else {
-                      $scope.insufficientPermissions = true;
-                      if ("admin,produccion,ordenes,plotter".split(',').lastIndexOf($rootScope.user.role) != -1) {
-                        // allowed access to files but no permission in drive
-                        Utils.showMessage('notify.drive_not_allowed', 'error');
-                      }
-                      Utils.translate('Files').then(function(value) {
-                        $scope.filesLbl = value;
-                      });
-                    }
-                  });
-                }
-              }
 
         		  if(!$scope.prevision.cloths || $scope.prevision.cloths.length == 0) {
         			  // init with one cloth empty, useful for creating new prevision
@@ -639,6 +575,8 @@ angular.module('vsko.stock')
             return d.promise;
   				}
 
+          // Help handle functions
+
           function handlePrevisionInDispatch() {
 
             // check if the prev was already in some dispatch -> remove from it
@@ -656,6 +594,78 @@ angular.module('vsko.stock')
               Dispatchs.addPrevision($scope.prevision, $scope.prevision.dispatchId).then(function(result) {
                 //
               });
+            }
+          }
+
+          function handlePrevisionDriveFolders(prevision) {
+
+            // handle creation/load of drive folders if they dont exists yet
+            if ($scope.prevision.id) {
+
+              if (!$scope.prevision.driveIdProduction) {
+                DriveAPI.hasPermissions(productionFilesFolder).then(function(hasDrivePermissions) {
+
+                  if (hasDrivePermissions) {
+
+                    Files.createFolders(prevision).then(function() {
+                      $scope.origPrevision.driveIdProduction = prevision.driveIdProduction;
+                      $scope.origPrevision.driveIdDesign = prevision.driveIdDesign;
+
+                      lkGoogleSettings.views = ["DocsView().setParent('"+prevision.driveIdProduction+"')",
+                                                "DocsUploadView().setParent('"+prevision.driveIdProduction+"')"] ;
+
+                      Utils.translate('Files count', {count: 0}).then(function(value) { $scope.filesLbl = value; });
+                    }, function(code) {
+                      // not permissions to create folder (shouldnt happen) -> show error message?
+                    });
+                  } else {
+                    // user logged in google but not permissions to create folder
+                    $scope.insufficientPermissions = true;
+                    if ("admin,produccion,ordenes,plotter".split(',').lastIndexOf($rootScope.user.role) != -1) {
+                      // allowed access to files but no permission in drive
+                      Utils.showMessage('notify.drive_not_allowed', 'error');
+                    }
+                  }
+                }, function(code) {
+                  // rejected has permissions, possible because is not logged into google yet
+                  Utils.translate('Files').then(function(value) { $scope.filesLbl = value; });
+                });
+
+                Utils.translate('Files').then(function(value) {
+                  $scope.filesLbl = value;
+                });
+
+              } else {
+                // drive folder already exists -> load it
+                lkGoogleSettings.views = ["DocsView().setParent('"+prevision.driveIdProduction+"')",
+                                          "DocsUploadView().setParent('"+prevision.driveIdProduction+"')"] ;
+
+                // get number of files in prevision folder to show in label
+                DriveAPI.hasPermissions(productionFilesFolder).then(function(hasDrivePermissions) {
+
+                  if (hasDrivePermissions) {
+                    // list files only if the user logged in google has permissions to see the prevision prod folder
+                    DriveAPI.listFiles(prevision.driveIdProduction).then(function(files) {
+                      Utils.translate('Files count', {count: files.length}).then(function(value) {
+                        $scope.filesLbl = value;
+                      });
+                    }, function(code) {
+                      // rejected list files, possible because the gapi is not loaded yet
+                      Utils.translate('Files').then(function(value) { $scope.filesLbl = value; });
+                    });
+                  } else {
+                    $scope.insufficientPermissions = true;
+                    if ("admin,produccion,ordenes,plotter".split(',').lastIndexOf($rootScope.user.role) != -1) {
+                      // allowed access to files but no permission in drive
+                      Utils.showMessage('notify.drive_not_allowed', 'error');
+                    }
+                    Utils.translate('Files').then(function(value) { $scope.filesLbl = value; });
+                  }
+                }, function(code) {
+                  // rejected has permissions, possible because is not logged into google yet
+                  Utils.translate('Files').then(function(value) { $scope.filesLbl = value; });
+                });
+              }
             }
           }
         }

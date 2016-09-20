@@ -304,6 +304,7 @@
     "dispatch_archived": "Despacho archivado.",
     "dispatch_restored": "Despacho restaurado.",
     "file_deleted": "Archivo eliminado.",
+    "file_delete_error": "Error eliminando archivo: {{fileName}}",
     "drive_not_allowed": "Su usuario de google no tiene permisos en la carpeta de google drive."
   }
 }
