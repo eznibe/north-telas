@@ -8,13 +8,20 @@ angular.module('vsko.stock')
       var d = $q.defer();
       var promises = [];
 
-      var folderTypes = [{type: 'produccion', parentFolderId: productionFilesFolder, column: 'driveIdProduction'}, {type: 'diseno', parentFolderId: designFilesFolder, column: 'driveIdDesign'}];
+      var folderTypes = [{type: 'produccion', parentFolderId: productionFilesFolder, column: 'driveIdProduction'}
+                      //  , {type: 'diseno', parentFolderId: designFilesFolder, column: 'driveIdDesign'}
+                        ];
       DriveAPI.init().then(function() {
 
         folderTypes.map(function(metadata) {
           // metadata.name = metadata.type + '_' + prevision.id;
           metadata.name = prevision.orderNumber;
           metadata.previsionId = prevision.id;
+
+          if (prevision.line && productionFolders[prevision.line]) {
+            metadata.parentFolderId = productionFolders[prevision.line];
+          }
+
           promises.push(DriveAPI.createFolder(metadata));
         });
 

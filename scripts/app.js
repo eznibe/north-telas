@@ -16,7 +16,7 @@ angular.module("vsko.stock", [
 			, 'lk-google-picker'
 			// , 'ui.bootstrap'
     ])
-    .run(['$cookieStore', '$rootScope', '$translate', function ($cookieStore, $rootScope, $translate) {
+    .run(['$cookieStore', '$rootScope', '$translate', '$window', function ($cookieStore, $rootScope, $translate, $window) {
     	console.log('vsko.stock run');
 
     	var user = $cookieStore.get('user');
@@ -36,6 +36,20 @@ angular.module("vsko.stock", [
 					fn();
 				})
 			});
+
+			// watch for online status modifications
+			$rootScope.online = navigator.onLine;
+      $window.addEventListener("offline", function() {
+        $rootScope.$apply(function() {
+          $rootScope.online = false;
+        });
+      }, false);
+
+      $window.addEventListener("online", function() {
+        $rootScope.$apply(function() {
+          $rootScope.online = true;
+        });
+      }, false);
 
 	}])
 	.factory('Authorization', ['$rootScope', function($rootScope) {

@@ -64,25 +64,59 @@ angular.module('vsko.stock').factory('DriveAPI',[ '$q', 'Utils', function ($q, U
     if (parentId) {
       params.q = "'" + parentId + "' in parents";
     }
-    if (gapi.client && gapi.client.drive) {
-      var request = gapi.client.drive.files.list(params);
+    if (typeof gapi != 'undefined') { // check of not gapi defined needed for offline or problems loading client
 
-      request.execute(function(resp) {
-        console.log('Files:');
-        var files = resp.files;
-        if (files && files.length > 0) {
-          for (var i = 0; i < files.length; i++) {
-            var file = files[i];
-            console.log(file.name + ' (' + file.id + ')');
+      if (gapi && gapi.client && gapi.client.drive) {
+        var request = gapi.client.drive.files.list(params);
+
+        request.execute(function(resp) {
+          console.log('Files:');
+          var files = resp.files;
+          if (files && files.length > 0) {
+            for (var i = 0; i < files.length; i++) {
+              var file = files[i];
+              console.log(file.name + ' (' + file.id + ')');
+            }
+            d.resolve(files);
+          } else {
+            console.log('No files found.');
+            d.resolve([]);
           }
-          d.resolve(files);
-        } else {
-          console.log('No files found.');
-          d.resolve([]);
-        }
-      });
+        });
+      } else {
+        d.reject();
+      }
     } else {
+      console.log('No gapi var.');
       d.reject();
+    }
+    return d.promise;
+  };
+
+  that.hasPermissions = function(parentId) {
+    var d = $q.defer();
+    var params = {
+      'fileId': parentId,
+    };
+    if (typeof gapi != 'undefined') { // check of not gapi defined needed for offline or problems loading client
+
+      if (gapi && gapi.client && gapi.client.drive) {
+        var request = gapi.client.drive.files.get(params);
+
+        request.execute(function(resp) {
+          console.log('Permissions', resp);
+          if (resp.code > 400) {
+            d.resolve(false);
+          } else {
+            d.resolve(true);
+          }
+        });
+      } else {
+        d.reject(500);
+      }
+    } else {
+      console.log('No gapi var.');
+      d.reject(500);
     }
     return d.promise;
   };
@@ -129,14 +163,18 @@ angular.module('vsko.stock').factory('DriveAPI',[ '$q', 'Utils', function ($q, U
         resource: fileMetadata,
         fields: 'id'
       }).execute(function(res, file) {
-        if(res) {
+        if(res && res.code != 404) {
           console.log(res);
           metadata.driveId = res.id;
 
           Utils.logFiles(metadata.driveId, metadata.name, 'create', metadata.type, metadata.parentFolderId, metadata.previsionId);
           d.resolve(metadata);
+        } else if (res && res.code == 404) {
+          // not found folder mean it doesn exists or dont have permissions to see it
+          console.log('Error 404, no possible to create folder', metadata);
+          d.reject(404);
         } else {
-          d.reject();
+          d.reject(500);
         }
       });
 
@@ -145,21 +183,25 @@ angular.module('vsko.stock').factory('DriveAPI',[ '$q', 'Utils', function ($q, U
 
   that.init = function() {
     defer = $q.defer();
-    if (gapi.auth) {
+    if (typeof gapi != 'undefined') { // check of not gapi defined needed for offline or problems loading client
+      if (gapi.auth) {
 
-      if (gapi.client && gapi.client.drive && gapi.client.drive.kB.servicePath.indexOf('v2') != -1) {
-        // patch to fix problem when opening first the google picker then the gapi version loaded is v2
-        gapi.client.drive.kB.servicePath = 'drive/v3/';
+        if (gapi.client && gapi.client.drive && gapi.client.drive.kB.servicePath.indexOf('v2') != -1) {
+          // patch to fix problem when opening first the google picker then the gapi version loaded is v2
+          gapi.client.drive.kB.servicePath = 'drive/v3/';
+        }
+
+        gapi.auth.authorize(
+            {
+              'client_id': drive_client_id,
+              'scope': SCOPES.join(' '),
+              'immediate': true
+            }, handleAuthResult);
+      } else {
+        console.log('Rejected init, no gapi.auth');
+        defer.reject(false);
       }
-
-      gapi.auth.authorize(
-          {
-            'client_id': drive_client_id,
-            'scope': SCOPES.join(' '),
-            'immediate': true
-          }, handleAuthResult);
     } else {
-      console.log('Rejected init, no gapi.auth');
       defer.reject(false);
     }
 

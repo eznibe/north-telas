@@ -13,6 +13,12 @@ angular.module('vsko.stock')
             $scope.files = [];
 
 
+            $scope.onBeforePickerOpen = function(elementInfo) {
+              // TODO change the drive folder id (prod/design) according to clicked button -> check elementInfo.id == 'productionPicker' / 'designPicker'
+              // Note: google-picker module was modified to include this extra call
+              // console.log('Google Picker before open!', elementInfo);
+            }
+
             $scope.onLoaded = function () {
             //  console.log('Google Picker loaded!');
             }
@@ -44,8 +50,20 @@ angular.module('vsko.stock')
               // console.log('Google picker close/cancel!');
             }
 
-            $scope.openSelection = function() {
-              scope.showPrevisionFilesModal([]);
+            $scope.clickedPicker = function() {
+              console.log('Clicked to open picker');
+            }
+
+            $scope.offlineUpload = function() {
+              scope.showPrevisionOfflineFilesModal(true);
+            }
+
+            $scope.checkOnline = function() {
+              console.log('Is online', $rootScope.online);
+            }
+
+            $scope.checkPermissions = function() {
+              DriveAPI.hasPermissions('0B3ufmcTU0qqcRDJGVEl2cVpudFE');
             }
 
 
@@ -78,10 +96,10 @@ angular.module('vsko.stock')
               });
             };
 
-            $scope.listFiles = function() {
+            $scope.listFiles = function(parentId) {
               DriveAPI.init().then(function() {
                 // DriveAPI.findPrevisionFolder('0B85OZZCDsYWNMnEyNTBfZUZpUTg');
-                DriveAPI.listFiles();
+                DriveAPI.listFiles(parentId);
               },
               function() {
                 console.log('Loaded rejected!');
@@ -111,16 +129,30 @@ angular.module('vsko.stock')
               if ($scope.prevision.id) {
 
                 if (!$scope.prevision.driveIdProduction) {
-                  Files.createFolders(prevision).then(function() {
-                    $scope.origPrevision.driveIdProduction = prevision.driveIdProduction;
-                    $scope.origPrevision.driveIdDesign = prevision.driveIdDesign;
+                  DriveAPI.hasPermissions(productionFilesFolder).then(function(hasDrivePermissions) {
 
-                    lkGoogleSettings.views = ["DocsView().setParent('"+prevision.driveIdProduction+"')",
-                                              "DocsUploadView().setParent('"+prevision.driveIdProduction+"')"] ;
+                    if (hasDrivePermissions) {
 
-                    Utils.translate('Files count', {count: 0}).then(function(value) {
-                      $scope.filesLbl = value;
-                    });
+                      Files.createFolders(prevision).then(function() {
+                        $scope.origPrevision.driveIdProduction = prevision.driveIdProduction;
+                        $scope.origPrevision.driveIdDesign = prevision.driveIdDesign;
+
+                        lkGoogleSettings.views = ["DocsView().setParent('"+prevision.driveIdProduction+"')",
+                                                  "DocsUploadView().setParent('"+prevision.driveIdProduction+"')"] ;
+
+                        Utils.translate('Files count', {count: 0}).then(function(value) {
+                          $scope.filesLbl = value;
+                        });
+                      }, function(code) {
+                        // show error message?
+                      });
+                    } else {
+                      $scope.insufficientPermissions = true;
+                      if ("admin,produccion,ordenes,plotter".split(',').lastIndexOf($rootScope.user.role) != -1) {
+                        // allowed access to files but no permission in drive
+                        Utils.showMessage('notify.drive_not_allowed', 'error');
+                      }
+                    }
                   });
 
                   Utils.translate('Files').then(function(value) {
@@ -133,15 +165,30 @@ angular.module('vsko.stock')
                                             "DocsUploadView().setParent('"+prevision.driveIdProduction+"')"] ;
 
                   // get number of files in prevision folder to show in label
-                  DriveAPI.listFiles($scope.prevision.driveIdProduction).then(function(files) {
-                    Utils.translate('Files count', {count: files.length}).then(function(value) {
-                      $scope.filesLbl = value;
-                    });
-                  }, function() {
-                    // rejected list files, possible because the gapi is not loaded yet
-                    Utils.translate('Files').then(function(value) {
-                      $scope.filesLbl = value;
-                    });
+                  DriveAPI.hasPermissions(productionFilesFolder).then(function(hasDrivePermissions) {
+
+                    if (hasDrivePermissions) {
+                      // list files only if the user logged in google has permissions to see the prevision prod folder
+                      DriveAPI.listFiles(prevision.driveIdProduction).then(function(files) {
+                        Utils.translate('Files count', {count: files.length}).then(function(value) {
+                          $scope.filesLbl = value;
+                        });
+                      }, function(code) {
+                        // rejected list files, possible because the gapi is not loaded yet
+                        Utils.translate('Files').then(function(value) {
+                          $scope.filesLbl = value;
+                        });
+                      });
+                    } else {
+                      $scope.insufficientPermissions = true;
+                      if ("admin,produccion,ordenes,plotter".split(',').lastIndexOf($rootScope.user.role) != -1) {
+                        // allowed access to files but no permission in drive
+                        Utils.showMessage('notify.drive_not_allowed', 'error');
+                      }
+                      Utils.translate('Files').then(function(value) {
+                        $scope.filesLbl = value;
+                      });
+                    }
                   });
                 }
               }

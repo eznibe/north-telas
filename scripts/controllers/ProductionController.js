@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope', '$translate', '$timeout', '$cookieStore', 'Production', 'Previsions', 'Users', 'Rules', 'Files', function ($scope, $rootScope, $translate, $timeout, $cookieStore, Production, Previsions, Users, Rules, Files) {
+angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope', '$translate', '$timeout', '$cookieStore', 'Production', 'Previsions', 'Users', 'Rules', 'Files', 'DriveAPI', function ($scope, $rootScope, $translate, $timeout, $cookieStore, Production, Previsions, Users, Rules, Files, DriveAPI) {
 
 	$scope.start = Date.now();
 
@@ -12,6 +12,11 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 		}
 	}
 	$rootScope.searchBoxChangedObservers.push($scope.refreshBySearchBox);
+
+	// just init the drive api to ensure we have the v3 loaded (avoiding problems with v2 loaded by the google picker)
+	$timeout(function() {
+		DriveAPI.init();
+	}, 2500);
 
 	// column filters selections are stored here as eg. selectionObject.week
 	$scope.selectionObject = {};
