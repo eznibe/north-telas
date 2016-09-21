@@ -126,12 +126,17 @@ function getDispatchCarries($dispatchId)
 	return fetch_array($result);
 }
 
+// get all the destinataries enetered in the systema (the info will be from the last dispatch for that person)
 function getDispatchDestinataries()
-{
-
-	$query = "SELECT destinatary as name, address, destiny, notes FROM dispatchs WHERE destinatary is not null
-						GROUP BY destinatary
-					  ORDER BY destinatary";
+{	
+	$query = "SELECT destinatary as name, address, destiny, transport, deliveryType , notes, number, archived
+						FROM dispatchs d
+						WHERE d.number in
+						(
+							SELECT max(number) as number FROM dispatchs WHERE destinatary is not null
+							GROUP BY destinatary
+						)
+						ORDER BY destinatary";
 
 	$result = mysql_query($query);
 
