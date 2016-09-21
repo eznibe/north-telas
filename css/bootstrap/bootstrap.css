@@ -6141,6 +6141,7 @@ mark {
 .btn {
   /*border: none;*/
   transition: background-color 0.15s linear;
+  border-radius: 4px;
 }
 .btn.input-group-addon {
   border: 1px solid #c8c5c5;
