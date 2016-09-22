@@ -12,7 +12,7 @@
 					</div>
 				</div>
 
-				<label class="control-label col-xs-1" for="edit_cloth" translate>and</label>
+				<label class="control-label col-xs-2" for="edit_cloth" style="text-align: center;" translate>and</label>
 				<div class="col-xs-4">
 					<div class="input-group input-group-sm date" date-picker>
 						<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="filter.endDate" class="form-control small" required>
@@ -32,28 +32,22 @@
 		      </select>
 				</div>
 
-				<label class="control-label col-xs-1"></label>
+				<label class="control-label col-xs-2"></label>
 				<div class="col-xs-4">
 					<input ng-model="filter.value" class="form-control small" />
 				</div>
 		</div>
-	</div>
 
-	<div class="row">
 		<div class="col-md-6 nopadding">
-				<label class="control-label col-xs-2"></label>
-				<div class="col-xs-4">
-				</div>
-
-				<label class="control-label col-xs-1" for="edit_cloth" translate>&nbsp;</label>
-				<div class="col-xs-4">
-					<a ng-click="search()" class="btn btn-default floatright">
-						<span class="glyphicon glyphicon-search"></span>
-						{{'Search' | translate}}
-					</a>
-				</div>
+			<div class="col-xs-4">
+				<!-- <a ng-click="search()" class="btn btn-default floatright"> -->
+					<span class="glyphicon glyphicon-search icon-with-label"></span>
+					<span><a ng-click="search()" class="btn-link">{{'Search' | translate}}</a><span>
+				<!-- </a> -->
+			</div>
 		</div>
 	</div>
+
 </div>
 
 <!-- Consumos -->

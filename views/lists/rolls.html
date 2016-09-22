@@ -8,7 +8,7 @@
 						<option value="">-- choose one --</option>
 			        </select>
 				</div>
-				
+
 				<label class="control-label col-xs-1" translate>Lote</label>
 				<div class="col-xs-2">
 					<select ng-model="filter.selectedLote" ng-options="sc as sc.lote for sc in lotes" class="form-control small">
@@ -24,15 +24,15 @@
 			            <option value="">-- choose one --</option>
 			        </select>
 				</div>
-				
+
 				<div class="col-xs-3">
 				</div>
-				
+
 				<div class="col-xs-2">
-					<a ng-click="search()" class="btn btn-default floatright" ng-disabled="!filter.selectedLote.id && !filter.selectedCloth.id">
-						<span class="glyphicon glyphicon-search"></span>
-						{{'Search' | translate}}
-					</a>
+					<!-- <a ng-click="search()" class="btn btn-default floatright" ng-disabled="!filter.selectedLote.id && !filter.selectedCloth.id"> -->
+						<span class="glyphicon glyphicon-search icon-with-label"></span>
+						<span><a ng-click="search()" class="btn-link" ng-disabled="!filter.selectedLote.id && !filter.selectedCloth.id">{{'Search' | translate}}</a><span>
+					<!-- </a> -->
 				</div>
 		</div>
 	</div>
@@ -92,4 +92,3 @@
 		</tr>
 	</tbody>
 </table>
-

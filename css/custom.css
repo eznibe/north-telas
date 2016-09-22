@@ -194,3 +194,17 @@ table#production th > div.editable {
 .icon-disabled {
 	color: lightgray;
 }
+
+.icon-with-label {
+	display: inline-block;
+	top: 2px;
+}
+
+.btn-link, .btn-link:hover {
+	color: inherit;
+	cursor: pointer;
+}
+
+.btn-link[disabled] {
+	color: lightgray;
+}

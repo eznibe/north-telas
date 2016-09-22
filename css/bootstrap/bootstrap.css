@@ -6636,7 +6636,7 @@ legend {
 }
 .table thead tr th {
   color: #ffffcc;
-  background-color: hsl(210, 80%, 55%) ;
+  background-color: hsl(210, 100%, 40%) ;
   font-size: 12px;
   font-weight: normal;
   /*text-shadow: 0 -1px 0 #ffffff;*/
@@ -7511,4 +7511,30 @@ a.rollDataLabel:hover {
 .fixWidth40 {
 	display: inline-block;
 	width: 40px;
+}
+
+.datepicker-days tbody {
+  background-color: hsl(210, 80%, 90%);
+}
+
+.datepicker-days tbody td {
+  cursor: pointer;
+}
+
+.datepicker-days tbody td:hover {
+  background-color: hsl(210, 80%, 85%);
+}
+
+.datepicker-days thead {
+  background-color: hsl(210, 80%, 55%);
+}
+
+.datepicker-days .next,
+.datepicker-days .prev {
+  cursor: pointer;
+}
+
+.datepicker-days .next:hover,
+.datepicker-days .prev:hover {
+  background-color: hsl(210, 80%, 45%);
 }

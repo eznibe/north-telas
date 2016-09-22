@@ -4,24 +4,6 @@
 
 	</div>
 
-	<!-- <div class="row">
-		<div class="col-md-6 nopadding">
-			<label class="control-label col-xs-3" translate>Filter by</label>
-			<div class="col-xs-4">
-				<select name="dd_ty" ng-model="filterOptions.selectedFilter" ng-options="sc as sc.name for sc in filterOptions.columns" class="form-control small" ng-change="clearFilterOption();">
-					<option value="">-- choose one --</option>
-				</select>
-			</div>
-
-			<label class="control-label col-xs-1"></label>
-			<div class="col-xs-4">
-				<select ng-model="filterOptions.selectedFilterOption" ng-options="sc as sc.value for sc in filterOptions.selectedFilter.options" class="form-control small" ng-change="clearFilterOption();">
-					<option value="">-- choose one --</option>
-				</select>
-			</div>
-		</div>
-	</div> -->
-
 	<div class="row">
 		<div class="col-md-6 nopadding">
 			<label class="control-label col-xs-3" translate>Order by</label>
@@ -37,22 +19,17 @@
 				</select>
 			</div>
 		</div>
+		<div class="col-md-6 nopadding">
+			<div class="col-xs-4">
+				<!-- <a ng-click="search(1)" class="btn btn-default floatright"> -->
+				<span class="glyphicon glyphicon-search icon-with-label"></span>
+				<span><a ng-click="search(1)" class="btn-link">{{'Search' | translate}}</a><span>
+				<!-- </a> -->
+			</div>
+		</div>
 	</div>
 
 	<div class="row">
-		<div class="col-md-6 nopadding">
-				<label class="control-label col-xs-3"></label>
-				<div class="col-xs-4">
-				</div>
-
-				<label class="control-label col-xs-1" for="edit_cloth" translate>&nbsp;</label>
-				<div class="col-xs-4">
-					<a ng-click="search(1)" class="btn btn-default floatright">
-						<span class="glyphicon glyphicon-search"></span>
-						{{'Search' | translate}}
-					</a>
-				</div>
-		</div>
 	</div>
 
 </div>
