@@ -50,13 +50,49 @@
 					<div class="navbar-collapse collapse" id="vsko-application-header-collapse">
 						<ul class="nav navbar-nav" ng-show="user.name">
 							<li access-restricted="vendedor">
-								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'Cloths' | translate }} <span class="caret"></span></a>
+								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'Stock arg' | translate }} <span class="caret"></span></a>
 			                    <ul class="dropdown-menu" role="menu">
-			                        <li><a href="#/groups" translate>Groups</a></li>
-			                        <li><a href="#/cloths" translate>All</a></li>
+			                        <li><a href="#/groups" translate>Cloths</a></li>
+                              <li><a href="#/orders/buy" translate>Buys</a></li>
+                              <li><a href="#/previsions" access-restricted="plotter" translate>Orders</a></li>
+                              <li><a href="#/plotter" translate>Plotter</a></li>
+                              <li><a href="#/onedesign" translate>One design cloths</a></li>
+                              <li><a href="#/providers" access-level="admin" translate>Providers</a></li>
 			                    </ul>
 							</li>
-							<li access-restricted="plotter,vendedor">
+              <li access-restricted="vendedor">
+								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'Stock bra' | translate }} <span class="caret"></span></a>
+			                    <ul class="dropdown-menu" role="menu">
+			                        <!-- <li><a href="#/groups" translate>Cloths</a></li> -->
+			                    </ul>
+							</li>
+              <li access-restricted="vendedor">
+								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'Production arg' | translate }} <span class="caret"></span></a>
+			                    <ul class="dropdown-menu" role="menu">
+                            <li><a href="#/production" translate>Production</a></li>
+                            <li><a href="#/historic" translate>Historics</a></li>
+			                    </ul>
+							</li>
+              <li access-restricted="vendedor">
+								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'Production bra' | translate }} <span class="caret"></span></a>
+			                    <ul class="dropdown-menu" role="menu">
+			                        <!-- <li><a href="#/groups" translate>Groups</a></li> -->
+			                    </ul>
+							</li>
+              <li access-restricted="vendedor">
+								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'Design' | translate }} <span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="#/design" access-restricted="plotter" translate>Design</a></li>
+                </ul>
+							</li>
+              <li access-restricted="vendedor">
+								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'Dispatchs' | translate }} <span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu">
+                    <li access-restricted="vendedor"><a href="#/dispatch" translate>Dispatchs</a></li>
+                    <li><a href="#/lists/dispatchsHistoric" translate>Historics</a></li>
+                </ul>
+							</li>
+							<!-- <li access-restricted="plotter,vendedor">
 								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'Buys' | translate }} <span class="caret"></span></a>
 			                    <ul class="dropdown-menu" role="menu">
 			                        <li><a href="#/orders/buy" translate>Buy</a></li>
@@ -71,16 +107,15 @@
 			                        <li><a href="#/design" access-restricted="plotter" translate>Design</a></li>
 			                        <li><a href="#/plotter" translate>Plotter</a></li>
 			                    </ul>
-							</li>
-              <li>
+							</li> -->
+              <!-- <li>
 								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'Manage' | translate }} <span class="caret"></span></a>
 			                    <ul class="dropdown-menu" role="menu">
                             <li><a href="#/production" translate>Production</a></li>
                             <li access-restricted="vendedor"><a href="#/dispatch" translate>Dispatchs</a></li>
                             <li><a href="#/historic" translate>Historics</a></li>
-                            <!-- <li><a href="#/canvas" translate>Canvas</a></li> -->
 			                    </ul>
-							</li>
+							</li> -->
 							<li access-restricted="vendedor">
 								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'Lists' | translate }} <span class="caret"></span></a>
 			                    <ul class="dropdown-menu" role="menu">
@@ -91,14 +126,11 @@
 			                        <li><a href="#/lists/clothsStock" translate>Cloths stock</a></li>
                               <li><a href="#/lists/clothsPrice" access-restricted="plotter" translate>Cloths price</a></li>
                               <li><a href="#/lists/clothsValuedStock" translate>Cloths valued stock</a></li>
-                              <li><a href="#/lists/dispatchsHistoric" translate>Dispatchs historic</a></li>
 			                    </ul>
 							</li>
 							<li access-restricted="plotter,vendedor">
-								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'System' | translate }} <span class="caret"></span></a>
+								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'Configuration' | translate }} <span class="caret"></span></a>
 			                    <ul class="dropdown-menu" role="menu">
-			                        <li><a href="#/providers" access-level="admin" translate>Providers</a></li>
-			                        <li><a href="#/onedesign">One design</a></li>
 			                        <li><a href="#/dolar" access-level="admin" translate>Configuration</a></li>
 			                        <li><a href="#/users" access-level="admin" translate>Users</a></li>
 			                    </ul>
