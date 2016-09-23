@@ -23,6 +23,7 @@ angular.module('vsko.stock')
         	  $scope.download = function() {
 
               angular.forEach($scope.selectedFiles, function (file, index) {
+                console.log(file);
                 window.open('https://drive.google.com/uc?export=download&id='+file.id);
               });
               $scope.modalPrevisionFiles.hide();

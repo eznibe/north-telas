@@ -611,8 +611,8 @@ angular.module('vsko.stock')
                       $scope.origPrevision.driveIdProduction = prevision.driveIdProduction;
                       $scope.origPrevision.driveIdDesign = prevision.driveIdDesign;
 
-                      lkGoogleSettings.views = ["DocsView().setParent('"+prevision.driveIdProduction+"')",
-                                                "DocsUploadView().setParent('"+prevision.driveIdProduction+"')"] ;
+                      lkGoogleSettings.views = ["DocsView().setParent('"+prevision.driveIdProduction+"').setSelectFolderEnabled(true).setIncludeFolders(true)",
+                                                "DocsUploadView().setParent('"+prevision.driveIdProduction+"').setIncludeFolders(true)"] ;
 
                       Utils.translate('Files count', {count: 0}).then(function(value) { $scope.filesLbl = value; });
                     }, function(code) {
@@ -637,7 +637,7 @@ angular.module('vsko.stock')
 
               } else {
                 // drive folder already exists -> load it
-                lkGoogleSettings.views = ["DocsView().setParent('"+prevision.driveIdProduction+"')",
+                lkGoogleSettings.views = ["DocsView().setParent('"+prevision.driveIdProduction+"').setSelectFolderEnabled(true).setIncludeFolders(true)",
                                           "DocsUploadView().setParent('"+prevision.driveIdProduction+"')"] ;
 
                 // get number of files in prevision folder to show in label
