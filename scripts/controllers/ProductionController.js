@@ -27,29 +27,31 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 	var defaultFilters = {orderList: [], limit: $scope.rows, default: true};
 	defaultFilters.orderList.push({key: 'week', type: 'str', mode: 'order.ascending'});
 
-	Previsions.getPrevisionsForProduction($rootScope.user.sellerCode, defaultFilters, 0).then(function(result) {
+	if (!$rootScope.forceNotLoad) { // very special case when after login it is forced to not load the initial list
+		Previsions.getPrevisionsForProduction($rootScope.user.sellerCode, defaultFilters, 0).then(function(result) {
 
-		console.log('Results in ' + (Date.now() - $scope.start) + ' ms.'); //eslint-disable-line
+			console.log('Results in ' + (Date.now() - $scope.start) + ' ms.'); //eslint-disable-line
 
-		$scope.previsions = result.data;
+			$scope.previsions = result.data;
 
-		if (result.data[0] && result.data[0].count > $scope.rows) {
-			$('#pagination').twbsPagination({
-		        totalPages: (result.data[0].count / $scope.rows) + 1,
-		        visiblePages: 7,
-						startPage: 1,
-						first: '<<',prev: '<',last: '>>',next: '>',
-		        onPageClick: function (event, page) {
-							if (!firstLoad) {
-			          console.log('Page: '+page);
-								$scope.search(page);
-							} else {
-								firstLoad = false;
-							}
-		        }
-		    });
-		}
-	});
+			if (result.data[0] && result.data[0].count > $scope.rows) {
+				$('#pagination').twbsPagination({
+			        totalPages: (result.data[0].count / $scope.rows) + 1,
+			        visiblePages: 7,
+							startPage: 1,
+							first: '<<',prev: '<',last: '>>',next: '>',
+			        onPageClick: function (event, page) {
+								if (!firstLoad) {
+				          console.log('Page: '+page);
+									$scope.search(page);
+								} else {
+									firstLoad = false;
+								}
+			        }
+			    });
+			}
+		});
+	}
 
 	$scope.visibility = {
 
