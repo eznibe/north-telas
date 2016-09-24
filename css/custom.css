@@ -36,7 +36,7 @@ table#production th {
 table#production td {
 	font-size: 11px;
 	padding: 4px;
-	color: black;
+	color: #333;
 }
 
 table#production td span {
@@ -68,6 +68,9 @@ table#production th > div.editable {
   width: 30px;
 }
 
+table#production tbody tr {
+  height: 35px;
+}
 
 #percentages {
 	border: 0px solid rgb(204, 204, 204);

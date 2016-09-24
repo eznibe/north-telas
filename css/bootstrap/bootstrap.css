@@ -2044,15 +2044,25 @@ th {
 .table > tbody > tr > td,
 .table > tfoot > tr > td {
   padding: 8px;
-  line-height: 1.42857143;
+  /*line-height: 1.42857143;*/
+  line-height: 16px;
   vertical-align: top;
   border-top: 1px solid #efefef;
-  font-size: 11px;
   vertical-align: middle;
+  font-size: 11px;
+  /*font-family: segoeui;*/
+  color: #333;
 }
+/*.table td span {
+  line-height: 16px;
+  font-size: 12px;
+  font-family: segoeui;
+  color: #333;
+}*/
 .table > thead > tr > th {
   vertical-align: bottom;
   border-bottom: 2px solid #efefef;
+  font-family: segoeui;
 }
 .table > caption + thead > tr:first-child > th,
 .table > colgroup + thead > tr:first-child > th,
@@ -3111,6 +3121,7 @@ tbody.collapse.in {
   line-height: 1.42857143;
   color: hsl(210, 100%, 41%);
   white-space: nowrap;
+  font-family: sourceSansPro;
 }
 .dropdown-menu > li > a:hover,
 .dropdown-menu > li > a:focus {
@@ -4137,6 +4148,9 @@ fieldset[disabled] .navbar-default .btn-link:focus {
 }
 .navbar-inverse .navbar-nav > li > a {
   color: #656565;
+  font-family: sourceSansPro;
+  padding-left: 7px;
+  padding-right: 7px;
 }
 .navbar-inverse .navbar-nav > li > a:hover,
 .navbar-inverse .navbar-nav > li > a:focus {
@@ -4442,7 +4456,7 @@ a.label:focus {
   display: inline-block;
   min-width: 10px;
   padding: 3px 7px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: normal;
   color: #000000;
   line-height: 1;
@@ -4507,8 +4521,8 @@ a.list-group-item.active > .badge,
     padding-bottom: 16px;
   }
   .container .jumbotron {
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 0px;
+    padding-bottom: 0px;
   }
   .jumbotron h1,
   .jumbotron .h1 {
@@ -6421,6 +6435,7 @@ mark {
   padding-top: 0;
   padding-bottom: 20px;
   margin-bottom: 20px;
+  font-family: sourceSansPro;
 }
 .jumbotron > .clearfix,
 .jumbotron > .dl-horizontal dd,
@@ -6443,6 +6458,9 @@ mark {
   font-size: 30px;
   margin-bottom: 15px;
 }
+.jumbotron h1 span {
+   font-family: Lato;
+ }
 .jumbotron p {
   margin-bottom: 15px;
 }
@@ -6637,7 +6655,7 @@ legend {
 .table thead tr th {
   color: #ffffcc;
   background-color: hsl(210, 100%, 40%) ;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: normal;
   /*text-shadow: 0 -1px 0 #ffffff;*/
 /*   border-left: solid 1px #f2f2f2; */
@@ -7538,3 +7556,37 @@ a.rollDataLabel:hover {
 .datepicker-days .prev:hover {
   background-color: hsl(210, 80%, 45%);
 }
+
+@font-face {
+  font-family: 'sourceSansPro';
+  src: url('../fonts/sourcesanspro-regular.ttf');
+}
+
+@font-face {
+  /*font-family: "Segoe UI",Arial,Helvetica,sans-serif;*/
+  font-family: "segoeui"
+  src: url('../fonts/segoeui.ttf');
+}
+
+@font-face {
+  font-family: 'Lato';
+  src: url("../fonts/LatoLatin-Medium.eot?") format("eot"), url("../fonts/LatoLatin-Medium.woff") format("woff"), url("../fonts/LatoLatin-Medium.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: 'Lato';
+  src: url("../fonts/LatoLatin-Semibold.eot?") format("eot"), url("../fonts/LatoLatin-Semibold.woff") format("woff"), url("../fonts/LatoLatin-Semibold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: bold; }
+
+@font-face {
+    font-family: 'Lato';
+    src: url("../fonts/LatoLatin-Medium.eot?") format("eot"), url("../fonts/LatoLatin-Medium.woff") format("woff"), url("../fonts/LatoLatin-Medium.ttf") format("truetype");
+    font-weight: 500;
+    font-style: bold; }
+
+@font-face {
+  font-family: 'Lato';
+  src: url("../fonts/LatoLatin-Regular.eot?") format("eot"), url("../fonts/LatoLatin-Regular.woff") format("woff"), url("../fonts/LatoLatin-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal; }
