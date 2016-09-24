@@ -7,13 +7,13 @@ angular.module("vsko.stock", [
       'pascalprecht.translate',
       'uuid4',
       'toaster',
-      // 'angular-loading-bar',
+      'angular-loading-bar',
 			'angucomplete-alt',
 			'anguFixedHeaderTable',
 			'angularStats',
 			'angular.bind.notifier',
-			'xeditable'
-			, 'lk-google-picker'
+			'xeditable',
+			'lk-google-picker'
 			// , 'ui.bootstrap'
     ])
     .run(['$cookieStore', '$rootScope', '$translate', function ($cookieStore, $rootScope, $translate) {
