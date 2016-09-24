@@ -603,8 +603,9 @@ function handleSpecialFilterCase($key, $values) {
 // will log the state of the prevision just before an update will be perfomed
 function logPrevisionUpdateFull($previsionId, $method) {
 
-	$update = "INSERT INTO previsionfulllogs (id,orderNumber,deliveryDate,client,sailId,sailDescription,boat,type,designed,oneDesign,greaterThan44,p,e,i,j,area,sailOneDesign,observations,designedOn,createdOn,state,prevState,stateAccepted,stateChanged,stateAcceptedDate,seller,dispatchId,line,week,priority,percentage,advance,tentativeDate,productionDate,infoDate,advanceDate,deletedProductionOn,deletedProductionBy,productionObservations,designObservations,method,insertedon)
-	 						SELECT *, '$method', now() FROM previsions WHERE id = '$previsionId'";
+	$update = "INSERT INTO previsionfulllogs (id,orderNumber,deliveryDate,client,sailId,sailDescription,boat,type,designed,oneDesign,greaterThan44,p,e,i,j,area,sailOneDesign,observations,designedOn,createdOn,state,prevState,stateAccepted,stateChanged,stateAcceptedDate,seller,dispatchId,line,week,priority,percentage,advance,tentativeDate,productionDate,infoDate,advanceDate,deletedProductionOn,deletedProductionBy,productionObservations,designObservations,driveIdProduction,driveIdDesign,method,insertedon)
+	 						SELECT id,orderNumber,deliveryDate,client,sailId,sailDescription,boat,type,designed,oneDesign,greaterThan44,p,e,i,j,area,sailOneDesign,observations,designedOn,createdOn,state,prevState,stateAccepted,stateChanged,stateAcceptedDate,seller,dispatchId,line,week,priority,percentage,advance,tentativeDate,productionDate,infoDate,advanceDate,deletedProductionOn,deletedProductionBy,productionObservations,designObservations,driveIdProduction,driveIdDesign
+							, '$method', now() FROM previsions WHERE id = '$previsionId'";
 
 	$obj->successful = true;
 	if(!mysql_query($update)) {
