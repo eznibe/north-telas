@@ -17,7 +17,7 @@
                 </div>
                 <div ng-if="g.cloths && g.cloths.length > 0">
 					<ul><li>
-						<a ng-repeat="c in g.cloths | limitTo:10" style="color:#616161;" class="badge" ng-click="showClothModal(c)">{{c.name}}</a>
+						<a ng-repeat="c in g.cloths | limitTo:10" style="color:#333;" class="badge" ng-click="showClothModal(c)">{{c.name}}</a>
 						<span ng-if="g.cloths.length > 2">...</span>
 					</li></ul>
 		    	</div>

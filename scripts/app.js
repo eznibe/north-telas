@@ -188,7 +188,7 @@ angular.module("vsko.stock", [
 						.when('/dispatch', {
                 templateUrl: 'views/dispatchs.html',
                 controller: 'DispatchCtrl',
-                access: 'public'
+                restricted: 'vendedor'
             })
 						.when('/canvas', {
                 templateUrl: 'views/canvas.html',
@@ -200,6 +200,11 @@ angular.module("vsko.stock", [
                 controller: 'OrdersCtrl',
                 restricted: 'plotter'
             })
+						.when('/orders', {
+								templateUrl: 'views/orders.html',
+								controller: 'OrdersCtrl',
+								restricted: 'plotter'
+						})
             .when('/users', {
                 templateUrl: 'views/users.html',
                 controller: 'UsersCtrl',

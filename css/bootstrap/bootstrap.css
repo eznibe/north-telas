@@ -7532,7 +7532,7 @@ a.rollDataLabel:hover {
 }
 
 .datepicker-days tbody {
-  background-color: hsl(210, 80%, 90%);
+  background-color: white;
 }
 
 .datepicker-days tbody td {
@@ -7544,7 +7544,8 @@ a.rollDataLabel:hover {
 }
 
 .datepicker-days thead {
-  background-color: hsl(210, 80%, 55%);
+  background-color: hsl(210, 100%, 40%);
+  color: white;
 }
 
 .datepicker-days .next,
@@ -7555,6 +7556,11 @@ a.rollDataLabel:hover {
 .datepicker-days .next:hover,
 .datepicker-days .prev:hover {
   background-color: hsl(210, 80%, 45%);
+}
+
+td.old.day,
+td.new.day {
+   color: lightgray;
 }
 
 @font-face {
