@@ -69,6 +69,48 @@ function updateAllPrevisionsStates($clothId, $limit, $offset) {
 	return $obj;
 }
 
+function updatePrevisionStateWithDeliveryType($deliveryType) {
+
+	$resultInfo = array();
+	$clothIds = "";
+
+	$query = "SELECT distinct(pc.clothId) as id, c.name, p.orderNumber
+						FROM previsions p
+						JOIN previsioncloth pc on p.id=pc.previsionId
+						LEFT JOIN plotters pl on pl.previsionId = p.id
+						JOIN cloths c on c.id=pc.clothId
+						where (p.designed=false or (p.designed=true and pl.id is not null))
+						and (pl.cutted is null or pl.cutted=false)
+						and p.state = '$deliveryType'
+						order by p.orderNumber, p.id, pc.clothId";
+
+	$result = mysql_query($query);
+	foreach (fetch_array($result) as $cloth) {
+		$clothResult = new stdClass();
+		$res = updatePrevisionState($cloth['id']);
+
+		$clothResult->countModified = count($res->modifiedPrevisions);
+		$clothResult->clothId = $cloth['id'];
+		$clothResult->clothName = $cloth['name'];
+		$clothResult->orderNumber = $cloth['orderNumber'];
+
+		$clothIds .= $cloth['id'] . " / " . $cloth['orderNumber'] . ", ";
+
+		array_push($resultInfo, $clothResult);
+	}
+
+	$obj->successful = true;
+	$obj->method = "updatePrevisionStateWithDeliveryType($deliveryType)";
+
+	$obj->resultInfo = $resultInfo;
+
+	$log->type = "updatePrevisionStateWithDeliveryType($deliveryType)";
+	$log->log = $clothIds;//implode(" == ", $resultInfo);
+	addLog($log);
+
+	return $obj;
+}
+
 function updatePrevisionState($clothIdsStr, $skipUpdateStateAccepted) {
 
 	global $touchedPrevisions;

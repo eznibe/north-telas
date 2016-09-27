@@ -6,6 +6,8 @@ angular.module('vsko.stock')
 
 		$scope.type = $routeParams.type;
 
+		$scope.filter = {deliveryTypes: ['Desconocido', 'Nacional', 'Courier', 'Aereo1', 'Aereo2', 'Maritimo']};
+
         // initial list of orders
         Orders.getOrders(orderStatus.to_buy).then(function(result) {
         	$scope.orders_buy = result.data;
@@ -110,7 +112,9 @@ angular.module('vsko.stock')
 
 								Utils.showMessage('notify.order_arrived');
 
-								updatePrevisionState(order);
+								// NOTE: not doing this here because it bring problems when many orders are arrived in a small interval (the calcultaion doesn't finish and other start in the middle resulting in bad state assignation)
+								// for the moment use manual update after all orders arrive
+								// updatePrevisionState(order);
 	    			}
 	    		});
         };
@@ -146,6 +150,12 @@ angular.module('vsko.stock')
 
         	$scope.modalUser.hide();
         };
+
+				$scope.calculateStates = function() {
+					Previsions.updatePrevisionStateWithDeliveryType($scope.filter.deliveryType).then(function() {
+						Utils.showMessage('notify.previsions_state_updated');
+					});
+				};
 
         $scope.setModalCtrl = function(modalCtrl) {
 

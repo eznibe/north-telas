@@ -211,6 +211,20 @@ angular.module('vsko.stock')
         	// return $http.post(url + 'previsions_POST.php?updatePrevisionState=true&clothIds='+clothIds, clothIds);
         };
 
+				this.updatePrevisionStateWithDeliveryType = function(deliveryType) {
+
+					var d = $q.defer();
+					var startTime = Date.now();
+
+					$http.post(url + 'previsions_POST.php?updatePrevisionState=true&deliveryType='+deliveryType, deliveryType).then(function(result) {
+						Utils.logTiming(startTime, url + 'previsions_POST.php?updatePrevisionState=true&deliveryType='+deliveryType, 'previsions.updatePrevisionStateWithDeliveryType', 'POST', deliveryType);
+						d.resolve(result);
+					});
+
+					return d.promise;
+        	// return $http.post(url + 'previsions_POST.php?updatePrevisionState=true&clothIds='+clothIds, clothIds);
+        };
+
 				this.updateAllPrevisionsStates = function() {
 
         	return $http.post(url + 'previsions_POST.php?updateAllPrevisionsStates=true', {});

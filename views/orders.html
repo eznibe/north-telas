@@ -1,5 +1,20 @@
 <div class="nopaddingright jumbotron clearfix">
 	<h1>{{'Buys' | translate}}</h1>
+	<div class="row" allowed-access="admin">
+		<div class="col-md-8 nopadding">
+				<label class="control-label col-xs-3" translate>Calculate states</label>
+				<div class="col-xs-3">
+					<select ng-model="filter.deliveryType" ng-options="t for t in filter.deliveryTypes" class="form-control small" ng-change="oneDesignCloths()"></select>
+				</div>
+
+				<div class="col-xs-2">
+					<a ng-click="calculateStates()" class="btn btn-default floatright" ng-disabled="!filter.deliveryType">
+						<span class="glyphicon glyphicon-ok"></span>
+						{{'Update' | translate}}
+					</a>
+				</div>
+		</div>
+	</div>
 </div>
 
 
