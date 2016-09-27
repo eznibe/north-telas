@@ -7,7 +7,7 @@ angular.module("vsko.stock", [
       'pascalprecht.translate',
       'uuid4',
       'toaster',
-      // 'angular-loading-bar',
+      'angular-loading-bar',
 			'angucomplete-alt',
 			'anguFixedHeaderTable',
 			'angularStats',
