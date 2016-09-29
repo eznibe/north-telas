@@ -107,7 +107,7 @@ angular.module("vsko.stock", [
         request: function(config) {
 
 					// add a random number to the end of the php GET calls to avoid Cache-Control
-          if(config.url.indexOf('php') != -1 && config.url.indexOf('_GET') != -1) {
+          if(config.url.indexOf('php') != -1 && (config.url.indexOf('_GET') != -1 || config.url.indexOf('_POST') != -1)) {
 
 	          config.url += (config.url.substr(config.url.length-4, config.url.length)=='.php' ? '?' : '&') + Math.random();
           }
