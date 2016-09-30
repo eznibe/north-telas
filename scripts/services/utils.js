@@ -50,7 +50,7 @@ angular.module('vsko.stock').factory('Utils',[ '$translate', '$http', '$timeout'
     var log = {type : type, log: JSON.stringify(entity), user: $rootScope.user.name};
 
     // TODO log to a remote server too (just as backup)
-    // $http.post(remoteAPIUrl + 'log_POST.php', log);
+    // $http.post(remoteAPIUrl + 'remotelog_POST.php', log);
 
     return $http.post(baseUrl + 'log_POST.php', log);
   };
