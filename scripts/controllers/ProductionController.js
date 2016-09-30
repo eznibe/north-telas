@@ -28,6 +28,13 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 
 		$scope.previsions = result.data;
 
+		$('table#production').floatThead({
+			position: 'fixed',
+			autoReflow: true,
+			zIndex: 20,
+			floatTableClass: 'production-floatThead'
+		});
+
 		if (result.data[0] && result.data[0].count > $scope.rows) {
 			$('#pagination').twbsPagination({
 		        totalPages: (result.data[0].count / $scope.rows) + 1,
@@ -72,6 +79,15 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 			}
 
 			$scope.storeColumnsSelectedState($scope.filterOptions.columns);
+
+			// recreate float header
+			$('table#production').floatThead('destroy');
+			$('table#production').floatThead({
+				position: 'fixed',
+				autoReflow: true,
+				zIndex: 20,
+				floatTableClass: 'production-floatThead'
+			});
 		},
 
 		selected: function(column) {

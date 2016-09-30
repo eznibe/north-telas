@@ -47,28 +47,35 @@ table#production td a span.save-ok {
 	color: red;
 }
 
-table#production th {
+/* For header rotate */
+
+table#production th,
+.production-floatThead th {
   /* Something you can count on */
   height: 80px;
   white-space: nowrap;
 }
 
-table#production th > div.rotate {
+table#production th > div.rotate,
+.production-floatThead th > div.rotate {
   transform:
     translate(0px, 30px)
     rotate(270deg);
   width: 10px;
 }
-table#production th > div.rotate > span {
+table#production th > div.rotate > span,
+.production-floatThead th > div.rotate > span {
   /*border-bottom: 1px solid #ccc;*/
   padding: 5px 10px;
 }
 
-table#production th > div.editable {
+table#production th > div.editable,
+.production-floatThead th > div.editable {
   width: 30px;
 }
 
-table#production tbody tr {
+table#production tbody tr,
+.production-floatThead tbody tr {
   height: 35px;
 }
 
@@ -177,7 +184,8 @@ table#production tbody tr {
 	padding-bottom: 5px;
 }
 
-.table#production .production-filter th {
+.table#production .production-filter th,
+.production-floatThead .production-filter th {
 	padding-top: 2px;
 	padding-bottom: 2px;
 	height: 20px;
