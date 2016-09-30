@@ -155,13 +155,13 @@
 			<td class="line" ng-show="::visibility.selected('line')">
 				{{:refreshColumnsValue:getValue(p, 'line')}}
 			</td>
-			<td class="percentage" ng-show="::visibility.selected('percentage')" style="min-width:30px;" ng-mouseover="::oneTimeBindings.showPopupList('percentages');" ng-mouseleave="::oneTimeBindings.hidePopupList('percentages');">
+			<td class="percentage" ng-show="::visibility.selected('percentage')" style="min-width:30px;" ng-mouseover="::oneTimeBindings.showPopupList('percentages');" ng-mouseleave="::oneTimeBindings.hidePopupList('percentages');" ng-style=":refreshErrorBackground:visibility.errorStyle(p, 'percentage');">
 				<editable-production-input entity="::p" field="'percentage'" callback="::changedPrevision.numericField" editable-by-role="'admin,produccion,velas-od'" width="20" style="display:inline-block;"></editable-production-input>
 			</td>
 			<td class="advance" ng-show="::visibility.selected('advance')">
 				{{:refreshColumnsValue:getValue(p, 'advance')}}
 			</td>
-			<td class="deliveryDate" ng-show="::visibility.selected('deliveryDate')" class="column-date" nowrap>
+			<td class="deliveryDate" ng-show="::visibility.selected('deliveryDate')" class="column-date" nowrap ng-style=":refreshErrorBackground:visibility.errorStyle(p, 'deliveryDate');">
 				<editable-date entity="::p" field="deliveryDate" callback="::updateDate" editable-by-role="'admin,produccion'" style="display:inline-block;" required="true"></editable-date>
 			</td>
 			<td class="tentativeDate" ng-show="::visibility.selected('tentativeDate')" class="column-date" nowrap>
@@ -170,7 +170,7 @@
 			<td class="productionDate" ng-show="::visibility.selected('productionDate')" class="column-date" nowrap access-restricted="vendedor">
 				<editable-date entity="::p" field="productionDate" callback="::updateDate" editable-by-role="'admin,produccion'" style="display:inline-block;"></editable-date>
 			</td>
-			<td class="infoDate" ng-show="::visibility.selected('infoDate')" class="column-date" nowrap>
+			<td class="infoDate" ng-show="::visibility.selected('infoDate')" class="column-date" nowrap ng-style=":refreshErrorBackground:visibility.errorStyle(p, 'infoDate');">
 				<editable-date entity="::p" field="infoDate" callback="::updateDate" editable-by-role="'admin,produccion'" style="display:inline-block;"></editable-date>
 			</td>
 			<td class="advanceDate" ng-show="::visibility.selected('advanceDate')" class="column-date" nowrap>

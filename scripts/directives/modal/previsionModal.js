@@ -251,6 +251,7 @@ angular.module('vsko.stock')
 
             var waitForPossiblePrevisionStateChange = false;
             var showChangedStateModal = false;
+            var errors = false;
 
             function newStateClose() {
               // called after the new state warning modal is closed, or called just after save if state is not changed
@@ -311,20 +312,25 @@ angular.module('vsko.stock')
         		  else if(!result.data.successfulInsert && result.data.insert) {
                 Lists.log({type: 'error.insertPrevision', log: result.data.insert}).then(function(result) {});
                 Utils.showMessage('notify.prevision_create_failed', 'error');
+                errors = true;
         		  }
               else if(!result.data.successfulUpdate && result.data.update) {
                 Lists.log({type: 'error.updatePrevision', log: result.data.update}).then(function(result) {});
                 Utils.showMessage('notify.prevision_edit_failed', 'error');
+                errors = true;
         		  }
               else if(!result.data.successfulCloths && result.data.queryCloths) {
                 Lists.log({type: 'error.queryCloths', log: result.data.queryCloths}).then(function(result) {});
                 Utils.showMessage('notify.prevision_cloth_save_failed', 'error');
+                errors = true;
         		  }
               else if(!result.data.successful) {
                 Utils.showMessage('notify.unknown_error', 'error');
+                Utils.logUIError('errorUI.savePrevision', result.data);
+                errors = true;
         		  }
 
-              if(!waitForPossiblePrevisionStateChange) {
+              if(!waitForPossiblePrevisionStateChange && !errors) {
                 $scope.modalPrevision.hide();
 
                 if($scope.previousModal) {
@@ -335,7 +341,11 @@ angular.module('vsko.stock')
                   $scope.onSavePrevision($scope.prevision);
                 }
               }
-        	  });
+        	  }, function(err) {
+              Utils.showIntrusiveMessage('notify.unknown_error', 'error');
+          		Utils.logUIError('error.rejected.savePrevision', {error: err, entity: $scope.prevision});
+              errors = true;
+            });
           };
 
           $scope.deletePrevision = function(prevision) {

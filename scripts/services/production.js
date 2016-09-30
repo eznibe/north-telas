@@ -24,19 +24,6 @@ angular.module('vsko.stock')
       	return $http.get(url + 'previsions_GET.php?clothId='+clothId+'&designed=false&expand=FULL');
       };
 
-      this.updateDate = function(prevision, fieldName) {
-
-				var d = $q.defer();
-				var startTime = Date.now();
-
-				$http.post(url + 'production_POST.php?updateDate=true&field='+fieldName, prevision).then(function(result) {
-					Utils.logTiming(startTime, url + 'production_POST.php?updateDate=true&field='+fieldName, 'production.updateDate('+fieldName+')', 'POST', prevision);
-					d.resolve(result);
-				});
-
-				return d.promise;
-      	// return $http.post(url + 'production_POST.php?updateDate=true&field='+fieldName, prevision);
-      };
 
 			this.getWeeksBySeason = function() {
 					return $http.get(url + 'previsions_GET.php?weeksBySeason=true');
@@ -46,6 +33,23 @@ angular.module('vsko.stock')
 				var seasonWeeks = {key: key, value: seasonWeeks};
 				return $http.post(url + 'previsions_POST.php?weeksBySeason=true', seasonWeeks);
 			}
+
+			this.updateDate = function(prevision, fieldName) {
+
+				var d = $q.defer();
+				var startTime = Date.now();
+
+				$http.post(url + 'production_POST.php?updateDate=true&field='+fieldName, prevision).then(function(result) {
+					var failed = !result.data.successful ? '-FAILED' : '';
+
+					Utils.logTiming(startTime, url + 'production_POST.php?updateDate=true&field='+fieldName, 'production.updateDate('+fieldName+')', 'POST'+failed, prevision);
+					d.resolve(result);
+				}, function(err) {
+					d.reject(err);
+				});
+
+				return d.promise;
+			};
 
 			this.updateField = function(prevision, fieldName, isNumeric) {
 
@@ -58,12 +62,15 @@ angular.module('vsko.stock')
 				var startTime = Date.now();
 
 				$http.post(url + 'previsions_POST.php?edit=true&field='+fieldName + numeric, prevision).then(function(result) {
-					Utils.logTiming(startTime, url + 'previsions_POST.php?edit=true&field='+fieldName + numeric, 'production.updateField('+fieldName+')', 'POST', prevision);
+					var failed = !result.data.successful ? '-FAILED' : '';
+
+					Utils.logTiming(startTime, url + 'previsions_POST.php?edit=true&field='+fieldName + numeric, 'production.updateField('+fieldName+')', 'POST'+failed, prevision);
 					d.resolve(result);
+				}, function(err) {
+					d.reject(err);
 				});
 
 				return d.promise;
-      	// return $http.post(url + 'previsions_POST.php?edit=true&field='+fieldName + numeric, prevision);
       };
 
       return this;

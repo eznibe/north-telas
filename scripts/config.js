@@ -1,6 +1,7 @@
 
 // PRODUCTION keys
 //var telasAPIUrl = 'http://northserver.no-ip.biz/telas/api/';
+//var remoteAPIUrl = 'http://localhost:90/telas/api/';
 //var googleAnalytics = true;
 
 //var productionFilesFolder = '0B3ufmcTU0qqcRDJGVEl2cVpudFE'; // Production Previsions
@@ -11,6 +12,7 @@
 // LOCAL keys
 var telasAPIUrl = 'http://localhost:90/telas/api/';
 //var telasAPIUrl = 'http://192.168.0.210:90/telas/api/';
+var remoteAPIUrl = 'http://localhost:90/telas/remoteapi/';
 var googleAnalytics = false;
 
 var productionFilesFolder = '0B7pV9nMgniCgN2FOSXNtNXppUkU'; // Test Production Previsions

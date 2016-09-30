@@ -4,7 +4,7 @@
 
 angular.module('vsko.stock')
 
-.factory('Lists', ['$http', '$q', 'uuid4', function ($http, $q, uuid4) {
+.factory('Lists', ['$http', '$q', '$rootScope', 'uuid4', function ($http, $q, $rootScope, uuid4) {
 
 		var url = telasAPIUrl;
 
@@ -98,6 +98,7 @@ angular.module('vsko.stock')
 
 				this.log = function(log)
         {
+					log.user = $rootScope.user.name;
         	return $http.post(url + 'log_POST.php', log);
         };
 

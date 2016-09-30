@@ -85,12 +85,15 @@ angular.module('vsko.stock')
 					var startTime = Date.now();
 
 					$http.post(url + 'previsions_POST.php', prevision).then(function(result) {
-						Utils.logTiming(startTime, url + 'previsions_POST.php', 'previsions.save', 'POST', prevision);
+						var failed = !result.data.successful ? '-FAILED' : '';
+
+						Utils.logTiming(startTime, url + 'previsions_POST.php', 'previsions.save', 'POST'+failed, prevision);
 						d.resolve(result);
+					}, function(err) {
+						d.reject(err);
 					});
 
 					return d.promise;
-					// return $http.post(url + 'previsions_POST.php', prevision);
         };
 
         this.designed = function(prevision) {

@@ -4,7 +4,9 @@ function addLog($log) {
 
 	$methodResult->successful = true;
 
-	$insert = "INSERT INTO logs (type, log) VALUES ('".$log->type."', \"".$log->log."\")";
+	$logStr = !strpos($log->log, '"') ? "\"".$log->log."\"" : "'".$log->log."'";
+
+	$insert = "INSERT INTO logs (type, log, user) VALUES ('".$log->type."', $logStr, '".$log->user."')";
 	if (! mysql_query($insert)) {
 			// error en insert
 			$methodResult->successful = false;

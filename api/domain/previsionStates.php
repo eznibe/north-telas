@@ -104,8 +104,10 @@ function updatePrevisionStateWithDeliveryType($deliveryType) {
 
 	$obj->resultInfo = $resultInfo;
 
-	$log->type = "updatePrevisionStateWithDeliveryType($deliveryType)";
+	// log manual action of previ state update
+	$log->type = "info.updatePrevisionStateWithDeliveryType($deliveryType)";
 	$log->log = $clothIds;//implode(" == ", $resultInfo);
+	$log->user = 'admin';
 	addLog($log);
 
 	return $obj;
