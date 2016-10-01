@@ -103,14 +103,28 @@ table#production tbody tr,
 #percentages tr,
 #weeks tr,
 #columnsSelector tr {
-	background-color: #f2dbc4;
+	background-color: #a3ccf5;
+	color: #333;
 	font-size: 12px;
+}
+
+#percentages td,
+#weeks td,
+#columnsSelector td {
+	padding-left: 2px;
 }
 
 #percentages tr.title,
 #weeks tr.title,
 #columnsSelector tr.title {
-	background-color: #edccaa;
+	background-color: hsl(210, 100%, 40%);
+	color: #ffffcc;
+}
+
+#columnsSelector {
+		/*border-width:1px;
+		border-style:solid;*/
+		border-collapse:collapse;
 }
 
 .small-button {
