@@ -258,18 +258,19 @@
                       <span class="glyphicon glyphicon-eye-open control-label" ng-click="showDispatchModal({id: prevision.dispatchId})" style="text-align:center; cursor:pointer;" ng-show="prevision.selectedDispatch.id"></span>
                     </div>
 
-                    <label class="control-label col-xs-2" translate>Files</label>
-              			<div class="col-xs-1" ng-show="prevision.driveIdProduction">
-              				<span class="glyphicon glyphicon-folder-open control-label" style="text-align:center; cursor:pointer;" lk-google-picker on-picked="onPicked(docs)" on-loaded="onLoaded()" on-cancel="onCancel()"></span>
-              			</div>
-
+                    <div class=" col-xs-4">
+                      <label class="control-label" style="padding-right: 10px;" ng-bind="filesLbl" translate>Files</label>
+                      <span id="productionPicker" class="glyphicon glyphicon-folder-open control-label" style="text-align:center; cursor:pointer;" lk-google-picker on-before-open="onBeforePickerOpen(element)" on-picked="onPicked(docs)" on-loaded="onLoaded()" on-cancel="onCancel()" ng-show="prevision.driveIdProduction && online && !insufficientPermissions" access-allowed="admin,produccion,ordenes,plotter"></span>
+                      <span class="glyphicon glyphicon-folder-open control-label" style="text-align:center; cursor:pointer; color: red;" ng-show="!online" ng-click="::offlineUpload()"></span>
+                    </div>
                   </div>
                 </div>
 
                 <!-- <div class="row">
-                  <span class="col-xs-2"><a href="javascript:;" ng-click="::listFiles();">List</a></span>
+                  <span class="col-xs-2"><a href="javascript:;" ng-click="::listFiles('0B7pV9nMgniCgN2FOSXNtNXppUkU');">List</a></span>
                   <span class="col-xs-2"><a href="javascript:;" ng-click="::downloadFile();">Download</a></span>
-                  <span class="col-xs-2"><a href="javascript:;" ng-click="::showPrevisionFilesModal([]);">Open</a></span>
+                  <span class="col-xs-2"><a href="javascript:;" ng-click="::checkPermissions();">Permissions</a></span>
+                  <span class="col-xs-2"><a href="javascript:;" ng-click="::checkOnline();">Check online</a></span>
                 </div> -->
 
                 <div class="row" style="min-height: 32px;">

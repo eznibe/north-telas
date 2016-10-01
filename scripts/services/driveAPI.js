@@ -18,64 +18,93 @@ angular.module('vsko.stock').factory('DriveAPI',[ '$q', 'Utils', function ($q, U
   }
 
   function handleAuthResult(authResult) {
-        if (authResult && !authResult.error) {
-          loaded = true;
-          loadDriveApi();
-        } else {
-          console.log(authResult);
-        }
-      }
+    if (authResult && !authResult.error) {
+      loaded = true;
+      loadDriveApi();
+    } else {
+      console.log(authResult);
+    }
+  }
 
-  that.findPrevisionFolder = function(previsionId) {
+  function updateApiVersion() {
+    if (gapi.client && gapi.client.drive && gapi.client.drive.kB.servicePath.indexOf('v2') != -1) {
+      // patch to fix problem when opening first the google picker then the gapi version loaded is v2
+      gapi.client.drive.kB.servicePath = 'drive/v3/';
+    }
+  }
+
+  // ---- Interface functions ---- //
+
+  that.listFiles = function(parentId) {
     var d = $q.defer();
-    console.log('Search prevId', previsionId)
-    var request = gapi.client.drive.files.list({
-        'pageSize': 10,
-        'q': "name = '"+previsionId+"'", // works fine
-        // 'q': "'"+previsionId+"' in parents",
-        'fields': "nextPageToken, files(id, name)"
-      });
+    var params = {
+      'pageSize': 10,
+      // 'q': "name contains 'V8888'", // works fine
+      // 'q': "'0B85OZZCDsYWNWDhqWkF0djU2R2c' in parents", // Previsions
+      // 'q': "'0B85OZZCDsYWNMnEyNTBfZUZpUTg' in parents",  // V8888
+      'fields': "nextPageToken, files(id, name)"
+    };
+    if (parentId) {
+      params.q = "'" + parentId + "' in parents";
+    }
+    if (typeof gapi != 'undefined') { // check of not gapi defined needed for offline or problems loading client
 
-      request.execute(function(resp) {
-        console.log('Files:');
-        var files = resp.files;
-        if (files && files.length == 1) {
-          var file = files[0];
-          console.log(file.name + ' (' + file.id + ')');
-          d.resolve(file);
-        } else {
-          console.log('No prevision folder found.');
-          d.reject();
-        }
-      });
+      if (gapi && gapi.client && gapi.client.drive) {
 
-      return d.promise;
+        updateApiVersion();
+
+        var request = gapi.client.drive.files.list(params);
+
+        request.execute(function(resp) {
+          console.log('Files:');
+          var files = resp.files;
+          if (files && files.length > 0) {
+            for (var i = 0; i < files.length; i++) {
+              var file = files[i];
+              console.log(file.name + ' (' + file.id + ')');
+            }
+            d.resolve(files);
+          } else {
+            console.log('No files found.');
+            d.resolve([]);
+          }
+        });
+      } else {
+        d.reject();
+      }
+    } else {
+      console.log('No gapi var.');
+      d.reject();
+    }
+    return d.promise;
   };
 
-  that.listFiles = function(loadedFiles) {
-    var request = gapi.client.drive.files.list({
-        'pageSize': 10,
-        // 'q': "name contains 'V8888'", // works fine
-        // 'q': "'0B85OZZCDsYWNWDhqWkF0djU2R2c' in parents", // Previsions
-        // 'q': "'0B85OZZCDsYWNMnEyNTBfZUZpUTg' in parents",  // V8888
-        'fields': "nextPageToken, files(id, name)"
-      });
+  that.hasPermissions = function(parentId) {
+    var d = $q.defer();
+    var params = {
+      'fileId': parentId,
+    };
+    if (typeof gapi != 'undefined') { // check of not gapi defined needed for offline or problems loading client
 
-      request.execute(function(resp) {
-        console.log('Files:');
-        var files = resp.files;
-        if (files && files.length > 0) {
-          for (var i = 0; i < files.length; i++) {
-            var file = files[i];
-            console.log(file.name + ' (' + file.id + ')');
-            if (loadedFiles) {
-              loadedFiles.push(file);
-            }
+      if (gapi && gapi.client && gapi.client.drive) {
+        var request = gapi.client.drive.files.get(params);
+
+        request.execute(function(resp) {
+          console.log('Permissions', resp);
+          if (resp.code > 400) {
+            d.resolve(false);
+          } else {
+            d.resolve(true);
           }
-        } else {
-          console.log('No files found.');
-        }
-      });
+        });
+      } else {
+        d.reject(500);
+      }
+    } else {
+      console.log('No gapi var.');
+      d.reject(500);
+    }
+    return d.promise;
   };
 
   that.downloadFile = function(file) {
@@ -98,7 +127,10 @@ angular.module('vsko.stock').factory('DriveAPI',[ '$q', 'Utils', function ($q, U
     gapi.client.drive.files.delete({
        fileId: file.id
     }).execute(function(res, resfile) {
-      if(res) {
+      if(res.code > 400) {
+        console.log('Rejected:', res);
+        d.reject(res.code);
+      } else if(res) {
         console.log(res, resfile);
         Utils.logFiles(file.id, file.name, 'delete', metadata.folder, metadata.parentId, metadata.previsionId);
         d.resolve(file);
@@ -120,14 +152,18 @@ angular.module('vsko.stock').factory('DriveAPI',[ '$q', 'Utils', function ($q, U
         resource: fileMetadata,
         fields: 'id'
       }).execute(function(res, file) {
-        if(res) {
+        if(res && res.code != 404) {
           console.log(res);
           metadata.driveId = res.id;
 
           Utils.logFiles(metadata.driveId, metadata.name, 'create', metadata.type, metadata.parentFolderId, metadata.previsionId);
           d.resolve(metadata);
+        } else if (res && res.code == 404) {
+          // not found folder mean it doesn exists or dont have permissions to see it
+          console.log('Error 404, no possible to create folder', metadata);
+          d.reject(404);
         } else {
-          d.reject();
+          d.reject(500);
         }
       });
 
@@ -136,73 +172,24 @@ angular.module('vsko.stock').factory('DriveAPI',[ '$q', 'Utils', function ($q, U
 
   that.init = function() {
     defer = $q.defer();
-    if (gapi.auth) {
+    if (typeof gapi != 'undefined') { // check of not gapi defined needed for offline or problems loading client
+      if (gapi.auth) {
 
-      if (gapi.client && gapi.client.drive && gapi.client.drive.kB.servicePath.indexOf('v2') != -1) {
-        // patch to fix problem when opening first the google picker then the gapi version loaded is v2
-        gapi.client.drive.kB.servicePath = 'drive/v3/';
+        updateApiVersion();
+
+        gapi.auth.authorize(
+            {
+              'client_id': drive_client_id,
+              'scope': SCOPES.join(' '),
+              'immediate': true
+            }, handleAuthResult);
+      } else {
+        console.log('Rejected init, no gapi.auth');
+        defer.reject(false);
       }
-
-      gapi.auth.authorize(
-          {
-            'client_id': drive_client_id,
-            'scope': SCOPES.join(' '),
-            'immediate': true
-          }, handleAuthResult);
     } else {
       defer.reject(false);
     }
-
-    return defer.promise;
-  };
-
-  that.uploadFile = function() {
-        var request = gapi.client.storage.objects.insert(
-      {
-
-      'bucket': bucket,
-
-      'name': "test.uploadFile",
-
-      'body': {
-
-      "media": {
-
-      "contentType": "application/json",
-
-      "data": $.base64.encode( "{id:1, name: 'content file'}" )
-
-      }
-
-      }
-      });
-      request.execute( function(res) {
-        console.log(res);
-      } );
-  }
-
-  that.uploadFilezz = function (input) {
-    var defer = $q.defer();
-
-    var fd = new FormData();
-    fd.append('attachment', input.file, input.file.name);
-    fd.append('type', input.type);
-
-    $http.post('',
-      fd, {
-        transformRequest: angular.identity, //eslint-disable-line
-        headers: {'Content-Type': undefined} //eslint-disable-line
-      })
-    .success(function(data, status) {
-      var resp = {
-        status: status
-      };
-      defer.resolve(resp);
-
-    }).error(function(resp, status) {
-
-      defer.resolve(resp);
-    });
 
     return defer.promise;
   };

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope', '$translate', '$timeout', '$cookieStore', 'Production', 'Previsions', 'Users', 'Rules', 'Files', function ($scope, $rootScope, $translate, $timeout, $cookieStore, Production, Previsions, Users, Rules, Files) {
+angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope', '$translate', '$timeout', '$cookieStore', 'Production', 'Previsions', 'Users', 'Rules', 'Files', 'DriveAPI', 'Utils', function ($scope, $rootScope, $translate, $timeout, $cookieStore, Production, Previsions, Users, Rules, Files, DriveAPI, Utils) {
 
 	$scope.start = Date.now();
 
@@ -13,6 +13,11 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 	}
 	$rootScope.searchBoxChangedObservers.push($scope.refreshBySearchBox);
 
+	// just init the drive api to ensure we have the v3 loaded (avoiding problems with v2 loaded by the google picker)
+	$timeout(function() {
+		DriveAPI.init();
+	}, 2500);
+
 	// column filters selections are stored here as eg. selectionObject.week
 	$scope.selectionObject = {};
 
@@ -22,36 +27,39 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 	var defaultFilters = {orderList: [], limit: $scope.rows, default: true};
 	defaultFilters.orderList.push({key: 'week', type: 'str', mode: 'order.ascending'});
 
-	Previsions.getPrevisionsForProduction($rootScope.user.sellerCode, defaultFilters, 0).then(function(result) {
+	if (!$rootScope.forceNotLoad) { // very special case when after login it is forced to not load the initial list
+		Previsions.getPrevisionsForProduction($rootScope.user.sellerCode, defaultFilters, 0).then(function(result) {
 
-		console.log('Results in ' + (Date.now() - $scope.start) + ' ms.'); //eslint-disable-line
+			console.log('Results in ' + (Date.now() - $scope.start) + ' ms.'); //eslint-disable-line
 
-		$scope.previsions = result.data;
+			$scope.origPrevisions = result.data.map(function(p) { return $.extend(true, {}, p); });
+			$scope.previsions = result.data;
 
-		$('table#production').floatThead({
-			position: 'fixed',
-			autoReflow: true,
-			zIndex: 20,
-			floatTableClass: 'production-floatThead'
+			$('table#production').floatThead({
+				position: 'fixed',
+				autoReflow: true,
+				zIndex: 20,
+				floatTableClass: 'production-floatThead'
+			});
+
+			if (result.data[0] && result.data[0].count > $scope.rows) {
+				$('#pagination').twbsPagination({
+			        totalPages: (result.data[0].count / $scope.rows) + 1,
+			        visiblePages: 7,
+							startPage: 1,
+							first: '<<',prev: '<',last: '>>',next: '>',
+			        onPageClick: function (event, page) {
+								if (!firstLoad) {
+				          console.log('Page: '+page);
+									$scope.search(page);
+								} else {
+									firstLoad = false;
+								}
+			        }
+			    });
+			}
 		});
-
-		if (result.data[0] && result.data[0].count > $scope.rows) {
-			$('#pagination').twbsPagination({
-		        totalPages: (result.data[0].count / $scope.rows) + 1,
-		        visiblePages: 7,
-						startPage: 1,
-						first: '<<',prev: '<',last: '>>',next: '>',
-		        onPageClick: function (event, page) {
-							if (!firstLoad) {
-			          console.log('Page: '+page);
-								$scope.search(page);
-							} else {
-								firstLoad = false;
-							}
-		        }
-		    });
-		}
-	});
+	}
 
 	$scope.visibility = {
 
@@ -95,6 +103,14 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 				return c.column == column || c.key == column;
 			});
 			return res.length > 0 ? res[0].selected : true;
+		},
+
+		errorStyle: function(prevision, fieldName) {
+			if (!prevision.errorFields) {
+				return {'background-color': 'inherit'};
+			}
+			var style = prevision.errorFields.indexOf(fieldName) != -1 ? {'background-color': 'red'} : {'background-color': 'inherit'};
+			return style;
 		}
 	};
 
@@ -204,6 +220,7 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 				$scope.hideLoading = true;
 			}
 
+			$scope.origPrevisions = result.data.map(function(p) { return $.extend(true, {}, p); });
 			$scope.previsions = result.data;
 
 			if ($('#pagination').data("twbs-pagination") && ($scope.page == 1 || result.data[0].count <= $scope.rows)) {
@@ -299,11 +316,13 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 		Production.updateDate(entity, fieldName).then(function(result) {
 
 			if (result.data.successful) {
-				Rules.updatePrevisionPercentage(entity, true);
+
 				if (entity.percentageChanged) {
 					$scope.$broadcast('$$rebind::refreshColumnsValue');
 					delete entity.percentageChanged;
 				}
+
+				Rules.updatePrevisionPercentage(entity, true);
 
 				Rules.updatePrevisionDeliveryDate(entity, true).then(function() {
 
@@ -317,9 +336,10 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 						}
 					}
 				});
-			} else {
-				Utils.showMessage('notify.save_field_error', 'error');
 			}
+			handleUpdateFieldResolve(result, entity, fieldName, 'updateDate');
+		}, function(err) {
+			handleUpdateFieldReject(err, entity, fieldName, 'updateDate');
 		});
 	};
 
@@ -332,27 +352,50 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 						// only research after inline edit number if it is the week and we have selected the order by week
 						$scope.search(1);
 					}
-				} else {
-					Utils.showMessage('notify.save_field_error', 'error');
-				}
+				} 
+				handleUpdateFieldResolve(result, entity, fieldName, 'updateNumericField');
+
+			}, function(err) {
+				handleUpdateFieldReject(err, entity, fieldName, 'updateNumericField');
 			});
 		},
 
 		field: function(entity, value, fieldName) {
 
 			Production.updateField(entity, fieldName).then(function(result) {
-				if (!result.data.successful) {
-					Utils.showMessage('notify.save_field_error', 'error');
-				}
+				handleUpdateFieldResolve(result, entity, fieldName, 'updateField');
+			}, function(err) {
+				handleUpdateFieldReject(err, entity, fieldName, 'updateField');
 			});
 		}
 	};
+
+	function handleUpdateFieldResolve(result, entity, fieldName, method) {
+
+		if (result.data.successful) {
+			Utils.showMessage('notify.saved_field');
+			removeErrorField(entity, fieldName);
+		} else {
+			Utils.showIntrusiveMessage('notify.save_field_error', 'error');
+
+			Utils.logUIError('errorUI.'+method+'('+fieldName+')', result.data);
+			putBackOriginalValue(entity, fieldName);
+		}
+	}
+
+	function handleUpdateFieldReject(err, entity, fieldName, method) {
+		Utils.showIntrusiveMessage('notify.save_field_error', 'error');
+		Utils.logUIError('error.rejected.'+method+'('+fieldName+')', {error: err, entity: entity});
+		putBackOriginalValue(entity, fieldName);
+	}
+
+	//------------------------------
 
 	$scope.removeFromProduction = function(prevision) {
 		prevision.deletedProductionOn = prevision.date; //moment().format('DD-MM-YYYY');
 		prevision.deletedProductionBy = $rootScope.user.name;
 
-		Production.updateDate(prevision, 'deletedProductionOn').then(function() {
+		Production.updateDate(prevision, 'deletedProductionOn').then(function(result) {
 			$scope.previsions = $scope.previsions.filter(function(p) {
 				return p.id != prevision.id;
 			});
@@ -429,6 +472,31 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 			return {column: c.column ? c.column : c.key, selected: c.selected};
 		}));
 	};
+
+	// revert the change in the given prevision field using the original loaded previsions array
+	function putBackOriginalValue(prevision, fieldName) {
+
+		$scope.origPrevisions.map(function(origPrevision) {
+
+			if (origPrevision.id === prevision.id) {
+				prevision[fieldName] = origPrevision[fieldName];
+				prevision.errorFields = prevision.errorFields ? prevision.errorFields.concat(fieldName) : [fieldName];
+
+				$scope.$broadcast('$$rebind::refreshLinkValue');
+				$scope.$broadcast('$$rebind::refreshErrorBackground');
+			}
+		});
+	}
+
+	function removeErrorField(prevision, fieldName) {
+		if (!prevision.errorFields) {
+			return;
+		}
+		prevision.errorFields = prevision.errorFields.filter(function(f) {
+			return f != fieldName;
+		});
+		$scope.$broadcast('$$rebind::refreshErrorBackground');
+	}
 
 	// do a search for production list without limit and group the results by key to set the list of options in each case
 	function loadFilterOptions() {

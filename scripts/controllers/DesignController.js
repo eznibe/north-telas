@@ -10,6 +10,9 @@ angular.module('vsko.stock').controller('DesignCtrl', ['$scope', 'Utils', 'Previ
         $scope.designed = function(prevision) {
 
           Previsions.designed(prevision).then(function(result) {
+
+            Rules.updatePrevisionPercentage(prevision, true);
+
             $scope.previsions.remove(prevision);
 
             console.log('Designed: '+prevision.orderNumber);
@@ -18,13 +21,12 @@ angular.module('vsko.stock').controller('DesignCtrl', ['$scope', 'Utils', 'Previ
 
             var clothsIds = prevision.cloths.map(function(c) { return c.clothId; }).join(',');
 
-            Previsions.updatePrevisionState(clothsIds).then(function() {
+            Previsions.updatePrevisionState(clothsIds, prevision.id).then(function() {
               Utils.showMessage('notify.previsions_state_updated');
             });
 
             prevision.designed = true;
 
-            Rules.updatePrevisionPercentage(prevision, true);
           });
 
           //prevision.designed = prevision.designed ? !prevision.designed : true;

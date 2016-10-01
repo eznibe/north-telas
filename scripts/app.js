@@ -16,7 +16,7 @@ angular.module("vsko.stock", [
 			'lk-google-picker'
 			// , 'ui.bootstrap'
     ])
-    .run(['$cookieStore', '$rootScope', '$translate', function ($cookieStore, $rootScope, $translate) {
+    .run(['$cookieStore', '$rootScope', '$translate', '$window', function ($cookieStore, $rootScope, $translate, $window) {
     	console.log('vsko.stock run');
 
     	var user = $cookieStore.get('user');
@@ -41,6 +41,20 @@ angular.module("vsko.stock", [
 					fn();
 				})
 			});
+
+			// watch for online status modifications
+			$rootScope.online = navigator.onLine;
+      $window.addEventListener("offline", function() {
+        $rootScope.$apply(function() {
+          $rootScope.online = false;
+        });
+      }, false);
+
+      $window.addEventListener("online", function() {
+        $rootScope.$apply(function() {
+          $rootScope.online = true;
+        });
+      }, false);
 
 	}])
 	.factory('Authorization', ['$rootScope', function($rootScope) {
@@ -98,7 +112,7 @@ angular.module("vsko.stock", [
         request: function(config) {
 
 					// add a random number to the end of the php GET calls to avoid Cache-Control
-          if(config.url.indexOf('php') != -1 && config.url.indexOf('_GET') != -1) {
+          if(config.url.indexOf('php') != -1 && (config.url.indexOf('_GET') != -1 || config.url.indexOf('_POST') != -1)) {
 
 	          config.url += (config.url.substr(config.url.length-4, config.url.length)=='.php' ? '?' : '&') + Math.random();
           }

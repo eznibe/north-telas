@@ -1,4 +1,4 @@
-<div ng-mouseover="::oneTimeBindings.mouseOver();" ng-mouseleave="::oneTimeBindings.mouseLeave();" ng-style="::oneTimeBindings.boxStyle()">
+<div ng-mouseover="::oneTimeBindings.mouseOver();" ng-mouseleave="::oneTimeBindings.mouseLeave();" ng-style=":refreshBoxStyle:oneTimeBindings.boxStyle()">
 	<a style="color:#616161; cursor:pointer;" id="entityDisplay-{{::entity.id}}-{{::field}}" ng-click="::clicked(entity)">
 		<span>{{:refreshLinkValue:oneTimeBindings.getFieldValue()}}</span> <span>{{:refreshLinkValue:oneTimeBindings.getExtraLabel()}}</span>
 	</a>

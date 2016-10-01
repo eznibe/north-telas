@@ -41,7 +41,10 @@ angular.module('vsko.stock').controller('PlotterCtrl', ['$scope', '$rootScope', 
 							Lists.log({type: 'error.updateRolls', log: result.data.updateRolls}).then(function(result) {});
 							Utils.showMessage('notify.plotter_rolls_update_failed', 'error');
 						}
-        	});
+        	}, function(err) {
+						Utils.showIntrusiveMessage('notify.plotter_cut_failed', 'error');
+						Utils.logUIError('error.rejected.cuttedPlotter', {error: err, entity: plotter});
+					});
         };
 
         $scope.addCut = function(plotter) {
@@ -85,7 +88,7 @@ angular.module('vsko.stock').controller('PlotterCtrl', ['$scope', '$rootScope', 
         $scope.search = function() {
 
         	if($scope.search.order) {
-	        	Plotters.search($scope.search.order).then(function(result){
+	        	Plotters.search(escape($scope.search.order)).then(function(result){
 
 	        		$scope.plotters = result.data;
 

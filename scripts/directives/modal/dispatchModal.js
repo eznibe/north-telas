@@ -50,7 +50,7 @@ angular.module('vsko.stock')
                     if (result.data.destinatary) {
                       initialLoad = true;
                       $scope.acDestinatary = $scope.destinataries.filter(function(d) {
-                        return result.data.destinatary == d.name;
+                        return result.data.destinatary.toLowerCase() == d.name.toLowerCase();
                       })[0];
                     }
                   });
@@ -262,7 +262,9 @@ angular.module('vsko.stock')
                   // update address, destiny and notes fields
                   $scope.dispatch.address = destinatary.originalObject.address;
                   $scope.dispatch.destiny = destinatary.originalObject.destiny;
-                  $scope.dispatch.notes = destinatary.originalObject.notes;
+                  // $scope.dispatch.notes = destinatary.originalObject.notes;
+                  $scope.dispatch.transport = destinatary.originalObject.transport;
+                  $scope.dispatch.deliveryType = destinatary.originalObject.deliveryType;
                 } else {
                   initialLoad = false;
                 }

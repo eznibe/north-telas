@@ -2,7 +2,7 @@
 
 angular.module('vsko.stock').controller('ClothsPriceCtrl', ['$scope', 'Stock', 'Lists', '$modal', function ($scope, Stock, Lists, $modal) {
 
-			Stock.getAllGroups().then(function(result) {
+			Stock.getAllGroups(true).then(function(result) {
 
 				$scope.groups = result.data;
 			});

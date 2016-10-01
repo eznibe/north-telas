@@ -26,6 +26,9 @@ angular.module('vsko.stock').controller('AuthorizationCtrl', ['$scope', '$rootSc
 					else {
 						// come from login -> redirect to the default page for the user role
 						$location.path(userRoles[$rootScope.user.role][1]);
+            $window.location.reload();
+
+            $rootScope.forceNotLoad = true;
 					}
 
 					$rootScope.login_error = false;

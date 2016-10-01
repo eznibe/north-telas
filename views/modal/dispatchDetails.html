@@ -157,7 +157,7 @@
 					<tbody>
 						<tr ng-repeat="o in dispatch.previsions">
               <td>
-                <editable-production-dropdown entity="::o" options="dispatch.carries" field="'carryId'" display="carryDisplayFn" callback="::changedCarry" width="75" editable-by-role="'admin,produccion'" style="display:inline-block;"></editable-production-dropdown>
+                <editable-production-dropdown entity="::o" options="dispatch.carries" field="'carryId'" display="carryDisplayFn" callback="::changedCarry" width="75" editable-by-role="'admin,produccion,velas-od'" style="display:inline-block;"></editable-production-dropdown>
 							</td>
 							<td nowrap>
 								{{o.orderNumber}}
@@ -166,7 +166,7 @@
 								{{o.client}}
 							</td>
               <td ng-show="!o.previsionId" style="min-width: 110px;">
-								<editable-production-input entity="::o" field="'client'" callback="::changedDispatch.field" width="100" editable-by-role="'admin,produccion'" style="display:inline-block;"></editable-production-input>
+								<editable-production-input entity="::o" field="'client'" callback="::changedDispatch.field" width="100" editable-by-role="'admin,produccion,velas-od'" style="display:inline-block;"></editable-production-input>
 							</td>
               <td>
 								{{o.boat}}
@@ -178,10 +178,10 @@
 								{{o.percentage}}
 							</td>
               <td>
-                <editable-production-input entity="::o" field="'weight'" callback="::changedDispatch.numericField" width="40" editable-by-role="'admin,produccion'" style="display:inline-block;"></editable-production-input>
+                <editable-production-input entity="::o" field="'weight'" callback="::changedDispatch.numericField" width="40" editable-by-role="'admin,produccion,velas-od'" style="display:inline-block;"></editable-production-input>
 							</td>
               <td>
-                <editable-production-textarea entity="::o" field="'observations'" callback="::changedDispatch.field" width="100" editable-by-role="'admin,produccion'" style="display:inline-block;"></editable-production-textarea>
+                <editable-production-textarea entity="::o" field="'observations'" callback="::changedDispatch.field" width="100" editable-by-role="'admin,produccion,velas-od'" style="display:inline-block;"></editable-production-textarea>
 							</td>
 							<td access-restricted="read-only,vendedor" style="width:80px; text-align:center;">
 								<!-- <a ng-click="showConfirmModal(o, deleteDispatchPrevision)" class="btn btn-default"> -->

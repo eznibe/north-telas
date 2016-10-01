@@ -8,9 +8,13 @@ angular.module('vsko.stock')
 
 		var url = telasAPIUrl;
 
-        this.getAllGroups = function()
+        this.getAllGroups = function(light)
         {
-        	return $http.get(url + 'groups_GET.php?expand=FULL');
+					var expand = '?expand=FULL'
+					if(light) {
+						expand = '?expand=NONE';
+					}
+        	return $http.get(url + 'groups_GET.php' + expand);
         };
 
         this.idp = function()

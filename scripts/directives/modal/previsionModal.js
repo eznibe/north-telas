@@ -12,23 +12,35 @@ angular.module('vsko.stock')
 
             $scope.files = [];
 
+
+            $scope.onBeforePickerOpen = function(elementInfo) {
+              // TODO change the drive folder id (prod/design) according to clicked button -> check elementInfo.id == 'productionPicker' / 'designPicker'
+              // Note: google-picker module was modified to include this extra call
+              // console.log('Google Picker before open!', elementInfo);
+            }
+
             $scope.onLoaded = function () {
             //  console.log('Google Picker loaded!');
             }
 
             $scope.onPicked = function (docs) {
 
-              // show selection popup, download or delete (only if it doesnt come from upload action)
               if (docs && !docs[0].isNew) {
-
+                // show selection popup, download or delete (only if it doesnt come from upload action)
                 $scope.showPrevisionFilesModal(docs);
               } else {
-
+                // new files uploaded
                 angular.forEach(docs, function (file, index) {
                   // console.log('Selected', file);
                   if (file.isNew) {
                     Utils.logFiles(file.id, file.name, 'upload', 'production', $scope.prevision.driveIdProduction, $scope.prevision.id);
                   }
+                });
+                // refersh count of files in folder
+                DriveAPI.listFiles($scope.prevision.driveIdProduction).then(function(files) {
+                  Utils.translate('Files count', {count: files.length}).then(function(value) {
+                    $scope.filesLbl = value;
+                  });
                 });
               }
 
@@ -38,8 +50,20 @@ angular.module('vsko.stock')
               // console.log('Google picker close/cancel!');
             }
 
-            $scope.openSelection = function() {
-              scope.showPrevisionFilesModal([]);
+            $scope.clickedPicker = function() {
+              console.log('Clicked to open picker');
+            }
+
+            $scope.offlineUpload = function() {
+              scope.showPrevisionOfflineFilesModal(true);
+            }
+
+            $scope.checkOnline = function() {
+              console.log('Is online', $rootScope.online);
+            }
+
+            $scope.checkPermissions = function() {
+              DriveAPI.hasPermissions('0B3ufmcTU0qqcRDJGVEl2cVpudFE');
             }
 
 
@@ -82,10 +106,10 @@ angular.module('vsko.stock')
               });
             };
 
-            $scope.listFiles = function() {
+            $scope.listFiles = function(parentId) {
               DriveAPI.init().then(function() {
                 // DriveAPI.findPrevisionFolder('0B85OZZCDsYWNMnEyNTBfZUZpUTg');
-                DriveAPI.listFiles();
+                DriveAPI.listFiles(parentId);
               },
               function() {
                 console.log('Loaded rejected!');
@@ -105,31 +129,15 @@ angular.module('vsko.stock')
 
         	  $scope.showPrevisionModal = function(prevision, previousModal) {
 
-
-
         		  $scope.prevision = prevision ? prevision : {oneDesign: false, greaterThan44: false};
 
         		  $scope.origPrevision = prevision ? $.extend(true, {}, prevision) : {}; // used when the user cancel the modifications (close the modal)
 
               $scope.prevision.startedAsOD = prevision ? prevision.oneDesign : true;
 
-              // handle creation of drive folders if they dont exists yet
-              if ($scope.prevision.id) {
+              // handle creation/load of drive folders if they dont exists yet
+              handlePrevisionDriveFolders(prevision);
 
-                if (!$scope.prevision.driveIdProduction) {
-                  Files.createFolders(prevision).then(function() {
-                    $scope.origPrevision.driveIdProduction = prevision.driveIdProduction;
-                    $scope.origPrevision.driveIdDesign = prevision.driveIdDesign;
-
-                    lkGoogleSettings.views = ["DocsView().setParent('"+prevision.driveIdProduction+"')",
-                                              "DocsUploadView().setParent('"+prevision.driveIdProduction+"')"] ;
-                  });
-                } else {
-
-                  lkGoogleSettings.views = ["DocsView().setParent('"+prevision.driveIdProduction+"')",
-                                            "DocsUploadView().setParent('"+prevision.driveIdProduction+"')"] ;
-                }
-              }
 
         		  if(!$scope.prevision.cloths || $scope.prevision.cloths.length == 0) {
         			  // init with one cloth empty, useful for creating new prevision
@@ -269,6 +277,7 @@ angular.module('vsko.stock')
 
             var waitForPossiblePrevisionStateChange = false;
             var showChangedStateModal = false;
+            var errors = false;
 
             function newStateClose() {
               // called after the new state warning modal is closed, or called just after save if state is not changed
@@ -329,20 +338,25 @@ angular.module('vsko.stock')
         		  else if(!result.data.successfulInsert && result.data.insert) {
                 Lists.log({type: 'error.insertPrevision', log: result.data.insert}).then(function(result) {});
                 Utils.showMessage('notify.prevision_create_failed', 'error');
+                errors = true;
         		  }
               else if(!result.data.successfulUpdate && result.data.update) {
                 Lists.log({type: 'error.updatePrevision', log: result.data.update}).then(function(result) {});
                 Utils.showMessage('notify.prevision_edit_failed', 'error');
+                errors = true;
         		  }
               else if(!result.data.successfulCloths && result.data.queryCloths) {
                 Lists.log({type: 'error.queryCloths', log: result.data.queryCloths}).then(function(result) {});
                 Utils.showMessage('notify.prevision_cloth_save_failed', 'error');
+                errors = true;
         		  }
               else if(!result.data.successful) {
                 Utils.showMessage('notify.unknown_error', 'error');
+                Utils.logUIError('errorUI.savePrevision', result.data);
+                errors = true;
         		  }
 
-              if(!waitForPossiblePrevisionStateChange) {
+              if(!waitForPossiblePrevisionStateChange && !errors) {
                 $scope.modalPrevision.hide();
 
                 if($scope.previousModal) {
@@ -353,7 +367,11 @@ angular.module('vsko.stock')
                   $scope.onSavePrevision($scope.prevision);
                 }
               }
-        	  });
+        	  }, function(err) {
+              Utils.showIntrusiveMessage('notify.unknown_error', 'error');
+          		Utils.logUIError('error.rejected.savePrevision', {error: err, entity: $scope.prevision});
+              errors = true;
+            });
           };
 
           $scope.deletePrevision = function(prevision) {
@@ -593,6 +611,8 @@ angular.module('vsko.stock')
             return d.promise;
   				}
 
+          // Help handle functions
+
           function handlePrevisionInDispatch() {
 
             // check if the prev was already in some dispatch -> remove from it
@@ -610,6 +630,78 @@ angular.module('vsko.stock')
               Dispatchs.addPrevision($scope.prevision, $scope.prevision.dispatchId).then(function(result) {
                 //
               });
+            }
+          }
+
+          function handlePrevisionDriveFolders(prevision) {
+
+            // handle creation/load of drive folders if they dont exists yet
+            if ($scope.prevision.id) {
+
+              if (!$scope.prevision.driveIdProduction) {
+                DriveAPI.hasPermissions(productionFilesFolder).then(function(hasDrivePermissions) {
+
+                  if (hasDrivePermissions) {
+
+                    Files.createFolders(prevision).then(function() {
+                      $scope.origPrevision.driveIdProduction = prevision.driveIdProduction;
+                      $scope.origPrevision.driveIdDesign = prevision.driveIdDesign;
+
+                      lkGoogleSettings.views = ["DocsView().setParent('"+prevision.driveIdProduction+"').setSelectFolderEnabled(true).setIncludeFolders(true)",
+                                                "DocsUploadView().setParent('"+prevision.driveIdProduction+"').setIncludeFolders(true)"] ;
+
+                      Utils.translate('Files count', {count: 0}).then(function(value) { $scope.filesLbl = value; });
+                    }, function(code) {
+                      // not permissions to create folder (shouldnt happen) -> show error message?
+                    });
+                  } else {
+                    // user logged in google but not permissions to create folder
+                    $scope.insufficientPermissions = true;
+                    if ("admin,produccion,ordenes,plotter".split(',').lastIndexOf($rootScope.user.role) != -1) {
+                      // allowed access to files but no permission in drive
+                      Utils.showMessage('notify.drive_not_allowed', 'error');
+                    }
+                  }
+                }, function(code) {
+                  // rejected has permissions, possible because is not logged into google yet
+                  Utils.translate('Files').then(function(value) { $scope.filesLbl = value; });
+                });
+
+                Utils.translate('Files').then(function(value) {
+                  $scope.filesLbl = value;
+                });
+
+              } else {
+                // drive folder already exists -> load it
+                lkGoogleSettings.views = ["DocsView().setParent('"+prevision.driveIdProduction+"').setSelectFolderEnabled(true).setIncludeFolders(true)",
+                                          "DocsUploadView().setParent('"+prevision.driveIdProduction+"')"] ;
+
+                // get number of files in prevision folder to show in label
+                DriveAPI.hasPermissions(productionFilesFolder).then(function(hasDrivePermissions) {
+
+                  if (hasDrivePermissions) {
+                    // list files only if the user logged in google has permissions to see the prevision prod folder
+                    DriveAPI.listFiles(prevision.driveIdProduction).then(function(files) {
+                      Utils.translate('Files count', {count: files.length}).then(function(value) {
+                        $scope.filesLbl = value;
+                      });
+                    }, function(code) {
+                      // rejected list files, possible because the gapi is not loaded yet
+                      Utils.translate('Files').then(function(value) { $scope.filesLbl = value; });
+                    });
+                  } else {
+                    $scope.insufficientPermissions = true;
+                    if ("admin,produccion,ordenes,plotter".split(',').lastIndexOf($rootScope.user.role) != -1) {
+                      // allowed access to files but no permission in drive
+                      Utils.showMessage('notify.drive_not_allowed', 'error');
+                    }
+                    Utils.translate('Files').then(function(value) { $scope.filesLbl = value; });
+                  }
+                }, function(code) {
+                  // rejected has permissions, possible because is not logged into google yet
+                  Utils.translate('Files').then(function(value) { $scope.filesLbl = value; });
+                });
+              }
             }
           }
         }

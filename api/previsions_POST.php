@@ -4,6 +4,7 @@ include_once '../include/headers.php';
 include_once '../include/dbutils.php';
 include_once '../include/main.php';
 
+include_once 'domain/logs.php';
 include_once 'domain/providers.php';
 include_once 'domain/plotters.php';
 include_once 'domain/orders.php';
@@ -31,8 +32,10 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$value = editPrevisionNumberField($json, $_GET['field']);
 	else if(isset($_GET['edit']))
 		$value = editPrevisionField($json, $_GET['field']);
-	else if(isset($_GET['updatePrevisionState']))
+	else if(isset($_GET['updatePrevisionState']) && isset($_GET['clothIds']))
 		$value = updatePrevisionState($_GET['clothIds']);
+	else if(isset($_GET['updatePrevisionState']) && isset($_GET['deliveryType']))
+		$value = updatePrevisionStateWithDeliveryType($_GET['deliveryType']);
 	else if(isset($_GET['updateAllPrevisionsStates']))
 		$value = updateAllPrevisionsStates();
 	else if(isset($_GET['acceptStateChange']))

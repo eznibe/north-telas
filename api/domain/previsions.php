@@ -224,8 +224,10 @@ function savePrevision($prevision)
 																		", tentativeDate = $tentativeDate, productionDate = $productionDate, infoDate = $infoDate, advanceDate = $advanceDate".
 																		" WHERE id = '".$prevision->id."'";
 
-		if(mysql_query($update))
+		if(mysql_query($update)) {
 			$obj->successful = true;
+			;
+		}
 		else {
 			$obj->successfulUpdate = false;
 			$obj->update = $update;

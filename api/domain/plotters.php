@@ -145,20 +145,20 @@ function finishPlotter($plotter) {
 			$obj->successful = false;
 			$obj->successfulRolls = false;
 			$obj->update = $update;
-			logQueryError($update, 'plotters.finishPlotter');
+			logQueryError($update, 'error.plotters.finishPlotter');
 		}
 
 		// discount mts from the mts of the rolls of the plotter
 		foreach ($plotter->cuts as $cut) {
 
-			logRollPreviousModification($cut->rollId, 'plotters.finishPlotter('+$plotter->id+')', null);
+			logRollPreviousModification($cut->rollId, 'plotters.finishPlotter('.$plotter->id.')', null);
 
 			$update = "UPDATE rolls set mts = if(mts-".$cut->mtsCutted." < 0, 0, mts-".$cut->mtsCutted.") where id = '".$cut->rollId."'";
 
 			if(!mysql_query($update)) {
 				$obj->successfulRolls = false;
 				$obj->updateRolls = $update;
-				logQueryError($update, 'plotters.finishPlotter');
+				logQueryError($update, 'error.plotters.finishPlotter');
 			}
 		}
 	}
@@ -186,7 +186,7 @@ function restorePlotter($plotter) {
 	// increment mts from the mts of the rolls of the plotter
 	foreach ($plotter->cuts as $cut) {
 
-		logRollPreviousModification($cut->rollId, 'plotters.restorePlotter('+$plotter->id+')', null);
+		logRollPreviousModification($cut->rollId, 'plotters.restorePlotter('.$plotter->id.')', null);
 
 		$update = "UPDATE rolls SET mts = mts + ".$cut->mtsCutted." WHERE id = '".$cut->rollId."'";
 

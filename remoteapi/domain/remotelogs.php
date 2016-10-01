@@ -6,7 +6,7 @@ function addLog($log) {
 
 	$logStr = !strpos($log->log, '"') ? "\"".$log->log."\"" : "'".$log->log."'";
 
-	$insert = "INSERT INTO logs (type, log, user) VALUES ('".$log->type."', $logStr, '".$log->user."')";
+	$insert = "INSERT INTO remotelogs (type, log, user) VALUES ('".$log->type."', $logStr, '".$log->user."')";
 	if (! mysql_query($insert)) {
 			// error en insert
 			$methodResult->successful = false;
@@ -20,7 +20,7 @@ function addFilesLog($log) {
 
 	$methodResult->successful = true;
 
-	$insert = "INSERT INTO fileslogs (fileId, fileName, action, folder, parentId, previsionId, user)
+	$insert = "INSERT INTO remotefileslogs (fileId, fileName, action, folder, parentId, previsionId, user)
 						 VALUES ('".$log->fileId."', '".$log->fileName."', '".$log->action."', '".$log->folder."', '".$log->parentId."', '".$log->previsionId."', '".$log->user."')";
 	if (! mysql_query($insert)) {
 			// error en insert
@@ -36,7 +36,7 @@ function logQueryError($query, $method) {
 	$res->successful = true;
 
 	// $insert = "INSERT INTO queryErrors (method, query) VALUES ('".$method."', '\"'".$query."\")";
-	$insert = "INSERT INTO logs (type, log) VALUES ('".$method."', \"".$query."\")";
+	$insert = "INSERT INTO remotelogs (type, log) VALUES ('".$method."', \"".$query."\")";
 	if (! mysql_query($insert)) {
 			// error en insert
 			$res->successful = false;
@@ -46,24 +46,11 @@ function logQueryError($query, $method) {
 	return $res;
 }
 
-function logRollPreviousModification($id, $method, $whereCondition) {
+function getAll() {
+	$query = "SELECT * FROM remotelogs";
 
-	$res->successful = true;
+	$result = mysql_query($query);
 
-	if(!isset($whereCondition)) {
-		$whereCondition = "id = '$id'";
-	}
-
-	// $insert = "INSERT INTO queryErrors (method, query) VALUES ('".$method."', '\"'".$query."\")";
-	$insert = "INSERT INTO logrolls (id, productId, type, number, lote, mtsOriginal, mts, orderId, incoming, manual, method, insertedOn)
-							SELECT *, '$method', now() FROM rolls WHERE $whereCondition";
-	if (! mysql_query($insert)) {
-			// error en insert
-			$res->successful = false;
-			$res->insert = $insert;
-	}
-
-	return $res;
+	return fetch_array($result);
 }
-
 ?>

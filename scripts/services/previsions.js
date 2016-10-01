@@ -85,12 +85,15 @@ angular.module('vsko.stock')
 					var startTime = Date.now();
 
 					$http.post(url + 'previsions_POST.php', prevision).then(function(result) {
-						Utils.logTiming(startTime, url + 'previsions_POST.php', 'previsions.save', 'POST', prevision);
+						var failed = !result.data.successful ? '-FAILED' : '';
+
+						Utils.logTiming(startTime, url + 'previsions_POST.php', 'previsions.save', 'POST'+failed, prevision);
 						d.resolve(result);
+					}, function(err) {
+						d.reject(err);
 					});
 
 					return d.promise;
-					// return $http.post(url + 'previsions_POST.php', prevision);
         };
 
         this.designed = function(prevision) {
@@ -197,13 +200,29 @@ angular.module('vsko.stock')
         	// return $http.post(url + 'previsions_POST.php?edit=true&field='+field, prevision);
         };
 
-				this.updatePrevisionState = function(clothIds) {
+				this.updatePrevisionState = function(clothIds, previsionId) {
 
 					var d = $q.defer();
 					var startTime = Date.now();
 
-					$http.post(url + 'previsions_POST.php?updatePrevisionState=true&clothIds='+clothIds, clothIds).then(function(result) {
+					var previInitiator = previsionId ? ('&preivsionInitiator = ' + previsionId) : '';
+
+					$http.post(url + 'previsions_POST.php?updatePrevisionState=true&clothIds='+clothIds + previInitiator, clothIds).then(function(result) {
 						Utils.logTiming(startTime, url + 'previsions_POST.php?updatePrevisionState=true&clothIds='+clothIds, 'previsions.updatePrevisionState', 'POST', clothIds);
+						d.resolve(result);
+					});
+
+					return d.promise;
+        	// return $http.post(url + 'previsions_POST.php?updatePrevisionState=true&clothIds='+clothIds, clothIds);
+        };
+
+				this.updatePrevisionStateWithDeliveryType = function(deliveryType) {
+
+					var d = $q.defer();
+					var startTime = Date.now();
+
+					$http.post(url + 'previsions_POST.php?updatePrevisionState=true&deliveryType='+deliveryType, deliveryType).then(function(result) {
+						Utils.logTiming(startTime, url + 'previsions_POST.php?updatePrevisionState=true&deliveryType='+deliveryType, 'previsions.updatePrevisionStateWithDeliveryType', 'POST', deliveryType);
 						d.resolve(result);
 					});
 

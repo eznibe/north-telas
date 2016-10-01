@@ -23,6 +23,7 @@ angular.module('vsko.stock')
         	  $scope.download = function() {
 
               angular.forEach($scope.selectedFiles, function (file, index) {
+                console.log(file);
                 window.open('https://drive.google.com/uc?export=download&id='+file.id);
               });
               $scope.modalPrevisionFiles.hide();
@@ -33,6 +34,15 @@ angular.module('vsko.stock')
               angular.forEach($scope.selectedFiles, function (file, index) {
                 DriveAPI.deleteFile(file, {folder: 'production', parentId: $scope.prevision.driveIdProduction, previsionId: $scope.prevision.id}).then(function() {
                   Utils.showMessage('notify.file_deleted');
+                  // refersh count of files in folder
+                  DriveAPI.listFiles($scope.prevision.driveIdProduction).then(function(files) {
+                    Utils.translate('Files count', {count: files.length}).then(function(value) {
+                      $scope.filesLbl = value;
+                    });
+                  });
+                }, function(code) {
+                  // delete file rejected, possible because not permission to do it
+                  Utils.showMessage('notify.file_delete_error', 'error', {fileName: file.name});
                 });
               });
               $scope.modalPrevisionFiles.hide();
