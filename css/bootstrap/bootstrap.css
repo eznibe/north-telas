@@ -4491,6 +4491,34 @@ a.list-group-item.active > .badge,
 .nav-pills > li > a > .badge {
   margin-left: 3px;
 }
+
+.text-size-selector {
+  list-style: none;
+  float: left;
+  padding: 0;
+  margin: 0;
+}
+
+.text-size-selector li {
+  display: inline;
+  padding-right: 5px;
+}
+
+.smallsize .table > tbody > tr > td,
+.smallsize .badge {
+  font-size: 11px;
+}
+
+.normalsize .table > tbody > tr > td,
+.normalsize .badge {
+  font-size: 12px;
+}
+
+.bigsize .table > tbody > tr > td,
+.bigsize .badge {
+  font-size: 13px;
+}
+
 .jumbotron {
   padding: 10px;
   margin-bottom: 10px;

@@ -46,7 +46,7 @@
 				<span access-allowed="admin,ordenes,produccion,plotter"><a href="javascript:void(0);" ng-click="showManualPlotterModal(p)">{{p.sOrder}}</a></span>
 				<span access-restricted="admin,ordenes,produccion,plotter">{{p.sOrder}}</span>
 			</td>
-			<td title="{{p.tooltip}}">
+			<td title="{{p.tooltip}}" nowrap>
 				<span ng-show="p.cutted=='0'">
 					<a ng-hide="p.sOrder" href="javascript:void(0);" ng-click="showPrevisionModal(p)">{{p.orderNumber}}</a>
 					<span ng-show="p.sOrder">{{p.orderNumber}}</span>

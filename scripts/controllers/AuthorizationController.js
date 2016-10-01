@@ -50,4 +50,8 @@ angular.module('vsko.stock').controller('AuthorizationCtrl', ['$scope', '$rootSc
       });
 		};
 
+    $scope.fontSizeClass = function() {
+      return $rootScope.fontSizeClass ? $rootScope.fontSizeClass : '';
+    };
+
 }]);

@@ -43,7 +43,14 @@
 						<li class="cards">
 							<ul>
 								<li ng-repeat="p in cloth.previsions | previsionsByType:'TEMP'" ng-click="showPrevisionModal(p, modalPrevisions)">
-									<h3><span style="color:black;">{{p.orderNumber}}</span></h3>
+									<!-- <h3><span style="color:black;">{{p.orderNumber}}</span></h3> -->
+                  <h3 style="margin-bottom: 10px;">
+                    <span style="color:black;">{{p.orderNumber}}</span>
+                    <span style="color:black; float:right; padding:2px;" ng-style="{'background-color': (p.stateAccepted=='0' ? 'orange' : '')}">
+        							{{p.state}}
+        							<a href="javascript:void(0)" ng-show="p.stateAccepted=='0'" ng-click="acceptStateChange(p); $event.stopPropagation();" style="cursor:pointer;" class="tag-control"><span class="glyphicon glyphicon-ok control-label" style="text-align:center; margin-left:4px;"></span></a>
+        						</span>
+                  </h3>
 									<h3><small translate>Client</small> <span>{{p.client}}</span></h3>
 									<h3><small translate>Sail</small> <span>{{p.sailName}}</span></h3>
 									<h3><small translate>Boat</small> <span>{{p.boat}}</span></h3>

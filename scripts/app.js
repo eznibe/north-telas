@@ -27,6 +27,11 @@ angular.module("vsko.stock", [
 	    	$translate.use(lang);
 			}
 
+			var fontsize = $cookieStore.get('fontsize');
+			if (fontsize) {
+	    	$rootScope.fontSizeClass = fontsize;
+			}
+
 			$rootScope.searchBoxChangedObservers = [];
 			$rootScope.pageChangedObservers = [];
 
@@ -228,6 +233,15 @@ angular.module("vsko.stock", [
             .when('/dolar', {
                 templateUrl: 'views/dolar.html',
                 controller: 'DolarCtrl',
+                access: 'admin'
+            })
+						.when('/profile', {
+                templateUrl: 'views/profile.html',
+                controller: 'ProfileCtrl'
+            })
+						.when('/seasonweeks', {
+                templateUrl: 'views/seasonweeks.html',
+                controller: 'SeasonWeeksCtrl',
                 access: 'admin'
             })
             .when('/lists/oldPrevisions', {

@@ -88,7 +88,8 @@
   "Filter": "Filtro",
   "Download": "Descargar",
   "Sail types": "Tipos de velas",
-  "": "",
+  "See all": "Ver todas",
+  "Text size": "Tamaño de texto en tablas",
   "": "",
   "Month": {
     "1": "Enero",
@@ -309,6 +310,8 @@
     "dispatch_removed": "Despacho borrado.",
     "dispatch_archived": "Despacho archivado.",
     "dispatch_restored": "Despacho restaurado.",
-    "file_deleted": "Archivo eliminado."
+    "file_deleted": "Archivo eliminado.",
+    "fontsize_updated": "Tamaño de letra cambiado.",
+    "weeks_updated": "Semanas actualizada."
   }
 }

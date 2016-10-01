@@ -33,7 +33,7 @@
 	    }
 	</script>
 </head>
-<body ng-app="vsko.stock" ng-controller='AuthorizationCtrl'>
+<body ng-app="vsko.stock" ng-controller='AuthorizationCtrl' ng-class="fontSizeClass()">
 		<!-- Fixed navbar -->
 		<div google-analytics ng-cloak>
 			<div class="navbar-inverse" role="navigation">
@@ -110,7 +110,7 @@
 			                        <li><a href="#/dolar" translate>Dolar</a></li>
 			                        <li><a href="#/users" translate>Users</a></li>
                               <li><a href="#/sails" translate>Sail types</a></li>
-                              <li><a href="#/weeks" translate>Season weeks</a></li>
+                              <li><a href="#/seasonweeks" translate>Season weeks</a></li>
 			                    </ul>
 							</li>
 							<li>
@@ -133,8 +133,8 @@
 							<li class="dropdrown">
 								<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> {{user.name}} <span class="caret"></span></a>
 								<ul class="dropdown-menu" role="menu">
-									<!-- <li><a href="#" translate>Profile</a></li> -->
-									<!-- <li class="divider"></li> -->
+                  <li><a href="#/profile" translate>Profile</a></li>
+									<li class="divider"></li>
 									<li><a href="#/login" ng-click="logout()" translate>Logout</a></li>
 								</ul>
 							</li>
@@ -206,6 +206,8 @@
         <script src="scripts/controllers/CanvasController.js"></script>
         <script src="scripts/controllers/ProvidersController.js"></script>
         <script src="scripts/controllers/DolarController.js"></script>
+        <script src="scripts/controllers/ProfileController.js"></script>
+        <script src="scripts/controllers/SeasonWeeksController.js"></script>
         <script src="scripts/controllers/OnedesignController.js"></script>
         <script src="scripts/controllers/AuthorizationController.js"></script>
         <script src="scripts/controllers/UsersController.js"></script>
