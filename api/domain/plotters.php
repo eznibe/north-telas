@@ -280,6 +280,11 @@ function toDesignPlotter($plotter) {
 	if(!mysql_query($update)) {
 		$obj->successful = false;
 		$obj->updatePrevision = $update;
+	} else {
+		$select = "SELECT * from previsions where id = '".$plotter->previsionId."'";
+		$result = mysql_query($select);
+		$obj->prevision = reset(fetch_array($result));
+		$obj->query = $select;
 	}
 
 	// remove all plotters with the same prevision id

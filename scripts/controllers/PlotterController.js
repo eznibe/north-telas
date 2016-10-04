@@ -161,6 +161,12 @@ angular.module('vsko.stock').controller('PlotterCtrl', ['$scope', '$rootScope', 
 
         	Plotters.restoreToDesign(plotter).then(function(result){
 
+						// revert percentage also using same rules
+						result.data.prevision.designed = false;
+						result.data.prevision.percentage = 0;
+
+						Rules.updatePrevisionPercentage(result.data.prevision, true);
+
         		$scope.plotters.remove(function(p) {
         			  return p.orderNumber == orderNumber;
         		});

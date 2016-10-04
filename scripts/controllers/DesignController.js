@@ -11,6 +11,8 @@ angular.module('vsko.stock').controller('DesignCtrl', ['$scope', 'Utils', 'Previ
 
           Previsions.designed(prevision).then(function(result) {
 
+            prevision.designed = true;            
+
             Rules.updatePrevisionPercentage(prevision, true);
 
             $scope.previsions.remove(prevision);
@@ -24,9 +26,6 @@ angular.module('vsko.stock').controller('DesignCtrl', ['$scope', 'Utils', 'Previ
             Previsions.updatePrevisionState(clothsIds, prevision.id).then(function() {
               Utils.showMessage('notify.previsions_state_updated');
             });
-
-            prevision.designed = true;
-
           });
 
           //prevision.designed = prevision.designed ? !prevision.designed : true;
