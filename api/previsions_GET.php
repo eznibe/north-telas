@@ -20,6 +20,9 @@ $expand = isset($_GET['expand']) ? $_GET['expand'] : null;
 if(isset($_GET['id'])) {
 	$value = getPrevision($_GET['id']);
 }
+else if(isset($_GET['validate'])) {
+	$value = validateOrderNumber($_GET['orderNumber']);
+}
 else if(isset($_GET['clothId'])) {
 	$value = getPrevisions($_GET['clothId'], $designed, $expand, null);
 }

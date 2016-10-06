@@ -313,6 +313,7 @@ angular.module('vsko.stock')
         	entity: '=',
         	callback: '=',
           editableByRole: '=',
+          readOnlyFn: '&',
           width: '='
         },
         templateUrl: 'views/directives/editableProductionInput.html',
@@ -324,7 +325,8 @@ angular.module('vsko.stock')
             scope.required = false;
           }
 
-          scope.readonly = scope.editableByRole && scope.editableByRole.split(',').lastIndexOf($rootScope.user.role) == -1;
+          scope.readonly = (scope.editableByRole && scope.editableByRole.split(',').lastIndexOf($rootScope.user.role) == -1)
+                              || (scope.readOnlyFn && scope.readOnlyFn({p: scope.entity}));
 
           scope.oneTimeBindings = {
             mouseOver: function(entity) {

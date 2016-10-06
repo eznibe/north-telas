@@ -191,3 +191,7 @@ table#production th > div.editable {
 .production-filter th > div > select {
 	width: 20px;
 }
+
+.notifyjs-corner {
+	z-index: 9999 !important;
+}

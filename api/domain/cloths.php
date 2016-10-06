@@ -388,7 +388,7 @@ function savePctNac($pctNac) {
 
 	$obj->successful = true;
 
-	$query = "INSERT INTO pctNac (value) VALUES (".$pctNac->value.")";
+	$query = "INSERT INTO pctnac (value) VALUES (".$pctNac->value.")";
 	$result = mysql_query($query);
 
 	return $obj;
@@ -397,7 +397,7 @@ function savePctNac($pctNac) {
 function getPctNac()
 {
 
-	$query = "SELECT * FROM pctNac d ORDER BY createdOn desc LIMIT 1";
+	$query = "SELECT * FROM pctnac d ORDER BY createdOn desc LIMIT 1";
 	$result = mysql_query($query);
 
 	return fetch_array($result);

@@ -166,6 +166,9 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 		},
 		stateStyle: function(p) {
 			return {'background-color': (p.stateAccepted=='0' ? 'orange' : '')};
+		},
+		readOnlyPercentage: function(p) {
+			return p.percentage < 25 && $rootScope.user.role != 'admin';
 		}
 	}
 

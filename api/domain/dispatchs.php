@@ -11,7 +11,7 @@ function getDispatchs($expand, $startDate, $endDate, $filterKey, $filterValue)
 		$query = "SELECT *, DATE_FORMAT(dispatchDate,'%d-%m-%Y') as dispatchDate, d.dispatchDate as unformattedDispatchDate
 							FROM dispatchs d
 							WHERE d.archived = false
-							ORDER BY d.dispatchDate";
+							ORDER BY d.number, d.dispatchDate";
 
 	} else if ($expand == 'HISTORIC') {
 
@@ -128,7 +128,7 @@ function getDispatchCarries($dispatchId)
 
 // get all the destinataries enetered in the systema (the info will be from the last dispatch for that person)
 function getDispatchDestinataries()
-{	
+{
 	$query = "SELECT destinatary as name, address, destiny, transport, deliveryType , notes, number, archived
 						FROM dispatchs d
 						WHERE d.number in

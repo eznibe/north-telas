@@ -120,6 +120,10 @@ angular.module('vsko.stock')
 					// return $http.post(url + 'previsions_POST.php?updateMts=true', cloth);
         };
 
+				this.validateUniqueOrderNumber = function(orderNumber) {
+					return $http.get(url + 'previsions_GET.php?validate=true&orderNumber='+escape(orderNumber));
+				};
+
         //-- PLOTTERS --//
 
         this.getAllPlotters = function(cutted)

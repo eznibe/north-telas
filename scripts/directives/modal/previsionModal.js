@@ -157,6 +157,10 @@ angular.module('vsko.stock')
                 $scope.prevision.week = 19;
               }
 
+              if (!$scope.prevision.percentage) {
+                $scope.prevision.percentage = 0;
+              }
+
               if ($scope.prevision.infoDate) {
                 $scope.prevision.hasInfo = true;
               }
@@ -266,86 +270,104 @@ angular.module('vsko.stock')
               }
             }
 
-        	  Previsions.save($scope.prevision, $rootScope.user.name).then(function(result) {
+            Previsions.validateUniqueOrderNumber($scope.prevision.orderNumber).then(function(result) {
 
-        		  if(result.data.successful && result.data.isNew) {
+              // valid scenarios to be a valid ordernumber:
+              // . it is not a new prevision but the order number is unique or the one that exists it's the same to current prevision
+              // . it is a new prevision and the order number is unique
+              if (($scope.prevision.id && (result.data.valid || $scope.prevision.id == result.data.previsionId))
+                      || (!$scope.prevision.id && result.data.valid)) {
 
-        			  $scope.previsions.push($scope.prevision);
+                Previsions.save($scope.prevision, $rootScope.user.name).then(function(result) {
 
-                Utils.showMessage('notify.prevision_created');
+                  if(result.data.successful && result.data.isNew) {
 
-                waitForPossiblePrevisionStateChange = true;
+                    $scope.previsions.push($scope.prevision);
 
-                // new prevision -> create folders in google drive for production and design files
-                Files.createFolders($scope.prevision).then(function() {
-                  // nothing to do here
-                });
+                    Utils.showMessage('notify.prevision_created');
 
-                updatePrevisionState($scope.prevision).then(function(state) {
-                  console.log('Ended update prev state (new):', state);
-                  // the prevision is new => show modal with the prev state for the user
-                  $scope.state = state;
-                  $scope.onClose = newStateClose;
-                  var modal = $modal({template: 'views/modal/showNewState.html', show: false, scope: $scope, backdrop:'static', animation:'am-fade-and-slide-top'});
-                  modal.$promise.then(modal.show);
-                });;
-        		  }
-        		  else if(result.data.successful && !result.data.isNew) {
+                    waitForPossiblePrevisionStateChange = true;
 
-                Utils.showMessage('notify.prevision_modified');
+                    // new prevision -> create folders in google drive for production and design files
+                    Files.createFolders($scope.prevision).then(function() {
+                      // nothing to do here
+                    });
 
-                waitForPossiblePrevisionStateChange = true;
-
-                updatePrevisionState($scope.prevision).then(function(state) {
-                  console.log('Ended update prev state:', state);
-                  if(state) {
-                    // the prevision state was updated => show modal with the new prev state for the user
-                    $scope.state = state;
-                    $scope.onClose = newStateClose;
-                    var modal = $modal({template: 'views/modal/showNewState.html', show: false, scope: $scope, backdrop:'static', animation:'am-fade-and-slide-top'});
-                    modal.$promise.then(modal.show);
-                  } else {
-                    newStateClose();
+                    updatePrevisionState($scope.prevision).then(function(state) {
+                      console.log('Ended update prev state (new):', state);
+                      // the prevision is new => show modal with the prev state for the user
+                      $scope.state = state;
+                      $scope.onClose = newStateClose;
+                      var modal = $modal({template: 'views/modal/showNewState.html', show: false, scope: $scope, backdrop:'static', animation:'am-fade-and-slide-top'});
+                      modal.$promise.then(modal.show);
+                    });;
                   }
+                  else if(result.data.successful && !result.data.isNew) {
+
+                    Utils.showMessage('notify.prevision_modified');
+
+                    waitForPossiblePrevisionStateChange = true;
+
+                    updatePrevisionState($scope.prevision).then(function(state) {
+                      console.log('Ended update prev state:', state);
+                      if(state) {
+                        // the prevision state was updated => show modal with the new prev state for the user
+                        $scope.state = state;
+                        $scope.onClose = newStateClose;
+                        var modal = $modal({template: 'views/modal/showNewState.html', show: false, scope: $scope, backdrop:'static', animation:'am-fade-and-slide-top'});
+                        modal.$promise.then(modal.show);
+                      } else {
+                        newStateClose();
+                      }
+                    });
+                  }
+                  else if(!result.data.successfulInsert && result.data.insert) {
+                    Lists.log({type: 'error.insertPrevision', log: result.data.insert}).then(function(result) {});
+                    Utils.showMessage('notify.prevision_create_failed', 'error');
+                    errors = true;
+                  }
+                  else if(!result.data.successfulUpdate && result.data.update) {
+                    Lists.log({type: 'error.updatePrevision', log: result.data.update}).then(function(result) {});
+                    Utils.showMessage('notify.prevision_edit_failed', 'error');
+                    errors = true;
+                  }
+                  else if(!result.data.successfulCloths && result.data.queryCloths) {
+                    Lists.log({type: 'error.queryCloths', log: result.data.queryCloths}).then(function(result) {});
+                    Utils.showMessage('notify.prevision_cloth_save_failed', 'error');
+                    errors = true;
+                  }
+                  else if(!result.data.successful) {
+                    Utils.showMessage('notify.unknown_error', 'error');
+                    Utils.logUIError('errorUI.savePrevision', result.data);
+                    errors = true;
+                  }
+
+                  if(!waitForPossiblePrevisionStateChange && !errors) {
+                    $scope.modalPrevision.hide();
+
+                    if($scope.previousModal) {
+                      $scope.previousModal.show();
+                    }
+
+                    if ($scope.onSavePrevision) {
+                      $scope.onSavePrevision($scope.prevision);
+                    }
+                  }
+                }, function(err) {
+                  Utils.showIntrusiveMessage('notify.unknown_error', 'error');
+                  Utils.logUIError('error.rejected.savePrevision', {error: err, entity: $scope.prevision});
+                  errors = true;
                 });
-        		  }
-        		  else if(!result.data.successfulInsert && result.data.insert) {
-                Lists.log({type: 'error.insertPrevision', log: result.data.insert}).then(function(result) {});
-                Utils.showMessage('notify.prevision_create_failed', 'error');
-                errors = true;
-        		  }
-              else if(!result.data.successfulUpdate && result.data.update) {
-                Lists.log({type: 'error.updatePrevision', log: result.data.update}).then(function(result) {});
-                Utils.showMessage('notify.prevision_edit_failed', 'error');
-                errors = true;
-        		  }
-              else if(!result.data.successfulCloths && result.data.queryCloths) {
-                Lists.log({type: 'error.queryCloths', log: result.data.queryCloths}).then(function(result) {});
-                Utils.showMessage('notify.prevision_cloth_save_failed', 'error');
-                errors = true;
-        		  }
-              else if(!result.data.successful) {
-                Utils.showMessage('notify.unknown_error', 'error');
-                Utils.logUIError('errorUI.savePrevision', result.data);
-                errors = true;
-        		  }
 
-              if(!waitForPossiblePrevisionStateChange && !errors) {
-                $scope.modalPrevision.hide();
-
-                if($scope.previousModal) {
-                  $scope.previousModal.show();
-                }
-
-                if ($scope.onSavePrevision) {
-                  $scope.onSavePrevision($scope.prevision);
-                }
+              } else {
+                // save attempt but prevision order number not unique
+                Utils.showMessage('notify.prevision_ordernumber_notunique', 'error');
               }
-        	  }, function(err) {
-              Utils.showIntrusiveMessage('notify.unknown_error', 'error');
-          		Utils.logUIError('error.rejected.savePrevision', {error: err, entity: $scope.prevision});
-              errors = true;
             });
+          };
+
+          $scope.isAdmin = function() {
+            return $rootScope.user.role === 'admin';
           };
 
           $scope.deletePrevision = function(prevision) {
@@ -383,6 +405,10 @@ angular.module('vsko.stock')
               $scope.prevision.i = prevision.originalObject.i;
               $scope.prevision.j = prevision.originalObject.j;
               $scope.prevision.area = prevision.originalObject.area;
+
+              $scope.prevision.selectedLine = prevision.originalObject.line ? $scope.lines.findAll({name:prevision.originalObject.line})[0] : {};
+              $scope.prevision.selectedSeller = prevision.originalObject.seller ? $scope.sellers.findAll({name:prevision.originalObject.seller})[0] : {};
+              $scope.prevision.priority = prevision.originalObject.priority;
 
               /*console.log('Selected prevision: '+prevision.originalObject.orderNumber);
               console.log('Stored in entity: '+$scope.prevision.orderNumber);*/

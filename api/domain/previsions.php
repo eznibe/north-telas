@@ -155,6 +155,23 @@ function getPrevision($id) {
 	return $obj;
 }
 
+// check if the given orderNumber already exist in the system
+function validateOrderNumber($orderNumber) {
+
+	$obj->valid = true;
+
+	$query = "SELECT * FROM previsions WHERE orderNumber = '$orderNumber'";
+	$result = mysql_query($query);
+
+	while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+		$obj->valid = false;
+		$obj->previsionId = $row['id'];
+		return $obj;
+	}
+
+	return $obj;
+}
+
 function checkAllClothsCutted($id) {
 
 	$query = "SELECT count(*) as count FROM plotters WHERE previsionId = '$id' and cutted = false";
