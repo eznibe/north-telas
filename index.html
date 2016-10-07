@@ -33,11 +33,11 @@
 	    }
 	</script>
 </head>
-<body ng-app="vsko.stock" ng-controller='AuthorizationCtrl'>
+<body ng-app="vsko.stock" ng-controller='AuthorizationCtrl' ng-class="fontSizeClass()">
 		<!-- Fixed navbar -->
 		<div google-analytics ng-cloak>
 			<div class="navbar-inverse" role="navigation">
-				<div class="container">
+				<div class="container-header">
 					<div class="navbar-header">
 						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#vsko-application-header-collapse">
 							<span class="sr-only">Toggle navigation</span>
@@ -45,41 +45,50 @@
 							<span class="icon-bar"></span>
 							<span class="icon-bar"></span>
 						</button>
-						<a class="navbar-brand"  translate>Stock manager</a>
+						<a class="navbar-brand"  translate></a>
 					</div>
 					<div class="navbar-collapse collapse" id="vsko-application-header-collapse">
 						<ul class="nav navbar-nav" ng-show="user.name">
 							<li access-restricted="vendedor">
-								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'Cloths' | translate }} <span class="caret"></span></a>
+								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'Stock arg' | translate }} <span class="caret"></span></a>
 			                    <ul class="dropdown-menu" role="menu">
-			                        <li><a href="#/groups" translate>Groups</a></li>
-			                        <li><a href="#/cloths" translate>All</a></li>
+			                        <li><a href="#/groups" translate>Cloths</a></li>
+                              <li><a href="#/orders"  access-restricted="plotter" translate>Buys</a></li>
+                              <li><a href="#/previsions" access-restricted="plotter" translate>Orders</a></li>
+                              <li><a href="#/plotter" translate>Plotter</a></li>
+                              <li><a href="#/onedesign" access-restricted="plotter" translate>One design cloths</a></li>
+                              <li><a href="#/providers" access-level="admin" translate>Providers</a></li>
 			                    </ul>
 							</li>
-							<li access-restricted="plotter,vendedor">
-								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'Buys' | translate }} <span class="caret"></span></a>
+              <!-- <li access-allowed="admin">
+								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'Stock bra' | translate }} <span class="caret"></span></a>
 			                    <ul class="dropdown-menu" role="menu">
-			                        <li><a href="#/orders/buy" translate>Buy</a></li>
-			                        <li><a href="#/orders/confirm" translate>Confirm</a></li>
-			                        <li><a href="#/orders/transit" translate>Transit</a></li>
 			                    </ul>
-							</li>
-							<li access-restricted="vendedor">
-								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'Orders' | translate }} <span class="caret"></span></a>
-			                    <ul class="dropdown-menu" role="menu">
-			                    	<li><a href="#/previsions" access-restricted="plotter" translate>Previsions</a></li>
-			                        <li><a href="#/design" access-restricted="plotter" translate>Design</a></li>
-			                        <li><a href="#/plotter" translate>Plotter</a></li>
-			                    </ul>
-							</li>
+							</li> -->
               <li>
-								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'Manage' | translate }} <span class="caret"></span></a>
+								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'Production arg' | translate }} <span class="caret"></span></a>
 			                    <ul class="dropdown-menu" role="menu">
                             <li><a href="#/production" translate>Production</a></li>
-                            <li access-restricted="vendedor"><a href="#/dispatch" translate>Dispatchs</a></li>
                             <li><a href="#/historic" translate>Historics</a></li>
-                            <!-- <li><a href="#/canvas" translate>Canvas</a></li> -->
 			                    </ul>
+							</li>
+              <!-- <li access-allowed="admin">
+								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'Production bra' | translate }} <span class="caret"></span></a>
+			                    <ul class="dropdown-menu" role="menu">
+			                    </ul>
+							</li> -->
+              <li access-restricted="vendedor,plotter">
+								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'Design' | translate }} <span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="#/design" access-restricted="plotter" translate>Design</a></li>
+                </ul>
+							</li>
+              <li access-restricted="vendedor">
+								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'Dispatchs' | translate }} <span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="#/dispatch" translate>Dispatchs</a></li>
+                    <li><a href="#/lists/dispatchsHistoric" translate>Historics</a></li>
+                </ul>
 							</li>
 							<li access-restricted="vendedor">
 								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'Lists' | translate }} <span class="caret"></span></a>
@@ -91,16 +100,15 @@
 			                        <li><a href="#/lists/clothsStock" translate>Cloths stock</a></li>
                               <li><a href="#/lists/clothsPrice" access-restricted="plotter" translate>Cloths price</a></li>
                               <li><a href="#/lists/clothsValuedStock" translate>Cloths valued stock</a></li>
-                              <li><a href="#/lists/dispatchsHistoric" translate>Dispatchs historic</a></li>
 			                    </ul>
 							</li>
-							<li access-restricted="plotter,vendedor">
-								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'System' | translate }} <span class="caret"></span></a>
+							<li access-allowed="admin">
+								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'Configuration' | translate }} <span class="caret"></span></a>
 			                    <ul class="dropdown-menu" role="menu">
-			                        <li><a href="#/providers" access-level="admin" translate>Providers</a></li>
-			                        <li><a href="#/onedesign">One design</a></li>
-			                        <li><a href="#/dolar" access-level="admin" translate>Configuration</a></li>
-			                        <li><a href="#/users" access-level="admin" translate>Users</a></li>
+			                        <li><a href="#/dolar" translate>Dolar</a></li>
+			                        <li><a href="#/users" translate>Users</a></li>
+                              <li><a href="#/sails" translate>Sail types</a></li>
+                              <li><a href="#/seasonweeks" translate>Season weeks</a></li>
 			                    </ul>
 							</li>
 							<li>
@@ -109,19 +117,21 @@
 			                        <li style="padding:0px 10px;"><input type="search" id="appsearch" ng-model="$parent.searchBox" ng-change="::$parent.searchBoxChanged()" stop-propagation/></li>
 			                    </ul>
 							</li>
-              <li>
-                <div angular-stats watch-count=".watch-count" digest-length=".digest-length"
-                     on-watch-count-update="onWatchCountUpdate(watchCount)"
-                     on-digest-length-update="onDigestLengthUpdate(digestLength)" style="z-index: 999; position: relative; left:10px;">
-                  W: <span class="watch-count"></span><br />
-                </div>
-              </li>
+              <!-- <li> -->
+              <!-- </li> -->
 						</ul>
+
+            <div angular-stats watch-count=".watch-count" digest-length=".digest-length"
+            on-watch-count-update="onWatchCountUpdate(watchCount)"
+            on-digest-length-update="onDigestLengthUpdate(digestLength)" style="z-index: 999; padding-top:10px; padding-bottom:10px; float:right; left:10px;">
+              <span class="watch-count"></span><br />
+            </div>
+
 						<ul class="nav navbar-nav navbar-right" ng-show="user.name">
 							<li class="dropdrown">
 								<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> {{user.name}} <span class="caret"></span></a>
 								<ul class="dropdown-menu" role="menu">
-									<li><a href="#" translate>Profile</a></li>
+                  <li><a href="#/profile" translate>Profile</a></li>
 									<li class="divider"></li>
 									<li><a href="#/login" ng-click="logout()" translate>Logout</a></li>
 								</ul>
@@ -199,6 +209,8 @@
         <script src="scripts/controllers/CanvasController.js"></script>
         <script src="scripts/controllers/ProvidersController.js"></script>
         <script src="scripts/controllers/DolarController.js"></script>
+        <script src="scripts/controllers/ProfileController.js"></script>
+        <script src="scripts/controllers/SeasonWeeksController.js"></script>
         <script src="scripts/controllers/OnedesignController.js"></script>
         <script src="scripts/controllers/AuthorizationController.js"></script>
         <script src="scripts/controllers/UsersController.js"></script>

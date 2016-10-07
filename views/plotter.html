@@ -8,15 +8,15 @@
 				</div>
 
 				<div class="col-xs-2">
-					<a ng-click="search()" class="btn btn-default floatright">
-						<span class="glyphicon glyphicon-search"></span>
-						{{'Search' | translate}}
-					</a>
+					<!-- <a ng-click="search()" class="btn btn-default floatright"> -->
+						<span class="glyphicon glyphicon-search icon-with-label"></span>
+						<span><a ng-click="search()" class="btn-link">{{'Search' | translate}}</a><span>
+					<!-- </a> -->
 				</div>
 		</div>
 	</div>
 	<p class="bigmargin">
-	    <a ng-click="showManualPlotterModal()" class="btn btn-info floatright" access-allowed="admin,ordenes,produccion,plotter" >
+	    <a ng-click="showManualPlotterModal()" class="btn btn-default floatright" access-allowed="admin,ordenes,produccion,plotter" >
 	        <span class="glyphicon glyphicon-plus"></span>&nbsp;
 	        {{'Create new plotter' | translate}}
 	    </a>
@@ -46,7 +46,7 @@
 				<span access-allowed="admin,ordenes,produccion,plotter"><a href="javascript:void(0);" ng-click="showManualPlotterModal(p)">{{p.sOrder}}</a></span>
 				<span access-restricted="admin,ordenes,produccion,plotter">{{p.sOrder}}</span>
 			</td>
-			<td title="{{p.tooltip}}">
+			<td title="{{p.tooltip}}" nowrap>
 				<span ng-show="p.cutted=='0'">
 					<a ng-hide="p.sOrder" href="javascript:void(0);" ng-click="showPrevisionModal(p)">{{p.orderNumber}}</a>
 					<span ng-show="p.sOrder">{{p.orderNumber}}</span>
@@ -83,23 +83,24 @@
 				<span class="glyphicon glyphicon-pencil col-xs-1 control-label" ng-click="showEditModal(p, editObservations)" style="text-align:center; cursor:pointer; float:none; padding-left:5px; padding-right:5px;" ng-show="over" access-allowed="admin,ordenes,produccion,plotter">&nbsp;</span>
 			</td>
 			<td style="width:80px; text-align:center;" ng-show="p.cutted=='1'" access-allowed="admin,ordenes,produccion,plotter">
-				<a ng-click="showConfirmModal(p, restore)" class="btn btn-default" >
-					<span class="glyphicon glyphicon-remove"></span>
-				</a>
+				<!-- <a ng-click="showConfirmModal(p, restore)" class="btn btn-default" > -->
+					<span class="glyphicon glyphicon-remove icon-link" ng-click="showConfirmModal(p, restore)"></span>
+				<!-- </a> -->
 			</td>
 			<td style="width:80px; text-align:center;" ng-show="p.cutted=='0'" access-allowed="admin,ordenes,produccion,plotter">
-				<a ng-click="showCutConfirmModal(p, cutted)" class="btn btn-default" ng-disabled="!filledCuts(p)" >
-					<span class="glyphicon glyphicon-ok"></span>
-				</a>
+				<!-- <a ng-click="showCutConfirmModal(p, cutted)" class="btn btn-default" ng-disabled="!filledCuts(p)" > -->
+					<span class="glyphicon glyphicon-ok icon-link"  ng-click="showCutConfirmModal(p, cutted)" ng-show="filledCuts(p)"></span>
+					<span class="glyphicon glyphicon-ok icon-disabled" ng-hide="filledCuts(p)"></span>
+				<!-- </a> -->
 			</td>
 
 			<td style="width:80px; text-align:center;" access-allowed="admin,ordenes,produccion,plotter">
-				<a ng-click="showRemovePlotterConfirmModal(p, restoreToDesign, deletePlotter)" class="btn btn-default" ng-show="!p.manualPlotterId && p.cutted=='0'">
-					<span class="glyphicon glyphicon-trash"></span>
-				</a>
-				<a ng-click="showConfirmModal(p, deleteManualPlotter)" class="btn btn-default" ng-show="p.manualPlotterId && p.cutted=='0'">
-					<span class="glyphicon glyphicon-trash"></span>
-				</a>
+				<!-- <a ng-click="showRemovePlotterConfirmModal(p, restoreToDesign, deletePlotter)" class="btn btn-default" ng-show="!p.manualPlotterId && p.cutted=='0'"> -->
+					<span class="glyphicon glyphicon-trash icon-link" ng-click="showRemovePlotterConfirmModal(p, restoreToDesign, deletePlotter)" ng-show="!p.manualPlotterId && p.cutted=='0'"></span>
+				<!-- </a> -->
+				<!-- <a ng-click="showConfirmModal(p, deleteManualPlotter)" class="btn btn-default" ng-show="p.manualPlotterId && p.cutted=='0'"> -->
+					<span class="glyphicon glyphicon-trash icon-link" ng-click="showConfirmModal(p, deleteManualPlotter)" ng-show="p.manualPlotterId && p.cutted=='0'"></span>
+				<!-- </a> -->
 			</td>
 		</tr>
 	</tbody>

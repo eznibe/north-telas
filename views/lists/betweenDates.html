@@ -79,24 +79,19 @@
 						<option value="">-- choose one --</option>
 		      </select>
 				</div>
-		</div>
-	</div>
 
-	<div class="row">
+				<label class="control-label col-xs-1"></label>
+		</div>
 		<div class="col-md-6 nopadding">
-				<label class="control-label col-xs-2"></label>
-				<div class="col-xs-4">
-				</div>
-
-				<label class="control-label col-xs-1" for="edit_cloth" translate>&nbsp;</label>
-				<div class="col-xs-4">
-					<a ng-click="search()" class="btn btn-default floatright">
-						<span class="glyphicon glyphicon-search"></span>
-						{{'Search' | translate}}
-					</a>
-				</div>
+			<div class="col-xs-4">
+				<!-- <a ng-click="search()" class="btn btn-default floatright"> -->
+					<span class="glyphicon glyphicon-search icon-with-label"></span>
+					<span><a ng-click="search()" class="btn-link">{{'Search' | translate}}</a><span>
+				<!-- </a> -->
+			</div>
 		</div>
 	</div>
+
 </div>
 
 <!-- Consumos -->

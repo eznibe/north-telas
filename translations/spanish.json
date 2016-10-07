@@ -71,6 +71,7 @@
   "Archive": "Archivar",
   "Dispatchs historic": "Despachos histórico",
   "Confirm archive?": "Confirma archivar?",
+  "Season weeks": "Semanas según temporada",
   "Season weeks 1": "Semanas OD/CA/REP",
   "Season weeks 2": "Semanas NY/DA/RA",
   "Order ascending": "Ascendiente",
@@ -90,8 +91,9 @@
   "Clear": "Limpiar",
   "Filter": "Filtro",
   "Download": "Descargar",
-  "": "",
-  "": "",
+  "Sail types": "Tipos de velas",
+  "See all": "Ver todas",
+  "Text size": "Tamaño de texto en tablas",
   "": "",
   "Month": {
     "1": "Enero",
@@ -107,6 +109,12 @@
     "11": "Noviembre",
     "12": "Diciembre"
   },
+  "Stock arg": "Stock ARG",
+  "Stock bra": "Stock BRA",
+  "Production arg": "Producción ARG",
+  "Production bra": "Producción BRA",
+  "One design cloths": "Telas OD",
+  "": "",
   "": "",
 
   "Buy": "Comprar",
@@ -270,6 +278,8 @@
     "unknown_error": "Prevision, error desconocido guardando cambios, ver log.",
     "save_field_error": "Error guardando el cambio, intente de nuevo.",
     "saved_field": "Modificación realizada.",
+    "save_carry_error": "Error guardando la caja o atado, intente de nuevo.",
+    "saved_carry": "Modificación realizada.",
     "order_to_plotter": "Orden pasada a plotter.",
     "dolar_updated": "Valor del dolar actualizado.",
     "percentage_updated": "Valor del % actualizado.",
@@ -307,9 +317,14 @@
     "dispatch_removed": "Despacho borrado.",
     "dispatch_archived": "Despacho archivado.",
     "dispatch_restored": "Despacho restaurado.",
+    "dispatch_save_error": "Error guardando el despacho, intente de nuevo.",
+    "dispatch_assign_error": "Error asignando caja o atado a la orden, intente de nuevo.",
+    "dispatch_assigned": "Asignación realizada.",
     "file_deleted": "Archivo eliminado.",
     "file_delete_error": "Error eliminando archivo: {{fileName}}",
     "drive_not_allowed": "Su usuario de google no tiene permisos en la carpeta de google drive.",
-    "prevision_ordernumber_notunique": "El número de orden ya está ingresado en el sistema."
+    "prevision_ordernumber_notunique": "El número de orden ya está ingresado en el sistema.",
+	"fontsize_updated": "Tamaño de letra cambiado.",
+    "weeks_updated": "Semanas actualizada."
   }
 }

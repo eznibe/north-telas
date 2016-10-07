@@ -33,7 +33,7 @@
 							<td>
 								<a href="javascript:void(0)" ng-click="showUpdateModal(p)">{{p.name}}</a>
 							</td>
-							<td>
+							<td nowrap>
 								{{p.code}}
 							</td>
 							<td>
@@ -46,16 +46,16 @@
               <td ng-show="order.status!='TO_BUY'" ng-mouseover="over = true" ng-mouseleave="over = false" style="border-left-style: hidden;" access-level="admin">
                 <span class="glyphicon glyphicon-pencil col-xs-1 control-label" ng-click="showRollsModal(p)" data-placement="right" my-tooltip="'Assign rolls'|translate" style="text-align:center; cursor:pointer; float:none; padding-left:5px; padding-right:5px;" ng-show="over">&nbsp;</span>
 							</td>
-							<td>
+							<td nowrap>
 								{{p.price}} USD
 							</td>
-							<td>
+							<td nowrap>
 								{{subTotal(p)}} USD
 							</td>
 							<td style="width:80px; text-align:center;" access-level="admin">
-								<a ng-click="showConfirmModal(p, removeItem)" class="btn btn-default" >
-									<span class="glyphicon glyphicon-trash"></span>
-								</a>
+								<!-- <a ng-click="showConfirmModal(p, removeItem)" class="btn btn-default" > -->
+									<span ng-click="showConfirmModal(p, removeItem)" class="glyphicon glyphicon-trash icon-link"></span>
+								<!-- </a> -->
 							</td>
 						</tr>
 						<tr class="totalRow">
@@ -74,7 +74,7 @@
 				<!-- Information collapser -->
 				<div class="panel panel-default" ng-if="order.status!='TO_BUY'">
 					<div class="panel-heading nopadding">
-						<h2 class="panel-title fullwidth">
+						<h2 class="panel-title panel-title-minimalist fullwidth">
 							<a data-toggle="collapse" data-target="#collapseInfo" href="javascript:void(0)" class="">
 								<span translate>Information</span></small>
 							</a>

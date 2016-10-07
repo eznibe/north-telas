@@ -12,8 +12,8 @@ angular.module("vsko.stock", [
 			'anguFixedHeaderTable',
 			'angularStats',
 			'angular.bind.notifier',
-			'xeditable'
-			, 'lk-google-picker'
+			'xeditable',
+			'lk-google-picker'
 			// , 'ui.bootstrap'
     ])
     .run(['$cookieStore', '$rootScope', '$translate', '$window', function ($cookieStore, $rootScope, $translate, $window) {
@@ -25,6 +25,11 @@ angular.module("vsko.stock", [
 			var lang = $cookieStore.get('lang');
 			if (lang) {
 	    	$translate.use(lang);
+			}
+
+			var fontsize = $cookieStore.get('fontsize');
+			if (fontsize) {
+	    	$rootScope.fontSizeClass = fontsize;
 			}
 
 			$rootScope.searchBoxChangedObservers = [];
@@ -202,7 +207,7 @@ angular.module("vsko.stock", [
 						.when('/dispatch', {
                 templateUrl: 'views/dispatchs.html',
                 controller: 'DispatchCtrl',
-                access: 'public'
+                restricted: 'vendedor'
             })
 						.when('/canvas', {
                 templateUrl: 'views/canvas.html',
@@ -214,6 +219,11 @@ angular.module("vsko.stock", [
                 controller: 'OrdersCtrl',
                 restricted: 'plotter'
             })
+						.when('/orders', {
+								templateUrl: 'views/orders.html',
+								controller: 'OrdersCtrl',
+								restricted: 'plotter'
+						})
             .when('/users', {
                 templateUrl: 'views/users.html',
                 controller: 'UsersCtrl',
@@ -237,6 +247,15 @@ angular.module("vsko.stock", [
             .when('/dolar', {
                 templateUrl: 'views/dolar.html',
                 controller: 'DolarCtrl',
+                access: 'admin'
+            })
+						.when('/profile', {
+                templateUrl: 'views/profile.html',
+                controller: 'ProfileCtrl'
+            })
+						.when('/seasonweeks', {
+                templateUrl: 'views/seasonweeks.html',
+                controller: 'SeasonWeeksCtrl',
                 access: 'admin'
             })
             .when('/lists/oldPrevisions', {

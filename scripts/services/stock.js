@@ -179,9 +179,14 @@ angular.module('vsko.stock')
         	return $http.post(url + 'providers_POST.php', newProduct);
         };
 
-        this.getAllSails = function()
+        this.getSails = function(groupId)
         {
-        	return $http.get(url + 'sails_GET.php?expand=FULL');
+        	return $http.get(url + 'sails_GET.php?expand=FULL&groupId='+groupId);
+        };
+
+				this.getAllSailGroups = function()
+        {
+        	return $http.get(url + 'sails_GET.php?sailGroups=true');
         };
 
         this.getAllBoats = function()

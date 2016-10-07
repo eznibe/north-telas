@@ -1,6 +1,6 @@
 <div>
 	<span ng-repeat="c in cuts">
-		<a style="color:#616161; display:{{c.isNew ? 'none':'inline-block'}};" id="badgeDisplay-{{c.id}}" class="badge tag-control" ng-click="clicked(c)" ng-class="{disabled: p.cutted=='1'}">{{c.selectedRoll.number}} / {{c.selectedRoll.lote}} - {{c.mtsCutted}} mts</a>
+		<a style="color:#333; display:{{c.isNew ? 'none':'inline-block'}};" id="badgeDisplay-{{c.id}}" class="badge tag-control" ng-click="clicked(c)" ng-class="{disabled: p.cutted=='1'}">{{c.selectedRoll.number}} / {{c.selectedRoll.lote}} - {{c.mtsCutted}} mts</a>
 		<span  class="badge" id="badgeEdit-{{c.id}}" style="display:{{c.isNew ? 'inline-block':'none'}};">
 			<select name="dd_rolls" ng-model="c.selectedRoll" ng-options="r as r.display for r in c.possibleRolls" ng-change="selectedRoll(c, c.selectedRoll)">
 				<option ng-show="!c.possibleRolls || c.possibleRolls.length==0" value="zz">Sin rollos</option>

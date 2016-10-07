@@ -304,7 +304,7 @@ angular.module('vsko.stock')
 	}
 )
 
-.directive('editableProductionInput', function($modal, $rootScope) {
+.directive('editableProductionInput', function($modal, $rootScope, $timeout) {
 
 	return {
         restrict: 'E',
@@ -379,7 +379,7 @@ angular.module('vsko.stock')
 
               if(scope.editable) {
                 $('#entityEdit-'+entity.id+'-'+scope.field).hide();
-                $('#entityDisplay-'+entity.id+'-'+scope.field).fadeIn('fast');
+                $('#entityDisplay-'+entity.id+'-'+scope.field).fadeIn('fast', refreshTableFloatThead);
                 $('#entityPencil-'+entity.id+'-'+scope.field).fadeIn('fast');
 
                 if(scope.tooltipText) {
@@ -388,14 +388,15 @@ angular.module('vsko.stock')
               }
       		  	else {
 
+
                 if (scope.entity[scope.field]) {
                   $('#entityDisplay-'+entity.id+'-'+scope.field).fadeOut('fast', function() {
-                    $('#entityEdit-'+entity.id+'-'+scope.field).fadeIn('fast');
+                    $('#entityEdit-'+entity.id+'-'+scope.field).fadeIn('fast', refreshTableFloatThead);
                     $('#entityPencil-'+entity.id+'-'+scope.field).fadeOut('fast');
                   });
                 } else {
                   $('#entityPencil-'+entity.id+'-'+scope.field).fadeOut('fast', function() {
-                    $('#entityEdit-'+entity.id+'-'+scope.field).fadeIn('fast');
+                    $('#entityEdit-'+entity.id+'-'+scope.field).fadeIn('fast', refreshTableFloatThead);
                     $('#entityDisplay-'+entity.id+'-'+scope.field).fadeOut('fast');
                   });
                 }
@@ -406,8 +407,28 @@ angular.module('vsko.stock')
       		  	scope.editable = !scope.editable;
 
               scope.$broadcast('$$rebind::refreshBoxStyle');
+
+              // $timeout(function() {
+              //   $('table#production').floatThead('destroy');
+              //   $('table#production').floatThead({
+              //     position: 'fixed',
+              //     autoReflow: true,
+              //     zIndex: 20,
+              //     floatTableClass: 'production-floatThead'
+              //   });
+              // }, 500);
             }
       	  };
+
+          function refreshTableFloatThead() {
+            $('table#production').floatThead('destroy');
+            $('table#production').floatThead({
+              position: 'fixed',
+              autoReflow: true,
+              zIndex: 20,
+              floatTableClass: 'production-floatThead'
+            });
+          }
         }
       };
 	}

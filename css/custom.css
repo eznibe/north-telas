@@ -36,7 +36,7 @@ table#production th {
 table#production td {
 	font-size: 11px;
 	padding: 4px;
-	color: black;
+	color: #333;
 }
 
 table#production td span {
@@ -47,27 +47,37 @@ table#production td a span.save-ok {
 	/*color: red;*/
 }
 
-table#production th {
+/* For header rotate */
+
+table#production th,
+.production-floatThead th {
   /* Something you can count on */
   height: 80px;
   white-space: nowrap;
 }
 
-table#production th > div.rotate {
+table#production th > div.rotate,
+.production-floatThead th > div.rotate {
   transform:
     translate(0px, 30px)
     rotate(270deg);
   width: 10px;
 }
-table#production th > div.rotate > span {
+table#production th > div.rotate > span,
+.production-floatThead th > div.rotate > span {
   /*border-bottom: 1px solid #ccc;*/
   padding: 5px 10px;
 }
 
-table#production th > div.editable {
+table#production th > div.editable,
+.production-floatThead th > div.editable {
   width: 30px;
 }
 
+table#production tbody tr,
+.production-floatThead tbody tr {
+  height: 35px;
+}
 
 #percentages {
 	border: 0px solid rgb(204, 204, 204);
@@ -93,14 +103,28 @@ table#production th > div.editable {
 #percentages tr,
 #weeks tr,
 #columnsSelector tr {
-	background-color: #f2dbc4;
+	background-color: #a3ccf5;
+	color: #333;
 	font-size: 12px;
+}
+
+#percentages td,
+#weeks td,
+#columnsSelector td {
+	padding-left: 2px;
 }
 
 #percentages tr.title,
 #weeks tr.title,
 #columnsSelector tr.title {
-	background-color: #edccaa;
+	background-color: hsl(210, 100%, 40%);
+	color: #ffffcc;
+}
+
+#columnsSelector {
+		/*border-width:1px;
+		border-style:solid;*/
+		border-collapse:collapse;
 }
 
 .small-button {
@@ -164,14 +188,14 @@ table#production th > div.editable {
 }
 
 
-.panel-title-prevision > a {
+.panel-title-minimalist > a {
 	padding-top: 8px;
 	padding-bottom: 8px;
 	background-color: white;
 	border-color: transparent;
 }
 
-.panel-title-prevision > a:hover, .panel-title-prevision > a:focus, .panel-title-prevision > a:active {
+.panel-title-minimalist > a:hover, .panel-title-minimalist > a:focus, .panel-title-minimalist > a:active {
 	background-color: white;
 }
 
@@ -180,7 +204,8 @@ table#production th > div.editable {
 	padding-bottom: 5px;
 }
 
-.table#production .production-filter th {
+.table#production .production-filter th,
+.production-floatThead .production-filter th {
 	padding-top: 2px;
 	padding-bottom: 2px;
 	height: 20px;
@@ -190,6 +215,29 @@ table#production th > div.editable {
 
 .production-filter th > div > select {
 	width: 20px;
+}
+
+.icon-link {
+	text-align: center;
+	cursor: pointer;
+}
+
+.icon-disabled {
+	color: lightgray;
+}
+
+.icon-with-label {
+	display: inline-block;
+	top: 2px;
+}
+
+.btn-link, .btn-link:hover {
+	color: inherit;
+	cursor: pointer;
+}
+
+.btn-link[disabled] {
+	color: lightgray;
 }
 
 .notifyjs-corner {

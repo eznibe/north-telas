@@ -1,0 +1,31 @@
+<div class="nopaddingright jumbotron clearfix">
+	<h1><span translate>Season weeks</span></h1>
+	<form name="formDolar">
+	<div class="row">
+		<div class="col-md-6 nopadding">
+
+				<label class="control-label col-xs-4" translate>Season weeks 1</label>
+				<div class="col-xs-3">
+					<input ng-model="seasonWeeks1" class="form-control small" required/>
+				</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6 nopadding">
+
+				<label class="control-label col-xs-4" translate>Season weeks 2</label>
+				<div class="col-xs-3">
+					<input ng-model="seasonWeeks2" class="form-control small" required/>
+				</div>
+
+				<label class="control-label col-xs-1" >&nbsp;</label>
+				<div class="col-xs-4">
+					<a ng-click="save()" class="btn btn-default floatright" ng-disabled="formDolar.$invalid">
+						<span class="glyphicon glyphicon-save"></span>
+						{{'Save' | translate}}
+					</a>
+				</div>
+		</div>
+	</div>
+	</form>
+</div>

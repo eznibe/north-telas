@@ -12,7 +12,8 @@ db_connect();
 
 
 $expand  = isset($_GET['expand']) ? $_GET['expand'] : null;
-$clothId = isset($_GET['clothId']) ? $_GET['clothId'] : null; 
+$clothId = isset($_GET['clothId']) ? $_GET['clothId'] : null;
+$groupId = isset($_GET['groupId']) ? $_GET['groupId'] : null;
 
 
 if(isset($_GET['id'])) {
@@ -21,8 +22,11 @@ if(isset($_GET['id'])) {
 else if(isset($_GET['onedesign'])) {
 	$value = getOneDesignSails();
 }
+else if(isset($_GET['sailGroups'])) {
+	$value = getSailGroups();
+}
 else {
-	$value = getSails($clothId, $expand);
+	$value = getSails($groupId, $expand);
 }
 
 //return JSON array

@@ -206,7 +206,8 @@ function savePrevision($prevision)
 	$designObservations = isset($prevision->designObservations) ? $prevision->designObservations : '' ;
 	$boat = isset($prevision->boat) ? $prevision->boat : '' ;
 	$client = isset($prevision->client) ? $prevision->client : '' ;
-	$sailId = isset($prevision->sailId) && $prevision->sailId!='' ? "'".$prevision->sailId."'" : 'null' ;
+	$sailId = isset($prevision->sailId) && $prevision->sailId!='' ? $prevision->sailId : 'null' ;
+	$sailGroupId = isset($prevision->sailGroupId) && $prevision->sailGroupId!='' ? $prevision->sailGroupId : 'null' ;
 	$sailDescription = isset($prevision->sailDescription) && $prevision->sailDescription!='' ? "'".$prevision->sailDescription."'" : 'null' ;
 	$sailOneDesign = isset($prevision->sailOneDesign) ? "'".$prevision->sailOneDesign."'" : 'null' ;
 	$oneDesign = $prevision->oneDesign==1 ? 'true' : 'false';
@@ -233,7 +234,7 @@ function savePrevision($prevision)
 	{
 		logPrevisionUpdateFull($prevision->id, 'savePrevision');
 		// update
-		$update = "UPDATE previsions SET orderNumber = '".$prevision->orderNumber."', deliveryDate = STR_TO_DATE('".$prevision->deliveryDate."', '%d-%m-%Y'), client = '".$client."', sailId = $sailId, sailDescription = $sailDescription, boat = '".$boat."', type = '".$prevision->type."', oneDesign = ".$oneDesign.", greaterThan44 = ".$greaterThan44.
+		$update = "UPDATE previsions SET orderNumber = '".$prevision->orderNumber."', deliveryDate = STR_TO_DATE('".$prevision->deliveryDate."', '%d-%m-%Y'), client = '".$client."', sailId = $sailId, sailGroupId = $sailGroupId, sailDescription = $sailDescription, boat = '".$boat."', type = '".$prevision->type."', oneDesign = ".$oneDesign.", greaterThan44 = ".$greaterThan44.
 																		", p = ".$p.", e = ".$e.", i = ".$i.", j = ".$j.", area = ".$area.", sailOneDesign = $sailOneDesign, observations = '$observations'".
 																		", productionObservations = '$productionObservations', designObservations = '$designObservations', dispatchId = $dispatchId".
 																		", week = $week, priority = $priority, line = $line, seller = $seller, advance = $advance, percentage = $percentage".
@@ -251,10 +252,10 @@ function savePrevision($prevision)
 	}
 	else {
 		// insert
-		$insert = "INSERT INTO previsions (id, orderNumber, deliveryDate, client, sailId, sailDescription, boat,
+		$insert = "INSERT INTO previsions (id, orderNumber, deliveryDate, client, sailId, sailGroupId, sailDescription, boat,
 				type, designed, oneDesign, greaterThan44, p, e, i,j, area, sailOneDesign, observations, productionObservations, designObservations,
 				week, priority, line, seller, advance, percentage, tentativeDate, productionDate, infoDate, advanceDate, dispatchId)
-				VALUES ('".$prevision->id."', '".$prevision->orderNumber."', STR_TO_DATE('".$prevision->deliveryDate."', '%d-%m-%Y'), '".$client."', $sailId, $sailDescription, '".$boat."', '".$prevision->type."', false, ".$oneDesign.", ".$greaterThan44.", ".
+				VALUES ('".$prevision->id."', '".$prevision->orderNumber."', STR_TO_DATE('".$prevision->deliveryDate."', '%d-%m-%Y'), '".$client."', $sailId, $sailGroupId, $sailDescription, '".$boat."', '".$prevision->type."', false, ".$oneDesign.", ".$greaterThan44.", ".
 								$p.", ".$e.", ".$i.", ".$j.", ".$area.", $sailOneDesign, '$observations', '$productionObservations', '$designObservations',
 								$week, $priority, $line, $seller, $advance, $percentage, $tentativeDate, $productionDate, $infoDate, $advanceDate, $dispatchId)" ;
 
@@ -619,11 +620,31 @@ function handleSpecialFilterCase($key, $values) {
 	return "";
 }
 
+function deletePrevision($id) {
+
+	$obj->successful = true;
+
+	// delete
+	$query = "DELETE FROM previsionCloth WHERE previsionId = '".$id."'";
+	if (! mysql_query($query)) {
+		$obj->successful = false;
+	}
+
+	logPrevisionUpdateFull($id, 'deletePrevision');
+
+	$query = "DELETE FROM previsions WHERE id = '".$id."'";
+	if (! mysql_query($query)) {
+		$obj->successful = false;
+	}
+
+	return $obj;
+}
+
 // will log the state of the prevision just before an update will be perfomed
 function logPrevisionUpdateFull($previsionId, $method) {
 
-	$update = "INSERT INTO previsionfulllogs (id,orderNumber,deliveryDate,client,sailId,sailDescription,boat,type,designed,oneDesign,greaterThan44,p,e,i,j,area,sailOneDesign,observations,designedOn,createdOn,state,prevState,stateAccepted,stateChanged,stateAcceptedDate,seller,dispatchId,line,week,priority,percentage,advance,tentativeDate,productionDate,infoDate,advanceDate,deletedProductionOn,deletedProductionBy,productionObservations,designObservations,driveIdProduction,driveIdDesign,method,insertedon)
-	 						SELECT id,orderNumber,deliveryDate,client,sailId,sailDescription,boat,type,designed,oneDesign,greaterThan44,p,e,i,j,area,sailOneDesign,observations,designedOn,createdOn,state,prevState,stateAccepted,stateChanged,stateAcceptedDate,seller,dispatchId,line,week,priority,percentage,advance,tentativeDate,productionDate,infoDate,advanceDate,deletedProductionOn,deletedProductionBy,productionObservations,designObservations,driveIdProduction,driveIdDesign
+	$update = "INSERT INTO previsionfulllogs (id,orderNumber,deliveryDate,client,sailId,sailDescription,boat,type,designed,oneDesign,greaterThan44,p,e,i,j,area,sailOneDesign,observations,designedOn,createdOn,state,prevState,stateAccepted,stateChanged,stateAcceptedDate,seller,dispatchId,line,week,priority,percentage,advance,tentativeDate,productionDate,infoDate,advanceDate,deletedProductionOn,deletedProductionBy,productionObservations,designObservations,driveIdProduction,driveIdDesign,sailGroupId,method,insertedon)
+	 						SELECT id,orderNumber,deliveryDate,client,sailId,sailDescription,boat,type,designed,oneDesign,greaterThan44,p,e,i,j,area,sailOneDesign,observations,designedOn,createdOn,state,prevState,stateAccepted,stateChanged,stateAcceptedDate,seller,dispatchId,line,week,priority,percentage,advance,tentativeDate,productionDate,infoDate,advanceDate,deletedProductionOn,deletedProductionBy,productionObservations,designObservations,driveIdProduction,driveIdDesign,sailGroupId
 							, '$method', now() FROM previsions WHERE id = '$previsionId'";
 
 	$obj->successful = true;

@@ -83,12 +83,11 @@ angular.module('vsko.stock')
                   }
     			  	  }
     			  	  else {
-                  Utils.showMessage('Error', 'error');
+                  Utils.showMessage('notify.dispatch_save_error', 'error');
     			  	  }
-
-         			 //  $scope.modalDispatch.hide();
-
-        		  });
+        		  }, function(err) {
+                Utils.showMessage('notify.dispatch_save_error', 'error');
+              });
         	  };
 
             // Dispatch prevision functions
@@ -103,6 +102,8 @@ angular.module('vsko.stock')
                     $scope.dispatch.previsions.push(prevision.originalObject);
 
                     delete $scope.acPrevision;
+                  } else {
+                    Utils.showMessage('Error', 'error');
                   }
                 });
               } else if (!prevision && $scope.orderNumberText) {
@@ -112,6 +113,8 @@ angular.module('vsko.stock')
                   if(result.data.successful) {
                     $scope.dispatch.previsions.push(prevision);
         						prevision.id = prevision.dpId;
+                  } else {
+                    Utils.showMessage('Error', 'error');
                   }
                 });
               }
@@ -124,6 +127,8 @@ angular.module('vsko.stock')
                   $scope.dispatch.previsions = $scope.dispatch.previsions.filter(function(p) {
                     return p.dpId != prevision.dpId;
                   });
+                } else {
+                  Utils.showMessage('Error', 'error');
                 }
               });
             };
@@ -147,6 +152,7 @@ angular.module('vsko.stock')
             $scope.showCarryModal = function(carry, type) {
 
               $scope.carry = carry ? carry : {isNew: true, type: type, dispatchId: $scope.dispatch.id};
+              $scope.origCarry = carry ? $.extend(true, {}, carry) : {}; // used when the user cancel the modifications (close the modal)
 
               $scope.modalCarry = $modal({template: 'views/modal/carry.html', show: false, scope: $scope, animation:'am-fade-and-slide-top'});
 
@@ -155,14 +161,26 @@ angular.module('vsko.stock')
 
             $scope.saveCarry = function(carry) {
 
-              Dispatchs.saveCarry(carry).then(function() {
+              Dispatchs.saveCarry(carry).then(function(result) {
 
-                if(carry.isNew) {
-                  $scope.dispatch.carries.push(carry);
-                  delete carry.isNew;
+                if (result.data.successful) {
+
+                  if(carry.isNew) {
+                    $scope.dispatch.carries.push(carry);
+                    delete carry.isNew;
+                  }
+
+                  $scope.modalCarry.hide();
+
+                  Utils.showMessage('notify.saved_carry');
+
+                  $.extend($scope.origCarry, carry);
+
+                } else {
+                  Utils.showIntrusiveMessage('notify.save_carry_error', 'error');
                 }
-
-                $scope.modalCarry.hide();
+              }, function(err) {
+                Utils.showIntrusiveMessage('notify.save_carry_error', 'error');
               });
             }
 
@@ -175,6 +193,13 @@ angular.module('vsko.stock')
                   });
                 }
               });
+            };
+
+            $scope.closeCarry = function() {
+
+          	  $.extend($scope.carry, $scope.origCarry);
+
+          	  $scope.modalCarry.hide();
             };
 
             $scope.carryDisplayFn = function(c) {
@@ -190,9 +215,15 @@ angular.module('vsko.stock')
             };
 
             $scope.changedCarry = function(prevision) {
-              Dispatchs.updatePrevisionCarry(prevision).then(function() {
+              Dispatchs.updatePrevisionCarry(prevision).then(function(result) {
 
-                console.log('new carry selection: '+ prevision.carryId);
+                if (result.data.successful) {
+                  Utils.showMessage('notify.dispatch_assigned');
+                } else {
+                  prevision.carryId = null;
+                  scope.$broadcast('$$rebind::refreshLinkValue');
+                  Utils.showMessage('notify.dispatch_assign_error', 'error');
+                }
               });
             };
 

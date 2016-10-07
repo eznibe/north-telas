@@ -49,6 +49,18 @@ function getCloths($groupId, $expand)
 		}
 		$row['sumInTransit'] = $sumInTransit;
 
+		$tobuy = getToBuy($row['id']);
+		$sumToBuy=0;
+		foreach ($tobuy as $order) {
+			foreach ($order['products'] as $product) {
+
+				if($product['clothId'] == $row['id']) {
+					$sumToBuy += $product['amount'];
+				}
+			}
+		}
+		$row['sumToBuy'] = $sumToBuy;
+
 		array_push($rows, $row);
 	}
 

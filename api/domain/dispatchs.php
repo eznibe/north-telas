@@ -96,7 +96,7 @@ function getDispatch($id) {
 	// boxes and tubes
 	$query = "SELECT dc.*
 						FROM dispatchCarries dc
-						WHERE dc.dispatchId = '".$row['id']."'";
+						WHERE dc.dispatchId = '".$row['id']."' ORDER BY dc.number";
 	$subresult = mysql_query($query);
 
 	$boxes = array();
@@ -176,7 +176,7 @@ function saveDispatch($dispatch)
 	$obj->method = 'saveDispatch';
 	$obj->successful = false;
 
-	$dispatchDate = isset($dispatch->dispatchDate) ? "STR_TO_DATE('".$dispatch->dispatchDate."', '%d-%m-%Y')" : 'null' ;
+	$dispatchDate = isset($dispatch->dispatchDate) && $dispatch->dispatchDate!="" ? "STR_TO_DATE('".$dispatch->dispatchDate."', '%d-%m-%Y')" : 'null' ;
 	$destinatary = isset($dispatch->destinatary) ? "'".$dispatch->destinatary."'" : 'null' ;
 	$destiny = isset($dispatch->destiny) ? "'".$dispatch->destiny."'" : 'null' ;
 	$transport = isset($dispatch->transport) ? "'".$dispatch->transport."'" : 'null' ;

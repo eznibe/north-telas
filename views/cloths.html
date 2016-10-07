@@ -1,7 +1,7 @@
 <div class="nopaddingright jumbotron clearfix">
 	<h1><span translate>Cloths</span><span ng-show="group"> {{'of Group' | translate}} '{{group.name}}'</span></h1>
 	<p class="bigmargin">
-	    <a ng-click="showClothModal()" class="btn btn-info floatright" access-level="admin">
+	    <a ng-click="showClothModal()" class="btn btn-default floatright" access-level="admin">
 	        <span class="glyphicon glyphicon-plus"></span>&nbsp;
 	        {{'Create new cloth' | translate}}
 	    </a>
@@ -18,7 +18,8 @@
 			<th translate>Transit</th>
 			<th translate>Delta total</th>
 			<th translate>St. min.</th>
-			<th><span>Djais </span><a href="javascript:void(0)" ng-click="showDjaiModal()" access-level="admin">+</a></th>
+			<!-- <th><span>Djais </span><a href="javascript:void(0)" ng-click="showDjaiModal()" access-level="admin">+</a></th> -->
+			<th translate>Buys</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -43,16 +44,18 @@
 				<a href="javascript:void(0)" ng-click="showClothInTransitModal(c)" ng-show="c.sumInTransit > 0" class="positiveLink" access-restricted="plotter">{{c.sumInTransit}}</a>
 				<span ng-show="c.sumInTransit > 0" access-allowed="plotter">{{c.sumInTransit}}</span>
 			</td>
-			<td>
-				{{(sumStock(c.providers) - sumPrevision(c) - sumPending(c) + c.sumInTransit).toFixed(0)}}
+			<td ng-style="::negativeDeltaTotalStyle(c);" ng-bind="::deltaTotal(c)">
+				<!-- {{(sumStock(c.providers) - sumPrevision(c) - sumPending(c) + c.sumInTransit).toFixed(0)}} -->
 			</td>
 			<td>
 				{{c.stockMin}}
 			</td>
-			<td>
+			<td ng-bind="::c.sumToBuy">
+			</td>
+			<!-- <td>
 				<a href="javascript:void(0)" ng-show="c.sumDjais > 0" ng-click="showClothDjaisModal(c)">{{c.sumDjais}}</a>
 				<span ng-show="c.sumDjais <= 0">0</span>
-			</td>
+			</td> -->
 		</tr>
 	</tbody>
 </table>

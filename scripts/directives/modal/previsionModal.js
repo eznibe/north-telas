@@ -25,6 +25,7 @@ angular.module('vsko.stock')
 
             $scope.onPicked = function (docs) {
 
+              // show selection popup, download or delete (only if it doesnt come from upload action)
               if (docs && !docs[0].isNew) {
                 // show selection popup, download or delete (only if it doesnt come from upload action)
                 $scope.showPrevisionFilesModal(docs);
@@ -71,8 +72,8 @@ angular.module('vsko.stock')
         		  $scope.cloths = result.data;
         	  });
 
-        	  Stock.getAllSails().then(function(result) {
-        		  $scope.sails = result.data;
+            Stock.getAllSailGroups().then(function(result) {
+        		  $scope.sailGroups = result.data;
         	  });
 
         	  OneDesign.getBoats().then(function(result) {
@@ -88,6 +89,16 @@ angular.module('vsko.stock')
             Production.getSellers().then(function(result) {
               $scope.sellers = result.data;
             });
+
+            $scope.updateSails = function() {
+              if ($scope.prevision.selectedSailGroup) {
+                Stock.getSails($scope.prevision.selectedSailGroup.id).then(function(result) {
+                  $scope.sails = result.data;
+                });
+              } else {
+                $scope.sails = [];
+              }
+            }
 
             $scope.acceptStateChange = function(p) {
               Previsions.acceptStateChange(p).then(function() {
@@ -119,6 +130,8 @@ angular.module('vsko.stock')
 
         	  $scope.showPrevisionModal = function(prevision, previousModal) {
 
+
+
         		  $scope.prevision = prevision ? prevision : {oneDesign: false, greaterThan44: false};
 
         		  $scope.origPrevision = prevision ? $.extend(true, {}, prevision) : {}; // used when the user cancel the modifications (close the modal)
@@ -141,7 +154,19 @@ angular.module('vsko.stock')
           	  });
 
           	  // set current selected sail
-          	  $scope.prevision.selectedSail = $scope.prevision.sailId ? $scope.sails.findAll({id:$scope.prevision.sailId})[0] : {};
+              if ($scope.prevision.sailGroupId) {
+                $scope.prevision.selectedSailGroup = $scope.sailGroups.findAll({id:$scope.prevision.sailGroupId})[0];
+
+                if ($scope.prevision.sailId) {
+                  Stock.getSails($scope.prevision.sailGroupId).then(function(result) {
+                    $scope.sails = result.data;
+                    $scope.prevision.selectedSail = result.data.findAll({id:$scope.prevision.sailId})[0];
+                  });
+                }
+              } else {
+                $scope.prevision.selectedSailGroup = {};
+                $scope.prevision.selectedSail = {};
+              }
 
           	  // set current selected boat
           	  $scope.prevision.selectedBoat = $scope.prevision.oneDesign ? $scope.boats.findAll({boat:$scope.prevision.boat})[0] : {};
@@ -225,6 +250,10 @@ angular.module('vsko.stock')
 
             if($scope.prevision.selectedSail.id) {
               $scope.prevision.sailId = $scope.prevision.selectedSail.id;
+            }
+
+            if($scope.prevision.selectedSailGroup.id) {
+              $scope.prevision.sailGroupId = $scope.prevision.selectedSailGroup.id;
             }
 
             if($scope.prevision.selectedBoat.boat) {
