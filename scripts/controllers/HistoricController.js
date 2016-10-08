@@ -7,7 +7,9 @@ angular.module('vsko.stock').controller('HistoricCtrl', ['$scope', '$rootScope',
 	var rows = 100;
 	var firstLoad = true;
 
-	var defaultFilters = {orderByKey: 'p.deletedProductionOn', orderByKeyType: 'date', orderType: 'order.descending', limit: rows};
+	// var defaultFilters = {orderByKey: 'p.deletedProductionOn', orderByKeyType: 'date', orderType: 'order.descending', limit: rows};
+	var defaultFilters = {orderList: [], limit: rows, default: true};
+	defaultFilters.orderList.push({key: 'p.deletedProductionOn', type: 'str', mode: 'order.descending'});
 
 	Previsions.getPrevisionsHistoric($rootScope.user.sellerCode, defaultFilters).then(function(result) {
 
