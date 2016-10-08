@@ -93,7 +93,14 @@ angular.module('vsko.stock')
             $scope.updateSails = function() {
               if ($scope.prevision.selectedSailGroup) {
                 Stock.getSails($scope.prevision.selectedSailGroup.id).then(function(result) {
-                  $scope.sails = result.data;
+                  if (!$scope.prevision.id || $scope.prevision.createdOn > '2016-10-07') {
+                    // do not show old sails if creating a new prevision or created after date of new sails released
+                    $scope.sails = result.data.filter(function(s) {
+                      return s.formulaId;
+                    });
+                  } else {
+                    $scope.sails = result.data;
+                  }
                 });
               } else {
                 $scope.sails = [];
@@ -159,7 +166,14 @@ angular.module('vsko.stock')
 
                 if ($scope.prevision.sailId) {
                   Stock.getSails($scope.prevision.sailGroupId).then(function(result) {
-                    $scope.sails = result.data;
+                    if (!$scope.prevision.id || $scope.prevision.createdOn > '2016-10-07') {
+                      // do not show old sails if creating a new prevision or created after date of new sails released
+                      $scope.sails = result.data.filter(function(s) {
+                        return s.formulaId;
+                      });
+                    } else {
+                      $scope.sails = result.data;
+                    }
                     $scope.prevision.selectedSail = result.data.findAll({id:$scope.prevision.sailId})[0];
                   });
                 }
@@ -492,11 +506,13 @@ angular.module('vsko.stock')
 
         	  if(!$scope.prevision.oneDesign && $scope.prevision.selectedSail) {
 
-        		  // for sails that split the mts in two cloths (grande y chica) check that there are at least 2 cloths already added
-        		  if($scope.prevision.selectedSail.splitF1=='Y' && $scope.prevision.cloths.length < 2) {
+              var line = $scope.prevision.selectedLine ? $scope.prevision.selectedLine.name : null;
+
+        		  // for sails that split the mts in two cloths (grande y chica) (with line=RA) check that there are at least 2 cloths already added
+        		  if(line=='RA' && $scope.prevision.cloths.length < 2) {
         			  $scope.prevision.cloths.push({});
         		  }
-        		  else if ((!$scope.prevision.selectedSail.splitF1 || $scope.prevision.selectedSail.splitF1=='N') && $scope.prevision.cloths.length > 1 && !$scope.prevision.cloths[1].selectedCloth) {
+        		  else if (line != 'RA' && $scope.prevision.cloths.length > 1 && !$scope.prevision.cloths[1].selectedCloth) {
         			  // selected sail with NO split in two cloths, if the second cloth is not selected yet remove it and leave only one cloth
         			  var cloth = $scope.prevision.cloths[0];
 
@@ -504,53 +520,72 @@ angular.module('vsko.stock')
         			  $scope.prevision.cloths.push(cloth);
         		  }
 
-
-    			  if(!$scope.prevision.greaterThan44) {
-    				  $scope.calculateClothMts($scope.prevision.selectedSail.valueF1, $scope.prevision.selectedSail.fieldsF1, $scope.prevision.selectedSail.typeF1, $scope.prevision.selectedSail.splitF1, $scope.prevision.cloths[0], $scope.prevision.cloths[1]);
-        		  }
-        		  else {
-        			  $scope.calculateClothMts($scope.prevision.selectedSail.valueF2, $scope.prevision.selectedSail.fieldsF2, $scope.prevision.selectedSail.typeF2, $scope.prevision.selectedSail.splitF2, $scope.prevision.cloths[0], $scope.prevision.cloths[1]);
-        		  }
+    				  $scope.calculateClothMts([$scope.prevision.selectedSail.valueF1, $scope.prevision.selectedSail.valueF2],
+                                        $scope.prevision.selectedSail.fieldsF1,
+                                        $scope.prevision.selectedSail.typeF1,
+                                        line,
+                                        $scope.prevision.cloths[0],
+                                        $scope.prevision.cloths[1],
+                                        $scope.prevision.greaterThan44,
+                                        $scope.prevision.selectedSail.rizo == 'Y');
         	  }
           };
 
-          $scope.calculateClothMts = function(value, fields, type, split, cloth1, cloth2) {
+          $scope.calculateClothMts = function(formulaValues, fields, type, line, cloth1, cloth2, greaterThan44, hasRizo) {
 
         	  var mts=undefined;
 
-        	  if(fields == 'PE') {
-        		  mts = doFormula(type, value, $scope.prevision.p, $scope.prevision.e );
-        	  }
-        	  else if(fields == 'IJ') {
-        		  mts = doFormula(type, value, $scope.prevision.i, $scope.prevision.j );
+        	  if(fields == 'E') {
+        		  mts = doFormula(type, formulaValues, fields, $scope.prevision.e);
         	  }
         	  else if(fields == 'SUP') {
-        		  mts = doFormula(type, value, $scope.prevision.area );
+
+              if (hasRizo) {
+                // some sails has option to select rizo and will change the formula value
+                if ($scope.prevision.rizo) {
+                  if (+$scope.prevision.rizo == 2) {
+                    formulaValues[0] = +formulaValues[0] + 0.05;
+                    formulaValues[1] = +formulaValues[1] + 0.05;
+                  } else if (+$scope.prevision.rizo == 3) {
+                    formulaValues[0] = +formulaValues[0] + 0.1;
+                    formulaValues[1] = +formulaValues[1] + 0.1;
+                  }
+                }
+              }
+
+        		  mts = doFormula(type, formulaValues, fields, $scope.prevision.area, line);
         	  }
 
         	  if(mts) {
 
-        		  if(cloth2 && split=='Y') {
+              if (greaterThan44) {
+                mts = mts * 1.1;
+              }
+
+        		  if(cloth2 && line == 'RA') {
         			  cloth1.mts = Math.round((mts * 0.7).toFixed(2));
         			  cloth2.mts = Math.round((mts * 0.3).toFixed(2));
         		  }
         		  else {
-        			  cloth1.mts = Math.round(mts.toFixed(2));
+        			  // cloth1.mts = Math.round(mts.toFixed(2));
+                cloth1.mts = mts.toFixed(2);
         		  }
         	  }
           };
 
-          function doFormula(type, value, op1, op2) {
+          function doFormula(type, formulaValues, fields, peijValue, line) {
 
-        	  if(type == 'MULT_DIV' && op1 && op2) {
-        		  return ((op1 * op2) / 2) * value;
-        	  }
-	  	  	    else if(type == 'MULT' && op1) {
-	  	  		      return op1 * value;
+	  	  	  if(type == 'MULT') {
+
+              if (fields == 'E') {
+                return (+peijValue * +formulaValues[0]) + +formulaValues[1];
+              }
+              else if (line == 'RA') {
+                return +peijValue * +formulaValues[1];
+              } else {
+                return +peijValue * +formulaValues[0];
+              }
 		        }
-  				  else if(type == 'MULT_MULT' && op1 && op2) {
-  					  return op1 * op2 * value;
-  				  }
 
         	  return undefined;
           }

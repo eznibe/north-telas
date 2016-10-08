@@ -185,9 +185,9 @@ angular.module('vsko.stock')
         	return $http.post(url + 'plotters_POST.php?manualPlotter=true', plotter);
         };
 
-				this.editObservations = function(prevision) {
+				this.editObservations = function(prevision, fieldName) {
 
-        	return $http.post(url + 'previsions_POST.php?edit=true&field=observations', prevision);
+        	return $http.post(url + 'previsions_POST.php?edit=true&field='+fieldName, prevision);
         };
 
 				this.editField = function(prevision, field) {
