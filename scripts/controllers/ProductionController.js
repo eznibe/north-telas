@@ -399,9 +399,15 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 		prevision.deletedProductionBy = $rootScope.user.name;
 
 		Production.updateDate(prevision, 'deletedProductionOn').then(function(result) {
-			$scope.previsions = $scope.previsions.filter(function(p) {
-				return p.id != prevision.id;
-			});
+			if (result.data.successful) {
+				$scope.previsions = $scope.previsions.filter(function(p) {
+					return p.id != prevision.id;
+				});
+				Utils.showMessage('notify.prevision_archived');
+			} else {
+				Utils.showMessage('notify.prevision_archived_error', 'error');
+				Utils.logUIError('errorUI.removeFromProduction(updateDate)', result.data);
+			}
 		});
 
 		Previsions.editField(prevision, 'deletedProductionBy');
