@@ -11,7 +11,7 @@ angular.module('vsko.stock').controller('DesignCtrl', ['$scope', 'Utils', 'Previ
 
           Previsions.designed(prevision).then(function(result) {
 
-            prevision.designed = true;            
+            prevision.designed = true;
 
             Rules.updatePrevisionPercentage(prevision, true);
 
@@ -33,9 +33,8 @@ angular.module('vsko.stock').controller('DesignCtrl', ['$scope', 'Utils', 'Previ
 
         $scope.editObservations = function(prevision) {
 
-        	Previsions.editObservations(prevision).then(function(result){
-
-        	   console.log('Observation changed to: '+prevision.observations);
+        	Previsions.editObservations(prevision, 'designObservations').then(function(result){
+            $scope.$broadcast('$$rebind::refreshObservations');
     		  });
         }
 }]);
