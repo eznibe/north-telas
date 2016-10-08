@@ -22,6 +22,8 @@ update sails set sailGroupId=3 where id=13;
 alter table previsions add column rizo int;
 alter table previsionfulllogs add column rizo int;
 
+alter table previsions modify column deletedProductionBy varchar(128);
+alter table previsionfulllogs modify column deletedProductionBy varchar(128);
 
 
 --mayor y mesana

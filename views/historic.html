@@ -134,9 +134,9 @@
 				{{:refreshColumnsValue:getValue(p, 'deletedProductionOn')}}
 			</td>
 			<td style="width:80px; text-align:center;" access-allowed="admin,produccion">
-				<a ng-click="showConfirmModal(p, restoreToProduction)" class="btn btn-default">
-					<span class="glyphicon glyphicon-refresh"></span>
-				</a>
+				<!-- <a ng-click="showConfirmModal(p, restoreToProduction)" class="btn btn-default"> -->
+					<span class="glyphicon glyphicon-refresh icon-link"  ng-click="showConfirmModal(p, restoreToProduction)"></span>
+				<!-- </a> -->
 			</td>
 		</tr>
 		<tr>

@@ -40,7 +40,7 @@ table#production td {
 }
 
 table#production td span {
-	color: black;
+	color: #333;
 }
 
 table#production td a span.save-ok {
@@ -242,4 +242,9 @@ table#production tbody tr,
 
 .notifyjs-corner {
 	z-index: 9999 !important;
+}
+
+.editable-input-link {
+	display: inline-block;
+	padding-top: 2px;
 }

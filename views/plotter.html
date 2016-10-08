@@ -48,31 +48,31 @@
 			</td>
 			<td title="{{p.tooltip}}" nowrap>
 				<span ng-show="p.cutted=='0'">
-					<a ng-hide="p.sOrder" href="javascript:void(0);" ng-click="showPrevisionModal(p)">{{p.orderNumber}}</a>
-					<span ng-show="p.sOrder">{{p.orderNumber}}</span>
+					<a ng-hide="p.sOrder" href="javascript:void(0);" ng-click="::showPrevisionModal(p)">{{::p.orderNumber}}</a>
+					<span ng-show="p.sOrder">{{::p.orderNumber}}</span>
 				</span>
 				<editable-input ng-show="p.cutted=='1'" entity="p" field="'orderNumber'" callback="updatePlotterField" style="display:inline-block;" editable-by-role="'admin,ordenes,produccion,plotter'"></editable-input>
 			</td>
 			<td>
-				<span ng-show="p.cutted=='0'">{{p.client}}</span>
+				<span ng-show="p.cutted=='0'">{{::p.client}}</span>
 				<editable-input ng-show="p.cutted=='1'" entity="p" field="'client'" callback="updatePlotterField" style="display:inline-block;" editable-by-role="'admin,ordenes,produccion,plotter'"></editable-input>
 			</td>
 			<td>
-				<span ng-show="p.cutted=='0'">{{p.sailName}}</span>
+				<span ng-show="p.cutted=='0'">{{::p.sailName}}</span>
 				<editable-input ng-show="p.cutted=='1'" entity="p" field="'sailName'" callback="updatePlotterField" style="display:inline-block;" editable-by-role="'admin,ordenes,produccion,plotter'"></editable-input>
 			</td>
 			<td>
-				<span ng-show="p.cutted=='0'">{{p.boat}}</span>
+				<span ng-show="p.cutted=='0'">{{::p.boat}}</span>
 				<editable-input ng-show="p.cutted=='1'" entity="p" field="'boat'" callback="updatePlotterField" style="display:inline-block;" editable-by-role="'admin,ordenes,produccion,plotter'"></editable-input>
 			</td>
 			<td>
-				{{p.name}}
+				{{::p.name}}
 			</td>
 			<td>
-				{{p.state}}
+				{{::p.state}}
 			</td>
 			<td>
-				{{p.mtsDesign}}
+				{{::p.mtsDesign}}
 			</td>
 			<td>
 				<plotter-cuts-tags plotter="p" cuts="p.cuts" editable-by-role="'admin,ordenes,produccion,plotter'" style="display:inline-block;"></plotter-cuts-tags>
