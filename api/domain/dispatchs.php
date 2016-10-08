@@ -234,13 +234,24 @@ function saveDispatch($dispatch)
 
 function archive($dispatch) {
 
+	$obj->successful = true;
+
 	$update = "UPDATE dispatchs SET archived = true WHERE id = '".$dispatch->id."'";
 
-	if(mysql_query($update))
-		$obj->successful = true;
-	else {
-		$obj->successfulUpdate = false;
+	if(!mysql_query($update)) {
+		$obj->successful = false;
 		$obj->update = $update;
+		return $obj;
+	}
+	else {
+		// archive previsions assigned to this dispatch
+		$update2 = "UPDATE previsions, dispatchprevisions SET previsions.deletedProductionOn = now(), previsions.deletedProductionBy = '".$dispatch->user." (dispatch)'
+								WHERE previsions.id = dispatchprevisions.previsionId and dispatchprevisions.dispatchId = '".$dispatch->id."'";
+
+		if(!mysql_query($update2)) {
+			$obj->successful = false;
+			$obj->update = $update2;
+		}
 	}
 
 	return $obj;

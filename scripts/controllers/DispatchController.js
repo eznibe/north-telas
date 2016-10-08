@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('vsko.stock').controller('DispatchCtrl', ['$scope', 'Utils', 'Dispatchs', '$modal', 'uuid4', function ($scope, Utils, Dispatchs, $modal, uuid4) {
+angular.module('vsko.stock').controller('DispatchCtrl', ['$scope', '$rootScope', 'Utils', 'Dispatchs', '$modal', 'uuid4', function ($scope, $rootScope, Utils, Dispatchs, $modal, uuid4) {
 
 		Dispatchs.getDispatchs('CURRENTS').then(function(result){
 
@@ -28,6 +28,8 @@ angular.module('vsko.stock').controller('DispatchCtrl', ['$scope', 'Utils', 'Dis
 
 		$scope.archiveDispatch = function(dispatch) {
 
+			dispatch.user = $rootScope.user.name;
+
 			Dispatchs.archive(dispatch).then(function(result) {
 				if (result.data.successful) {
 					$scope.dispatchs = $scope.dispatchs.filter(function(d) {
@@ -35,6 +37,8 @@ angular.module('vsko.stock').controller('DispatchCtrl', ['$scope', 'Utils', 'Dis
 					});
 
 					Utils.showMessage('notify.dispatch_archived');
+				} else {
+					Utils.showMessage('notify.dispatch_archived_error', 'error');
 				}
 			});
 		};
