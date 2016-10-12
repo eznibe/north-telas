@@ -120,21 +120,34 @@ angular.module('vsko.stock').controller('PlotterCtrl', ['$scope', '$rootScope', 
 
         	Plotters.restore(plotter).then(function(result){
 
-        		console.log('Restored: '+plotter.id);
+						if (result.data.successful) {
 
-        		Plotters.getPossibleRolls(plotter).then(function(possibleRolls){
+							console.log('Restored: '+plotter.id);
 
-		    			plotter.possibleRolls = possibleRolls.data;
+							// revert percentage also using same rules
+							result.data.prevision.allCutted = false;
+							result.data.prevision.percentage = 0;
 
-		    			$scope.loadSelectedRoll(plotter.cuts, possibleRolls.data);
-		    		});
+							Rules.updatePrevisionPercentage(result.data.prevision, true);
 
-						Utils.showMessage('notify.cloth_back_to_plotter');
+							Plotters.getPossibleRolls(plotter).then(function(possibleRolls){
 
-						Previsions.updatePrevisionState(plotter.clothId).then(function() {
-							Utils.showMessage('notify.previsions_state_updated');
-						});
-        	});
+								plotter.possibleRolls = possibleRolls.data;
+
+								$scope.loadSelectedRoll(plotter.cuts, possibleRolls.data);
+							});
+
+							Utils.showMessage('notify.cloth_back_to_plotter');
+
+							Previsions.updatePrevisionState(plotter.clothId).then(function() {
+								Utils.showMessage('notify.previsions_state_updated');
+							});
+						} else {
+							Utils.showMessage('notify.cloth_back_to_plotter_error', 'error');
+						}
+        	}, function(err) {
+						Utils.showMessage('notify.cloth_back_to_plotter_error', 'error');
+					});
         };
 
         $scope.deletePlotter = function(plotter) {

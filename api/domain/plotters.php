@@ -180,8 +180,14 @@ function restorePlotter($plotter) {
 
 	$update = "UPDATE plotters SET cutted = false, cuttedOn = null, cuttedBy = null WHERE id = '".$plotter->id."'";
 
-	if(!mysql_query($update))
+	if(!mysql_query($update)) {
 		$obj->successful = false;
+	} else {
+		$select = "SELECT * from previsions where id = '".$plotter->previsionId."'";
+		$result = mysql_query($select);
+		$obj->prevision = reset(fetch_array($result));
+		// $obj->query = $select;
+	}
 
 	// increment mts from the mts of the rolls of the plotter
 	foreach ($plotter->cuts as $cut) {

@@ -294,6 +294,7 @@
     "plotter_cut_failed": "Plotter no pudo ser cortado.",
     "plotter_rolls_update_failed": "Rollos del plotter cortado no pudieron ser actualizados.",
     "cloth_back_to_plotter": "Tela vuelta a estado 'Por cortar'.",
+    "cloth_back_to_plotter_error": "Error restaurando corte, vuelva a intentarlo.",
     "plotter_deleted": "Plotter eliminado.",
     "plotter_back_to_design": "Plotter restaurado a diseño.",
     "saved_changes": "Cambios guardados.",
@@ -327,7 +328,7 @@
     "file_delete_error": "Error eliminando archivo: {{fileName}}",
     "drive_not_allowed": "Su usuario de google no tiene permisos en la carpeta de google drive.",
     "prevision_ordernumber_notunique": "El número de orden ya está ingresado en el sistema.",
-	"fontsize_updated": "Tamaño de letra cambiado.",
+	  "fontsize_updated": "Tamaño de letra cambiado.",
     "weeks_updated": "Semanas actualizada."
   }
 }
