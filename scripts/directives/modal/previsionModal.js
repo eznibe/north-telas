@@ -262,7 +262,7 @@ angular.module('vsko.stock')
               }
             });
 
-            if($scope.prevision.selectedSail.id) {
+            if($scope.prevision.selectedSail && $scope.prevision.selectedSail.id) {
               $scope.prevision.sailId = $scope.prevision.selectedSail.id;
             }
 

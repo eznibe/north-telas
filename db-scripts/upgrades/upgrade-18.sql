@@ -67,3 +67,20 @@ INSERT INTO sails (id,description,formulaLower44Id,formulaGreater44Id,sailGroupI
 
 INSERT INTO sails (id,description,formulaLower44Id,formulaGreater44Id,sailGroupId,formulaId) VALUES (110,'Trinquetilla de enrollar',null, null,3,'38');
 INSERT INTO sails (id,description,formulaLower44Id,formulaGreater44Id,sailGroupId,formulaId) VALUES (111,'Trinquetilla de enrollar c/battens',null, null,3,'38');
+
+update previsions set sailGroupId=9 where sailGroupId=8
+  
+update sails set id = 1020 where id = 102;
+update sails set id = 1010 where id = 101;
+
+update sails set id = 101 where id = 1020;
+update sails set id = 102 where id = 1010;
+
+update sails set description = 'C/Garruchos (E-3mts)' where id = 100;
+update sails set description = 'C/Garruchos (E+3mts)' where id = 101;
+update sails set description = 'C/Lazzy (E-3mts)' where id = 102;
+update sails set description = 'C/Lazzy (E+3mts)' where id = 103;
+
+INSERT INTO formulas (id,formula,value,value2,fields,type,rizo) VALUES ('98','Relinga',1,0,'E','MULT','N');
+
+INSERT INTO sails (id,description,formulaLower44Id,formulaGreater44Id,sailGroupId,formulaId) VALUES (104,'C/Relinga',null, null,8,'98');
