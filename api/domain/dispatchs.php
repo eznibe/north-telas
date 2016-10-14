@@ -78,11 +78,12 @@ function getDispatch($id) {
 	}
 
 	// previsions
-	$query = "SELECT dp.*, dp.id as dpId, dc.number, dc.type, coalesce(p.orderNumber, dp.orderNumber) as orderNumber, coalesce(p.client, dp.client) as client, p.boat, p.percentage, coalesce(p.sailDescription, p.sailOneDesign, s.description) as sailName
+	$query = "SELECT dp.*, dp.id as dpId, dc.number, dc.type, coalesce(p.orderNumber, dp.orderNumber) as orderNumber, coalesce(p.client, dp.client) as client, p.boat, p.percentage, coalesce(p.sailDescription, p.sailOneDesign, concat(sg.name,' - ',s.description)) as sailName
 						FROM dispatchs d JOIN dispatchPrevisions dp on dp.dispatchId = d.id
 						 								 LEFT JOIN dispatchCarries dc on dc.id = dp.carryId
 														 LEFT JOIN previsions p on p.id = dp.previsionId
 														 LEFT JOIN sails s on p.sailId = s.id
+														 LEFT JOIN sailgroups sg on sg.id=s.sailGroupId
 						WHERE dp.dispatchId = '".$row['id']."'";
 	$subresult = mysql_query($query);
 

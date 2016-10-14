@@ -29,11 +29,12 @@ function getPlotters($clothId, $cutted, $search, $upToDate) {
 													 ) ";
 	}
 
-	$queryGral = "SELECT *, pl.id as id, coalesce(p.sailDescription, p.sailOneDesign, s.description) as sailName, pl.observations as observations, deliveryDate as unformattedDeliveryDate, DATE_FORMAT(deliveryDate,'%d-%m-%Y') as deliveryDate, p.id as previsionId
+	$queryGral = "SELECT *, pl.id as id, coalesce(p.sailDescription, p.sailOneDesign, concat(sg.name,' - ',s.description)) as sailName, pl.observations as observations, deliveryDate as unformattedDeliveryDate, DATE_FORMAT(deliveryDate,'%d-%m-%Y') as deliveryDate, p.id as previsionId
 		  FROM plotters pl
 		  JOIN previsions p on p.id = pl.previsionId
 		  JOIN cloths c on c.id = pl.clothId
 		  LEFT JOIN sails s on s.id=p.sailId
+			LEFT JOIN sailgroups sg on sg.id=s.sailGroupId
 		  WHERE 1=1 $cuttedCondition $orderCondition $searchCondition $upToDateCondition ORDER BY p.orderNumber, c.name";
 
 	$result = mysql_query($queryGral);
@@ -509,7 +510,7 @@ function getClothPlotters($clothId, $startDate, $endDate, $userName, $providerNa
 	}
 
 	$query1 = "SELECT c.*, p.*, s.*, pre.*, pc.plotterId, pro.code,
-				SUM(pc.mtsCutted) as sumMtsCutted, DATE_FORMAT(p.cuttedOn,'%d-%m-%Y') as formattedDate, IFNULL(pre.orderNumber, mp.orderNumber) as orderNumber, IFNULL(pre.orderNumber, mp.orderNumber) as sortOrderNumber, coalesce(pre.sailDescription, pre.sailOneDesign, s.description) as sailName, p.observations as observations
+				SUM(pc.mtsCutted) as sumMtsCutted, DATE_FORMAT(p.cuttedOn,'%d-%m-%Y') as formattedDate, IFNULL(pre.orderNumber, mp.orderNumber) as orderNumber, IFNULL(pre.orderNumber, mp.orderNumber) as sortOrderNumber, coalesce(pre.sailDescription, pre.sailOneDesign, concat(sg.name,' - ',s.description)) as sailName, p.observations as observations
 				FROM cloths c
 				JOIN plotters p on p.clothId = c.id
 				JOIN plottercuts pc on pc.plotterId = p.id
@@ -517,6 +518,7 @@ function getClothPlotters($clothId, $startDate, $endDate, $userName, $providerNa
 				LEFT JOIN previsions pre on pre.id = p.previsionId
 				LEFT JOIN manualplotters mp on mp.id = p.manualPlotterId
 				LEFT JOIN sails s on s.id = pre.sailId
+				LEFT JOIN sailgroups sg on sg.id=s.sailGroupId
 				JOIN groups g on g.id = c.groupId
 				JOIN products pro on pro.clothId = c.id
 				JOIN providers prov on (prov.id = pro.providerId and pro.productId = r.productId)

@@ -230,13 +230,14 @@ function getRollCuts($rollId, $clothId) {
 	$rollIdCondition = isset($rollId) ? " AND pc.rollId = '$rollId'" : "";
 	$clothIdCondition = isset($clothId) ? " AND c.id = '$clothId'" : "";
 
-	$query = "SELECT *, DATE_FORMAT(p.cuttedOn,'%d-%m-%Y') as formattedDate, IFNULL(pre.orderNumber, mp.orderNumber) as orderNumber, coalesce(pre.sailDescription, pre.sailOneDesign, s.description) as sailName, p.observations as observations
+	$query = "SELECT *, DATE_FORMAT(p.cuttedOn,'%d-%m-%Y') as formattedDate, IFNULL(pre.orderNumber, mp.orderNumber) as orderNumber, coalesce(pre.sailDescription, pre.sailOneDesign, concat(sg.name,' - ',s.description)) as sailName, p.observations as observations
 		FROM plottercuts pc
 		JOIN plotters p on p.id = pc.plotterId
 		JOIN rolls r on r.id = pc.rollId
 		JOIN cloths c on c.id = p.clothId
 		LEFT JOIN previsions pre on pre.id = p.previsionId
 		LEFT JOIN sails s on s.id = pre.sailId
+		LEFT JOIN sailgroups sg on sg.id=s.sailGroupId
 		LEFT JOIN manualplotters mp on mp.id = p.manualPlotterId
 		WHERE p.cutted = true $rollIdCondition $clothIdCondition
 		ORDER BY p.cuttedOn desc";
