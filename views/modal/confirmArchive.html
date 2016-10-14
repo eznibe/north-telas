@@ -15,7 +15,8 @@
 			</div>
 
 			<div class="modal-body">
-				<p translate>Confirm archive?</p>
+				<p ng-if="!confirmMessage" translate>Confirm archive?</p>
+				<p ng-if="confirmMessage" ng-bind="confirmMessage"></p>
 
 				<p> <span translate>Date</span>:
 					<div class="input-group input-group-sm date" date-picker>
