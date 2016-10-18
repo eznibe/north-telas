@@ -146,12 +146,13 @@ function getPrevision($id) {
 	$result = mysql_query($query);
 
 	while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+		$row['successful'] = true;
 		return $row;
 	}
 
-	header('HTTP/1.1 404 Not Found', true, 404);
-
-	$obj->error = "Not found";
+	$obj = array();
+	$obj['successful'] = false;
+	
 	return $obj;
 }
 

@@ -29,7 +29,7 @@ function getPlotters($clothId, $cutted, $search, $upToDate) {
 													 ) ";
 	}
 
-	$queryGral = "SELECT *, pl.id as id, coalesce(p.sailDescription, p.sailOneDesign, concat(sg.name,' - ',s.description)) as sailName, pl.observations as observations, deliveryDate as unformattedDeliveryDate, DATE_FORMAT(deliveryDate,'%d-%m-%Y') as deliveryDate, p.id as previsionId
+	$queryGral = "SELECT *, pl.id as id, coalesce(p.sailDescription, p.sailOneDesign, concat(sg.name,' - ',s.description)) as sailName, pl.observations as observations, deliveryDate as unformattedDeliveryDate, DATE_FORMAT(deliveryDate,'%d-%m-%Y') as deliveryDate, p.id as previsionId, c.name as clothName
 		  FROM plotters pl
 		  JOIN previsions p on p.id = pl.previsionId
 		  JOIN cloths c on c.id = pl.clothId
@@ -299,6 +299,8 @@ function toDesignPlotter($plotter) {
 
 	$result = mysql_query($query);
 
+	$obj->deletePlotterResults = array();
+
 	$rows = fetch_array($result);
 	foreach ($rows as $row) {
 		$result = deletePlotter($row['id']);
@@ -307,6 +309,7 @@ function toDesignPlotter($plotter) {
 			$obj->query = $result->query;
 			$obj->submethod = $result->method;
 		}
+		array_push($obj->deletePlotterResults, $result);
 	}
 
 	return $obj;
@@ -344,8 +347,8 @@ function deletePlotter($plotterId) {
 		$query = "SELECT * FROM plotterCuts WHERE plotterId = '$plotterId'";
 		$result = mysql_query($query);
 
-		$rows = fetch_array($result);
-		foreach ($rows as $row) {
+		$cutsrows = fetch_array($result);
+		foreach ($cutsrows as $row) {
 			$cut = new stdClass();
 			$cut->mtsCutted = $row['mtsCutted'];
 			$cut->rollId = $row['rollId'];
@@ -379,6 +382,9 @@ function deletePlotter($plotterId) {
 	// TODO possible after removing a plotter the prevision get in allCutted state -> include info in response
 	$prevision = checkAllClothsCutted($rows[0]['previsionId']);
 	$obj->allCutted = $prevision['allCutted'];
+	
+	$obj->plotterId = $plotterId;
+	$obj->row0 = $rows[0];
 
 	return $obj;
 }
