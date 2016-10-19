@@ -26,7 +26,7 @@ function getDispatchs($expand, $startDate, $endDate, $filterKey, $filterValue)
 		}
 
 		$query = "SELECT d.*, DATE_FORMAT(dispatchDate,'%d-%m-%Y') as dispatchDate, d.dispatchDate as unformattedDispatchDate
-							FROM dispatchs d LEFT JOIN dispatchPrevisions dp on d.id = dp.dispatchId LEFT JOIN previsions p on p.id = dp.previsionId
+							FROM dispatchs d LEFT JOIN dispatchprevisions dp on d.id = dp.dispatchId LEFT JOIN previsions p on p.id = dp.previsionId
 							WHERE d.archived = true  $condition
 							GROUP BY d.id
 							ORDER BY d.number";
@@ -40,7 +40,7 @@ function getDispatchs($expand, $startDate, $endDate, $filterKey, $filterValue)
 		while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
 
 			$query = "SELECT dp.*, coalesce(p.orderNumber, dp.orderNumber) as orderNumber, coalesce(p.client, dp.client) as client
-								FROM dispatchs d JOIN dispatchPrevisions dp on dp.dispatchId = d.id LEFT JOIN previsions p on p.id = dp.previsionId
+								FROM dispatchs d JOIN dispatchprevisions dp on dp.dispatchId = d.id LEFT JOIN previsions p on p.id = dp.previsionId
 								WHERE dp.dispatchId = '".$row['id']."'";
 			$subresult = mysql_query($query);
 
@@ -79,8 +79,8 @@ function getDispatch($id) {
 
 	// previsions
 	$query = "SELECT dp.*, dp.id as dpId, dc.number, dc.type, coalesce(p.orderNumber, dp.orderNumber) as orderNumber, coalesce(p.client, dp.client) as client, p.boat, p.percentage, coalesce(p.sailDescription, p.sailOneDesign, concat(sg.name,' - ',s.description)) as sailName
-						FROM dispatchs d JOIN dispatchPrevisions dp on dp.dispatchId = d.id
-						 								 LEFT JOIN dispatchCarries dc on dc.id = dp.carryId
+						FROM dispatchs d JOIN dispatchprevisions dp on dp.dispatchId = d.id
+						 								 LEFT JOIN dispatchcarries dc on dc.id = dp.carryId
 														 LEFT JOIN previsions p on p.id = dp.previsionId
 														 LEFT JOIN sails s on p.sailId = s.id
 														 LEFT JOIN sailgroups sg on sg.id=s.sailGroupId
@@ -96,7 +96,7 @@ function getDispatch($id) {
 
 	// boxes and tubes
 	$query = "SELECT dc.*
-						FROM dispatchCarries dc
+						FROM dispatchcarries dc
 						WHERE dc.dispatchId = '".$row['id']."' ORDER BY dc.number";
 	$subresult = mysql_query($query);
 
@@ -119,7 +119,7 @@ function getDispatch($id) {
 function getDispatchCarries($dispatchId)
 {
 
-	$query = "SELECT *, concat(type, ' ', number) as display FROM dispatchCarries WHERE dispatchId = '$dispatchId'
+	$query = "SELECT *, concat(type, ' ', number) as display FROM dispatchcarries WHERE dispatchId = '$dispatchId'
 					  ORDER BY type, number";
 
 	$result = mysql_query($query);
@@ -168,7 +168,7 @@ function getNextDispatchNumber() {
 function saveDispatch($dispatch)
 {
 
-	$query = "SELECT * FROM dispatchs d LEFT JOIN dispatchPrevisions dp on d.id = dp.dispatchId WHERE d.id = '".$dispatch->id."'";
+	$query = "SELECT * FROM dispatchs d LEFT JOIN dispatchprevisions dp on d.id = dp.dispatchId WHERE d.id = '".$dispatch->id."'";
 	$result = mysql_query($query);
 	$num_results = mysql_num_rows($result);
 
@@ -278,11 +278,11 @@ function addPrevision($prevision)
 	$obj->successful = false;
 
 	if (isset($prevision->id)) {
-		$insert = "INSERT INTO dispatchPrevisions (id, dispatchId, previsionId)
+		$insert = "INSERT INTO dispatchprevisions (id, dispatchId, previsionId)
 						 	VALUES ('".$prevision->dpId."', '".$prevision->dispatchId."', '".$prevision->id."')" ;
 	} else {
 		// will add not a real prevision but something manually entered by the user
-		$insert = "INSERT INTO dispatchPrevisions (id, dispatchId, orderNumber)
+		$insert = "INSERT INTO dispatchprevisions (id, dispatchId, orderNumber)
 						 	VALUES ('".$prevision->dpId."', '".$prevision->dispatchId."', '".$prevision->orderNumber."')" ;
 	}
 
@@ -308,7 +308,7 @@ function saveCarry($carry)
 	$weight = isset($carry->weight) ? $carry->weight : 'null' ;
 
 	if (isset($carry->isNew)) {
-		$insert = "INSERT INTO dispatchCarries (id, dispatchId, number, measures, weight, type)
+		$insert = "INSERT INTO dispatchcarries (id, dispatchId, number, measures, weight, type)
 							 VALUES ('".$carry->id."', '".$carry->dispatchId."', ".$carry->number.", $measures, $weight, '".$carry->type."')" ;
 
 		if(mysql_query($insert)) {
@@ -319,7 +319,7 @@ function saveCarry($carry)
 			$obj->insert = $insert;
 		}
 	} else {
-		$update = "UPDATE dispatchCarries
+		$update = "UPDATE dispatchcarries
 							 SET number = ".$carry->number.", measures = $measures, weight = $weight
 							 WHERE id = '".$carry->id."'" ;
 
@@ -342,14 +342,14 @@ function deleteDispatch($id) {
 
 	$obj->successful = true;
 
-	// delete dispatchPrevisions, dispatchCarries, and finally the dispatch
-	$query = "DELETE FROM dispatchPrevisions WHERE dispatchId = '".$id."'";
+	// delete dispatchprevisions, dispatchcarries, and finally the dispatch
+	$query = "DELETE FROM dispatchprevisions WHERE dispatchId = '".$id."'";
 	if (! mysql_query($query)) {
 		$obj->successful = false;
 		$obj->query = $query;
 	}
 
-	$query = "DELETE FROM dispatchCarries WHERE dispatchId = '".$id."'";
+	$query = "DELETE FROM dispatchcarries WHERE dispatchId = '".$id."'";
 	if (! mysql_query($query)) {
 		$obj->successful = false;
 		$obj->query = $query;
@@ -369,7 +369,7 @@ function deleteDispatchPrevision($dispatchPrevisionId) {
 	$obj->successful = true;
 
 	// delete
-	$query = "DELETE FROM dispatchPrevisions WHERE id = '".$dispatchPrevisionId."'";
+	$query = "DELETE FROM dispatchprevisions WHERE id = '".$dispatchPrevisionId."'";
 	if (! mysql_query($query)) {
 		$obj->successful = false;
 	}
@@ -382,7 +382,7 @@ function deleteDispatchPrevisionExtended($previsionId, $dispatchId) {
 	$obj->successful = true;
 
 	// delete
-	$query = "DELETE FROM dispatchPrevisions WHERE previsionId = '".$previsionId."' AND dispatchId = '".$dispatchId."'";
+	$query = "DELETE FROM dispatchprevisions WHERE previsionId = '".$previsionId."' AND dispatchId = '".$dispatchId."'";
 	if (! mysql_query($query)) {
 		$obj->successful = false;
 	}
@@ -396,12 +396,12 @@ function deleteCarry($carryId) {
 	$obj->successful = true;
 
 	// delete
-	$query = "UPDATE dispatchPrevisions SET carryId = null WHERE carryId = '".$carryId."'";
+	$query = "UPDATE dispatchprevisions SET carryId = null WHERE carryId = '".$carryId."'";
 	if (! mysql_query($query)) {
 		$obj->successful = false;
 	}
 
-	$query = "DELETE FROM dispatchCarries WHERE id = '".$carryId."'";
+	$query = "DELETE FROM dispatchcarries WHERE id = '".$carryId."'";
 	if (! mysql_query($query)) {
 		$obj->successful = false;
 	}
@@ -416,7 +416,7 @@ function editDispatchPrevisionNumberField($prevision, $field) {
 	$obj->method = "editPrevisionNumberField($field)";
 	$obj->prevision = $prevision;
 
-	$update = "UPDATE dispatchPrevisions SET $field = ".$prevision->$field." WHERE id = '".$prevision->dpId."'";
+	$update = "UPDATE dispatchprevisions SET $field = ".$prevision->$field." WHERE id = '".$prevision->dpId."'";
 
 	if(!mysql_query($update)) {
 		$obj->successful = false;
@@ -432,7 +432,7 @@ function editDispatchPrevisionField($prevision, $field) {
 	$obj->method = "editPrevisionField($field)";
 	$obj->prevision = $prevision;
 
-	$update = "UPDATE dispatchPrevisions SET $field = '".$prevision->$field."' WHERE id = '".$prevision->dpId."'";
+	$update = "UPDATE dispatchprevisions SET $field = '".$prevision->$field."' WHERE id = '".$prevision->dpId."'";
 
 	if(!mysql_query($update)) {
 		$obj->successful = false;
@@ -450,7 +450,7 @@ function updateDispatchPrevisionCarry($prevision) {
 
 	$carryId = isset($prevision->carryId) ? "'".$prevision->carryId."'" : 'null' ;
 
-	$update = "UPDATE dispatchPrevisions SET carryId = $carryId
+	$update = "UPDATE dispatchprevisions SET carryId = $carryId
 						 WHERE id = '".$prevision->dpId."'";
 
 	if(!mysql_query($update)) {

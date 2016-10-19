@@ -152,7 +152,7 @@ function getPrevision($id) {
 
 	$obj = array();
 	$obj['successful'] = false;
-	
+
 	return $obj;
 }
 
@@ -193,7 +193,7 @@ function checkAllClothsCutted($id) {
 function savePrevision($prevision)
 {
 
-	$query = "SELECT * FROM previsions p LEFT JOIN previsionCloth pc on p.id = pc.previsionId WHERE p.id = '".$prevision->id."'";
+	$query = "SELECT * FROM previsions p LEFT JOIN previsioncloth pc on p.id = pc.previsionId WHERE p.id = '".$prevision->id."'";
 	$result = mysql_query($query);
 	$num_results = mysql_num_rows($result);
 
@@ -293,23 +293,23 @@ function handleCloths($prevision, $rows, $obj) {
 
 		if($row != null) {
 			// update pc
-			$query = "UPDATE previsionCloth SET clothId = '".$cloth->id."', mts = ".$cloth->mts." WHERE cpId = '".$cloth->cpId."'";
+			$query = "UPDATE previsioncloth SET clothId = '".$cloth->id."', mts = ".$cloth->mts." WHERE cpId = '".$cloth->cpId."'";
 
 			if($row['clothId'] != $cloth->id) {
 				// different cloth, we should mark in the log as deleted and create a new one
-				$log  = "INSERT INTO previsionLogs (id, previsionId, clothId, mts, action, user) VALUES (UUID(), '".$prevision->id."', '".$row['clothId']."', 0, 2, '".$prevision->modifiedBy."')";
-				$log2 = "INSERT INTO previsionLogs (id, previsionId, clothId, mts, action, user) VALUES (UUID(), '".$prevision->id."', '".$cloth->id."', ".$cloth->mts.", 0, '".$prevision->modifiedBy."')";
+				$log  = "INSERT INTO previsionlogs (id, previsionId, clothId, mts, action, user) VALUES (UUID(), '".$prevision->id."', '".$row['clothId']."', 0, 2, '".$prevision->modifiedBy."')";
+				$log2 = "INSERT INTO previsionlogs (id, previsionId, clothId, mts, action, user) VALUES (UUID(), '".$prevision->id."', '".$cloth->id."', ".$cloth->mts.", 0, '".$prevision->modifiedBy."')";
 			}
 			else if($row['mts'] != $cloth->mts) {
 				// only mts changed, same cloth
-				$log = "INSERT INTO previsionLogs (id, previsionId, clothId, mts, action, user) VALUES (UUID(), '".$prevision->id."', '".$cloth->id."', ".$cloth->mts.", 1, '".$prevision->modifiedBy."')";
+				$log = "INSERT INTO previsionlogs (id, previsionId, clothId, mts, action, user) VALUES (UUID(), '".$prevision->id."', '".$cloth->id."', ".$cloth->mts.", 1, '".$prevision->modifiedBy."')";
 			}
 		}
 		else {
 			// insert pc
-			$query = "INSERT INTO previsionCloth VALUES ('".$cloth->cpId."', '".$prevision->id."', '".$cloth->id."', ".$cloth->mts.")";
+			$query = "INSERT INTO previsioncloth VALUES ('".$cloth->cpId."', '".$prevision->id."', '".$cloth->id."', ".$cloth->mts.")";
 
-			$log = "INSERT INTO previsionLogs (id, previsionId, clothId, mts, action, user) VALUES (UUID(), '".$prevision->id."', '".$cloth->id."', ".$cloth->mts.", 0, '".$prevision->modifiedBy."')";
+			$log = "INSERT INTO previsionlogs (id, previsionId, clothId, mts, action, user) VALUES (UUID(), '".$prevision->id."', '".$cloth->id."', ".$cloth->mts.", 0, '".$prevision->modifiedBy."')";
 		}
 
 		if(!mysql_query($query)) {
@@ -337,9 +337,9 @@ function handleCloths($prevision, $rows, $obj) {
 		}
 
 		if(!$found) {
-			$query = "DELETE from previsionCloth where cpId = '".$row['cpId']."'";
+			$query = "DELETE from previsioncloth where cpId = '".$row['cpId']."'";
 
-			$log  = "INSERT INTO previsionLogs (id, previsionId, clothId, mts, action) VALUES (UUID(), '".$prevision->id."', '".$row['clothId']."', ".$row['mts'].", 2)";
+			$log  = "INSERT INTO previsionlogs (id, previsionId, clothId, mts, action) VALUES (UUID(), '".$prevision->id."', '".$row['clothId']."', ".$row['mts'].", 2)";
 
 			if(!mysql_query($query)) {
 				$obj->successfulCloths = false;
@@ -404,7 +404,7 @@ function updateMts($cloth) {
 	$obj->method = "updateMts";
 	$obj->cloth = $cloth;
 
-	$update = "UPDATE previsionCloth SET mts = ".$cloth->mts." WHERE cpId = '".$cloth->cpId."'";
+	$update = "UPDATE previsioncloth SET mts = ".$cloth->mts." WHERE cpId = '".$cloth->cpId."'";
 
 	if(!mysql_query($update))
 		$obj->successful = false;
@@ -627,7 +627,7 @@ function deletePrevision($id) {
 	$obj->successful = true;
 
 	// delete
-	$query = "DELETE FROM previsionCloth WHERE previsionId = '".$id."'";
+	$query = "DELETE FROM previsioncloth WHERE previsionId = '".$id."'";
 	if (! mysql_query($query)) {
 		$obj->successful = false;
 	}
