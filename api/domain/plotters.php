@@ -44,7 +44,7 @@ function getPlotters($clothId, $cutted, $search, $upToDate) {
 	$plotters = array();
 	foreach ($rows as $plotter) {
 
-		$query = "SELECT *, c.id as id FROM plotterCuts c JOIN rolls r on r.id = c.rollId WHERE c.plotterId = '".$plotter['id']."'";
+		$query = "SELECT *, c.id as id FROM plottercuts c JOIN rolls r on r.id = c.rollId WHERE c.plotterId = '".$plotter['id']."'";
 
 		$result = mysql_query($query);
 
@@ -69,9 +69,9 @@ function getPlotters($clothId, $cutted, $search, $upToDate) {
 		array_push($plotters, $plotter);
 	}
 
-	// from manualPlotters
+	// from manualplotters
 	$query = "SELECT *, pl.id as id, DATE_FORMAT(pl.plotterDate,'%d-%m-%Y') as plotterDate, DATE_FORMAT(pl.cuttedOn,'%d-%m-%Y') as cuttedOn
-						FROM plotters pl JOIN manualPlotters mp on mp.id = pl.manualPlotterId JOIN cloths c on c.id = pl.clothId
+						FROM plotters pl JOIN manualplotters mp on mp.id = pl.manualPlotterId JOIN cloths c on c.id = pl.clothId
 						WHERE 1=1 $cuttedCondition $orderCondition $searchCondition2 $upToDateCondition ORDER BY mp.orderNumber, c.name";
 
 	$result = mysql_query($query);
@@ -80,7 +80,7 @@ function getPlotters($clothId, $cutted, $search, $upToDate) {
 
 	foreach ($rows as $plotter) {
 
-		$query = "SELECT *, c.id as id FROM plotterCuts c JOIN rolls r on r.id = c.rollId WHERE c.plotterId = '".$plotter['id']."'";
+		$query = "SELECT *, c.id as id FROM plottercuts c JOIN rolls r on r.id = c.rollId WHERE c.plotterId = '".$plotter['id']."'";
 
 		$result = mysql_query($query);
 
@@ -103,7 +103,7 @@ function getPlotter($id) {
 
 		if($row['manualPlotterId']!=null) {
 			// fill with manual plotter table extra data
-			$query = "SELECT * FROM manualPlotters WHERE id = '".$row['manualPlotterId']."'";
+			$query = "SELECT * FROM manualplotters WHERE id = '".$row['manualPlotterId']."'";
 			$subresult = mysql_query($query);
 
 			while($subrow = mysql_fetch_array($subresult, MYSQL_ASSOC)) {
@@ -251,7 +251,7 @@ function savePlotterCut($cut) {
 	$obj->cut = $cut;
 
 
-	$query = "SELECT * FROM plotterCuts c WHERE c.id = '".$cut->id."'";
+	$query = "SELECT * FROM plottercuts c WHERE c.id = '".$cut->id."'";
 	$result = mysql_query($query);
 	$num_results = mysql_num_rows($result);
 
@@ -259,12 +259,12 @@ function savePlotterCut($cut) {
 
 	if($num_results > 0) {
 		// update cut
-		$query = "UPDATE plotterCuts SET rollId = '".$cut->rollId."', mtsCutted = ".$cut->mtsCutted." WHERE id = '".$cut->id."'";
+		$query = "UPDATE plottercuts SET rollId = '".$cut->rollId."', mtsCutted = ".$cut->mtsCutted." WHERE id = '".$cut->id."'";
 		$obj->type="updated";
 	}
 	else {
 		// insert cut
-		$query = "INSERT INTO plotterCuts VALUES ('".$cut->id."', '".$cut->plotterId."', ".$cut->mtsCutted.", '".$cut->rollId."')";
+		$query = "INSERT INTO plottercuts VALUES ('".$cut->id."', '".$cut->plotterId."', ".$cut->mtsCutted.", '".$cut->rollId."')";
 		$obj->type="inserted";
 	}
 
@@ -320,7 +320,7 @@ function deletePlotterCut($cutId) {
 	$obj->successful = true;
 
 	// delete
-	$query = "DELETE FROM plotterCuts WHERE id = '".$cutId."'";
+	$query = "DELETE FROM plottercuts WHERE id = '".$cutId."'";
 	if (! mysql_query($query)) {
 		$obj->successful = false;
 	}
@@ -344,7 +344,7 @@ function deletePlotter($plotterId) {
 		$plotter->id = $plotterId;
 		$plotter->cuts = array();
 
-		$query = "SELECT * FROM plotterCuts WHERE plotterId = '$plotterId'";
+		$query = "SELECT * FROM plottercuts WHERE plotterId = '$plotterId'";
 		$result = mysql_query($query);
 
 		$cutsrows = fetch_array($result);
@@ -359,7 +359,7 @@ function deletePlotter($plotterId) {
 	}
 
 	// insert in removed plotters
-	$query = "INSERT INTO removedPlotters SELECT *, now() FROM plotters WHERE id = '$plotterId'";
+	$query = "INSERT INTO removedplotters SELECT *, now() FROM plotters WHERE id = '$plotterId'";
 	if (! mysql_query($query)) {
 		$obj->successful = false;
 		$obj->query = $query;
@@ -373,7 +373,7 @@ function deletePlotter($plotterId) {
 	}
 
 	// delete assigned cuts (Note: plotter cuts assigned but not cutted are not reduced from roll mts so no need to restore nothing here)
-	$query = "DELETE FROM plotterCuts WHERE plotterId = '$plotterId'";
+	$query = "DELETE FROM plottercuts WHERE plotterId = '$plotterId'";
 	if (! mysql_query($query)) {
 		$obj->successful = false;
 		$obj->query = $query;
@@ -382,7 +382,7 @@ function deletePlotter($plotterId) {
 	// TODO possible after removing a plotter the prevision get in allCutted state -> include info in response
 	$prevision = checkAllClothsCutted($rows[0]['previsionId']);
 	$obj->allCutted = $prevision['allCutted'];
-	
+
 	$obj->plotterId = $plotterId;
 	$obj->row0 = $rows[0];
 
@@ -401,14 +401,14 @@ function deleteManualPlotter($manualPlotterId) {
 	$plotters = fetch_array($result); // unique result
 
 	// delete manual plotter
-	$query = "DELETE FROM manualPlotters WHERE id = '$manualPlotterId'";
+	$query = "DELETE FROM manualplotters WHERE id = '$manualPlotterId'";
 	if (! mysql_query($query)) {
 		$obj->successful = false;
 		$obj->query = $query;
 	}
 
 	// insert in removed plotters
-	$query = "INSERT INTO removedPlotters SELECT *, now() FROM plotters WHERE manualPlotterId = '".$manualPlotterId."'";
+	$query = "INSERT INTO removedplotters SELECT *, now() FROM plotters WHERE manualPlotterId = '".$manualPlotterId."'";
 	if (! mysql_query($query)) {
 		$obj->successful = false;
 		$obj->query = $query;
@@ -422,7 +422,7 @@ function deleteManualPlotter($manualPlotterId) {
 	}
 
 	// delete assigned cuts (Note: plotter cuts assigned but not cutted are not reduced from roll mts so no need to restore nothing here)
-	$query = "DELETE FROM plotterCuts WHERE plotterId = '".$plotters[0]['id']."'";
+	$query = "DELETE FROM plottercuts WHERE plotterId = '".$plotters[0]['id']."'";
 	if (! mysql_query($query)) {
 		$obj->successful = false;
 		$obj->query = $query;
@@ -449,7 +449,7 @@ function saveManualPlotter($plotter) {
 	if($num_results > 0) {
 
 		// update manual plotter
-		$query = "UPDATE manualPlotters SET sOrder = '".$plotter->sOrder."', orderNumber = '".$plotter->orderNumber."' WHERE id = '".$plotter->manualPlotterId."'";
+		$query = "UPDATE manualplotters SET sOrder = '".$plotter->sOrder."', orderNumber = '".$plotter->orderNumber."' WHERE id = '".$plotter->manualPlotterId."'";
 
 		if(!mysql_query($query)) {
 			$obj->successfulMP = false;
@@ -463,7 +463,7 @@ function saveManualPlotter($plotter) {
 		// insert manual plotter
 		$id = uniqid();
 		if(isset($plotter->orderNumber)) $orderNumber = "'".$plotter->orderNumber."'"; else $orderNumber = 'null';
-		$query = "INSERT INTO manualPlotters VALUES ('".$id."', '".$plotter->sOrder."', $orderNumber)";
+		$query = "INSERT INTO manualplotters VALUES ('".$id."', '".$plotter->sOrder."', $orderNumber)";
 
 		if(!mysql_query($query))
 			$obj->successfulMP = false;

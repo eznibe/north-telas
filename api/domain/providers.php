@@ -4,7 +4,7 @@ include_once 'rolls.php';
 
 function getProviders($clothId, $expand)
 {
-	
+
 	if(isset($clothId)) {
 		// providers only for the given cloth
 		$query = "SELECT * FROM providers p right join products pt on p.id = pt.providerId WHERE pt.clothId = '$clothId' ORDER BY p.name";
@@ -20,7 +20,7 @@ function getProviders($clothId, $expand)
 			$sumStock = 0; $sumStockTemp = 0; $sumStockDef = 0;
 			foreach ($row['rolls'] as $value) {
 				$sumStock += $value['mts'];
-	
+
 				if($value['type']=='TEMP') $sumStockTemp += $value['mts'];
 				if($value['type']=='DEF')  $sumStockDef  += $value['mts'];
 			}
@@ -30,7 +30,7 @@ function getProviders($clothId, $expand)
 
 //			foreach ($manuals as $value) {
 //				$sumStock += $value['mts'];
-//	
+//
 //				if($value['type']=='TEMP') $sumStockTemp += $value['mts'];
 //				if($value['type']=='DEF')  $sumStockDef  += $value['mts'];
 //			}
@@ -49,7 +49,7 @@ function getProviders($clothId, $expand)
 		$query = "SELECT * FROM providers p ORDER BY p.name";
 
 		$result = mysql_query($query);
-	
+
 		$rows = fetch_array($result);
 
 		$response = array();
@@ -69,12 +69,12 @@ function getProvider($id) {
 
 	$query = "SELECT * FROM providers WHERE id = '$id'";
 	$result = mysql_query($query);
-	
+
 	while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
 		return $row;
 	}
 
-	header('HTTP/1.1 404 Not Found', true, 404); 
+	header('HTTP/1.1 404 Not Found', true, 404);
 
 	$obj->error = "Not found";
 	return $obj;
@@ -92,7 +92,7 @@ function saveNewProduct($newProduct) {
 	$result = mysql_query($query);
 
 	$num_results = mysql_num_rows($result);
-	
+
 	$rows = fetch_array($result);
 
 	if ($num_results == 0) { // no provider
@@ -108,7 +108,7 @@ function saveNewProduct($newProduct) {
 	if(!mysql_query($insert)) {
 		$obj->successful = false;
 	}
-	
+
 	if($obj->successful) {
 		$products = getProducts($newProduct->provider->id, $newProduct->productId);
 		$obj->product = $products[0];
@@ -117,7 +117,7 @@ function saveNewProduct($newProduct) {
 			$query = "SELECT * FROM providers p WHERE p.id = '".$newProduct->provider->id."'";
 
 			$result = mysql_query($query);
-	
+
 			$rows = fetch_array($result);
 
 			$rows[0]['products'] = $products;
@@ -139,7 +139,7 @@ function getProducts($providerId, $productId) {
 	$query = "SELECT p.*, c.name, c.id as clothId FROM products p join cloths c on c.id = p.clothId WHERE p.providerId = '$providerId' $productCondition ORDER BY c.name";
 
 	$result = mysql_query($query);
-		
+
 	$productsResult = fetch_array($result);
 
 	$products = array();
@@ -180,10 +180,10 @@ function getProducts($providerId, $productId) {
 // manual stock set for the given productId
 function getManualStocks($productId) {
 
-	$query = "SELECT * FROM manualStock m WHERE m.productId = '$productId'";
+	$query = "SELECT * FROM manualstock m WHERE m.productId = '$productId'";
 
 	$result = mysql_query($query);
-	
+
 	return fetch_array($result);
 }
 
@@ -244,7 +244,7 @@ function updateProviderName($provider) {
 	$query = "SELECT * FROM providers WHERE id = '".$provider->id."'";
 
 	$result = mysql_query($query);
-		
+
 	$rows = fetch_array($result); // unique
 
 	$response->provider = $rows[0];
