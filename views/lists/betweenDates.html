@@ -71,8 +71,8 @@
 				</div>
 		</div>
 	</div>
-	<div class="row" ng-show="filter.selectedType.id == 'TYPE_PLOTTERS'">
-		<div class="col-md-6 nopadding">
+	<div class="row" >
+		<div class="col-md-6 nopadding" ng-show="filter.selectedType.id == 'TYPE_PLOTTERS'">
 				<label class="control-label col-xs-2" translate>Group by</label>
 				<div class="col-xs-4">
 					<select name="dd_ty" ng-model="filter.selectedGroupBy" ng-options="sc as sc.name for sc in filter.groupByOptions" class="form-control small" ng-change="">
@@ -81,6 +81,8 @@
 				</div>
 
 				<label class="control-label col-xs-1"></label>
+		</div>
+		<div class="col-md-6 nopadding" ng-hide="filter.selectedType.id == 'TYPE_PLOTTERS'">
 		</div>
 		<div class="col-md-6 nopadding">
 			<div class="col-xs-4">
