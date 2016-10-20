@@ -248,3 +248,13 @@ table#production tbody tr,
 	display: inline-block;
 	padding-top: 2px;
 }
+
+.navbar-inverse .dropdown-menu {
+	background-color: white !important;
+}
+
+@media screen and (max-width: 991px) {
+	#angular-stats {
+		display: none;
+	}
+}

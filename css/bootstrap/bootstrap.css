@@ -259,7 +259,7 @@ th {
   src: url('../../bootstrap/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../../bootstrap/fonts/glyphicons-halflings-regular.woff') format('woff'), url('../../bootstrap/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../../bootstrap/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
 }
 .glyphicon {
-  position: relative;
+  /*position: relative;*/
   top: 1px;
   display: inline-block;
   font-family: 'Glyphicons Halflings';
@@ -1395,6 +1395,9 @@ pre code {
   min-height: 1px;
   padding-left: 15px;
   padding-right: 15px;
+}
+.jumbotron .col-xs-1, .jumbotron .col-sm-1, .jumbotron .col-md-1, .jumbotron .col-lg-1, .jumbotron .col-xs-2, .jumbotron .col-sm-2, .jumbotron .col-md-2, .jumbotron .col-lg-2, .jumbotron .col-xs-3, .jumbotron .col-sm-3, .jumbotron .col-md-3, .jumbotron .col-lg-3, .jumbotron .col-xs-4, .jumbotron .col-sm-4, .jumbotron .col-md-4, .jumbotron .col-lg-4, .jumbotron .col-xs-5, .jumbotron .col-sm-5, .jumbotron .col-md-5, .jumbotron .col-lg-5, .jumbotron .col-xs-6, .jumbotron .col-sm-6, .jumbotron .col-md-6, .jumbotron .col-lg-6, .jumbotron .col-xs-7, .jumbotron .col-sm-7, .jumbotron .col-md-7, .jumbotron .col-lg-7, .jumbotron .col-xs-8, .jumbotron .col-sm-8, .jumbotron .col-md-8, .jumbotron .col-lg-8, .jumbotron .col-xs-9, .jumbotron .col-sm-9, .jumbotron .col-md-9, .jumbotron .col-lg-9, .jumbotron .col-xs-10, .jumbotron .col-sm-10, .jumbotron .col-md-10, .jumbotron .col-lg-10, .jumbotron .col-xs-11, .jumbotron .col-sm-11, .jumbotron .col-md-11, .jumbotron .col-lg-11, .jumbotron .col-xs-12, .jumbotron .col-sm-12, .jumbotron .col-md-12, .jumbotron .col-lg-12 {
+  position: inherit !important;
 }
 .col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12 {
   float: left;
@@ -3374,7 +3377,7 @@ tbody.collapse.in {
   opacity: 0;
 }
 .input-group {
-  position: relative;
+  /*position: relative;*/
   display: table;
   border-collapse: separate;
 }
@@ -3384,7 +3387,7 @@ tbody.collapse.in {
   padding-right: 0;
 }
 .input-group .form-control {
-  position: relative;
+  /*position: relative;*/
   z-index: 2;
   float: left;
   width: 100%;
@@ -3872,7 +3875,11 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   }
 }
 .navbar-nav {
-  margin: 7.5px -15px;
+  /*margin: 7.5px -15px;*/
+  /*margin-top: 7px;
+  margin-bottom: 7px;*/
+  margin-left: -15px;
+  margin-right: -15px;
 }
 .navbar-nav > li > a {
   padding-top: 10px;
@@ -6458,7 +6465,7 @@ mark {
   content: "\e080";
 }
 .jumbotron {
-  position: relative;
+  /*position: relative;*/
   /*background: url("../img/gradient_bg_ns.png") bottom left no-repeat;*/
   padding-top: 0;
   padding-bottom: 20px;
@@ -6480,7 +6487,7 @@ mark {
 .jumbotron > .pager,
 .jumbotron > .panel-body,
 .jumbotron > .modal-footer {
-  position: relative;
+  /*position: relative;*/
 }
 .jumbotron h1 {
   font-size: 30px;
