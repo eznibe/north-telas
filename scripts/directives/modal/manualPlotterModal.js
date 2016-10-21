@@ -47,7 +47,7 @@ angular.module('vsko.stock')
 
               		  if(result.data.successful && result.data.isNew) {
 
-              			  $scope.plotter.name = $scope.plotter.selectedCloth.name;
+              			  $scope.plotter.clothName = $scope.plotter.selectedCloth.name;
               			  $scope.plotter.clothId = $scope.plotter.selectedCloth.id;
               			  $scope.plotter.cuts = new Array();
               			  $scope.plotter.cutted = '0';

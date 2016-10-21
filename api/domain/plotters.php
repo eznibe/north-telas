@@ -70,12 +70,12 @@ function getPlotters($clothId, $cutted, $search, $upToDate) {
 	}
 
 	// from manualplotters
-	$query = "SELECT *, pl.id as id, DATE_FORMAT(pl.plotterDate,'%d-%m-%Y') as plotterDate, DATE_FORMAT(pl.cuttedOn,'%d-%m-%Y') as cuttedOn
+	$query = "SELECT *, pl.id as id, DATE_FORMAT(pl.plotterDate,'%d-%m-%Y') as plotterDate, DATE_FORMAT(pl.cuttedOn,'%d-%m-%Y') as cuttedOn, c.name as clothName
 						FROM plotters pl JOIN manualplotters mp on mp.id = pl.manualPlotterId JOIN cloths c on c.id = pl.clothId
 						WHERE 1=1 $cuttedCondition $orderCondition $searchCondition2 $upToDateCondition ORDER BY mp.orderNumber, c.name";
 
 	$result = mysql_query($query);
-
+// return $query;
 	$rows = fetch_array($result);
 
 	foreach ($rows as $plotter) {
@@ -434,7 +434,7 @@ function deleteManualPlotter($manualPlotterId) {
 
 function saveManualPlotter($plotter) {
 
-	$obj->successful = true;
+	$obj->successful = false;
 	$obj->isNew = false;
 	$obj->method = "saveManualPlotter";
 	$obj->plotter = $plotter;
@@ -454,30 +454,40 @@ function saveManualPlotter($plotter) {
 		if(!mysql_query($query)) {
 			$obj->successfulMP = false;
 			$obj->wrongQuery = $query;
-		}
+		} else {
 
-		$query = "UPDATE plotters p SET plotterDate = STR_TO_DATE('".$plotter->plotterDate."', '%d-%m-%Y'), observations = '".$plotter->observations."', clothId = '".$plotter->selectedCloth->id."' WHERE id = '".$plotter->id."'";
-		$obj->type="updated";
+			$query = "UPDATE plotters p SET plotterDate = STR_TO_DATE('".$plotter->plotterDate."', '%d-%m-%Y'), observations = '".$plotter->observations."', clothId = '".$plotter->selectedCloth->id."' WHERE id = '".$plotter->id."'";
+			$obj->type="updated";
+
+			if(mysql_query($query)) {
+				$obj->successful = true;
+			}
+		}
 	}
 	else {
 		// insert manual plotter
 		$id = uniqid();
 		if(isset($plotter->orderNumber)) $orderNumber = "'".$plotter->orderNumber."'"; else $orderNumber = 'null';
-		$query = "INSERT INTO manualplotters VALUES ('".$id."', '".$plotter->sOrder."', $orderNumber)";
+		$query = "INSERT INTO manualplotters (id, sOrder, orderNumber) VALUES ('".$id."', '".$plotter->sOrder."', $orderNumber)";
 
-		if(!mysql_query($query))
+		if(!mysql_query($query)) {
 			$obj->successfulMP = false;
+			$obj->queryMP = $query;
+		} else {
 
-		if(isset($plotter->observations)) $observations = "'".$plotter->observations."'"; else $observations = 'null';
-		$query = "INSERT INTO plotters (id, previsionId, clothId, mtsDesign, plotterDate, manualPlotterId, observations, cutted, cuttedOn)
-			  VALUES ('".$plotter->id."', null, '".$plotter->selectedCloth->id."', null, STR_TO_DATE('".$plotter->plotterDate."', '%d-%m-%Y'), '$id', $observations, false, null)";
-		$obj->type = "inserted";
+			if(isset($plotter->observations)) $observations = "'".$plotter->observations."'"; else $observations = 'null';
+			$query = "INSERT INTO plotters (id, previsionId, clothId, mtsDesign, plotterDate, manualPlotterId, observations, cutted, cuttedOn)
+				  VALUES ('".$plotter->id."', null, '".$plotter->selectedCloth->id."', null, STR_TO_DATE('".$plotter->plotterDate."', '%d-%m-%Y'), '$id', $observations, false, null)";
 
-		$obj->isNew = true;
+			$obj->type = "inserted";
+
+			$obj->isNew = true;
+
+			if(mysql_query($query)) {
+				$obj->successful = true;
+			}
+		}
 	}
-
-	if(!mysql_query($query))
-		$obj->successful = false;
 
 	return $obj;
 }
