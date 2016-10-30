@@ -572,7 +572,7 @@ angular.module('vsko.stock')
         		  }
         		  else {
         			  // cloth1.mts = Math.round(mts.toFixed(2));
-                cloth1.mts = mts.toFixed(2);
+                cloth1.mts = Math.round(mts.toFixed(2));
         		  }
         	  }
           };
