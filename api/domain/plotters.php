@@ -4,6 +4,7 @@ include_once 'previsions.php';
 include_once 'logs.php';
 
 function getPlotters($clothId, $cutted, $search, $upToDate) {
+	global $country;
 
 	$orderCondition = "";
 	if(isset($clothId))
@@ -35,7 +36,7 @@ function getPlotters($clothId, $cutted, $search, $upToDate) {
 		  JOIN cloths c on c.id = pl.clothId
 		  LEFT JOIN sails s on s.id=p.sailId
 			LEFT JOIN sailgroups sg on sg.id=s.sailGroupId
-		  WHERE 1=1 $cuttedCondition $orderCondition $searchCondition $upToDateCondition ORDER BY p.orderNumber, c.name";
+		  WHERE 1=1 and pl.country = '$country' $cuttedCondition $orderCondition $searchCondition $upToDateCondition ORDER BY p.orderNumber, c.name";
 
 	$result = mysql_query($queryGral);
 
@@ -72,7 +73,7 @@ function getPlotters($clothId, $cutted, $search, $upToDate) {
 	// from manualplotters
 	$query = "SELECT *, pl.id as id, DATE_FORMAT(pl.plotterDate,'%d-%m-%Y') as plotterDate, DATE_FORMAT(pl.cuttedOn,'%d-%m-%Y') as cuttedOn, c.name as clothName
 						FROM plotters pl JOIN manualplotters mp on mp.id = pl.manualPlotterId JOIN cloths c on c.id = pl.clothId
-						WHERE 1=1 $cuttedCondition $orderCondition $searchCondition2 $upToDateCondition ORDER BY mp.orderNumber, c.name";
+						WHERE 1=1 and pl.country = '$country' $cuttedCondition $orderCondition $searchCondition2 $upToDateCondition ORDER BY mp.orderNumber, c.name";
 
 	$result = mysql_query($query);
 // return $query;
@@ -434,6 +435,8 @@ function deleteManualPlotter($manualPlotterId) {
 
 function saveManualPlotter($plotter) {
 
+	global $country;
+
 	$obj->successful = false;
 	$obj->isNew = false;
 	$obj->method = "saveManualPlotter";
@@ -468,7 +471,7 @@ function saveManualPlotter($plotter) {
 		// insert manual plotter
 		$id = uniqid();
 		if(isset($plotter->orderNumber)) $orderNumber = "'".$plotter->orderNumber."'"; else $orderNumber = 'null';
-		$query = "INSERT INTO manualplotters (id, sOrder, orderNumber) VALUES ('".$id."', '".$plotter->sOrder."', $orderNumber)";
+		$query = "INSERT INTO manualplotters (id, sOrder, orderNumber, country) VALUES ('".$id."', '".$plotter->sOrder."', $orderNumber, '$country')";
 
 		if(!mysql_query($query)) {
 			$obj->successfulMP = false;
@@ -476,8 +479,8 @@ function saveManualPlotter($plotter) {
 		} else {
 
 			if(isset($plotter->observations)) $observations = "'".$plotter->observations."'"; else $observations = 'null';
-			$query = "INSERT INTO plotters (id, previsionId, clothId, mtsDesign, plotterDate, manualPlotterId, observations, cutted, cuttedOn)
-				  VALUES ('".$plotter->id."', null, '".$plotter->selectedCloth->id."', null, STR_TO_DATE('".$plotter->plotterDate."', '%d-%m-%Y'), '$id', $observations, false, null)";
+			$query = "INSERT INTO plotters (id, previsionId, clothId, mtsDesign, plotterDate, manualPlotterId, observations, cutted, cuttedOn, country)
+				  VALUES ('".$plotter->id."', null, '".$plotter->selectedCloth->id."', null, STR_TO_DATE('".$plotter->plotterDate."', '%d-%m-%Y'), '$id', $observations, false, null, '$country')";
 
 			$obj->type = "inserted";
 
@@ -494,9 +497,13 @@ function saveManualPlotter($plotter) {
 
 function getClothPlotters($clothId, $startDate, $endDate, $userName, $providerName, $groupName, $groupBy) {
 
+	global $country;
+
 	$condition = "";
 	if(isset($clothId)) {
 		$condition = " AND p.clothId = '$clothId' ";
+	} else {
+		$condition = " AND p.country = '$country' ";
 	}
 
 	if(isset($userName)) {
@@ -571,10 +578,15 @@ function getClothPlotters($clothId, $startDate, $endDate, $userName, $providerNa
 
 function getClothAllPlottersAndOrders($clothId, $startDate, $endDate) {
 
+	global $country;
+
 	$condition = "";
 	if(isset($clothId)) {
 		$conditionP = " AND clothId = '$clothId' ";
 		$conditionO = " AND clothId = '$clothId' ";
+	} else {
+		$conditionP = " AND p.country = '$country' ";
+		$conditionO = " AND o.country = '$country' ";
 	}
 
 	if(isset($startDate) && isset($endDate)) {

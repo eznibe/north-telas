@@ -2,15 +2,17 @@
 
 function getDispatchs($expand, $startDate, $endDate, $filterKey, $filterValue)
 {
+	global $country;
 
 	if ($expand == 'NONE') {
 		$query = "SELECT *
-							FROM dispatchs d";
+							FROM dispatchs d
+							WHERE d.country = '$country' ";
 
 	} else if ($expand == 'CURRENTS') {
 		$query = "SELECT *, DATE_FORMAT(dispatchDate,'%d-%m-%Y') as dispatchDate, d.dispatchDate as unformattedDispatchDate
 							FROM dispatchs d
-							WHERE d.archived = false
+							WHERE d.archived = false AND d.country = '$country'
 							ORDER BY d.number, d.dispatchDate";
 
 	} else if ($expand == 'HISTORIC') {
@@ -27,7 +29,7 @@ function getDispatchs($expand, $startDate, $endDate, $filterKey, $filterValue)
 
 		$query = "SELECT d.*, DATE_FORMAT(dispatchDate,'%d-%m-%Y') as dispatchDate, d.dispatchDate as unformattedDispatchDate
 							FROM dispatchs d LEFT JOIN dispatchprevisions dp on d.id = dp.dispatchId LEFT JOIN previsions p on p.id = dp.previsionId
-							WHERE d.archived = true  $condition
+							WHERE d.archived = true AND d.country = '$country'  $condition
 							GROUP BY d.id
 							ORDER BY d.number";
 	}
@@ -146,15 +148,17 @@ function getDispatchDestinataries()
 
 
 function getNextDispatchNumber() {
-	$count = "SELECT count(*) as count FROM dispatchs";
+	global $country;
 
-	$query = "SELECT (max(number) + 1) as number FROM dispatchs";
+	$count = "SELECT count(*) as count FROM dispatchs WHERE country = '$country'";
+
+	$query = "SELECT (max(number) + 1) as number FROM dispatchs WHERE country = '$country'";
 
 	$countResult = mysql_query($count);
 
 	$countArr = fetch_array($countResult);
 	if ($countArr[0]['count'] == 0) {
-		return '1';
+		return $country == 'ARG' ? '1' : '1001';
 	}
 
 	$result = mysql_query($query);
@@ -167,6 +171,7 @@ function getNextDispatchNumber() {
 
 function saveDispatch($dispatch)
 {
+	global $country;
 
 	$query = "SELECT * FROM dispatchs d LEFT JOIN dispatchprevisions dp on d.id = dp.dispatchId WHERE d.id = '".$dispatch->id."'";
 	$result = mysql_query($query);
@@ -204,15 +209,15 @@ function saveDispatch($dispatch)
 	}
 	else {
 		// insert
-		$insert = "INSERT INTO dispatchs (id, number, dispatchDate, destinatary, destiny, transport, deliveryType, address, value, tracking, notes)
-				VALUES ('".$dispatch->id."', $dispatch->number, $dispatchDate, $destinatary, $destiny, $transport, $deliveryType, $address, $value, $tracking, $notes)" ;
+		$insert = "INSERT INTO dispatchs (id, number, dispatchDate, destinatary, destiny, transport, deliveryType, address, value, tracking, notes, country)
+				VALUES ('".$dispatch->id."', $dispatch->number, $dispatchDate, $destinatary, $destiny, $transport, $deliveryType, $address, $value, $tracking, $notes, '$country')" ;
 
 		if(mysql_query($insert)) {
 			$obj->successful = true;
 			$obj->isNew = true;
 
 			// update to notify all other users of the new dispatch created
-			$update = "UPDATE usuarios SET newdispatch = true WHERE id != '".$dispatch->userId."'";
+			$update = "UPDATE usuarios SET newdispatch = true WHERE id != '".$dispatch->userId."' AND country = '$country'";
 			if(!mysql_query($update)) {
 				$obj->successful = false;
 				$obj->update = $update;

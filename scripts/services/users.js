@@ -40,6 +40,11 @@ angular.module('vsko.stock')
         	return $http.post(url + 'users_POST.php', user);
         };
 
+				this.updateCountry = function(user) {
+
+        	return $http.post(url + 'users_POST.php?updateCountry=true', user);
+        };
+
         this.deleteUser = function(user) {
 
         	return $http.delete(url + 'users_DELETE.php?id='+ user.id);

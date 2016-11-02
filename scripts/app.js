@@ -32,6 +32,11 @@ angular.module("vsko.stock", [
 	    	$rootScope.fontSizeClass = fontsize;
 			}
 
+			// default country, only in case it is not cached yet
+			if (!$rootScope.user.country) {
+				$rootScope.user.country = 'ARG';
+			}
+
 			$rootScope.searchBoxChangedObservers = [];
 			$rootScope.pageChangedObservers = [];
 
@@ -122,6 +127,21 @@ angular.module("vsko.stock", [
 	    };
 	    return random;
 	}])
+	.factory('AddCountry', ['$rootScope', function($rootScope) {
+	    var country = {
+        request: function(config) {
+
+					// add user country from rootscope to every request to the php api
+          if(config.url.indexOf('php') != -1) {
+
+	          config.url += (config.url.substr(config.url.length-4, config.url.length)=='.php' ? '?' : '&') + 'country='+$rootScope.user.country;
+          }
+
+          return config;
+        }
+	    };
+	    return country;
+	}])
 	.config(['lkGoogleSettingsProvider', function (lkGoogleSettingsProvider) {
 
 	  lkGoogleSettingsProvider.configure({
@@ -141,6 +161,7 @@ angular.module("vsko.stock", [
         $httpProvider.interceptors.push('Authorization');
         $httpProvider.interceptors.push('PageAccess');
         $httpProvider.interceptors.push('ClearSearchBox');
+				$httpProvider.interceptors.push('AddCountry');
 				$httpProvider.interceptors.push('AvoidCache');
     }
     ])

@@ -1,4 +1,4 @@
-<div class="nopaddingright jumbotron clearfix">
+<div class="nopaddingright  clearfix">
 	<h1><span translate>Profile</span></h1>
 	<form name="formDolar">
 	<div class="row">
@@ -23,6 +23,17 @@
 					<a href="javascript:void(0);" ng-click="changeLanguage('port')">br</a>
 				</div>
 
+		</div>
+	</div>
+	<div class="row" access-allowed="admin,design">
+		<div class="col-md-6 nopadding">
+
+				<label class="control-label col-xs-4" translate>Country</label>
+				<div class="col-xs-3">
+					<select ng-model="country" ng-options="c for c in countries" class="form-control small" ng-change="changeCountry(c);">
+						<!-- <option value="">-- choose one --</option> -->
+					</select>
+				</div>
 		</div>
 	</div>
 	</form>

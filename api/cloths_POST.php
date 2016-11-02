@@ -10,7 +10,8 @@ db_connect();
 
 function saveCloth($cloth)
 {
-
+	global $country;
+	
 	$query = "SELECT * FROM cloths c WHERE c.id = '".$cloth->id."'";
 	$result = mysql_query($query);
 	$num_results = mysql_num_rows($result);
@@ -31,7 +32,7 @@ function saveCloth($cloth)
 		// insert
 		$groupId = $cloth->groupId ? "'".$cloth->groupId."'" : 'null';
 
-		$insert = "INSERT INTO cloths VALUES ('".$cloth->id."', '".$cloth->name."', '".$cloth->stockMin."', $groupId)" ;
+		$insert = "INSERT INTO cloths (id, name, stockMin, groupId, country) VALUES ('".$cloth->id."', '".$cloth->name."', '".$cloth->stockMin."', $groupId, '$country')" ;
 
 		if(mysql_query($insert)) {
 			$obj->successful = true;

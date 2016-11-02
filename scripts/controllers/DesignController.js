@@ -3,7 +3,7 @@
 angular.module('vsko.stock').controller('DesignCtrl', ['$scope', 'Utils', 'Previsions', 'Rules', '$modal', function ($scope, Utils, Previsions, Rules, $modal) {
 
         // initial list of previsions
-        Previsions.getAll(false).then(function(result) {
+        Previsions.getAll(false, 'DESIGN').then(function(result) {
         	$scope.previsions = result.data;
         });
 

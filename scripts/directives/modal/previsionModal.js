@@ -2,7 +2,7 @@
 
 angular.module('vsko.stock')
 
-.directive('previsionModal', function($modal, $rootScope, $q, $translate, Utils, Stock, Previsions, Files, OneDesign, Lists, Production, Rules, Dispatchs, DriveAPI, lkGoogleSettings) {
+.directive('previsionModal', function($modal, $rootScope, $q, $translate, countries, Utils, Stock, Previsions, Files, OneDesign, Lists, Production, Rules, Dispatchs, DriveAPI, lkGoogleSettings) {
 
     return {
           restrict: 'E',
@@ -11,6 +11,8 @@ angular.module('vsko.stock')
         	  var $scope = scope;
 
             $scope.files = [];
+
+            $scope.countries = countries;
 
 
             $scope.onBeforePickerOpen = function(elementInfo) {
@@ -139,7 +141,7 @@ angular.module('vsko.stock')
 
 
 
-        		  $scope.prevision = prevision ? prevision : {oneDesign: false, greaterThan44: false};
+        		  $scope.prevision = prevision ? prevision : {oneDesign: false, greaterThan44: false, country: $rootScope.user.country};
 
         		  $scope.origPrevision = prevision ? $.extend(true, {}, prevision) : {}; // used when the user cancel the modifications (close the modal)
 

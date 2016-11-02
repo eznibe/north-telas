@@ -4,7 +4,7 @@
 
 angular.module('vsko.stock')
 
-.factory('Stock', ['$http', '$q', 'uuid4', 'Utils', function ($http, $q, uuid4, Utils) {
+.factory('Stock', ['$http', '$q', '$rootScope', 'uuid4', 'Utils', function ($http, $q, $rootScope, uuid4, Utils) {
 
 		var url = telasAPIUrl;
 
@@ -14,7 +14,7 @@ angular.module('vsko.stock')
 					if(light) {
 						expand = '?expand=NONE';
 					}
-        	return $http.get(url + 'groups_GET.php' + expand);
+        	return $http.get(url + 'groups_GET.php' + expand );
         };
 
         this.idp = function()
@@ -98,7 +98,7 @@ angular.module('vsko.stock')
 					var d = $q.defer();
 					var startTime = Date.now();
 
-					$http.get(url + 'cloths_GET.php'+expand).then(function(result) {
+					$http.get(url + 'cloths_GET.php' + expand).then(function(result) {
 						Utils.logTiming(startTime, url + 'cloths_GET.php'+expand, 'stock.getAllCloths', 'GET');
 						d.resolve(result);
 					});

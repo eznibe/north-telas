@@ -2,10 +2,18 @@
 
 function getPrevisions($clothId, $designed, $expand, $production, $historic, $sellerCode, $offset, $filters)
 {
+	global $country;
+
+	$countryCondition = " AND p.country = '$country' ";
 
 	$designedCondition = "";
 	if(isset($designed)) {
 		$designedCondition = " AND p.designed = $designed ";
+
+		if ($designed == 'false') {
+			// list for design page -> remove country condition
+			$countryCondition = "";
+		}
 	}
 
 	$productionCondition = "";
@@ -33,14 +41,14 @@ function getPrevisions($clothId, $designed, $expand, $production, $historic, $se
 		$query = "SELECT p.*, coalesce(p.sailDescription, p.sailOneDesign, concat(sg.name,' - ',s.description)) as sailName, deliveryDate as unformattedDeliveryDate,
 									   DATE_FORMAT(deliveryDate,'%d-%m-%Y') as deliveryDate, DATE_FORMAT(tentativeDate,'%d-%m-%Y') as tentativeDate, DATE_FORMAT(productionDate,'%d-%m-%Y') as productionDate, DATE_FORMAT(infoDate,'%d-%m-%Y') as infoDate, DATE_FORMAT(advanceDate,'%d-%m-%Y') as advanceDate
 							FROM previsions p LEFT JOIN sails s on s.id=p.sailId LEFT JOIN sailgroups sg on sg.id=s.sailGroupId JOIN previsioncloth pc on pc.previsionId=p.id
-							WHERE pc.clothId = '$clothId' $designedCondition ORDER by p.deliveryDate, p.id";
+							WHERE pc.clothId = '$clothId' AND p.country = '$country' $designedCondition ORDER by p.deliveryDate, p.id";
 
 	}	else if (isset($expand) && $expand == 'LIST') {
 		// for the prevision cards page
 		$query = "SELECT p.*, coalesce(p.sailDescription, p.sailOneDesign, concat(sg.name,' - ',s.description)) as sailName, deliveryDate as unformattedDeliveryDate, ".
 							"       DATE_FORMAT(deliveryDate,'%d-%m-%Y') as deliveryDate, DATE_FORMAT(tentativeDate,'%d-%m-%Y') as tentativeDate, DATE_FORMAT(productionDate,'%d-%m-%Y') as productionDate, DATE_FORMAT(infoDate,'%d-%m-%Y') as infoDate, DATE_FORMAT(advanceDate,'%d-%m-%Y') as advanceDate, DATE_FORMAT(deletedProductionOn,'%d-%m-%Y') as deletedProductionOn ".
 							"FROM previsions p LEFT JOIN sails s on s.id=p.sailId LEFT JOIN sailgroups sg on sg.id=s.sailGroupId ".
-							"WHERE 1=1 AND (p.designed = false OR p.stateAccepted = false) ORDER by p.deliveryDate, p.orderNumber "
+							"WHERE 1=1 AND p.country = '$country' AND (p.designed = false OR p.stateAccepted = false) ORDER by p.deliveryDate, p.orderNumber "
 							;
 	} else {
 		// for the production and historic list
@@ -53,7 +61,7 @@ function getPrevisions($clothId, $designed, $expand, $production, $historic, $se
 		$select = "SELECT p.*, coalesce(p.sailDescription, p.sailOneDesign, concat(sg.name,' - ',s.description)) as sailName, deliveryDate as unformattedDeliveryDate, d.id as dispatchId, d.number as dispatch, ".
 							"       DATE_FORMAT(deliveryDate,'%d-%m-%Y') as deliveryDate, DATE_FORMAT(tentativeDate,'%d-%m-%Y') as tentativeDate, DATE_FORMAT(productionDate,'%d-%m-%Y') as productionDate, DATE_FORMAT(infoDate,'%d-%m-%Y') as infoDate, DATE_FORMAT(advanceDate,'%d-%m-%Y') as advanceDate, DATE_FORMAT(deletedProductionOn,'%d-%m-%Y') as deletedProductionOn ";
 		$body =   "FROM previsions p LEFT JOIN sails s on s.id=p.sailId LEFT JOIN sailgroups sg on sg.id=s.sailGroupId LEFT JOIN dispatchprevisions dp on dp.previsionId = p.id LEFT JOIN dispatchs d on d.id = dp.dispatchId ".
-							"WHERE 1=1 $filter $designedCondition $productionCondition $historicCondition $sellerCondition ".
+							"WHERE 1=1 $countryCondition $filter $designedCondition $productionCondition $historicCondition $sellerCondition ".
 							"ORDER by $orderBy $productionOrderBy -p.deliveryDate desc, p.orderNumber ";
 		$footer = "$limit $offset"
 							;
@@ -101,10 +109,11 @@ function getPrevisions($clothId, $designed, $expand, $production, $historic, $se
 
 function getPrevisionsBasic()
 {
+	global $country;
 
 	$query = "SELECT p.id, p.orderNumber, p.boat, p.percentage, p.client,
 									 coalesce(p.sailDescription, p.sailOneDesign, s.description) as sailName
-						FROM previsions p LEFT JOIN sails s on s.id=p.sailId";
+						FROM previsions p LEFT JOIN sails s on s.id=p.sailId WHERE p.country = '$country'";
 
 	$result = mysql_query($query);
 
@@ -113,12 +122,15 @@ function getPrevisionsBasic()
 
 function getPrevisionsUpToDate($clothId, $upToDate) {
 
+	global $country;
+
 	$query = "SELECT p.*, coalesce(p.sailDescription, p.sailOneDesign, concat(sg.name,' - ',s.description)) as sailName, deliveryDate as unformattedDeliveryDate, DATE_FORMAT(deliveryDate,'%d-%m-%Y') as deliveryDate, plog.mts
 						FROM previsions p LEFT JOIN sails s LEFT JOIN sailgroups sg on sg.id=s.sailGroupId on s.id=p.sailId
 						JOIN (select * from previsionlogs pl order by date desc) plog on (plog.previsionId = p.id )
 						WHERE plog.clothId = '$clothId'
 							AND p.createdOn <= STR_TO_DATE('".$upToDate."', '%d-%m-%Y') AND (p.designedOn is null OR date(p.designedOn) >= STR_TO_DATE('".$upToDate."', '%d-%m-%Y'))
 							AND plog.date <= STR_TO_DATE('".$upToDate."', '%d-%m-%Y')
+							AND p.country = '$country'
 						ORDER by p.deliveryDate, p.id, plog.date desc";
 
 	$result = mysql_query($query);
@@ -161,7 +173,7 @@ function validateOrderNumber($orderNumber) {
 
 	$obj->valid = true;
 
-	$query = "SELECT * FROM previsions WHERE orderNumber = '$orderNumber' and id not like '%-prev%'";
+	$query = "SELECT * FROM previsions p WHERE p.orderNumber = '$orderNumber' and p.country = '$country' and id not like '%-prev%'";
 	$result = mysql_query($query);
 
 	while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
@@ -192,7 +204,6 @@ function checkAllClothsCutted($id) {
 
 function savePrevision($prevision)
 {
-
 	$query = "SELECT * FROM previsions p LEFT JOIN previsioncloth pc on p.id = pc.previsionId WHERE p.id = '".$prevision->id."'";
 	$result = mysql_query($query);
 	$num_results = mysql_num_rows($result);
@@ -219,6 +230,7 @@ function savePrevision($prevision)
 	$j = isset($prevision->j) && trim($prevision->j)!='' ? $prevision->j : 'null' ;
 	$area = isset($prevision->area) && trim($prevision->area)!='' ? $prevision->area : 'null' ;
 	$rizo = isset($prevision->rizo) && trim($prevision->rizo)!='' ? $prevision->rizo : 'null' ;
+	$country = isset($prevision->country) && trim($prevision->country)!='' ? $prevision->country : 'ARG' ;
 
 	$week = isset($prevision->week) && trim($prevision->week)!='' ? $prevision->week : 'null' ;
 	$priority = isset($prevision->priority) && trim($prevision->priority)!='' ? $prevision->priority : 'null' ;
@@ -256,10 +268,10 @@ function savePrevision($prevision)
 		// insert
 		$insert = "INSERT INTO previsions (id, orderNumber, deliveryDate, client, sailId, sailGroupId, sailDescription, boat,
 				type, designed, oneDesign, greaterThan44, p, e, i,j, area, sailOneDesign, observations, productionObservations, designObservations,
-				week, priority, line, seller, advance, percentage, tentativeDate, productionDate, infoDate, advanceDate, dispatchId, rizo)
+				week, priority, line, seller, advance, percentage, tentativeDate, productionDate, infoDate, advanceDate, dispatchId, rizo, country)
 				VALUES ('".$prevision->id."', '".$prevision->orderNumber."', STR_TO_DATE('".$prevision->deliveryDate."', '%d-%m-%Y'), '".$client."', $sailId, $sailGroupId, $sailDescription, '".$boat."', '".$prevision->type."', false, ".$oneDesign.", ".$greaterThan44.", ".
 								$p.", ".$e.", ".$i.", ".$j.", ".$area.", $sailOneDesign, '$observations', '$productionObservations', '$designObservations',
-								$week, $priority, $line, $seller, $advance, $percentage, $tentativeDate, $productionDate, $infoDate, $advanceDate, $dispatchId, $rizo)" ;
+								$week, $priority, $line, $seller, $advance, $percentage, $tentativeDate, $productionDate, $infoDate, $advanceDate, $dispatchId, $rizo, '$country')" ;
 
 		if(mysql_query($insert)) {
 			$obj->successful = true;
@@ -364,6 +376,7 @@ function existsCP($cloth, $rows) {
 }
 
 function setDesigned($prevision) {
+	global $country;
 
 	$obj->successful = true;
 	$obj->method = "setDesigned";
@@ -374,8 +387,8 @@ function setDesigned($prevision) {
 	// insert all the cloths in the prevision in the plotters table
 	foreach ($prevision->cloths as $cloth) {
 
-		$insert = "INSERT INTO plotters (id, previsionId, clothId, mtsDesign, plotterDate, manualPlotterId, observations, cutted, cuttedOn, cuttedBy)
-				values ('".uniqid()."', '".$cloth->previsionId."', '".$cloth->clothId."', ".$cloth->mts.", CURRENT_DATE, null, ".$observations.", false, null, null)";
+		$insert = "INSERT INTO plotters (id, previsionId, clothId, mtsDesign, plotterDate, manualPlotterId, observations, cutted, cuttedOn, cuttedBy, country)
+				values ('".uniqid()."', '".$cloth->previsionId."', '".$cloth->clothId."', ".$cloth->mts.", CURRENT_DATE, null, ".$observations.", false, null, null, '$country')";
 
 		if(!mysql_query($insert)) {
 			$obj->successfulInsert = false;
@@ -469,8 +482,9 @@ function editPrevisionDate($prevision, $field) {
 }
 
 function getWeeksBySeason() {
+	global $country;
 
-	$query = "SELECT name, value FROM properties WHERE name like 'seasonWeeks%'";
+	$query = "SELECT name, value FROM properties p WHERE p.country = '$country' AND name like 'seasonWeeks%'";
 	$result = mysql_query($query);
 
 	return fetch_array($result);
@@ -478,10 +492,12 @@ function getWeeksBySeason() {
 
 function updateWeeksBySeason($weeks) {
 
+	global $country;
+
 	$obj->successful = true;
 	$obj->method = "updateWeeksBySeason()";
 
-	$update = "UPDATE properties SET value = '".$weeks->value."' WHERE name = '".$weeks->key."'";
+	$update = "UPDATE properties SET value = '".$weeks->value."' WHERE name = '".$weeks->key."' AND country = '$country'";
 
 	if(!mysql_query($update)) {
 		$obj->successful = false;
@@ -644,9 +660,10 @@ function deletePrevision($id) {
 
 // will log the state of the prevision just before an update will be perfomed
 function logPrevisionUpdateFull($previsionId, $method) {
+	global $country;
 
-	$update = "INSERT INTO previsionfulllogs (id,orderNumber,deliveryDate,client,sailId,sailDescription,boat,type,designed,oneDesign,greaterThan44,p,e,i,j,area,sailOneDesign,observations,designedOn,createdOn,state,prevState,stateAccepted,stateChanged,stateAcceptedDate,seller,dispatchId,line,week,priority,percentage,advance,tentativeDate,productionDate,infoDate,advanceDate,deletedProductionOn,deletedProductionBy,productionObservations,designObservations,driveIdProduction,driveIdDesign,sailGroupId,rizo,method,insertedon)
-	 						SELECT id,orderNumber,deliveryDate,client,sailId,sailDescription,boat,type,designed,oneDesign,greaterThan44,p,e,i,j,area,sailOneDesign,observations,designedOn,createdOn,state,prevState,stateAccepted,stateChanged,stateAcceptedDate,seller,dispatchId,line,week,priority,percentage,advance,tentativeDate,productionDate,infoDate,advanceDate,deletedProductionOn,deletedProductionBy,productionObservations,designObservations,driveIdProduction,driveIdDesign,sailGroupId,rizo
+	$update = "INSERT INTO previsionfulllogs (id,orderNumber,deliveryDate,client,sailId,sailDescription,boat,type,designed,oneDesign,greaterThan44,p,e,i,j,area,sailOneDesign,observations,designedOn,createdOn,state,prevState,stateAccepted,stateChanged,stateAcceptedDate,seller,dispatchId,line,week,priority,percentage,advance,tentativeDate,productionDate,infoDate,advanceDate,deletedProductionOn,deletedProductionBy,productionObservations,designObservations,driveIdProduction,driveIdDesign,sailGroupId,rizo,country,method,insertedon)
+	 						SELECT id,orderNumber,deliveryDate,client,sailId,sailDescription,boat,type,designed,oneDesign,greaterThan44,p,e,i,j,area,sailOneDesign,observations,designedOn,createdOn,state,prevState,stateAccepted,stateChanged,stateAcceptedDate,seller,dispatchId,line,week,priority,percentage,advance,tentativeDate,productionDate,infoDate,advanceDate,deletedProductionOn,deletedProductionBy,productionObservations,designObservations,driveIdProduction,driveIdDesign,sailGroupId,rizo,country
 							, '$method', now() FROM previsions WHERE id = '$previsionId'";
 
 	$obj->successful = true;

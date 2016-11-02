@@ -258,3 +258,26 @@ table#production tbody tr,
 		display: none;
 	}
 }
+
+.flag-ARG {
+  content: " ";
+  display: block;
+  /*position: absolute;
+  left: 0;
+  top: 0;*/
+  background: url("img/argentina.png") center top no-repeat transparent;
+  width: 32px;
+  height: 20px;
+}
+
+.flag-BRA {
+  content: " ";
+  display: block;
+  /*position: absolute;
+  left: 0;
+  top: 0;*/
+  background: url("img/brazil.png") center top no-repeat transparent;
+  width: 32px;
+  height: 20px;
+  /*margin-top: 12px;*/
+}

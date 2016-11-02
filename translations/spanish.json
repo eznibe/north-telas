@@ -96,6 +96,9 @@
   "Text size": "Tamaño de texto en tablas",
   "Dispatch archive confirm": "Al archivar el despacho se archivarán las órdenes asociadas. Confirma acción? ",
   "Order with dispatch archive confirm": "La orden seleccionada está asociada a un despacho activo. Confirma archivar? ",
+  "Country": "País",
+  "": "",
+  "": "",
   "": "",
   "Month": {
     "1": "Enero",

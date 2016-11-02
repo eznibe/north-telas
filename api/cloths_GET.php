@@ -14,7 +14,6 @@ db_connect();
 $expand  = isset($_GET['expand']) ? $_GET['expand'] : null;
 $groupId = isset($_GET['groupId']) ? $_GET['groupId'] : null;
 
-
 if(isset($_GET['id'])) {
 	$value = getCloth($_GET['id']);
 }

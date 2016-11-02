@@ -26,4 +26,6 @@ angular.module('vsko.stock')
 	in_transit: 'IN_TRANSIT',
 	finished: 'FINISHED',
 	deleted: 'DELETED'
-});
+})
+
+.constant('countries', ['ARG', 'BRA']);
