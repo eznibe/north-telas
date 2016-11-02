@@ -35,7 +35,7 @@ angular.module('vsko.stock')
               delete $scope.acDestinatary;
 
               if (!$scope.dispatch.isNew) {
-                Dispatchs.getDispatchCarries(scope.dispatch.id).then(function(result) {
+                Dispatchs.getDispatchCarries($scope.dispatch.id).then(function(result) {
 
                   $scope.dispatch.allCarries = result.data;
 
@@ -61,7 +61,7 @@ angular.module('vsko.stock')
                 });
               }
 
-              $scope.modalDispatch = $modal({template: 'views/modal/dispatchDetails.html', show: false, scope: $scope});
+              $scope.modalDispatch = $modal({template: 'views/modal/dispatchDetails.html', show: false, scope: $scope, backdrop:'static'});
 
               $scope.modalDispatch.$promise.then($scope.modalDispatch.show);
         	  };
@@ -90,12 +90,27 @@ angular.module('vsko.stock')
               });
         	  };
 
+            $scope.closeDispatch = function() {
+
+              if ($scope.dispatch.isNew) {
+                // details closed but dispatch was not created -> remove possible previsions assignations
+                Dispatchs.remove($scope.dispatch).then(function(result) {
+          				if (result.data.successful) {
+
+          				}
+          			});
+              }
+
+              $scope.modalDispatch.hide();
+            };
+
             // Dispatch prevision functions
 
             $scope.addPrevision = function(prevision) {
 
               if (prevision) {
                 prevision.originalObject.previsionId = prevision.originalObject.id;
+                prevision.originalObject.dispatchId = $scope.dispatch.id;
                 Dispatchs.addPrevision(prevision.originalObject, $scope.dispatch.id).then(function(result) {
 
                   if(result.data.successful) {
