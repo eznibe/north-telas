@@ -41,3 +41,24 @@ DELETE from providers where id = '5';
 
 INSERT INTO properties values ('seasonWeeks.1', '4', now(), 'BRA');
 INSERT INTO properties values ('seasonWeeks.2', '6', now(), 'BRA');
+
+
+CREATE TABLE removeddispatchs
+(
+   id char(64) PRIMARY KEY NOT NULL,
+   number int,
+   dispatchDate date,
+   destinatary varchar(128),
+   destiny varchar(128),
+   transport varchar(128),
+   deliveryType varchar(64),
+   archived bit DEFAULT 0,
+   archivedOn timestamp DEFAULT '0000-00-00 00:00:00' NOT NULL,
+   address varchar(64),
+   value real,
+   tracking varchar(64),
+   notes text,
+   country varchar(8) ,
+   insertedon timestamp default CURRENT_TIMESTAMP
+)ENGINE=MyISAM
+;

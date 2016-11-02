@@ -344,7 +344,7 @@ function saveCarry($carry)
 
 
 function deleteDispatch($id) {
-
+	
 	$obj->successful = true;
 
 	// delete dispatchprevisions, dispatchcarries, and finally the dispatch
@@ -359,6 +359,11 @@ function deleteDispatch($id) {
 		$obj->successful = false;
 		$obj->query = $query;
 	}
+
+	// log in removed dispatchs
+	$query = "INSERT INTO removeddispatchs SELECT *, now() FROM dispatchs WHERE id = '".$id."'";
+	mysql_query($query);
+
 
 	$query = "DELETE FROM dispatchs WHERE id = '".$id."'";
 	if (! mysql_query($query)) {
