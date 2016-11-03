@@ -260,10 +260,11 @@ function getClothRolls($clothId, $onlyAvailables) {
 //		WHERE p.clothId = '$clothId' $condition
 //		ORDER BY r.number, r.lote";
 
-		$query = "SELECT r.id, r.number, r.lote, r.type, r.mtsOriginal, coalesce(sum(pc.mtsCutted), 0) as sumCutted, (r.mtsOriginal - coalesce(sum(pc.mtsCutted), 0)) as calculatedMts, r.mts, r.incoming, p.*
+		$query = "SELECT r.id, r.number, r.lote, r.type, r.mtsOriginal, coalesce(sum(pc.mtsCutted), 0) as sumCutted, (r.mtsOriginal - coalesce(sum(pc.mtsCutted), 0)) as calculatedMts, r.mts, r.incoming, o.status as orderStatus, p.*
 							FROM rolls r
 							JOIN products p on p.productId=r.productId
 							left join plottercuts pc on pc.rollId=r.id
+							left join orders o on o.orderId=r.orderId
 							WHERE p.clothId = '$clothId'
 							$condition
 							group by r.id, r.number, r.lote, r.type, r.mtsOriginal, r.incoming
