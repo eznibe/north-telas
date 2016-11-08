@@ -12,6 +12,11 @@ angular.module('vsko.stock').controller('PlotterCtrl', ['$scope', '$rootScope', 
 
         	plotter.cutted = plotter.cutted ? !plotter.cutted : true;
 
+					// check that all the cuts attached to the cutted plotter are actually saved before sending it
+					plotter.cuts = plotter.cuts.filter(function(c) {
+						return !c.isNew;
+					});
+
         	Plotters.cutted(plotter, $rootScope.user.name).then(function(result){
 
 						if(result.data.successful && result.data.successfulRolls) {
@@ -81,6 +86,11 @@ angular.module('vsko.stock').controller('PlotterCtrl', ['$scope', '$rootScope', 
         		if(c.selectedRoll && c.mtsCutted && c.mtsCutted > 0 && !c.editable)
         			filled = true;
         	});
+
+					// should be no cuts in isNew state
+					if (plotter.cuts.filter( function(c) { return c.isNew; } ).length > 0) {
+						filled = false;
+					}
 
         	return filled;
         };
