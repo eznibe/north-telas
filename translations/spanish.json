@@ -332,6 +332,7 @@
     "prevision_ordernumber_notunique": "El número de orden ya está ingresado en el sistema.",
 	  "fontsize_updated": "Tamaño de letra cambiado.",
     "weeks_updated": "Semanas actualizada.",
-    "delete_orderitem_error": "No se pudo remover el item, intente de nuevo."
+    "delete_orderitem_error": "No se pudo remover el item, intente de nuevo.",
+    "cut_assigned_error": "Error asignando corte, intente de nuevo."
   }
 }

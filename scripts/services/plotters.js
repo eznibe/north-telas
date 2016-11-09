@@ -61,6 +61,7 @@ angular.module('vsko.stock')
         	return $http.delete(url + 'plotters_DELETE.php?removeManualPlotter=true&id='+ manualPlotterId);
         };
 
+				// deprecated, use Prevision.savePlotterCut
         this.savePlotterCut = function(cut) {
 
         	if(!cut.id)

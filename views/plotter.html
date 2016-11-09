@@ -83,24 +83,16 @@
 				<span class="glyphicon glyphicon-pencil col-xs-1 control-label" ng-click="showEditModal(p, editObservations)" style="text-align:center; cursor:pointer; float:none; padding-left:5px; padding-right:5px;" ng-show="over" access-allowed="admin,ordenes,produccion,plotter">&nbsp;</span>
 			</td>
 			<td style="width:80px; text-align:center;" ng-show="p.cutted=='1'" access-allowed="admin,ordenes,produccion,plotter">
-				<!-- <a ng-click="showConfirmModal(p, restore)" class="btn btn-default" > -->
 					<span class="glyphicon glyphicon-remove icon-link" ng-click="showConfirmModal(p, restore)"></span>
-				<!-- </a> -->
 			</td>
 			<td style="width:80px; text-align:center;" ng-show="p.cutted=='0'" access-allowed="admin,ordenes,produccion,plotter">
-				<!-- <a ng-click="showCutConfirmModal(p, cutted)" class="btn btn-default" ng-disabled="!filledCuts(p)" > -->
 					<span class="glyphicon glyphicon-ok icon-link"  ng-click="showCutConfirmModal(p, cutted)" ng-show="filledCuts(p)"></span>
 					<span class="glyphicon glyphicon-ok icon-disabled" ng-hide="filledCuts(p)"></span>
-				<!-- </a> -->
 			</td>
 
 			<td style="width:80px; text-align:center;" access-allowed="admin,ordenes,produccion,plotter">
-				<!-- <a ng-click="showRemovePlotterConfirmModal(p, restoreToDesign, deletePlotter)" class="btn btn-default" ng-show="!p.manualPlotterId && p.cutted=='0'"> -->
 					<span class="glyphicon glyphicon-trash icon-link" ng-click="showRemovePlotterConfirmModal(p, restoreToDesign, deletePlotter)" ng-show="!p.manualPlotterId && p.cutted=='0'"></span>
-				<!-- </a> -->
-				<!-- <a ng-click="showConfirmModal(p, deleteManualPlotter)" class="btn btn-default" ng-show="p.manualPlotterId && p.cutted=='0'"> -->
 					<span class="glyphicon glyphicon-trash icon-link" ng-click="showConfirmModal(p, deleteManualPlotter)" ng-show="p.manualPlotterId && p.cutted=='0'"></span>
-				<!-- </a> -->
 			</td>
 		</tr>
 	</tbody>
