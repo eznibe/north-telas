@@ -265,7 +265,7 @@ function savePlotterCut($cut) {
 	}
 	else {
 		// insert cut
-		$query = "INSERT INTO plottercuts VALUES ('".$cut->id."', '".$cut->plotterId."', ".$cut->mtsCutted.", '".$cut->rollId."')";
+		$query = "INSERT INTO plottercuts (id, plotterId, mtsCutted, rollId) VALUES ('".$cut->id."', '".$cut->plotterId."', ".$cut->mtsCutted.", '".$cut->rollId."')";
 		$obj->type="inserted";
 	}
 

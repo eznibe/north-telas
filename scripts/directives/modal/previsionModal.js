@@ -324,7 +324,7 @@ angular.module('vsko.stock')
               // valid scenarios to be a valid ordernumber:
               // . it is not a new prevision but the order number is unique or the one that exists it's the same to current prevision
               // . it is a new prevision and the order number is unique
-              if (($scope.prevision.id && (result.data.valid || $scope.prevision.id == result.data.previsionId))
+              if (($scope.prevision.id && (result.data.valid || $scope.prevision.id == result.data.previsionId || $scope.prevision.previsionId == result.data.previsionId))
                       || (!$scope.prevision.id && result.data.valid)) {
 
                 Previsions.save($scope.prevision, $rootScope.user.name).then(function(result) {

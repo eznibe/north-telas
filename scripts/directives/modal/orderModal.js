@@ -73,8 +73,13 @@ angular.module('vsko.stock')
 
                     Utils.showMessage('notify.order_no_items_deleted');
 		      				}
-	      				}
-	      			});
+	      				} else {
+                  Utils.showMessage('notify.delete_orderitem_error', 'error');
+                }
+	      			}, function(err) {
+                console.log('Promise failed:', err);
+                Utils.showMessage('notify.delete_orderitem_error', 'error');
+              });
 	      	  };
 
 	      	  $scope.receive = function() {

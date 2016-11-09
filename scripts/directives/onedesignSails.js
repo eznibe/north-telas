@@ -27,9 +27,9 @@ angular.module('vsko.stock')
 
         		  cut.rollId = cut.selectedRoll.id;
 
-        		  Previsions.savePlotterCut(cut).then(function(result){
-        			  console.log("Changed cut to "+cut.mtsCutted+" mts");
-        		  });
+        		  // Previsions.savePlotterCut(cut).then(function(result){
+        			//   console.log("Changed cut to "+cut.mtsCutted+" mts");
+        		  // });
         	  };
 
 
