@@ -28,9 +28,15 @@ angular.module('vsko.stock')
         		  cut.rollId = cut.selectedRoll.id;
 
         		  Previsions.savePlotterCut(cut).then(function(result){
-        			  console.log("Changed cut to "+cut.mtsCutted+" mts");
+                if (result.data.successful) {
+          			  console.log("Changed cut to "+cut.mtsCutted+" mts");
 
-                Utils.showMessage('notify.cut_assigned');
+                  Utils.showMessage('notify.cut_assigned');
+
+                  delete cut.isNew;
+                } else {
+                  Utils.showMessage('notify.cut_assigned_error', 'error');
+                }
         		  });
 
         		  $scope.clicked(cut);
