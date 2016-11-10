@@ -129,7 +129,7 @@
 
 						<ul class="nav navbar-nav navbar-right" ng-show="user.name">
               <li class="dropdrown">
-								<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><span class="flag-{{user.country}}"></span></span></a>								
+								<a ng-click="changeCountry()" class="dropdown-toggle" data-toggle="dropdown"><span class="flag-{{user.country}}"></span></span></a>								
 							</li>
 							<li class="dropdrown">
 								<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> {{user.name}} <span class="caret"></span></a>
