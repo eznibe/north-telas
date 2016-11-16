@@ -2,7 +2,7 @@
 
 angular.module('vsko.stock')
 
-.directive('onedesignModal', function($modal, Utils, Stock, OneDesign) {
+.directive('onedesignModal', function($modal, $rootScope, Utils, Stock, OneDesign) {
 
     return {
           restrict: 'E',
@@ -10,14 +10,9 @@ angular.module('vsko.stock')
 
         	  var $scope = scope;
 
-        	  Stock.getAllCloths().then(function(result) {
-        		  $scope.cloths = result.data;
-          	  });
-
-
         	  $scope.showOneDesignModal = function(boat) {
 
-        		  $scope.onedesign = boat ? boat : {isNew: true};
+        		  $scope.onedesign = boat ? boat : {isNew: true, country: $rootScope.user.country};
 
         		  $scope.onedesign.isManualSail = false;
 
@@ -30,9 +25,13 @@ angular.module('vsko.stock')
         			  $scope.boat = {};
         		  }
 
-                  $scope.modalOneDesign = $modal({template: 'views/modal/onedesignDetails.html', show: false, scope: $scope});
+              Stock.getAllCloths(false, $scope.boat.country).then(function(result) {
+          		  $scope.cloths = result.data;
+          	  });
 
-                  $scope.modalOneDesign.$promise.then($scope.modalOneDesign.show);
+              $scope.modalOneDesign = $modal({template: 'views/modal/onedesignDetails.html', show: false, scope: $scope});
+
+              $scope.modalOneDesign.$promise.then($scope.modalOneDesign.show);
         	  };
 
         	  $scope.save = function(onedesign) {
@@ -43,26 +42,26 @@ angular.module('vsko.stock')
 
         		  OneDesign.save(onedesign).then(function(result){
 
-        			  	  if(result.data.successful) {
+    			  	  if(result.data.successful) {
 
-        			  		  if(!$scope.boat.allsails)
-        			  			  $scope.boat.allsails = [];
+    			  		  if(!$scope.boat.allsails)
+    			  			  $scope.boat.allsails = [];
 
-        			  		  result.data.onedesign.odId = result.data.onedesign.id;
+    			  		  result.data.onedesign.odId = result.data.onedesign.id;
 
-        			  		  $scope.boat.allsails.push(result.data.onedesign);
+    			  		  $scope.boat.allsails.push(result.data.onedesign);
 
-        			  		  $scope.onedesign = {boat: result.data.onedesign.boat};
+    			  		  $scope.onedesign = {boat: result.data.onedesign.boat};
 
-        			  		  $scope.loadSails();
-        			  	  }
-        			  	  else {
+    			  		  $scope.loadSails();
+    			  	  }
+    			  	  else {
 
-        			  	  }
+    			  	  }
 
 //            			  $scope.modalOneDesign.hide();
 
-                    Utils.showMessage('notify.od_cloth_added');
+                Utils.showMessage('notify.od_cloth_added');
         		  });
         	  };
 

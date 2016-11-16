@@ -58,14 +58,14 @@ function getBoats() {
 function getOneDesignBoats() {
 	global $country;
 
-	$query = "SELECT boat FROM onedesign WHERE country = '$country' GROUP BY boat ORDER BY boat";
+	$query = "SELECT boat, country FROM onedesign GROUP BY boat, country ORDER BY boat";
 
 	$result = mysql_query($query);
 
 	$boats = array();
 	while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
 
-		$query = "SELECT sailPrefix as sail FROM onedesign WHERE boat = '".$row['boat']."' AND country = '$country' GROUP BY sail ORDER BY sail";
+		$query = "SELECT sailPrefix as sail FROM onedesign WHERE boat = '".$row['boat']."' AND country = '".$row['country']."' GROUP BY sail ORDER BY sail";
 
 		$resultsails = mysql_query($query);
 
@@ -75,7 +75,7 @@ function getOneDesignBoats() {
 			$sail->sail = $rowSail['sail'];
 
 			// default cloths of every sail
-			$query = "SELECT o.*, c.name FROM onedesign o JOIN cloths c on c.id = o.clothId WHERE boat = '".$row['boat']."' AND sailPrefix = '".$rowSail['sail']."' AND o.country = '$country' ORDER BY c.name";
+			$query = "SELECT o.*, c.name FROM onedesign o JOIN cloths c on c.id = o.clothId WHERE boat = '".$row['boat']."' AND sailPrefix = '".$rowSail['sail']."' AND c.country = '".$row['country']."' ORDER BY c.name";
 
 			$resultcloths = mysql_query($query);
 
@@ -97,6 +97,7 @@ function getOneDesignBoats() {
 
 		$boat = new stdClass();
 		$boat->boat = $row['boat'];
+		$boat->country = $row['country'];
 		$boat->uiId = uniqid();
 		$boat->sails = $sails;
 

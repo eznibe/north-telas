@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('vsko.stock').controller('OnedesignCtrl', ['$scope', 'Utils', 'OneDesign', '$modal', 'uuid4', function ($scope, Utils, OneDesign, $modal, uuid4) {
+angular.module('vsko.stock').controller('OnedesignCtrl', ['$scope', '$rootScope', 'Utils', 'OneDesign', '$modal', 'uuid4', function ($scope, $rootScope, Utils, OneDesign, $modal, uuid4) {
 
 		OneDesign.getBoats().then(function(result){
 
@@ -36,5 +36,9 @@ angular.module('vsko.stock').controller('OnedesignCtrl', ['$scope', 'Utils', 'On
 						}
 					});
 				};
+
+				$scope.visibleByUserCountry = function(boat) {
+					return boat.country == $rootScope.user.storedCountry || $rootScope.user.storedCountry == 'ARG';
+				}
 
 }]);

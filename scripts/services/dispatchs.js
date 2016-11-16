@@ -8,7 +8,7 @@ angular.module('vsko.stock')
 
 		var url = telasAPIUrl;
 
-        this.getDispatchs = function(expand, filter)
+        this.getDispatchs = function(expand, filter, country)
         {
 					var startDate = filter && filter.startDate ? filter.startDate : "01-01-1000";
 					var endDate = filter && filter.endDate ? filter.endDate : "12-12-2999";
@@ -19,7 +19,9 @@ angular.module('vsko.stock')
 						filterParam += '&filterValue=' + filter.value;
 					}
 
-        	return $http.get(url + 'dispatchs_GET.php?expand='+(expand ? expand : 'NONE')+'&startDate='+startDate+"&endDate="+endDate + filterParam);
+					country = country ? '&dispatchCountry=' + country : '';
+
+        	return $http.get(url + 'dispatchs_GET.php?expand='+(expand ? expand : 'NONE')+'&startDate='+startDate+"&endDate="+endDate + filterParam + country);
         };
 
 				this.getDispatch = function(id)

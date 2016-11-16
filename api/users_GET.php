@@ -10,6 +10,7 @@ include_once 'domain/users.php';
 
 db_connect();
 
+$sellerCountry = isset($_GET['sellerCountry']) ? $_GET['sellerCountry'] : null;
 
 if(isset($_GET['existsNewDispatch'])) {
 	$value = existsNewDispatch($_GET['id']);

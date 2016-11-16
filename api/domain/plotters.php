@@ -30,7 +30,7 @@ function getPlotters($clothId, $cutted, $search, $upToDate) {
 													 ) ";
 	}
 
-	$queryGral = "SELECT *, pl.id as id, coalesce(p.sailDescription, p.sailOneDesign, concat(sg.name,' - ',s.description)) as sailName, pl.observations as observations, deliveryDate as unformattedDeliveryDate, DATE_FORMAT(deliveryDate,'%d-%m-%Y') as deliveryDate, p.id as previsionId, c.name as clothName
+	$queryGral = "SELECT *, pl.id as id, coalesce(p.sailDescription, p.sailOneDesign, concat(sg.name,' - ',s.description)) as sailName, pl.observations as observations, deliveryDate as unformattedDeliveryDate, DATE_FORMAT(deliveryDate,'%d-%m-%Y') as deliveryDate, p.id as previsionId, c.name as clothName, p.country
 		  FROM plotters pl
 		  JOIN previsions p on p.id = pl.previsionId
 		  JOIN cloths c on c.id = pl.clothId
@@ -657,6 +657,17 @@ function getClothAllPlottersAndOrders($clothId, $startDate, $endDate) {
 	}
 
 	return $results;
+}
+
+function hasPlotterCuts($previsionId) {
+
+	$query = "SELECT count(*) as count FROM plottercuts pc join plotters p on p.id=pc.plotterId where p.previsionId = '$previsionId'";
+
+	$result = mysql_query($query);
+
+	$rows = fetch_array($result);
+
+	return $rows[0]['count'] == '0' ? false : true;
 }
 
 ?>

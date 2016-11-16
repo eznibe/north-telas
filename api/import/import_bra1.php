@@ -1,6 +1,6 @@
 <?php
 
-// Get list of all users or one in particular if the id is given
+// TO RUN IN BRA DB BEFORE EXPORT DATA
 
 include_once '../../include/headers.php';
 include_once '../../include/dbutils.php';

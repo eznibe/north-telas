@@ -8,7 +8,10 @@ include_once 'rolls.php';
 
 function getCloths($groupId, $expand)
 {
-	global $country;
+	global $country, $previsionCountry, $clothCountry;
+
+	$country = isset($previsionCountry) ? $previsionCountry : $country;
+	$country = isset($clothCountry) ? $clothCountry : $country;
 
 	$condition = '';
 	if(isset($groupId)) {
@@ -418,6 +421,48 @@ function getPctNac()
 	$result = mysql_query($query);
 
 	return fetch_array($result);
+}
+
+function getClothsWithMatchIdsInCountry($matchIds, $country) {
+
+	$matchIds = str_replace(",", "','", $matchIds);
+	$query = "SELECT c1.*, c1.id as newClothId, c2.id as originalClothId FROM cloths c1, cloths c2 where c1.country = '$country' and c1.matchClothId in ('$matchIds') and c1.matchClothId = c2.matchClothId and c1.id != c2.id";
+	$result = mysql_query($query);
+
+	return fetch_array($result);
+}
+
+function copyCloth($cloth, $country) {
+
+	$obj->successful = true;
+	$obj->method = 'copyCloth';
+
+	$groupId = $cloth->groupId ? "'".$cloth->groupId."'" : 'null';
+
+	$matchId = uniqid();
+	$newClothId = uniqid();
+
+	$insert = "INSERT INTO cloths (id, name, stockMin, groupId, matchClothId, country) VALUES ('$newClothId', '".$cloth->name."', '".$cloth->stockMin."', $groupId, '$matchId', '$country')" ;
+
+	if(!mysql_query($insert)) {
+		$obj->successful = false;
+		$obj->insert = $insert;
+	}
+	// $obj->insert = $insert;
+
+	$update = "UPDATE cloths SET matchClothId = '$matchId' WHERE id = '".$cloth->id."'";
+
+	if(!mysql_query($update)) {
+		$obj->successful = false;
+		$obj->update = $update;
+	}
+	// $obj->update = $update;
+
+	$obj->matchClothId = $matchId;
+	$obj->originalClothId = $cloth->id;
+	$obj->newClothId = $newClothId;
+
+	return $obj;
 }
 
 ?>

@@ -39,6 +39,7 @@ alter table previsions add column rizo int;
 
 alter table previsions modify column sailId int;
 
+ALTER TABLE cloths ADD COLUMN matchClothId varchar(64) AFTER groupId;
 
 ALTER TABLE boats ADD COLUMN country varchar(8) DEFAULT 'BRA';
 ALTER TABLE cloths ADD COLUMN country varchar(8) DEFAULT 'BRA';

@@ -41,7 +41,7 @@
 								</div>
                 <label class="control-label col-xs-2" translate>Country</label>
 								<div class="col-xs-4">
-									<select ng-model="prevision.country" ng-options="c for c in countries" class="form-control small" ng-disabled="true">
+									<select ng-model="prevision.country" ng-options="c for c in countries" class="form-control small" ng-disabled="user.storedCountry == 'BRA' || prevision.isNew || (prevision.designed=='1' && prevision.id.indexOf('-prev')==-1)" ng-change="refreshCountry();">
                   </select>
 								</div>
 						</div>

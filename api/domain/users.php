@@ -108,7 +108,9 @@ function getRoles() {
 
 function getSellerCodes() {
 
-	global $country;
+	global $country, $sellerCountry;
+
+	$country = isset($sellerCountry) ? $sellerCountry : $country;
 
 	$query = "SELECT distinct(code) as name FROM usuarios u WHERE code is not null AND u.country = '$country' ORDER BY code";
 	$result = mysql_query($query);

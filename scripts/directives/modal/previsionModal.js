@@ -4,9 +4,9 @@ angular.module('vsko.stock')
 
 .directive('previsionModal', function($modal, $rootScope, $q, $translate, countries, Utils, Stock, Previsions, Files, OneDesign, Lists, Production, Rules, Dispatchs, DriveAPI, lkGoogleSettings) {
 
-    return {
-          restrict: 'E',
-          link: function postLink(scope, element, attrs) {
+  return {
+    restrict: 'E',
+    link: function postLink(scope, element, attrs) {
 
         	  var $scope = scope;
 
@@ -88,10 +88,6 @@ angular.module('vsko.stock')
 
             $scope.lines = Production.getLines();
 
-            Production.getSellers().then(function(result) {
-              $scope.sellers = result.data;
-            });
-
             $scope.updateSails = function() {
               if ($scope.prevision.selectedSailGroup) {
                 Stock.getSails($scope.prevision.selectedSailGroup.id).then(function(result) {
@@ -141,7 +137,7 @@ angular.module('vsko.stock')
 
 
 
-        		  $scope.prevision = prevision ? prevision : {oneDesign: false, greaterThan44: false, country: $rootScope.user.country};
+        		  $scope.prevision = prevision ? prevision : {isNew: true, oneDesign: false, greaterThan44: false, country: $rootScope.user.country};
 
         		  $scope.origPrevision = prevision ? $.extend(true, {}, prevision) : {}; // used when the user cancel the modifications (close the modal)
 
@@ -151,16 +147,36 @@ angular.module('vsko.stock')
               handlePrevisionDriveFolders(prevision);
 
 
-        		  if(!$scope.prevision.cloths || $scope.prevision.cloths.length == 0) {
-        			  // init with one cloth empty, useful for creating new prevision
-              	  $scope.prevision.cloths = new Array();
-              	  $scope.prevision.cloths.push({});
+              if(!$scope.prevision.cloths || $scope.prevision.cloths.length == 0) {
+                // init with one cloth empty, useful for creating new prevision
+                $scope.prevision.cloths = new Array();
+                $scope.prevision.cloths.push({});
               }
 
-          	  // set current value for each cloth (needed for dropdown)
-          	  $scope.prevision.cloths.each(function( cloth ) {
-          		  cloth.selectedCloth = $scope.cloths.findAll({id:cloth.id})[0];
+              // cloths to show depends on the prevision country
+              Stock.getAllCloths(true, $scope.prevision.country).then(function(result) {
+          		  $scope.cloths = result.data;
+
+                // set current value for each cloth (needed for dropdown)
+            	  $scope.prevision.cloths.each(function( cloth ) {
+            		  cloth.selectedCloth = $scope.cloths.findAll({id:cloth.id})[0];
+            	  });
           	  });
+
+              // sellers to show depends on the prevision country
+              Production.getSellers($scope.prevision.country).then(function(result) {
+                $scope.sellers = result.data;
+
+                if ($scope.prevision.seller && result.data.filter(function(d) {
+                    return d.name === $scope.prevision.seller;
+                  }).length == 0) {
+
+                  $scope.sellers.push({name: $scope.prevision.seller});
+                }
+
+                $scope.prevision.selectedSeller = $scope.prevision.seller ? $scope.sellers.findAll({name:$scope.prevision.seller})[0] : {};
+              });
+
 
           	  // set current selected sail
               if ($scope.prevision.sailGroupId) {
@@ -192,7 +208,6 @@ angular.module('vsko.stock')
 
 
               $scope.prevision.selectedLine = $scope.prevision.line ? $scope.lines.findAll({name:$scope.prevision.line})[0] : {};
-              $scope.prevision.selectedSeller = $scope.prevision.seller ? $scope.sellers.findAll({name:$scope.prevision.seller})[0] : {};
 
               if (!$scope.prevision.week) {
                 $scope.prevision.week = 19;
@@ -229,6 +244,8 @@ angular.module('vsko.stock')
                   }
                 }
           		});
+
+              isInPlotterWithCuts($scope.prevision);
 
           	  $scope.modalPrevision = $modal({template: 'views/modal/prevision.html', show: false, scope: $scope, backdrop:'static', animation:'am-fade-and-slide-top'});
 
@@ -317,6 +334,11 @@ angular.module('vsko.stock')
               if ($scope.onSavePrevision) {
                 $scope.onSavePrevision($scope.prevision);
               }
+
+              // special case when the country was changed -> remove from list
+              if ($scope.origPrevision.country != $scope.prevision.country) {
+                $scope.previsions.remove($scope.prevision);
+              }
             }
 
             Previsions.validateUniqueOrderNumber($scope.prevision.orderNumber).then(function(result) {
@@ -332,6 +354,8 @@ angular.module('vsko.stock')
                   if(result.data.successful && result.data.isNew) {
 
                     $scope.previsions.push($scope.prevision);
+
+                    delete $scope.prevision.isNew;
 
                     Utils.showMessage('notify.prevision_created');
 
@@ -400,6 +424,11 @@ angular.module('vsko.stock')
 
                     if ($scope.onSavePrevision) {
                       $scope.onSavePrevision($scope.prevision);
+                    }
+
+                    // special case when the country was changed -> remove from list
+                    if ($scope.origPrevision.country != $scope.prevision.country) {
+                      $scope.previsions.remove($scope.prevision);
                     }
                   }
                 }, function(err) {
@@ -507,6 +536,98 @@ angular.module('vsko.stock')
         		  $scope.previousModal.show();
         	  }
           };
+
+          $scope.refreshCountry = function() {
+
+            // update list of sellers
+            Production.getSellers($scope.prevision.country).then(function(result) {
+              $scope.sellers = result.data;
+
+              // if a seller was selected in the previous country we should keep it in the list
+              if ($scope.prevision.selectedSeller && $scope.prevision.selectedSeller.name && result.data.filter(function(d) {
+                  return d.name === $scope.prevision.selectedSeller.name;
+                }).length == 0) {
+
+                $scope.sellers.push({name: $scope.prevision.selectedSeller.name});
+              }
+
+              if ($scope.prevision.selectedSeller) {
+                $scope.prevision.selectedSeller = $scope.sellers.findAll({name:$scope.prevision.selectedSeller.name})[0];
+              }
+            });
+
+            // update list of dispatchs
+            Dispatchs.getDispatchs('NONE', null, $scope.prevision.country).then(function(result){
+              // for the drop dropdown only OPEN dispatchs
+              $scope.openDispatchs = result.data.filter(function(d) {
+                return d.archived == '0';
+              });
+
+              if ($scope.prevision.dispatchId) {
+                // load the the already saved one
+                $scope.prevision.selectedDispatch = null;
+                $scope.prevision.dispatchId = null;
+              }
+            });
+
+            // update the list of possible cloths and the selected cloths to the ones in the new country
+            updateClothToNewCountry();
+          };
+
+          function updateClothToNewCountry() {
+
+            var promises = [];
+
+            var matchIds = [];
+            $scope.prevision.cloths.each(function( item ) {
+              if (item.selectedCloth) {
+                if (item.selectedCloth.matchClothId) {
+                  matchIds.push(item.selectedCloth.matchClothId);
+                } else {
+                  // selected cloth doesn't have a match -> copy cloth in new country
+                  promises.push(Stock.copyCloth(item, $scope.prevision.country));
+                }
+              }
+            });
+
+            promises.push(Stock.getCorrespondingCountryCloth(matchIds, $scope.prevision.country));
+
+            // wait for all cloth copies and get of corresponding cloths in new country are done
+            $q.all(promises).then(function(results) {
+
+              Stock.getAllCloths(true, $scope.prevision.country).then(function(allCloths) {
+
+                $scope.cloths = allCloths.data;
+
+                results.each(function(result) {
+
+                  var matchs = [].concat(result.data);
+
+                  matchs.each(function(match) {
+
+                    // get the slected cloth with the original cloth id and set the new cloth
+                    var cloths = $scope.prevision.cloths.filter(function(item) {
+                      return item.selectedCloth && item.selectedCloth.id == match.originalClothId;
+                    });
+
+                    cloths[0].selectedCloth = $scope.cloths.findAll({id: match.newClothId})[0];
+                  });
+                })
+              });
+            });
+          }
+
+
+          function isInPlotterWithCuts(prevision) {
+            // check if the current prevision is in plotter and has assigned some plotter cuts
+            if (!prevision.isNew) {
+              Previsions.isInPlotterWithCuts(prevision.previsionId ? prevision.previsionId : prevision.id).then(function(result) {
+                prevision.isInPlotterWithCuts = result.data;
+              });
+            } else {
+                prevision.isInPlotterWithCuts = false;
+            }
+          }
 
           $scope.calculateMts = function() {
 

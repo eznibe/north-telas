@@ -2,7 +2,7 @@
 
 function getPrevisions($clothId, $designed, $expand, $production, $historic, $sellerCode, $offset, $filters)
 {
-	global $country;
+	global $country, $storedCountry;
 
 	$countryCondition = " AND p.country = '$country' ";
 
@@ -10,8 +10,8 @@ function getPrevisions($clothId, $designed, $expand, $production, $historic, $se
 	if(isset($designed)) {
 		$designedCondition = " AND p.designed = $designed ";
 
-		if ($designed == 'false') {
-			// list for design page -> remove country condition
+		if ($designed == 'false' && isset($storedCountry) && $storedCountry == 'ARG') {
+			// list for design page -> remove country condition only if user stored country is not BRA
 			$countryCondition = "";
 		}
 	}
@@ -51,7 +51,7 @@ function getPrevisions($clothId, $designed, $expand, $production, $historic, $se
 							"WHERE 1=1 AND p.country = '$country' AND (p.designed = false OR p.stateAccepted = false) ORDER by p.deliveryDate, p.orderNumber "
 							;
 	} else {
-		// for the production and historic list
+		// for the production and historic list (also design list)
 		$filter = createFilterCondition($filters);
 		$orderBy = createOrderByCondition($filters);
 
@@ -252,7 +252,7 @@ function savePrevision($prevision)
 																		", p = ".$p.", e = ".$e.", i = ".$i.", j = ".$j.", area = ".$area.", sailOneDesign = $sailOneDesign, observations = '$observations'".
 																		", productionObservations = '$productionObservations', designObservations = '$designObservations', dispatchId = $dispatchId".
 																		", week = $week, priority = $priority, line = $line, seller = $seller, advance = $advance, percentage = $percentage".
-																		", tentativeDate = $tentativeDate, productionDate = $productionDate, infoDate = $infoDate, advanceDate = $advanceDate, rizo = $rizo".
+																		", tentativeDate = $tentativeDate, productionDate = $productionDate, infoDate = $infoDate, advanceDate = $advanceDate, rizo = $rizo, country = '$country'".
 																		" WHERE id = '".$prevision->id."'";
 
 		if(mysql_query($update)) {
@@ -376,7 +376,6 @@ function existsCP($cloth, $rows) {
 }
 
 function setDesigned($prevision) {
-	global $country;
 
 	$obj->successful = true;
 	$obj->method = "setDesigned";
@@ -388,7 +387,7 @@ function setDesigned($prevision) {
 	foreach ($prevision->cloths as $cloth) {
 
 		$insert = "INSERT INTO plotters (id, previsionId, clothId, mtsDesign, plotterDate, manualPlotterId, observations, cutted, cuttedOn, cuttedBy, country)
-				values ('".uniqid()."', '".$cloth->previsionId."', '".$cloth->clothId."', ".$cloth->mts.", CURRENT_DATE, null, ".$observations.", false, null, null, '$country')";
+				values ('".uniqid()."', '".$cloth->previsionId."', '".$cloth->clothId."', ".$cloth->mts.", CURRENT_DATE, null, ".$observations.", false, null, null, '".$prevision->country."')";
 
 		if(!mysql_query($insert)) {
 			$obj->successfulInsert = false;

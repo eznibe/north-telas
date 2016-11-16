@@ -71,6 +71,8 @@ function updateAllPrevisionsStates($clothId, $limit, $offset) {
 
 function updatePrevisionStateWithDeliveryType($deliveryType) {
 
+	global $country;
+
 	$resultInfo = array();
 	$clothIds = "";
 
@@ -82,6 +84,7 @@ function updatePrevisionStateWithDeliveryType($deliveryType) {
 						where (p.designed=false or (p.designed=true and pl.id is not null))
 						and (pl.cutted is null or pl.cutted=false)
 						and p.state = '$deliveryType'
+						and p.country = '$country'
 						order by p.orderNumber, p.id, pc.clothId";
 
 	$result = mysql_query($query);

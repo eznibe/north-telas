@@ -2,7 +2,9 @@
 
 function getDispatchs($expand, $startDate, $endDate, $filterKey, $filterValue)
 {
-	global $country;
+	global $country, $dispatchCountry;
+
+	$country = isset($dispatchCountry) ? $dispatchCountry : $country;
 
 	if ($expand == 'NONE') {
 		$query = "SELECT *
@@ -344,7 +346,7 @@ function saveCarry($carry)
 
 
 function deleteDispatch($id) {
-	
+
 	$obj->successful = true;
 
 	// delete dispatchprevisions, dispatchcarries, and finally the dispatch

@@ -336,6 +336,7 @@
 	  "fontsize_updated": "Tamaño de letra cambiado.",
     "weeks_updated": "Semanas actualizada.",
     "delete_orderitem_error": "No se pudo remover el item, intente de nuevo.",
-    "cut_assigned_error": "Error asignando corte, intente de nuevo."
+    "cut_assigned_error": "Error asignando corte, intente de nuevo.",
+    "missing_cloth_in_new_country": "No existen las siguientes telas en el nuevo país => {{missingCloths}}"
   }
 }
