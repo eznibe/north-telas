@@ -33,18 +33,20 @@ function existsNewDispatch($id) {
 	$obj->successful = true;
 	$obj->method = 'existsNewDispatch';
 
-	$query = "SELECT u.newdispatch FROM usuarios u WHERE u.id = '$id'";
+	$query = "SELECT u.newdispatch, u.country FROM usuarios u WHERE u.id = '$id'";
 	$result = mysql_query($query);
 
 	$rows = array();
 	while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
 
 		$obj->existsNewDispatch = $row['newdispatch'];
+		$storedCountry = $row['country'];
 		if ($obj->existsNewDispatch) {
-			$query = "SELECT max(number) as number FROM dispatchs";
+			$query = "SELECT max(number) as number FROM dispatchs WHERE country = '$storedCountry'";
 			$res = mysql_query($query);
 			$maxdispatch = mysql_fetch_array($res, MYSQL_ASSOC);
 			$obj->number = $maxdispatch['number'];
+			$obj->query = $query;
 		}
 	}
 
