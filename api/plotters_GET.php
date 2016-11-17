@@ -17,7 +17,7 @@ $clothId = isset($_GET['clothId']) ? $_GET['clothId'] : null;
 if(isset($_GET['search'])) {
 	$value = getPlotters($clothId, null, $_GET['search'], null);
 }
-if(isset($_GET['hasPlotterCuts'])) {
+else if(isset($_GET['hasPlotterCuts'])) {
 	$value = hasPlotterCuts($_GET['previsionId']);
 }
 else {
