@@ -23,9 +23,12 @@ angular.module("vsko.stock", [
     	$rootScope.user = user ? user : {};
 
 			var lang = $cookieStore.get('lang');
-			if (lang) {
-	    	$translate.use(lang);
+			if (!lang) {
+				// get translate file to use from browser locale
+				var locale = getLocale();
+				lang = locale.toLowerCase().substring(0, 2) === 'pt' ? 'port' : 'spanish';
 			}
+			$translate.use(lang);
 
 			var fontsize = $cookieStore.get('fontsize');
 			if (fontsize) {
@@ -347,17 +350,17 @@ angular.module("vsko.stock", [
             prefix: 'translations/',
             suffix: '.json'
           })
-          .determinePreferredLanguage(function () {
-            var locale = getLocale();
-            if (locale.toLowerCase().substring(0, 2) === 'pt') {
-            	return 'port';
-            }
-            else if (locale.toLowerCase().substring(0, 2) === 'es') {
-            	return 'spanish';
-            }
-
-//            return 'english';
-            return 'spanish';
-          })
+//           .determinePreferredLanguage(function () {
+//             var locale = getLocale();
+//             if (locale.toLowerCase().substring(0, 2) === 'pt') {
+//             	return 'port';
+//             }
+//             else if (locale.toLowerCase().substring(0, 2) === 'es') {
+//             	return 'spanish';
+//             }
+//
+// //            return 'english';
+//             return 'spanish';
+//           })
           .fallbackLanguage('english');
     }])
