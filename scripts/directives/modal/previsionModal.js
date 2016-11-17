@@ -76,6 +76,7 @@ angular.module('vsko.stock')
 
             Stock.getAllSailGroups().then(function(result) {
         		  $scope.sailGroups = result.data;
+              translateSailGroups();
         	  });
 
         	  OneDesign.getBoats().then(function(result) {
@@ -99,6 +100,7 @@ angular.module('vsko.stock')
                   } else {
                     $scope.sails = result.data;
                   }
+                  translateSails();
                 });
               } else {
                 $scope.sails = [];
@@ -192,6 +194,7 @@ angular.module('vsko.stock')
                     } else {
                       $scope.sails = result.data;
                     }
+                    translateSails();
                     $scope.prevision.selectedSail = result.data.findAll({id:$scope.prevision.sailId})[0];
                   });
                 }
@@ -801,6 +804,20 @@ angular.module('vsko.stock')
 
             return d.promise;
   				}
+
+          function translateSails() {
+            $scope.sails.map(function(s) {
+              var translation = $translate.instant('sails.'+s.id);
+              s.description = translation != 'sails.'+s.id ? translation : s.description;
+            });
+          }
+
+          function translateSailGroups() {
+            $scope.sailGroups.map(function(s) {
+              var translation = $translate.instant('sailGroups.'+s.id);
+              s.name = translation != 'sailGroups.'+s.id ? translation : s.name;
+            });
+          }
 
           // Help handle functions
 
