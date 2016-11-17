@@ -41,11 +41,11 @@ alter table previsions modify column sailId int;
 
 ALTER TABLE cloths ADD COLUMN matchClothId varchar(64) AFTER groupId;
 
-ALTER TABLE boats ADD COLUMN country varchar(8) DEFAULT 'BRA';
+--ALTER TABLE boats ADD COLUMN country varchar(8) DEFAULT 'BRA';
 ALTER TABLE cloths ADD COLUMN country varchar(8) DEFAULT 'BRA';
 ALTER TABLE dolar ADD COLUMN country varchar(8) DEFAULT 'BRA';
-ALTER TABLE formulas ADD COLUMN country varchar(8) DEFAULT 'BRA';
-ALTER TABLE groups ADD COLUMN country varchar(8) DEFAULT 'BRA';
+--ALTER TABLE formulas ADD COLUMN country varchar(8) DEFAULT 'BRA';
+--ALTER TABLE groups ADD COLUMN country varchar(8) DEFAULT 'BRA';
 ALTER TABLE manualplotters ADD COLUMN country varchar(8) DEFAULT 'BRA';
 ALTER TABLE onedesign ADD COLUMN country varchar(8) DEFAULT 'BRA';
 ALTER TABLE orders ADD COLUMN country varchar(8) DEFAULT 'BRA';

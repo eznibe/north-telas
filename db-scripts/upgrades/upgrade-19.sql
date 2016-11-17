@@ -3,10 +3,9 @@
 ALTER TABLE boats modify column id int PRIMARY KEY NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE formulas modify column id int PRIMARY KEY NOT NULL AUTO_INCREMENT;
-ALTER TABLE groups modify column id int PRIMARY KEY NOT NULL AUTO_INCREMENT;
-ALTER TABLE providers modify column id int PRIMARY KEY NOT NULL AUTO_INCREMENT;
-ALTER TABLE sailgroups modify column id int PRIMARY KEY NOT NULL AUTO_INCREMENT;
-ALTER TABLE usuarios modify column id int PRIMARY KEY NOT NULL AUTO_INCREMENT;
+--ALTER TABLE groups modify column id int NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE sailgroups modify column id int NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE onedesign add column boatId int;
 
