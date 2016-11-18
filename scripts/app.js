@@ -25,7 +25,9 @@ angular.module("vsko.stock", [
 			var lang = $cookieStore.get('lang');
 			if (!lang) {
 				// get translate file to use from browser locale
-				var locale = getLocale();
+				// var locale = getLocale();
+				var nav = window.navigator;
+				var locale = ((nav.language || nav.browserLanguage || nav.systemLanguage || nav.userLanguage) || '').split('-').join('_');
 				lang = locale.toLowerCase().substring(0, 2) === 'pt' ? 'port' : 'spanish';
 			}
 			$translate.use(lang);
