@@ -348,6 +348,7 @@
     "100": "Pronta para entrega"
   },
   "sails": {
+    "13": "Inner Jib",
     "14": "Storm Jib",
     "30": "Standard",
     "34": "Enrolar na retranca",
@@ -369,15 +370,15 @@
     "72": "Enrolar no mastro c/talas",
     "73": "Trysail",
     "94": "Staysail de Mezena",
-    "110": "Trinquetilla de enrolar",
-    "111": "Trinquetilla de enrolar c/talas"
+    "110": "Inner Jib de enrolar",
+    "111": "Inner Jib de enrolar c/talas"
   },
   "sailGroups": {
-    "1": "Mayor",
+    "1": "Mestra",
     "3": "Buja",
     "4": "Mezena",
     "5": "Asimetrico",
-    "8": "Cubremayor",
+    "8": "Capa de mestra",
     "9": "Otra"
   }
 }
