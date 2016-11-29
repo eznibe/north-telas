@@ -1,8 +1,8 @@
 <div>
-	<a style="color:#616161; cursor:pointer;" id="boatDisplay-{{b.uiId}}" ng-click="clickedName(b)">{{b.boat}}</a>
-	<span  class="badge" id="boatEdit-{{b.uiId}}" style="display:none;">
-		<input type="text" ng-model="b.boat" style="width:100px;"/> 
-		
-		<a href="javascript:void(0)" ng-click="changedName(b); clickedName(b);" ><span class="glyphicon glyphicon-ok control-label" style="text-align:center; cursor:pointer; margin-left:4px;"></span></a>
-	</span> 
+	<a style="color:#616161; cursor:pointer;" id="boatDisplay-{{entity.uiId}}" ng-click="clickedName(entity)">{{entity.boat}}</a>
+	<span  class="badge" id="boatEdit-{{entity.uiId}}" style="display:none;">
+		<input type="text" ng-model="entity.boat" style="width:100px;"/>
+
+		<a href="javascript:void(0)" ng-click="changedName(entity); clickedName(entity);" ><span class="glyphicon glyphicon-ok control-label" style="text-align:center; cursor:pointer; margin-left:4px;"></span></a>
+	</span>
 </div>

@@ -4,25 +4,31 @@
 
 angular.module('vsko.stock')
 
-.factory('Previsions', ['$http', 'uuid4', '$q', 'Utils', function ($http, uuid4, $q, Utils) {
+.factory('Previsions', ['$http', 'uuid4', '$q', '$rootScope', 'Utils', function ($http, uuid4, $q, $rootScope, Utils) {
 
 		var url = telasAPIUrl;
 
         this.getAll = function(includeDesigned, expand)
         {
 					var designedCondition = "";
-        	if(!includeDesigned)
-        		designedCondition = "&designed=false";
+        	if(!includeDesigned) {
+						designedCondition = "&designed=false";
+					}
 
-						var d = $q.defer();
-						var startTime = Date.now();
+					var countryCondition = "";
+					if (expand == 'DESIGN') {
+						countryCondition = "&storedCountry="+$rootScope.user.storedCountry;
+					}
 
-						$http.get(url + 'previsions_GET.php?expand='+(expand ? expand : 'FULL') + designedCondition).then(function(result) {
-							Utils.logTiming(startTime, url + 'previsions_GET.php?expand='+(expand ? expand : 'FULL') + designedCondition, 'previsions.getAll', 'GET');
-							d.resolve(result);
-						});
+					var d = $q.defer();
+					var startTime = Date.now();
 
-						return d.promise;
+					$http.get(url + 'previsions_GET.php?expand='+(expand ? expand : 'FULL') + designedCondition + countryCondition).then(function(result) {
+						Utils.logTiming(startTime, url + 'previsions_GET.php?expand='+(expand ? expand : 'FULL') + designedCondition + countryCondition, 'previsions.getAll', 'GET');
+						d.resolve(result);
+					});
+
+					return d.promise;
         	// return $http.get(url + 'previsions_GET.php?expand='+(expand ? expand : 'FULL') + designedCondition);
         };
 
@@ -252,6 +258,10 @@ angular.module('vsko.stock')
 					return d.promise;
         	// return $http.post(url + 'previsions_POST.php?acceptStateChange=true', prevision);
         };
+
+				this.isInPlotterWithCuts = function(previsionId) {
+					return $http.get(url + 'plotters_GET.php?previsionId='+previsionId+'&hasPlotterCuts=true');
+				};
 
         return this;
     }]);

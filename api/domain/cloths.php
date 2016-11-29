@@ -8,13 +8,17 @@ include_once 'rolls.php';
 
 function getCloths($groupId, $expand)
 {
+	global $country, $previsionCountry, $clothCountry;
+
+	$country = isset($previsionCountry) ? $previsionCountry : $country;
+	$country = isset($clothCountry) ? $clothCountry : $country;
 
 	$condition = '';
 	if(isset($groupId)) {
-		$condition = ' WHERE c.groupId = '.$groupId;
+		$condition = ' AND c.groupId = '.$groupId;
 	}
 
-	$query = "SELECT * FROM cloths c ".$condition." ORDER BY c.name";
+	$query = "SELECT * FROM cloths c WHERE c.country = '$country' ".$condition." ORDER BY c.name";
 	$result = mysql_query($query);
 
 	if(!$expand=='FULL')
@@ -85,6 +89,8 @@ function getCloth($id) {
 
 function getClothsUpToDate($groupId, $date, $includeStock0, $joinProviders) {
 
+	global $country;
+
 	$includeStock0 = isset($includeStock0);
 	$joinProviders = isset($joinProviders);
 
@@ -97,10 +103,10 @@ function getClothsUpToDate($groupId, $date, $includeStock0, $joinProviders) {
 						(
 							SELECT r2.id, sum(pc.mtsCutted) as mtsCutted
 							FROM plottercuts pc join plotters p on pc.plotterId=p.id join rolls r2 on r2.id=pc.rollId join cloths c on p.clothId=c.id
-							where c.groupId='$groupId' and p.cutted = true and p.cuttedOn <= STR_TO_DATE('".$date."', '%d-%m-%Y')
+							where c.groupId='$groupId' and c.country = '$country' and p.cutted = true and p.cuttedOn <= STR_TO_DATE('".$date."', '%d-%m-%Y')
 							group by r2.id
 						) cuts ON cuts.id = r.id
-						WHERE c.groupId='$groupId' and r.incoming=false and o.arriveDate <= STR_TO_DATE('".$date."', '%d-%m-%Y')
+						WHERE c.groupId='$groupId' and c.country = '$country' and r.incoming=false and o.arriveDate <= STR_TO_DATE('".$date."', '%d-%m-%Y')
 							and ((r.mtsOriginal - coalesce(cuts.mtsCutted, 0))) > 0";
 
   if($includeStock0) {
@@ -114,10 +120,10 @@ function getClothsUpToDate($groupId, $date, $includeStock0, $joinProviders) {
 							(
 								SELECT r2.id, sum(pc.mtsCutted) as mtsCutted
 								FROM plottercuts pc join plotters p on pc.plotterId=p.id join rolls r2 on r2.id=pc.rollId join cloths c on p.clothId=c.id
-								where c.groupId='$groupId' and p.cutted = true and p.cuttedOn <= STR_TO_DATE('".$date."', '%d-%m-%Y')
+								where c.groupId='$groupId' and c.country = '$country' and p.cutted = true and p.cuttedOn <= STR_TO_DATE('".$date."', '%d-%m-%Y')
 								group by r2.id
 							) cuts ON cuts.id = r.id
-							WHERE c.groupId='$groupId' and r.incoming=false and o.arriveDate <= STR_TO_DATE('".$date."', '%d-%m-%Y')
+							WHERE c.groupId='$groupId' and c.country = '$country' and r.incoming=false and o.arriveDate <= STR_TO_DATE('".$date."', '%d-%m-%Y')
 								and ((r.mtsOriginal - coalesce(cuts.mtsCutted, 0))) = 0
 							GROUP BY p.clothId	";
 
@@ -131,10 +137,10 @@ function getClothsUpToDate($groupId, $date, $includeStock0, $joinProviders) {
 							(
 								SELECT r2.id, sum(pc.mtsCutted) as mtsCutted
 								FROM plottercuts pc join plotters p on pc.plotterId=p.id join rolls r2 on r2.id=pc.rollId join cloths c on p.clothId=c.id
-								where c.groupId='$groupId' and p.cutted = true and p.cuttedOn <= STR_TO_DATE('".$date."', '%d-%m-%Y')
+								where c.groupId='$groupId' and c.country = '$country' and p.cutted = true and p.cuttedOn <= STR_TO_DATE('".$date."', '%d-%m-%Y')
 								group by r2.id
 							) cuts ON cuts.id = r.id
-							WHERE c.groupId='$groupId' and r.incoming=true and o.arriveDate is null and o.inTransitDate is not null
+							WHERE c.groupId='$groupId' and c.country = '$country' and r.incoming=true and o.arriveDate is null and o.inTransitDate is not null
 							and o.inTransitDate <= STR_TO_DATE('".$date."', '%d-%m-%Y')
 							GROUP BY p.clothId	";
 	}
@@ -305,11 +311,13 @@ function appendExtraInfo($clothRows, $upToDate) {
 
 function getClothsPrices($groupId) {
 
+	global $country;
+
 	$groupCondition = isset($groupId) ? " AND c.groupId = '$groupId'" : "";
 
 	$query = "SELECT c.*, p.code, p.price, pro.name as provider
 						FROM cloths c join products p on p.clothId=c.id join providers pro on pro.id=p.providerId
-					  WHERE 1=1 $groupCondition ORDER BY c.name";
+					  WHERE 1=1 AND c.country = '$country' $groupCondition ORDER BY c.name";
 	$result = mysql_query($query);
 
 	return fetch_array($result);
@@ -379,28 +387,28 @@ function deleteCloth($clothId)
 
 function getDolar()
 {
-
-	$query = "SELECT * FROM dolar d ORDER BY createdOn desc LIMIT 1";
+	global $country;
+	$query = "SELECT * FROM dolar d WHERE country = '$country' ORDER BY createdOn desc LIMIT 1";
 	$result = mysql_query($query);
 
 	return fetch_array($result);
 }
 
 function saveDolar($dolar) {
-
+	global $country;
 	$obj->successful = true;
 
-	$query = "INSERT INTO dolar (value) VALUES (".$dolar->value.")";
+	$query = "INSERT INTO dolar (value, country) VALUES (".$dolar->value.", '$country')";
 	$result = mysql_query($query);
 
 	return $obj;
 }
 
 function savePctNac($pctNac) {
-
+	global $country;
 	$obj->successful = true;
 
-	$query = "INSERT INTO pctnac (value) VALUES (".$pctNac->value.")";
+	$query = "INSERT INTO pctnac (value, country) VALUES (".$pctNac->value.", '$country')";
 	$result = mysql_query($query);
 
 	return $obj;
@@ -408,11 +416,53 @@ function savePctNac($pctNac) {
 
 function getPctNac()
 {
-
-	$query = "SELECT * FROM pctnac d ORDER BY createdOn desc LIMIT 1";
+	global $country;
+	$query = "SELECT * FROM pctnac d WHERE country = '$country' ORDER BY createdOn desc LIMIT 1";
 	$result = mysql_query($query);
 
 	return fetch_array($result);
+}
+
+function getClothsWithMatchIdsInCountry($matchIds, $country) {
+
+	$matchIds = str_replace(",", "','", $matchIds);
+	$query = "SELECT c1.*, c1.id as newClothId, c2.id as originalClothId FROM cloths c1, cloths c2 where c1.country = '$country' and c1.matchClothId in ('$matchIds') and c1.matchClothId = c2.matchClothId and c1.id != c2.id";
+	$result = mysql_query($query);
+
+	return fetch_array($result);
+}
+
+function copyCloth($cloth, $country) {
+
+	$obj->successful = true;
+	$obj->method = 'copyCloth';
+
+	$groupId = $cloth->groupId ? "'".$cloth->groupId."'" : 'null';
+
+	$matchId = uniqid();
+	$newClothId = uniqid();
+
+	$insert = "INSERT INTO cloths (id, name, stockMin, groupId, matchClothId, country) VALUES ('$newClothId', '".$cloth->name."', '".$cloth->stockMin."', $groupId, '$matchId', '$country')" ;
+
+	if(!mysql_query($insert)) {
+		$obj->successful = false;
+		$obj->insert = $insert;
+	}
+	// $obj->insert = $insert;
+
+	$update = "UPDATE cloths SET matchClothId = '$matchId' WHERE id = '".$cloth->id."'";
+
+	if(!mysql_query($update)) {
+		$obj->successful = false;
+		$obj->update = $update;
+	}
+	// $obj->update = $update;
+
+	$obj->matchClothId = $matchId;
+	$obj->originalClothId = $cloth->id;
+	$obj->newClothId = $newClothId;
+
+	return $obj;
 }
 
 ?>

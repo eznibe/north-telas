@@ -55,7 +55,7 @@
 									<input name="edit_obs" type="number" class="form-control small" required ng-model="onedesign.mts">
 								</div>
 						</div>
-						<div class="col-md-2 nopadding" access-restricted="read-only">
+						<div class="col-md-2 nopadding" access-restricted="read-only" ng-show="::visibleByUserCountry(boat)">
 								<div class="col-xs-6">
 									<a ng-click="save(onedesign)" class="btn btn-default floatright edit_person" ng-disabled="!form.$valid" >
 										<span class="glyphicon glyphicon-save"></span>
@@ -71,7 +71,7 @@
 							<th translate>Sail</th>
 							<th translate>Cloth</th>
 							<th >mts</th>
-							<th access-restricted="read-only" translate>Delete</th>
+							<th access-restricted="read-only" ng-show="::visibleByUserCountry(boat)" translate>Delete</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -85,7 +85,7 @@
 							<td>
 								{{ s.mts }}
 							</td>
-							<td access-restricted="read-only" style="width:80px; text-align:center;">
+							<td access-restricted="read-only" style="width:80px; text-align:center;" ng-show="::visibleByUserCountry(boat)">
 								<!-- <a ng-click="showConfirmModal(s, deleteOneDesignCloth)" class="btn btn-default"> -->
 									<span class="glyphicon glyphicon-trash icon-link" ng-click="showConfirmModal(s, deleteOneDesignCloth)"></span>
 								<!-- </a> -->

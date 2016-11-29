@@ -4,10 +4,11 @@ include_once 'rolls.php';
 
 function getProviders($clothId, $expand)
 {
+	global $country;
 
 	if(isset($clothId)) {
 		// providers only for the given cloth
-		$query = "SELECT * FROM providers p right join products pt on p.id = pt.providerId WHERE pt.clothId = '$clothId' ORDER BY p.name";
+		$query = "SELECT * FROM providers p right join products pt on p.id = pt.providerId WHERE pt.clothId = '$clothId' AND p.country = '$country' ORDER BY p.name";
 
 		$result = mysql_query($query);
 
@@ -46,7 +47,7 @@ function getProviders($clothId, $expand)
 	}
 	else {
 		// all providers
-		$query = "SELECT * FROM providers p ORDER BY p.name";
+		$query = "SELECT * FROM providers p WHERE p.country = '$country' ORDER BY p.name";
 
 		$result = mysql_query($query);
 
@@ -82,6 +83,7 @@ function getProvider($id) {
 
 function saveNewProduct($newProduct) {
 
+	global $country;
 	$obj->successful = true;
 	$obj->isNewProvider = false;
 	$obj->method = "saveNewProduct";
@@ -96,7 +98,7 @@ function saveNewProduct($newProduct) {
 	$rows = fetch_array($result);
 
 	if ($num_results == 0) { // no provider
-		$insert = "INSERT INTO providers (id, name, countryId) VALUES ('".$newProduct->provider->id."', '".$newProduct->provider->name."', 1)";
+		$insert = "INSERT INTO providers (id, name, countryId, country) VALUES ('".$newProduct->provider->id."', '".$newProduct->provider->name."', 1, '$country')";
 		if(!mysql_query($insert)) {
 			$obj->successful = false;
 		}
@@ -130,6 +132,8 @@ function saveNewProduct($newProduct) {
 }
 
 function getProducts($providerId, $productId) {
+
+	global $country;
 
 	$productCondition = "";
 	if(isset($productId)) {

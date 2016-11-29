@@ -14,6 +14,8 @@ angular.module('vsko.stock').controller('AuthorizationCtrl', ['$scope', '$rootSc
 					$rootScope.user.role = response.data.role;
 					$rootScope.user.sellerCode = response.data.sellerCode;
           $rootScope.user.id = response.data.id;
+          $rootScope.user.storedCountry = response.data.country; // user country stored in db
+          $rootScope.user.country = response.data.country; // country the user is seeing now
 
 					// store in cookie to have access after a f5 reload
 					$cookieStore.put('user', $rootScope.user);
@@ -55,6 +57,19 @@ angular.module('vsko.stock').controller('AuthorizationCtrl', ['$scope', '$rootSc
 
     $scope.fontSizeClass = function() {
       return $rootScope.fontSizeClass ? $rootScope.fontSizeClass : '';
+    };
+
+    $scope.changeCountry = function() {
+      if ($scope.canChangeCountry()) {
+        $rootScope.user.country = $rootScope.user.country === 'ARG' ? 'BRA' : 'ARG';
+        $cookieStore.put('user', $rootScope.user);
+        $window.location.reload();
+      }
+    };
+
+    $scope.canChangeCountry = function() {
+      var result = $rootScope.user.storedCountry != 'BRA' && ['admin', 'ordenes'].indexOf($rootScope.user.role) != -1;
+      return result;
     };
 
 }]);

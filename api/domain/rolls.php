@@ -283,11 +283,22 @@ function saveManualRoll($roll) {
 
 	$productId = uniqid();
 
-	$query = "INSERT INTO products values ('$productId', 'zz', '".$roll->clothId."', 'code-zz', null)";
+	// get one provider of the cloth to add this manual roll to
+	$query = "SELECT pt.productId FROM providers p right join products pt on p.id = pt.providerId WHERE pt.clothId = '".$roll->clothId."' and pt.providerId != 'zz'";
 
-	if(!mysql_query($query)) {
-		$obj->successful = false;
-		$obj->query = $query;
+	$result = mysql_query($query);
+	$rows = fetch_array($result);
+
+	if (count($rows) > 0) {
+		$productId = $rows[0]['productId'];
+	} else {
+
+		$query = "INSERT INTO products values ('$productId', 'zz', '".$roll->clothId."', 'code-zz', null)";
+
+		if(!mysql_query($query)) {
+			$obj->successful = false;
+			$obj->query = $query;
+		}
 	}
 
 	$query = "INSERT INTO rolls (id, productId, type, number, lote, mtsOriginal, mts, orderId, incoming, manual) values ('".$roll->id."', '$productId', '".$roll->type."', '".$roll->number."', '".$roll->lote."', ".$roll->mts.", ".$roll->mts.", '99', false, true)";

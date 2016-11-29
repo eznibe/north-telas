@@ -4,7 +4,7 @@
 
 angular.module('vsko.stock')
 
-.factory('Stock', ['$http', '$q', 'uuid4', 'Utils', function ($http, $q, uuid4, Utils) {
+.factory('Stock', ['$http', '$q', '$rootScope', 'uuid4', 'Utils', function ($http, $q, $rootScope, uuid4, Utils) {
 
 		var url = telasAPIUrl;
 
@@ -14,7 +14,7 @@ angular.module('vsko.stock')
 					if(light) {
 						expand = '?expand=NONE';
 					}
-        	return $http.get(url + 'groups_GET.php' + expand);
+        	return $http.get(url + 'groups_GET.php' + expand );
         };
 
         this.idp = function()
@@ -88,18 +88,20 @@ angular.module('vsko.stock')
         	// return $http.get(url + 'groups_GET.php?id='+groupId+'&expand='+expansion);
         };
 
-        this.getAllCloths = function(light)
+        this.getAllCloths = function(light, country)
         {
-					var expand = '';
+					var expand = '?1=1';
 					if(!light) {
-						expand = '?expand=FULL';
+						expand += '&expand=FULL';
 					}
+
+					country = country ? "&previsionCountry="+country + "&clothCountry="+country : "";
 
 					var d = $q.defer();
 					var startTime = Date.now();
 
-					$http.get(url + 'cloths_GET.php'+expand).then(function(result) {
-						Utils.logTiming(startTime, url + 'cloths_GET.php'+expand, 'stock.getAllCloths', 'GET');
+					$http.get(url + 'cloths_GET.php' + expand + country).then(function(result) {
+						Utils.logTiming(startTime, url + 'cloths_GET.php'+expand + country, 'stock.getAllCloths', 'GET');
 						d.resolve(result);
 					});
 
@@ -120,6 +122,11 @@ angular.module('vsko.stock')
         	}
 
         	return $http.post(url + 'cloths_POST.php', cloth);
+        };
+
+				this.copyCloth = function(cloth, country)
+        {
+        	return $http.post(url + 'cloths_POST.php?copy=true&clothCountry='+country, cloth);
         };
 
 				this.deleteCloth = function(cloth) {
@@ -235,6 +242,10 @@ angular.module('vsko.stock')
         {
         	return $http.post(url + 'groups_POST.php', group);
         };
+
+				this.getCorrespondingCountryCloth = function(matchIds, country) {
+					return $http.get(url + 'cloths_GET.php?matchIds='+matchIds.join(',')+'&previsionCountry='+country);
+				}
 
         return this;
     }]);

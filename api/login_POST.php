@@ -21,6 +21,7 @@ function getUser($user, $passw)
 		$obj->role = $row['role'];
 		$obj->sellerCode = $row['code'];
 		$obj->id = $row['id'];
+		$obj->country = $row['country'];
 	}
 	else {
 		$obj->successful = false;

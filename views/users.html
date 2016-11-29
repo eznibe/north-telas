@@ -14,12 +14,13 @@
 			<th translate>Name</th>
 			<th translate>Username</th>
 			<th translate>Role</th>
+			<th translate>Country</th>
 			<th></th>
 			<th></th>
 		</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="u in users | orderBy:'name' | filter:searchBox">
+		<tr ng-repeat="u in users | filter:searchBox">
 			<td>
 				{{u.name}}
 			</td>
@@ -28,6 +29,9 @@
 			</td>
 			<td>
 				{{u.role}}
+			</td>
+			<td>
+				{{u.country}}
 			</td>
 			<td style="width:80px; text-align: center;">
 				<!-- <a href="javascript:void(0);" ng-click="showModal(u)" class="btn btn-sm btn-default">

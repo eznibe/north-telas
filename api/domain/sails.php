@@ -24,6 +24,7 @@ function getSailGroups() {
 
 
 function getOneDesignSails() {
+	global $country;
 
 	$query = "SELECT sailPrefix as sail FROM onedesign o GROUP BY sailPrefix ORDER BY sailPrefix";
 

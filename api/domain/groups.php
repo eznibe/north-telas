@@ -4,6 +4,7 @@ include_once 'cloths.php';
 
 function getGroup($groupId, $expand)
 {
+	global $country;
 
 	$query = "SELECT * FROM groups g WHERE g.id = '".$groupId."' ORDER BY g.name";
 	$result = mysql_query($query);
@@ -22,6 +23,7 @@ function getGroup($groupId, $expand)
 
 function getGroups($expand)
 {
+	global $country;
 
 	$query = "SELECT * FROM groups g ORDER BY g.id";
 	$result = mysql_query($query);
@@ -68,7 +70,7 @@ function saveGroup($group) {
 		$num_results = mysql_num_rows($result);
 
 		$rows = fetch_array($result);
-		
+
 		if ($num_results > 0) { // unique result
 			$group->id = $rows[0]['maxid'] + 1;
 		}

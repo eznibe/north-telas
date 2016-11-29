@@ -2,7 +2,7 @@
 
 angular.module('vsko.stock')
 
-.controller('UsersCtrl', ['$scope', 'Users', '$modal', function ($scope, Users, $modal) {
+.controller('UsersCtrl', ['$scope', 'Users', '$modal', 'countries', '$rootScope', function ($scope, Users, $modal, countries, $rootScope) {
 
         // initial list of all users
         Users.getAllUsers().then(function(result) {
@@ -10,11 +10,12 @@ angular.module('vsko.stock')
         	$scope.users = result.data;
         });
 
+        $scope.countries = countries;
 
         // Modal functions
         $scope.showModal = function(user) {
 
-        	$scope.user = user ? user : {};
+        	$scope.user = user ? user : {country: $rootScope.user.country};
 
         	$scope.oldPassword = $scope.user.password;
 

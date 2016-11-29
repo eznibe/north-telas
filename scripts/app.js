@@ -23,13 +23,23 @@ angular.module("vsko.stock", [
     	$rootScope.user = user ? user : {};
 
 			var lang = $cookieStore.get('lang');
-			if (lang) {
-	    	$translate.use(lang);
+			if (!lang) {
+				// get translate file to use from browser locale
+				// var locale = getLocale();
+				var nav = window.navigator;
+				var locale = ((nav.language || nav.browserLanguage || nav.systemLanguage || nav.userLanguage) || '').split('-').join('_');
+				lang = locale.toLowerCase().substring(0, 2) === 'pt' ? 'port' : 'spanish';
 			}
+			$translate.use(lang);
 
 			var fontsize = $cookieStore.get('fontsize');
 			if (fontsize) {
 	    	$rootScope.fontSizeClass = fontsize;
+			}
+
+			// default country, only in case it is not cached yet
+			if (!$rootScope.user.country) {
+				$rootScope.user.country = 'ARG';
 			}
 
 			$rootScope.searchBoxChangedObservers = [];
@@ -122,6 +132,21 @@ angular.module("vsko.stock", [
 	    };
 	    return random;
 	}])
+	.factory('AddCountry', ['$rootScope', function($rootScope) {
+	    var country = {
+        request: function(config) {
+
+					// add user country from rootscope to every request to the php api
+          if(config.url.indexOf('php') != -1) {
+
+	          config.url += (config.url.substr(config.url.length-4, config.url.length)=='.php' ? '?' : '&') + 'country='+$rootScope.user.country;
+          }
+
+          return config;
+        }
+	    };
+	    return country;
+	}])
 	.config(['lkGoogleSettingsProvider', function (lkGoogleSettingsProvider) {
 
 	  lkGoogleSettingsProvider.configure({
@@ -141,6 +166,7 @@ angular.module("vsko.stock", [
         $httpProvider.interceptors.push('Authorization');
         $httpProvider.interceptors.push('PageAccess');
         $httpProvider.interceptors.push('ClearSearchBox');
+				$httpProvider.interceptors.push('AddCountry');
 				$httpProvider.interceptors.push('AvoidCache');
     }
     ])
@@ -326,17 +352,17 @@ angular.module("vsko.stock", [
             prefix: 'translations/',
             suffix: '.json'
           })
-          .determinePreferredLanguage(function () {
-            var locale = getLocale();
-            if (locale.toLowerCase().substring(0, 2) === 'pt') {
-            	return 'port';
-            }
-            else if (locale.toLowerCase().substring(0, 2) === 'es') {
-            	return 'spanish';
-            }
-
-//            return 'english';
-            return 'spanish';
-          })
+//           .determinePreferredLanguage(function () {
+//             var locale = getLocale();
+//             if (locale.toLowerCase().substring(0, 2) === 'pt') {
+//             	return 'port';
+//             }
+//             else if (locale.toLowerCase().substring(0, 2) === 'es') {
+//             	return 'spanish';
+//             }
+//
+// //            return 'english';
+//             return 'spanish';
+//           })
           .fallbackLanguage('english');
     }])

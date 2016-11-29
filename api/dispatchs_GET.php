@@ -11,6 +11,7 @@ include_once 'domain/dispatchs.php';
 db_connect();
 
 $expand = isset($_GET['expand']) ? $_GET['expand'] : null;
+$dispatchCountry = isset($_GET['dispatchCountry']) ? $_GET['dispatchCountry'] : null;
 
 if(isset($_GET['id'])) {
 	$value = getDispatch($_GET['id']);

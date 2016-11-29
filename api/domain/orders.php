@@ -10,6 +10,7 @@ function getOrders($status, $providerId, $expand) {
 
 function getOrdersUpToDate($status, $providerId, $expand, $upToDate)
 {
+	global $country;
 
 	$providerCondition = "";
 	if(isset($providerId)) {
@@ -29,11 +30,11 @@ function getOrdersUpToDate($status, $providerId, $expand, $upToDate)
 
 	if(isset($status) && !isset($upToDate)) {
 		$queryGral = "SELECT *, DATE_FORMAT(orderDate,'%d-%m-%Y') as formattedDate, arriveDate as unformattedArriveDate, DATE_FORMAT(arriveDate,'%d-%m-%Y') as arriveDate, DATE_FORMAT(estimatedArriveDate,'%d-%m-%Y') as estimatedArriveDate FROM orders o
-									WHERE o.status = '$status' $providerCondition $upToDateCondition ORDER BY -o.estimatedArriveDate desc, o.orderDate";
+									WHERE o.status = '$status' AND o.country = '$country' $providerCondition $upToDateCondition ORDER BY -o.estimatedArriveDate desc, o.orderDate";
 	}
 	else {
 		$queryGral = "SELECT *, DATE_FORMAT(orderDate,'%d-%m-%Y') as formattedDate, arriveDate as unformattedArriveDate, DATE_FORMAT(arriveDate,'%d-%m-%Y') as arriveDate, DATE_FORMAT(estimatedArriveDate,'%d-%m-%Y') as estimatedArriveDate FROM orders o
-									WHERE 1=1 $providerCondition $upToDateCondition ORDER BY -o.estimatedArriveDate desc, o.orderDate";
+									WHERE 1=1 AND o.country = '$country' $providerCondition $upToDateCondition ORDER BY -o.estimatedArriveDate desc, o.orderDate";
 	}
 
 	$result = mysql_query($queryGral);
@@ -124,6 +125,7 @@ function getOrder($id) {
 // Compra a un provider, genera orden (usado en buy_POST)
 function buy($provider)
 {
+	global $country;
 	$obj->successful = false;
 	$obj->isNew = false;
 	$obj->method = 'buy';
@@ -143,8 +145,8 @@ function buy($provider)
 	else {
 		$orderId = uniqid();
 		// no order for the provider
-		$insert = "INSERT INTO orders (orderId, orderDate, estimatedArriveDate, arriveDate, invoiceNumber, status, type, providerId, description, deliveryType)
-							 VALUES ('$orderId', null, null, null, null, 'TO_BUY', null, '".$provider->providerId."', null, 'Desconocido')" ;
+		$insert = "INSERT INTO orders (orderId, orderDate, estimatedArriveDate, arriveDate, invoiceNumber, status, type, providerId, description, deliveryType, country)
+							 VALUES ('$orderId', null, null, null, null, 'TO_BUY', null, '".$provider->providerId."', null, 'Desconocido', '$country')" ;
 
 		if(mysql_query($insert)) {
 			$obj->successful = true;
@@ -331,10 +333,12 @@ function validate($order) {
 
 function getClothOrders($startDate, $endDate, $clothId, $invoiceNumber, $providerName, $groupName) {
 
+	global $country;
+
 	// all cloths between dates
 	$condition  = " AND STR_TO_DATE('$startDate', '%d-%m-%Y') <= o.arriveDate AND STR_TO_DATE('$endDate', '%d-%m-%Y') >= o.arriveDate ";
 
-	$condition .= isset($clothId) ? " AND c.id = '$clothId'" : '';
+	$condition .= isset($clothId) ? " AND c.id = '$clothId'" : " AND c.country = '$country'";
 
 	$condition .= isset($invoiceNumber) ? " AND o.invoiceNumber like '$invoiceNumber%'" : '';
 

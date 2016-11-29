@@ -1,9 +1,8 @@
 <?php
 
-function getUsers()
-{
+function getUsers() {
 
-	$query = "SELECT * FROM usuarios order by name";
+	$query = "SELECT * FROM usuarios order by country, name";
 	$result = mysql_query($query);
 
 	$rows = array();
@@ -34,18 +33,20 @@ function existsNewDispatch($id) {
 	$obj->successful = true;
 	$obj->method = 'existsNewDispatch';
 
-	$query = "SELECT u.newdispatch FROM usuarios u WHERE u.id = '$id'";
+	$query = "SELECT u.newdispatch, u.country FROM usuarios u WHERE u.id = '$id'";
 	$result = mysql_query($query);
 
 	$rows = array();
 	while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
 
 		$obj->existsNewDispatch = $row['newdispatch'];
+		$storedCountry = $row['country'];
 		if ($obj->existsNewDispatch) {
-			$query = "SELECT max(number) as number FROM dispatchs";
+			$query = "SELECT max(number) as number FROM dispatchs WHERE country = '$storedCountry'";
 			$res = mysql_query($query);
 			$maxdispatch = mysql_fetch_array($res, MYSQL_ASSOC);
 			$obj->number = $maxdispatch['number'];
+			$obj->query = $query;
 		}
 	}
 
@@ -66,10 +67,24 @@ function acceptNewDispatch($user) {
 	return $obj;
 }
 
-function getPlotterUsers()
-{
+function updateCountry($user) {
 
-	$query = "SELECT u.name FROM usuarios u join plotters p on lower(p.cuttedBy) = lower(u.name) group by u.name order by u.name";
+	$obj->successful = true;
+	$obj->method = 'updateCountry';
+
+	$update = "UPDATE usuarios SET country = '".$user->country."' WHERE id = '".$user->id."'";
+	if(!mysql_query($update)) {
+		$obj->successful = false;
+		$obj->update = $update;
+	}
+
+	return $obj;
+}
+
+function getPlotterUsers() {
+	global $country;
+
+	$query = "SELECT u.name FROM usuarios u join plotters p on lower(p.cuttedBy) = lower(u.name) WHERE u.country = '$country' group by u.name order by u.name";
 	$result = mysql_query($query);
 
 	$rows = array();
@@ -95,7 +110,11 @@ function getRoles() {
 
 function getSellerCodes() {
 
-	$query = "SELECT distinct(code) as name FROM usuarios WHERE code is not null ORDER BY code";
+	global $country, $sellerCountry;
+
+	$country = isset($sellerCountry) ? $sellerCountry : $country;
+
+	$query = "SELECT distinct(code) as name FROM usuarios u WHERE code is not null AND u.country = '$country' ORDER BY code";
 	$result = mysql_query($query);
 
 	$rows = array();
@@ -121,7 +140,7 @@ function addOrUpdateUser($user) {
 	if ($num_results != 0)
 	{
 		// update
-		$query = "UPDATE usuarios SET username = '".$user->username."', password = '".$user->password."', name = '".$user->name."', role = '".$user->role."', code = $code WHERE id = '".$user->id."'";
+		$query = "UPDATE usuarios SET username = '".$user->username."', password = '".$user->password."', name = '".$user->name."', role = '".$user->role."', country = '".$user->country."', code = $code WHERE id = '".$user->id."'";
 		if (! mysql_query($query)) {
 			// error en update
 			$methodResult = false;
@@ -129,7 +148,7 @@ function addOrUpdateUser($user) {
 	}
 	else {
 		// insert
-		$query = "INSERT INTO usuarios (id, username, password, name, role, code) VALUES ('".$user->id."', '".$user->username."', '".$user->password."', '".$user->name."', '".$user->role."', $code)";
+		$query = "INSERT INTO usuarios (id, username, password, name, role, code, country) VALUES ('".$user->id."', '".$user->username."', '".$user->password."', '".$user->name."', '".$user->role."', $code, '".$user->country."')";
 		if (! mysql_query($query)) {
 			// error en insert
 			$methodResult = false;

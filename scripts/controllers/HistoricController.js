@@ -17,7 +17,7 @@ angular.module('vsko.stock').controller('HistoricCtrl', ['$scope', '$rootScope',
 
 		$scope.previsions = result.data;
 
-		if (result.data[0].count > rows) {
+		if (result.data[0] && result.data[0].count > rows) {
 			$('#pagination').twbsPagination({
 		        totalPages: (result.data[0].count / rows) + 1,
 		        visiblePages: 7,

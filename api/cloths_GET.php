@@ -13,7 +13,8 @@ db_connect();
 
 $expand  = isset($_GET['expand']) ? $_GET['expand'] : null;
 $groupId = isset($_GET['groupId']) ? $_GET['groupId'] : null;
-
+$previsionCountry = isset($_GET['previsionCountry']) ? $_GET['previsionCountry'] : null;
+$clothCountry = isset($_GET['clothCountry']) ? $_GET['clothCountry'] : null;
 
 if(isset($_GET['id'])) {
 	$value = getCloth($_GET['id']);
@@ -23,6 +24,9 @@ else if(isset($_GET['dolar'])) {
 }
 else if(isset($_GET['pctNac'])) {
 	$value = getPctNac();
+}
+else if(isset($_GET['matchIds'])) {
+	$value = getClothsWithMatchIdsInCountry($_GET['matchIds'], $previsionCountry);
 }
 else {
 	$value = getCloths($groupId, $expand);

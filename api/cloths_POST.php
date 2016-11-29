@@ -10,6 +10,7 @@ db_connect();
 
 function saveCloth($cloth)
 {
+	global $country;
 
 	$query = "SELECT * FROM cloths c WHERE c.id = '".$cloth->id."'";
 	$result = mysql_query($query);
@@ -31,12 +32,23 @@ function saveCloth($cloth)
 		// insert
 		$groupId = $cloth->groupId ? "'".$cloth->groupId."'" : 'null';
 
-		$insert = "INSERT INTO cloths VALUES ('".$cloth->id."', '".$cloth->name."', '".$cloth->stockMin."', $groupId)" ;
+		$matchId = uniqid();
+
+		$insert = "INSERT INTO cloths (id, name, stockMin, groupId, matchClothId, country) VALUES ('".$cloth->id."', '".$cloth->name."', '".$cloth->stockMin."', $groupId, '$matchId', '$country')" ;
 
 		if(mysql_query($insert)) {
 			$obj->successful = true;
 			$obj->isNew = true;
+
+			$otherCountry = $country == 'ARG' ? 'BRA' : 'ARG';
+			$insert = "INSERT INTO cloths (id, name, stockMin, groupId, matchClothId, country) VALUES ('".uniqid()."', '".$cloth->name."', '".$cloth->stockMin."', $groupId, '$matchId', '$otherCountry')" ;
+
+			if(!mysql_query($insert)) {
+				$obj->successful = false;
+				$obj->insert = $insert;
+			}
 		}
+
 	}
 
 	$obj->cloth = $cloth;
@@ -59,6 +71,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 	}
 	else if(isset($_GET['pctNac'])) {
 		$value = savePctNac($json);
+	}
+	else if(isset($_GET['copy'])) {
+		$value = copyCloth($json, $_GET['clothCountry']);
 	}
 	else {
 		$value = saveCloth($json);

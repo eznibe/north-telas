@@ -16,6 +16,7 @@ db_connect();
 
 $designed = isset($_GET['designed']) ? $_GET['designed'] : null;
 $expand = isset($_GET['expand']) ? $_GET['expand'] : null;
+$storedCountry = isset($_GET['storedCountry']) ? $_GET['storedCountry'] : null;
 
 if(isset($_GET['id'])) {
 	$value = getPrevision($_GET['id']);

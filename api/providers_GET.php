@@ -12,7 +12,8 @@ db_connect();
 
 
 $expand  = isset($_GET['expand']) ? $_GET['expand'] : null;
-$clothId = isset($_GET['clothId']) ? $_GET['clothId'] : null; 
+$clothId = isset($_GET['clothId']) ? $_GET['clothId'] : null;
+$country = isset($_GET['country']) ? $_GET['country'] : 'ARG';
 
 
 if(isset($_GET['id'])) {
