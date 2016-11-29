@@ -20,8 +20,8 @@
 	<tbody>
 		<tr ng-repeat="b in boats | filter:searchBox ">
 			<td style="width:350px;">
-			 	<!--<editable-boat-name ng-model="b" style="display:inline-block;"></editable-boat-name>-->
-				<editable-input entity="b" field="'boat'" callback="changedName" style="display:inline-block;" editable-by-role="'admin,ordenes,produccion,velas-od'"></editable-input>
+			 	<editable-boat-name entity="b" style="display:inline-block;" editable-by-role="'admin,ordenes,produccion,velas-od'"></editable-boat-name>
+				<!-- <editable-input entity="b" field="'boat'" callback="changedName" style="display:inline-block;" editable-by-role="'admin,ordenes,produccion,velas-od'"></editable-input> -->
 			</td>
 			<td>
 				<onedesign-sails boat="b" open="showOneDesignModal" style="display:inline-block;"></onedesign-sails>

@@ -195,14 +195,20 @@ angular.module('vsko.stock')
 	}
 )
 
-.directive('editableBoatName', function($modal, OneDesign) {
+.directive('editableBoatName', function($modal, $rootScope, OneDesign) {
 
     return {
           restrict: 'E',
+          scope: {
+            entity: '=',
+            editableByRole: '='
+          },
           templateUrl: 'views/directives/editableBoatName.html',
           link: function postLink(scope, element, attrs) {
 
         	  var $scope = scope;
+
+            $scope.readonly = scope.editableByRole && scope.editableByRole.split(',').lastIndexOf($rootScope.user.role) == -1;
 
         	  $scope.changedName = function(boat) {
 
@@ -218,6 +224,8 @@ angular.module('vsko.stock')
 
         	  $scope.clickedName = function(boat) {
 
+              if(!scope.readonly) {
+
         		  	if(boat.editable) {
 	        		  	$('#boatEdit-'+boat.uiId).fadeOut('fast', function() {
 		      			    $('#boatDisplay-'+boat.uiId).fadeIn('fast');
@@ -232,6 +240,7 @@ angular.module('vsko.stock')
         		  	}
 
         		  	boat.editable = !boat.editable;
+              }
         	  };
           }
         };
