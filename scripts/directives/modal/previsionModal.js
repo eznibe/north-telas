@@ -339,7 +339,7 @@ angular.module('vsko.stock')
               }
 
               // special case when the country was changed -> remove from list
-              if ($scope.origPrevision.country != $scope.prevision.country) {
+              if ($scope.origPrevision.country && $scope.origPrevision.country != $scope.prevision.country) {
                 $scope.previsions.remove($scope.prevision);
               }
             }
@@ -430,7 +430,7 @@ angular.module('vsko.stock')
                     }
 
                     // special case when the country was changed -> remove from list
-                    if ($scope.origPrevision.country != $scope.prevision.country) {
+                    if ($scope.origPrevision.country && $scope.origPrevision.country != $scope.prevision.country) {
                       $scope.previsions.remove($scope.prevision);
                     }
                   }
