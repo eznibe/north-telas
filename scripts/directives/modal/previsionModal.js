@@ -296,7 +296,7 @@ angular.module('vsko.stock')
               }
             }
 
-            if($scope.prevision.selectedBoat.boat) {
+            if($scope.prevision.selectedBoat && $scope.prevision.selectedBoat.boat) {
               $scope.prevision.boat = $scope.prevision.selectedBoat.boat;
             }
 
