@@ -71,49 +71,51 @@
 	<thead>
 		<tr>
 			<th class="seller"><div class="rotate"><span translate>Seller col</span></div></th>
-			<th class="week"><div class="rotate"><span translate>Week col</span></div></th>
+			<th class="week" access-restricted="vendedor"><div class="rotate"><span translate>Week col</span></div></th>
 			<th class="priority" access-restricted="vendedor"><div class="rotate"><span translate>Priority col</span></div></th>
 			<th class="dispatch"><div class="rotate"><span translate>Dispatch</span></div></th>
 			<th class="orderNumber" translate>Order</th>
 			<th class="client" translate>Client</th>
 			<th class="boat" translate>Boat</th>
 			<th class="sailName" translate>Sail</th>
-			<th class="line"><div class="rotate"><span translate>Line</span></div></th>
+			<th class="line" access-restricted="vendedor"><div class="rotate"><span translate>Line</span></div></th>
 			<th class="percentage"><div><span translate>%</span></div></th>
 			<th class="advance"><div class="rotate"><span translate>Advance</span></div></th>
 			<th class="deliveryDate" translate style="min-width:95px;">Delivery date min</th>
-			<th class="tentativeDate" translate style="min-width:95px;">Tentative date min</th>
+			<th class="tentativeDate" access-restricted="vendedor" translate style="min-width:95px;">Tentative date min</th>
 			<th class="productionDate" access-restricted="vendedor" translate style="min-width:95px;">Production date min</th>
 			<th class="infoDate" translate style="min-width:95px;">Info date min</th>
 			<th class="advanceDate" translate style="min-width:95px;">Advance date min</th>
-			<th class="cloths" translate>Cloths</th>
+			<th class="cloths" access-restricted="vendedor" translate>Cloths</th>
 			<th class="state" access-restricted="vendedor" translate>State col</th>
 			<th class="area" access-restricted="vendedor" translate>Area</th>
 			<th class="productionObservations" access-restricted="vendedor" translate>Observations</th>
+			<th class="designObservations" access-allowed="vendedor" translate>Design observations col</th>
 			<th access-allowed="admin,produccion,velas-od" access-restricted="vendedor" translate>Archive</th>
 		</tr>
 		<tr class="production-filter">
 			<th class="seller" ng-style="{'background-color': headerBackgroundColor(selectionObject.seller)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('seller');" style="text-align:center; cursor:pointer;"></span></div></th>
-			<th class="week" ng-style="{'background-color': headerBackgroundColor(selectionObject.week)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('week');" style="text-align:center; cursor:pointer;"></span></div></th>
+			<th class="week" ng-style="{'background-color': headerBackgroundColor(selectionObject.week)}" access-restricted="vendedor"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('week');" style="text-align:center; cursor:pointer;"></span></div></th>
 			<th class="priority" ng-style="{'background-color': headerBackgroundColor(selectionObject.priority)}" access-restricted="vendedor"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('priority');" style="text-align:center; cursor:pointer;"></span></div></th>
 			<th class="dispatch" ng-style="{'background-color': headerBackgroundColor(selectionObject.dispatch)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('dispatch');" style="text-align:center; cursor:pointer;"></div></th>
 			<th class="orderNumber" ng-style="{'background-color': headerBackgroundColor(selectionObject.orderNumber)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('orderNumber');" style="text-align:center; cursor:pointer;"></div></th>
 			<th class="client" ng-style="{'background-color': headerBackgroundColor(selectionObject.client)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('client');" style="text-align:center; cursor:pointer;"></span></div></th>
 			<th class="boat" ng-style="{'background-color': headerBackgroundColor(selectionObject.boat)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('boat');" style="text-align:center; cursor:pointer;"></div></th>
 			<th class="sailName" ng-style="{'background-color': headerBackgroundColor(selectionObject.sailName)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('sailName');" style="text-align:center; cursor:pointer;"></div></th>
-			<th class="line" ng-style="{'background-color': headerBackgroundColor(selectionObject.line)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('line');" style="text-align:center; cursor:pointer;"></div></th>
+			<th class="line" ng-style="{'background-color': headerBackgroundColor(selectionObject.line)}" access-restricted="vendedor"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('line');" style="text-align:center; cursor:pointer;"></div></th>
 			<th class="percentage" ng-style="{'background-color': headerBackgroundColor(selectionObject.percentage)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('percentage');" style="text-align:center; cursor:pointer;"></div></th>
 			<th class="advance" ng-style="{'background-color': headerBackgroundColor(selectionObject.advance)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('advance');" style="text-align:center; cursor:pointer;"></div></th>
 			<th class="deliveryDate" ng-style="{'background-color': headerBackgroundColor(selectionObject.deliveryDate)}" style="min-width:95px;"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('deliveryDate');" style="text-align:center; cursor:pointer;"></span></div></th>
-			<th class="tentativeDate" ng-style="{'background-color': headerBackgroundColor(selectionObject.tentativeDate)}" style="min-width:95px;"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('tentativeDate');" style="text-align:center; cursor:pointer;"></div></th>
+			<th class="tentativeDate" ng-style="{'background-color': headerBackgroundColor(selectionObject.tentativeDate)}" access-restricted="vendedor" style="min-width:95px;"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('tentativeDate');" style="text-align:center; cursor:pointer;"></div></th>
 			<th class="productionDate" ng-style="{'background-color': headerBackgroundColor(selectionObject.productionDate)}" access-restricted="vendedor" style="min-width:95px;"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('productionDate');" style="text-align:center; cursor:pointer;"></div></th>
 			<th class="infoDate" ng-style="{'background-color': headerBackgroundColor(selectionObject.infoDate)}" style="min-width:95px;"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('infoDate');" style="text-align:center; cursor:pointer;"></div></th>
 			<th class="advanceDate" ng-style="{'background-color': headerBackgroundColor(selectionObject.advanceDate)}" style="min-width:95px;"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('advanceDate');" style="text-align:center; cursor:pointer;"></div></th>
-			<th class="cloths" ng-style="{'background-color': headerBackgroundColor(selectionObject.cloths)}" style="min-width:95px;"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('cloths');" style="text-align:center; cursor:pointer;"></div></th>
+			<th class="cloths" ng-style="{'background-color': headerBackgroundColor(selectionObject.cloths)}" style="min-width:95px;" access-restricted="vendedor"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('cloths');" style="text-align:center; cursor:pointer;"></div></th>
 			<!-- <th class="cloths"></th> -->
 			<th class="state" ng-style="{'background-color': headerBackgroundColor(selectionObject.state)}" access-restricted="vendedor"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('state');" style="text-align:center; cursor:pointer;"></div></th>
 			<th class="area" ng-style="{'background-color': headerBackgroundColor(selectionObject.area)}" access-restricted="vendedor"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('area');" style="text-align:center; cursor:pointer;"></div></th>
 			<th class="productionObservations" access-restricted="vendedor"></th>
+			<th class="designObservations" access-allowed="vendedor"></th>
 			<th class="production-filter" access-allowed="admin,produccion,velas-od" access-restricted="vendedor"></th>
 		</tr>
 	</thead>
@@ -122,7 +124,7 @@
 			<td class="seller" ng-show="::visibility.selected('seller')">
 				<span ng-bind=":refreshColumnsValue:getValue(p, 'seller')"></span>
 			</td>
-			<td class="week" ng-show="::visibility.selected('week')" ng-mouseover="::oneTimeBindings.showPopupList('weeks');" ng-mouseleave="::oneTimeBindings.hidePopupList('weeks');" ng-style=":refreshErrorBackground:visibility.errorStyle(p, 'week');">
+			<td class="week" ng-show="::visibility.selected('week')" ng-mouseover="::oneTimeBindings.showPopupList('weeks');" ng-mouseleave="::oneTimeBindings.hidePopupList('weeks');" ng-style=":refreshErrorBackground:visibility.errorStyle(p, 'week');" access-restricted="vendedor">
 				<editable-production-input entity="::p" field="'week'" callback="::changedPrevision.numericField" editable-by-role="'admin,produccion'" width="20" style="display:inline-block;"></editable-production-input>
 			</td>
 			<td class="priority" ng-show="::visibility.selected('priority')" access-restricted="vendedor">
@@ -144,7 +146,7 @@
 			<td class="sailName" ng-show="::visibility.selected('sailName')" nowrap>
 				{{:refreshColumnsValue:getValue(p, 'sailName')}}
 			</td>
-			<td class="line" ng-show="::visibility.selected('line')">
+			<td class="line" ng-show="::visibility.selected('line')" access-restricted="vendedor">
 				{{:refreshColumnsValue:getValue(p, 'line')}}
 			</td>
 			<td class="percentage" ng-show="::visibility.selected('percentage')" style="min-width:30px;" ng-mouseover="::oneTimeBindings.showPopupList('percentages');" ng-mouseleave="::oneTimeBindings.hidePopupList('percentages');" ng-style=":refreshErrorBackground:visibility.errorStyle(p, 'percentage');">
@@ -156,7 +158,7 @@
 			<td class="deliveryDate" ng-show="::visibility.selected('deliveryDate')" class="column-date" nowrap ng-style=":refreshErrorBackground:visibility.errorStyle(p, 'deliveryDate');">
 				<editable-date entity="::p" field="deliveryDate" callback="::updateDate" editable-by-role="'admin,produccion'" style="display:inline-block;" required="true"></editable-date>
 			</td>
-			<td class="tentativeDate" ng-show="::visibility.selected('tentativeDate')" class="column-date" nowrap ng-style=":refreshErrorBackground:visibility.errorStyle(p, 'tentativeDate');">
+			<td class="tentativeDate" ng-show="::visibility.selected('tentativeDate')" class="column-date" nowrap ng-style=":refreshErrorBackground:visibility.errorStyle(p, 'tentativeDate');" access-restricted="vendedor">
 				<editable-date entity="::p" field="tentativeDate" callback="::updateDate" editable-by-role="'admin,produccion'" style="display:inline-block;"></editable-date>
 			</td>
 			<td class="productionDate" ng-show="::visibility.selected('productionDate')" class="column-date" nowrap access-restricted="vendedor" ng-style=":refreshErrorBackground:visibility.errorStyle(p, 'productionDate');">
@@ -168,7 +170,7 @@
 			<td class="advanceDate" ng-show="::visibility.selected('advanceDate')" class="column-date" nowrap ng-style=":refreshErrorBackground:visibility.errorStyle(p, 'advanceDate');">
 				<editable-date entity="::p" field="advanceDate" callback="::updateDate" editable-by-role="'admin,produccion'" style="display:inline-block;"></editable-date>
 			</td>
-			<td class="cloths" ng-show="::visibility.selected('cloths')">
+			<td class="cloths" ng-show="::visibility.selected('cloths')" access-restricted="vendedor">
 				<prevision-cloths prevision="::p" style="display:inline-block;"></prevision-cloths>
 			</td>
 			<td class="state" ng-show="::visibility.selected('state')" access-restricted="vendedor" style="text-align: center;">
@@ -184,6 +186,9 @@
 			</td>
 			<td class="productionObservations" ng-show="::visibility.selected('productionObservations')" style="min-width:110px;" access-restricted="vendedor" ng-style=":refreshErrorBackground:visibility.errorStyle(p, 'productionObservations');">
 				<editable-production-textarea entity="::p" field="'productionObservations'" callback="::changedPrevision.field" editable-by-role="'admin,produccion'" width="82" style="display:inline-block;"></editable-production-textarea>
+			</td>
+			<td class="designObservations" ng-show="::visibility.selected('designObservations')" style="min-width:110px;" access-allowed="vendedor" ng-style=":refreshErrorBackground:visibility.errorStyle(p, 'designObservations');">
+				<editable-production-observations entity="::p" field="'designObservations'" callback="::changedPrevision.field" edit-disabled="designObservationsDisabled" editable-by-role="'vendedor'" style="display:inline-blockzz;"></editable-production-observations>
 			</td>
 			<td style="width:80px; text-align:center;" access-allowed="admin,produccion,velas-od">
 				<!-- <a ng-click="showArchiveConfirmModal(p, null, removeFromProduction)" class="btn btn-default small-button"> -->

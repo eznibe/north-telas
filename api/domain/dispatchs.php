@@ -219,7 +219,7 @@ function saveDispatch($dispatch)
 			$obj->isNew = true;
 
 			// update to notify all other users of the new dispatch created
-			$update = "UPDATE usuarios SET newdispatch = true WHERE id != '".$dispatch->userId."' AND country = '$country'";
+			$update = "UPDATE usuarios SET newdispatch = true WHERE id != '".$dispatch->userId."' AND country = '$country' AND role != 'vendedor'";
 			if(!mysql_query($update)) {
 				$obj->successful = false;
 				$obj->update = $update;

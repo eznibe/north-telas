@@ -346,6 +346,10 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 		});
 	};
 
+	$scope.designObservationsDisabled = function(entity) {
+		return +entity.percentage >= 6;
+	}
+
 	$scope.changedPrevision = {
 		numericField: function(entity, value, fieldName) {
 

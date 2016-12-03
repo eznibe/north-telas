@@ -675,6 +675,110 @@ angular.module('vsko.stock')
 	}
 )
 
+.directive('editableProductionObservations', function($modal, $rootScope) {
+
+	return {
+        restrict: 'E',
+        scope: {
+        	field: '=',
+        	entity: '=',
+        	callback: '=',
+          editableByRole: '=',
+          editDisabled: '='
+        },
+        templateUrl: 'views/directives/editableProductionObservations.html',
+        link: function postLink(scope, element, attrs) {
+
+          scope.editable = false;
+          scope.over = false;
+          if (scope.required === undefined) {
+            scope.required = false;
+          }
+
+          scope.readonly = scope.editableByRole && scope.editableByRole.split(',').lastIndexOf($rootScope.user.role) == -1;
+
+          scope.oneTimeBindings = {
+            mouseOver: function(entity) {
+              scope.over = true;
+              scope.$broadcast('$$rebind::refreshPencil');
+            },
+            mouseLeave: function(entity) {
+              scope.over = false;
+              scope.$broadcast('$$rebind::refreshPencil');
+            },
+            showPencil: function() {
+              return !scope.entity[scope.field] && scope.over && !scope.editable && !scope.readonly;
+            },
+
+            getExtraLabel: function() {
+              if (!scope.extraLabel) {
+                return '';
+              }
+              return scope.extraLabel;
+            },
+            getFieldValue: function() {
+              if (!scope.entity[scope.field]) {
+                return '';
+              }
+              return scope.entity[scope.field].length > 100 ? (scope.entity[scope.field].substr(0, 100) + '...') : scope.entity[scope.field];
+            },
+            textareaStyle: function() {
+              return {'width': scope.width ? scope.width+'px' : '95%', 'height': '200px', 'font-size': '10px'};
+            },
+            boxStyle: function() {
+              return {'min-height': '20px'};
+            }
+          };
+
+      	  scope.changed = function(entity) {
+
+            if(!scope.required || entity[scope.field]) {
+              scope.callback(entity, entity[scope.field], scope.field);
+
+              scope.clicked(entity);
+
+              scope.$broadcast('$$rebind::refreshLinkValue');
+            }
+      	  };
+
+      	  scope.clicked = function(entity) {
+
+            if(!scope.readonly && (!scope.editDisabled || !scope.editDisabled(scope.entity))) {
+
+              if(scope.editable) {
+                $('#entityEdit-'+entity.id+'-'+scope.field).hide();
+                $('#entityDisplay-'+entity.id+'-'+scope.field).fadeIn('fast');
+                $('#entityPencil-'+entity.id+'-'+scope.field).fadeIn('fast');
+
+                if(scope.tooltipText) {
+                  $('#value-'+scope.entity.id+'-'+scope.field).tooltip({title: scope.tooltipText });
+                }
+              }
+      		  	else {
+
+                if (scope.entity[scope.field]) {
+                  $('#entityDisplay-'+entity.id+'-'+scope.field).fadeOut('fast', function() {
+                    $('#entityEdit-'+entity.id+'-'+scope.field).fadeIn('fast');
+                    $('#entityPencil-'+entity.id+'-'+scope.field).fadeOut('fast');
+                  });
+                } else {
+                  $('#entityPencil-'+entity.id+'-'+scope.field).fadeOut('fast', function() {
+                    $('#entityEdit-'+entity.id+'-'+scope.field).fadeIn('fast');
+                    $('#entityDisplay-'+entity.id+'-'+scope.field).fadeOut('fast');
+                  });
+                }
+
+                scope.$broadcast('$$rebind::refreshDateInput');
+      		  	}
+
+      		  	scope.editable = !scope.editable;
+            }
+      	  };
+        }
+      };
+	}
+)
+
 .directive('editableDate', function($modal, $rootScope) {
 
 	return {
