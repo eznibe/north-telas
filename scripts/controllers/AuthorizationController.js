@@ -20,7 +20,7 @@ angular.module('vsko.stock').controller('AuthorizationCtrl', ['$scope', '$rootSc
 					// store in cookie to have access after a f5 reload
 					$cookieStore.put('user', $rootScope.user);
 
-					if($location.path() != '/login') {
+					if($location.path() != '/login' && $rootScope.user.role != 'vendedor') {
 						// reload the same view the user tried to enter
 						// $route.reload();
             $window.location.reload();
