@@ -121,6 +121,7 @@ function updatePrevisionState($clothIdsStr, $skipUpdateStateAccepted) {
 	global $touchedPrevisions;
 	global $builtPrevisions;
 	global $recurses;
+	global $country;
 	$touchedPrevisions = array();
 	$builtPrevisions = array();
 	$recurses = 0;
@@ -137,9 +138,10 @@ function updatePrevisionState($clothIdsStr, $skipUpdateStateAccepted) {
 			// process each of the given cloths
 
 			// seek the last prevision by delivery date (including previsions of given cloth still in plotter)
-			$query = "SELECT pre.id, pre.deliveryDate, pre.createdOn, pre.orderNumber, IF(pl.id is null, 'in_design', 'in_plotter') as location
+			$query = "SELECT pre.id, pre.deliveryDate, pre.createdOn, pre.orderNumber, IF(pl.id is null, 'in_design', 'in_plotter') as location, c.country as clothCountry
 								FROM previsions pre
 								JOIN previsioncloth pc on pc.previsionId = pre.id
+								JOIN cloths c on c.id = pc.clothId
 								LEFT JOIN plotters pl on pl.previsionId = pre.id
 								WHERE (pre.designed=false or (pre.designed=true and pl.id is not null))
 									AND (pl.cutted is null or pl.cutted=false)
@@ -160,6 +162,7 @@ function updatePrevisionState($clothIdsStr, $skipUpdateStateAccepted) {
         $prevision['cloths'] = getPrevisionCloths($prevision);
 
 				//$obj->prevCloths = $prevision['cloths'];
+				$country = $prevision['clothCountry'];
 
 				$prevision = buildPrevisionStateData($clothsDisponibility, $prevision);
 				array_push($builtPrevisions, $prevision);

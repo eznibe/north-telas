@@ -215,7 +215,7 @@ angular.module('vsko.stock')
 					var d = $q.defer();
 					var startTime = Date.now();
 
-					var previInitiator = previsionId ? ('&preivsionInitiator = ' + previsionId) : '';
+					var previInitiator = previsionId ? ('&previsionInitiator=' + previsionId) : '';
 
 					$http.post(url + 'previsions_POST.php?updatePrevisionState=true&clothIds='+clothIds + previInitiator, clothIds).then(function(result) {
 						Utils.logTiming(startTime, url + 'previsions_POST.php?updatePrevisionState=true&clothIds='+clothIds, 'previsions.updatePrevisionState', 'POST', clothIds);
