@@ -171,6 +171,8 @@ function getPrevision($id) {
 // check if the given orderNumber already exist in the system
 function validateOrderNumber($orderNumber) {
 
+	global $country;
+
 	$obj->valid = true;
 
 	$query = "SELECT * FROM previsions p WHERE p.orderNumber = '$orderNumber' and p.country = '$country' and id not like '%-prev%'";
