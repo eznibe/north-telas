@@ -248,6 +248,8 @@ function getRollCuts($rollId, $clothId) {
 
 function getClothRolls($clothId, $onlyAvailables) {
 
+	global $country;
+
 	$condition = "";
 	if(isset($onlyAvailables) && $onlyAvailables=="true") {
 		$condition = " AND r.mts > 0";
@@ -263,9 +265,10 @@ function getClothRolls($clothId, $onlyAvailables) {
 		$query = "SELECT r.id, r.number, r.lote, r.type, r.mtsOriginal, coalesce(sum(pc.mtsCutted), 0) as sumCutted, (r.mtsOriginal - coalesce(sum(pc.mtsCutted), 0)) as calculatedMts, r.mts, r.incoming, o.status as orderStatus, p.*
 							FROM rolls r
 							JOIN products p on p.productId=r.productId
+							JOIN providers pro on pro.id = p.providerId
 							left join plottercuts pc on pc.rollId=r.id
 							left join orders o on o.orderId=r.orderId
-							WHERE p.clothId = '$clothId'
+							WHERE p.clothId = '$clothId' AND pro.country = '$country'
 							$condition
 							group by r.id, r.number, r.lote, r.type, r.mtsOriginal, r.incoming
 							order by r.number";
