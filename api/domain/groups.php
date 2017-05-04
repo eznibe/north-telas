@@ -58,6 +58,8 @@ function getGroups($expand)
 
 function saveGroup($group) {
 
+	global $country;
+
 	$obj->successful = true;
 	$obj->isNew = !isset($group->id);
 
@@ -76,7 +78,7 @@ function saveGroup($group) {
 		}
 
 		// insert new group
-		$insert = "INSERT INTO groups VALUES ('".$group->id."', '".$group->name."')" ;
+		$insert = "INSERT INTO groups VALUES ('".$group->id."', '".$group->name."', 'ARG')" ; // always ARG as country for the moment,those are also showed in BRA
 
 		if(!mysql_query($insert)) {
 			$obj->successful = false;
