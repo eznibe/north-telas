@@ -32,7 +32,7 @@ angular.module('vsko.stock')
         			  $scope.cloth = {};
         		  }
 
-          	  Stock.getAllGroups().then(function(result){
+          	  Stock.getAllGroups(true).then(function(result){
           		  $scope.groups = $scope.groups ? $scope.groups : result.data;
 
           		  $.each($scope.groups, function(index, value){
@@ -61,17 +61,22 @@ angular.module('vsko.stock')
 
               cloth.selectedGroup = null;
 
-        		  Stock.saveCloth(cloth).then(function(result){
+              if (cloth.groupId) {
 
-                $scope.modalCloth.hide();
+                Stock.saveCloth(cloth).then(function(result){
 
-                Utils.showMessage('notify.saved_changes');
+                  $scope.modalCloth.hide();
 
-        			  Stock.getAllGroups().then(function(result){
-        				    // refresh groups because of possible modification in the cloth group
-                  	$scope.groups = result.data;
+                  Utils.showMessage('notify.saved_changes');
+
+                  Stock.getAllGroups().then(function(result){
+                    // refresh groups because of possible modification in the cloth group
+                    $scope.groups = result.data;
+                  });
                 });
-        		  });
+              } else {
+                Utils.showMessage('notify.missing_group', 'error');
+              }
         	  };
 
             $scope.deleteCloth = function(cloth) {
