@@ -11,21 +11,26 @@ angular.module('vsko.stock').controller('DesignCtrl', ['$scope', 'Utils', 'Previ
 
           Previsions.designed(prevision).then(function(result) {
 
-            prevision.designed = true;
+            if (result.data.successful) {
 
-            Rules.updatePrevisionPercentage(prevision, true);
+              prevision.designed = true;
 
-            $scope.previsions.remove(prevision);
+              Rules.updatePrevisionPercentage(prevision, true);
 
-            console.log('Designed: '+prevision.orderNumber);
+              $scope.previsions.remove(prevision);
 
-            Utils.showMessage('notify.order_to_plotter');
+              console.log('Designed: '+prevision.orderNumber);
 
-            var clothsIds = prevision.cloths.map(function(c) { return c.clothId; }).join(',');
+              Utils.showMessage('notify.order_to_plotter');
 
-            Previsions.updatePrevisionState(clothsIds, prevision.id).then(function() {
-              Utils.showMessage('notify.previsions_state_updated');
-            });
+              var clothsIds = prevision.cloths.map(function(c) { return c.clothId; }).join(',');
+
+              Previsions.updatePrevisionState(clothsIds, prevision.id).then(function() {
+                Utils.showMessage('notify.previsions_state_updated');
+              });
+            } else {
+              Utils.showMessage('notify.order_to_plotter_error', 'error');
+            }
           });
 
           //prevision.designed = prevision.designed ? !prevision.designed : true;

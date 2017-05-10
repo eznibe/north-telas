@@ -121,6 +121,33 @@ function updateRollField($roll, $rollField, $value) {
 		$obj->roll->mts = $newMts;
 	}
 
+	// special case mts, a plotter and plottercut should be created for the corrected mts in order to allow reports to get the available mts correctly
+	if($rollField == 'mts') {
+
+		$query = "SELECT r.*, p.clothId FROM rolls r join products p on r.productId=p.productId WHERE r.id = '".$roll->id."' ";
+
+		$result = mysql_query($query);
+
+		while($subrow = mysql_fetch_array($result, MYSQL_ASSOC)) { // unique result
+
+			$currentMts = $subrow['mts'];
+
+			$difference = $currentMts - $value;
+
+			$newPlotterId = uniqid();
+
+			$insert = "INSERT INTO plotters (id, plotterDate, clothId, observations, cutted, cuttedOn, cuttedBy)
+								 VALUES ('$newPlotterId', CURRENT_DATE, '".$subrow['clothId']."', 'Plotter especial, roll mts correcion', true, CURRENT_DATE, 'automatic')";
+
+			mysql_query($insert);
+
+			$insert = "INSERT INTO plottercuts (id, plotterId, mtsCutted, rollId)
+								 VALUES (uuid(), '$newPlotterId', $difference, '".$roll->id."')";
+
+			mysql_query($insert);
+		}
+	}
+
 	$obj->log = logRollPreviousModification($roll->id, "rolls.updateRollField($rollField)", null);
 
 	$update = "UPDATE rolls SET $rollField = '".$value."' $extraUpdate WHERE id = '".$roll->id."'";

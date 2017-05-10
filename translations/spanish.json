@@ -339,7 +339,8 @@
     "delete_orderitem_error": "No se pudo remover el item, intente de nuevo.",
     "cut_assigned_error": "Error asignando corte, intente de nuevo.",
     "missing_cloth_in_new_country": "No existen las siguientes telas en el nuevo país => {{missingCloths}}",
-    "missing_group": "El grupo es requerido."
+    "missing_group": "El grupo es requerido.",
+    "order_to_plotter_error": "Orden no pudo ser pasada a plotter."
   },
   "percentages": {
     "title": "% de Producción",

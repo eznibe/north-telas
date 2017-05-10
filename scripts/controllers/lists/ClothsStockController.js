@@ -14,7 +14,7 @@ angular.module('vsko.stock').controller('ClothsStockCtrl', ['$scope', 'Stock', '
 				if($scope.filter.selectedGroup) {
 
 						if($scope.filter.upToDate) {
-							Lists.stockUpToDate($scope.filter.selectedGroup.id, $scope.filter.upToDate).then(function(result) {
+							Lists.stockUpToDate($scope.filter.selectedGroup.id, $scope.filter.upToDate, false).then(function(result) {
 								$scope.cloths = result.data;
 							});
 						}
