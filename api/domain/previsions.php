@@ -1,5 +1,7 @@
 <?php
 
+include_once 'logs.php';
+
 function getPrevisions($clothId, $designed, $expand, $production, $historic, $sellerCode, $offset, $filters)
 {
 	global $country, $storedCountry;
@@ -385,29 +387,51 @@ function setDesigned($prevision) {
 
 	$observations = (isset($prevision->observations) && $prevision->observations!='') ? "'".$prevision->observations."'" : 'null';
 
-	// insert all the cloths in the prevision in the plotters table
-	foreach ($prevision->cloths as $cloth) {
+	// TODO check the prevision is not already designed
+	$query = "SELECT * FROM previsions p WHERE p.id = '".$prevision->id."' ";
 
-		$insert = "INSERT INTO plotters (id, previsionId, clothId, mtsDesign, plotterDate, manualPlotterId, observations, cutted, cuttedOn, cuttedBy, country)
-				values ('".uniqid()."', '".$cloth->previsionId."', '".$cloth->clothId."', ".$cloth->mts.", CURRENT_DATE, null, ".$observations.", false, null, null, '".$prevision->country."')";
+	$result = mysql_query($query);
 
-		if(!mysql_query($insert)) {
-			$obj->successfulInsert = false;
-			$obj->insert = $insert;
-		}
-		else {
-			$obj->successfulInsert = true;
+	while($subrow = mysql_fetch_array($result, MYSQL_ASSOC)) { // unique result
 
-			logPrevisionUpdateFull($prevision->id, 'setDesigned');
-
-			$update = "UPDATE previsions SET designed = true, designedOn = CURRENT_DATE WHERE id = '".$prevision->id."'";
-
-			if(!mysql_query($update))
-				$obj->successful = false;
-		}
+		$isDesigned = $subrow['designed'];
 	}
 
-	$prevision->designed = true;
+	if ($isDesigned == "0") {
+
+		// insert all the cloths in the prevision in the plotters table
+		foreach ($prevision->cloths as $cloth) {
+
+			$insert = "INSERT INTO plotters (id, previsionId, clothId, mtsDesign, plotterDate, manualPlotterId, observations, cutted, cuttedOn, cuttedBy, country)
+			values ('".uniqid()."', '".$cloth->previsionId."', '".$cloth->clothId."', ".$cloth->mts.", CURRENT_DATE, null, ".$observations.", false, null, null, '".$prevision->country."')";
+
+			if(!mysql_query($insert)) {
+				$obj->successfulInsert = false;
+				$obj->insert = $insert;
+			}
+			else {
+				$obj->successfulInsert = true;
+
+				logPrevisionUpdateFull($prevision->id, 'setDesigned');
+
+				$update = "UPDATE previsions SET designed = true, designedOn = CURRENT_DATE WHERE id = '".$prevision->id."'";
+
+				if(!mysql_query($update))
+					$obj->successful = false;
+			}
+		}
+
+		$prevision->designed = true;
+
+	} else {
+		// log intention to setdesigned a prevision already designed
+		$log->type = "setDesigned.alreadyDesigned";
+		$log->log = $prevision->id;
+		$log->user = "backend";
+		addLog($log);
+
+		$obj->successful = false;
+	}
 
 	return $obj;
 }
