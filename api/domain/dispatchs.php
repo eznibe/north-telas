@@ -473,5 +473,16 @@ function updateDispatchPrevisionCarry($prevision) {
 	return $obj;
 }
 
+function isInSomeDispatch($previsionId) {
+
+	$query = "SELECT count(*) as count FROM dispatchprevisions dp where dp.previsionId = '$previsionId'";
+
+	$result = mysql_query($query);
+
+	$rows = fetch_array($result);
+
+	return $rows[0]['count'] == '0' ? false : true;
+}
+
 
 ?>

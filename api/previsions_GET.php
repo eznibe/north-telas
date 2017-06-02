@@ -11,6 +11,7 @@ include_once 'domain/plotters.php';
 include_once 'domain/orders.php';
 include_once 'domain/previsions.php';
 include_once 'domain/previsionStates.php';
+include_once 'domain/dispatchs.php';
 
 db_connect();
 
@@ -49,6 +50,9 @@ else if(isset($_GET['updatePrevisionState'])) {
 }
 else if(isset($_GET['weeksBySeason'])) {
 	$value = getWeeksBySeason($_GET['weeksBySeason']);
+}
+else if(isset($_GET['isInSomeDispatch'])) {
+	$value = isInSomeDispatch($_GET['previsionId']);
 }
 else {
 	$value = getPrevisions(null, $designed, $expand, null);

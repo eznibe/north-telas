@@ -318,7 +318,6 @@
     "group_updated": "Grupo {{groupName}} actualizado.",
     "buy_amount": "Cantidad a comprar: {{amount}} mts",
     "buy_assigned": "Compra asignada a orden #{{orderNumber}}",
-
     "dispatch_added": "Nuevo despacho agregado.",
     "dispatch_updated": "Despacho actualizado.",
     "dispatch_removed": "Despacho borrado.",
@@ -340,7 +339,9 @@
     "cut_assigned_error": "Error asignando corte, intente de nuevo.",
     "missing_cloth_in_new_country": "No existen las siguientes telas en el nuevo país => {{missingCloths}}",
     "missing_group": "El grupo es requerido.",
-    "order_to_plotter_error": "Orden no pudo ser pasada a plotter."
+    "order_to_plotter_error": "Orden no pudo ser pasada a plotter.",
+
+    "prevision_assign_error": "Orden ya asignada en otro despacho."
   },
   "percentages": {
     "title": "% de Producción",
