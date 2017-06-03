@@ -25,7 +25,7 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 	var firstLoad = true;
 
 	var defaultFilters = {orderList: [], limit: $scope.rows, default: true};
-	defaultFilters.orderList.push({key: 'week', type: 'str', mode: 'order.ascending'});
+	defaultFilters.orderList.push({key: 'week', type: 'str', mode: 'order.ascending', mode2: 'order.ascending'});
 
 	if (!$rootScope.forceNotLoad) { // very special case when after login it is forced to not load the initial list
 		Previsions.getPrevisionsForProduction($rootScope.user.sellerCode, defaultFilters, 0).then(function(result) {
@@ -130,7 +130,8 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 
 	$scope.filterOptions.orderTypes = [{name: 'Order ascending', key:'order.ascending'},
   													 				 {name: 'Order descending', key:'order.descending'}];
-  $scope.filterOptions.orderMode = 'order.ascending';
+  $scope.filterOptions.orderMode1 = 'order.ascending';
+	$scope.filterOptions.orderMode2 = 'order.ascending';
 	$scope.filterOptions.selectedOrderBy = $scope.filterOptions.columns[1];
   $scope.filterOptions.selectedOrderType = $scope.filterOptions.orderTypes[0];
 
@@ -198,10 +199,10 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 
 		$scope.filter.orderList = [];
 		if ($scope.filterOptions.selectedOrderBy) {
-			$scope.filter.orderList.push({key: $scope.filterOptions.selectedOrderBy.key, type: $scope.filterOptions.selectedOrderBy.type, mode: $scope.filterOptions.orderMode});
+			$scope.filter.orderList.push({key: $scope.filterOptions.selectedOrderBy.key, type: $scope.filterOptions.selectedOrderBy.type, mode: $scope.filterOptions.orderMode1});
 		}
 		if ($scope.filterOptions.selectedOrderBy2) {
-			$scope.filter.orderList.push({key: $scope.filterOptions.selectedOrderBy2.key, type: $scope.filterOptions.selectedOrderBy2.type, mode: $scope.filterOptions.orderMode});
+			$scope.filter.orderList.push({key: $scope.filterOptions.selectedOrderBy2.key, type: $scope.filterOptions.selectedOrderBy2.type, mode: $scope.filterOptions.orderMode2});
 		}
 
 		$scope.filter.searchBox = $scope.searchBox;
@@ -422,9 +423,13 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 	$scope.clearFilterOption = function() {
 	};
 
-	$scope.changeSortOrder = function() {
+	$scope.changeSortOrder = function(position) {
 
-		$scope.filterOptions.orderMode = $scope.filterOptions.orderMode == 'order.ascending' ? 'order.descending' : 'order.ascending';
+		if (position === 1) {
+			$scope.filterOptions.orderMode1 = $scope.filterOptions.orderMode1 == 'order.ascending' ? 'order.descending' : 'order.ascending';
+		} else {
+			$scope.filterOptions.orderMode2 = $scope.filterOptions.orderMode2 == 'order.ascending' ? 'order.descending' : 'order.ascending';
+		}
 		$scope.search(1);
 	}
 
