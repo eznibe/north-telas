@@ -104,6 +104,22 @@ angular.module('vsko.stock')
               $scope.modalDispatch.hide();
             };
 
+            $scope.printDispatch = function(dispatch) {
+
+              $('#d_number').html($scope.dispatch.number);
+              $('#d_dispatchDate').html($scope.dispatch.dispatchDate);
+              $('#d_value').html($scope.dispatch.value);
+              $('#d_destinatary').html($scope.dispatch.destinatary);
+
+              $('#d_address').html($scope.dispatch.address);
+              $('#d_destiny').html($scope.dispatch.destiny);
+              $('#d_transport').html($scope.dispatch.transport);
+              $('#d_deliveryType').html($scope.dispatch.deliveryType);
+              $('#d_tracking').html($scope.dispatch.tracking);
+
+              $('#printDispatch').printThis();
+            }
+
             // Dispatch prevision functions
 
             $scope.addPrevision = function(prevision) {
