@@ -683,6 +683,42 @@ function deletePrevision($id) {
 	return $obj;
 }
 
+function weekUp($req) {
+
+	$obj->successful = true;
+
+	foreach ($req->ids as $id) {
+		logPrevisionUpdateFull($id, 'weekUp');
+
+		$update = "UPDATE previsions SET week = week + 1 WHERE id = '$id'";
+
+		if(!mysql_query($update)) {
+			$obj->successful = false;
+			$obj->update = $update;
+		}
+	}
+
+	return $obj;
+}
+
+function weekDown($req) {
+
+	$obj->successful = true;
+
+	foreach ($req->ids as $id) {
+		logPrevisionUpdateFull($id, 'weekDown');
+
+		$update = "UPDATE previsions SET week = (case when week > 0 then week-1 else 0 end) WHERE id = '$id'";
+
+		if(!mysql_query($update)) {
+			$obj->successful = false;
+			$obj->update = $update;
+		}
+	}
+
+	return $obj;
+}
+
 // will log the state of the prevision just before an update will be perfomed
 function logPrevisionUpdateFull($previsionId, $method) {
 	global $country;

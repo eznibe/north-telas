@@ -48,6 +48,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 	else if(isset($_GET['listHistoric'])) {
 		$value = getPrevisions(null, null, $expand, null, true, $_GET['sellerCode'], $_GET['offset'], $json);
 	}
+	else if(isset($_GET['weekUp'])) {
+		$value = weekUp($json);
+	}
+	else if(isset($_GET['weekDown'])) {
+		$value = weekDown($json);
+	}
 	else
 		$value = savePrevision($json);
 

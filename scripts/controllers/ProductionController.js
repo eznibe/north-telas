@@ -186,7 +186,41 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 		},
 		readOnlyPercentage: function(p) {
 			return p.percentage < 25 && $rootScope.user.role != 'admin';
+		},
+		weekUp: function() {
+			var checkedPrevisions = getCheckedPrevisions();
+
+			if (checkedPrevisions.length > 0) {
+				Previsions.weekUp(checkedPrevisions).then(function(result) {
+					if (result.data.successful) {
+						$scope.search(1);
+					}
+				});
+			}
+		},
+		weekDown: function() {
+			var checkedPrevisions = getCheckedPrevisions();
+
+			if (checkedPrevisions.length > 0) {
+				Previsions.weekDown(checkedPrevisions).then(function(result) {
+					if (result.data.successful) {
+						$scope.search(1);
+					}
+				});
+			}
 		}
+	}
+
+	function getCheckedPrevisions() {
+		var checkedPrevisions = [];
+
+		angular.forEach($scope.previsions, function (prevision, index) {
+			if ($('#'+prevision.id).is(':checked')) {
+				checkedPrevisions.push(prevision.id);
+			}
+		});
+
+		return checkedPrevisions;
 	}
 
 	$scope.search = function(page) {

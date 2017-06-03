@@ -26,14 +26,14 @@
 			</div>
 		</div>
 
-		<div class="col-md-5 nopadding">
+		<div class="col-md-5 nopadding noprint">
 			<label class="control-label col-xs-3" translate>Production summary</label>
 			<div class="col-xs-4">
 				<span class="glyphicon glyphicon-stats control-label" ng-click="showProductionSummaryModal(allProduction)" style="text-align:center; cursor:pointer;"></span>
 			</div>
 		</div>
 	</div>
-	<div class="row">
+	<div class="row noprint">
 		<div class="col-md-7 nopadding">
 			<label class="control-label col-xs-2" translate>Show all</label>
 			<div class="col-xs-4">
@@ -49,23 +49,29 @@
 		</div>
 	</div>
 
-	<div class="row">
-		<div class="col-md-6 nopadding">
-				<label class="control-label col-xs-7"></label>
+	<div class="row noprint">
+		<div class="col-md-7 nopadding">
 
-				<div class="col-xs-3">
-					<!-- <a ng-click="clearFilters()" class="btn btn-default floatright"> -->
-						<span class="glyphicon glyphicon-remove icon-with-label"></span>
-						<span><a ng-click="clearFilters()" class="btn-link">{{'Clear filters' | translate}}</a><span>
-					<!-- </a> -->
-				</div>
+			<label class="control-label col-xs-2" access-allowed="admin,produccion">{{'Week' | translate}}</label>
 
-				<div class="col-xs-2">
-					<!-- <a ng-click="search(1)" class="btn btn-default floatright"> -->
-						<span class="glyphicon glyphicon-sort-by-attributes icon-with-label"></span>
-						<span><a ng-click="search(1)" class="btn-link">{{'Sort' | translate}}</a><span>
-					<!-- </a> -->
-				</div>
+			<div class="col-xs-2" access-allowed="admin,produccion">
+				<span class="glyphicon glyphicon-chevron-down control-label" ng-click="::oneTimeBindings.weekDown();" style="text-align:center; cursor:pointer; margin-right: 15px;" title="Bajar semana"></span>
+				<span class="glyphicon glyphicon-chevron-up control-label" ng-click="::oneTimeBindings.weekUp();" style="text-align:center; cursor:pointer;" title="Subir semana"></span>
+			</div>
+
+			<label class="control-label col-xs-4" access-restricted="admin,produccion"></label>
+
+			<label class="control-label col-xs-3"></label>
+
+			<div class="col-xs-3">
+				<span class="glyphicon glyphicon-remove icon-with-label"></span>
+				<span><a ng-click="clearFilters()" class="btn-link">{{'Clear filters' | translate}}</a><span>
+			</div>
+
+			<div class="col-xs-2">
+				<span class="glyphicon glyphicon-sort-by-attributes icon-with-label"></span>
+				<span><a ng-click="search(1)" class="btn-link">{{'Sort' | translate}}</a><span>
+			</div>
 		</div>
 	</div>
 </div>
@@ -74,6 +80,7 @@
 <table id="production" class="table table-bordered table-striped table-hover">
 	<thead>
 		<tr>
+			<th class="noprint"></th>
 			<th class="seller"><div class="rotate"><span translate>Seller col</span></div></th>
 			<th class="week" access-restricted="vendedor"><div class="rotate"><span translate>Week col</span></div></th>
 			<th class="priority" access-restricted="vendedor"><div class="rotate"><span translate>Priority col</span></div></th>
@@ -95,9 +102,10 @@
 			<th class="area" access-restricted="vendedor" translate>Area</th>
 			<th class="productionObservations" access-restricted="vendedor" translate>Observations</th>
 			<th class="designObservations" access-allowed="vendedor" translate>Design observations col</th>
-			<th access-allowed="admin,produccion,velas-od" access-restricted="vendedor" translate>Archive</th>
+			<th access-allowed="admin,produccion,velas-od" access-restricted="vendedor" class="noprint" translate>Archive</th>
 		</tr>
 		<tr class="production-filter">
+			<th class="noprint"></th>
 			<th class="seller" ng-style="{'background-color': headerBackgroundColor(selectionObject.seller)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('seller');" style="text-align:center; cursor:pointer;"></span></div></th>
 			<th class="week" ng-style="{'background-color': headerBackgroundColor(selectionObject.week)}" access-restricted="vendedor"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('week');" style="text-align:center; cursor:pointer;"></span></div></th>
 			<th class="priority" ng-style="{'background-color': headerBackgroundColor(selectionObject.priority)}" access-restricted="vendedor"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('priority');" style="text-align:center; cursor:pointer;"></span></div></th>
@@ -120,11 +128,14 @@
 			<th class="area" ng-style="{'background-color': headerBackgroundColor(selectionObject.area)}" access-restricted="vendedor"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('area');" style="text-align:center; cursor:pointer;"></div></th>
 			<th class="productionObservations" access-restricted="vendedor"></th>
 			<th class="designObservations" access-allowed="vendedor"></th>
-			<th class="production-filter" access-allowed="admin,produccion,velas-od" access-restricted="vendedor"></th>
+			<th class="production-filter noprint" access-allowed="admin,produccion,velas-od" access-restricted="vendedor"></th>
 		</tr>
 	</thead>
 	<tbody>
 		<tr ng-repeat="p in previsions track by p.id" my-repeat-directive="start" ng-style="::{'background-color': weekBackgroundColor(p)}">
+			<td class="noprint">
+				<input type="checkbox" id="{{::p.id}}"/>
+			</td>
 			<td class="seller" ng-show="::visibility.selected('seller')">
 				<span ng-bind=":refreshColumnsValue:getValue(p, 'seller')"></span>
 			</td>
@@ -194,13 +205,13 @@
 			<td class="designObservations" ng-show="::visibility.selected('designObservations')" style="min-width:110px;" access-allowed="vendedor" ng-style=":refreshErrorBackground:visibility.errorStyle(p, 'designObservations');">
 				<editable-production-observations entity="::p" field="'designObservations'" callback="::changedPrevision.field" edit-disabled="designObservationsDisabled" editable-by-role="'vendedor'" style="display:inline-blockzz;"></editable-production-observations>
 			</td>
-			<td style="width:80px; text-align:center;" access-allowed="admin,produccion,velas-od">
+			<td style="width:80px; text-align:center;" access-allowed="admin,produccion,velas-od" class="noprint">
 				<!-- <a ng-click="showArchiveConfirmModal(p, null, removeFromProduction)" class="btn btn-default small-button"> -->
 					<span class="glyphicon glyphicon-ok icon-link" ng-click="showArchiveConfirmModal(p, null, removeFromProduction, p.dispatchId ? 'Order with dispatch archive confirm' : null)" ></span>
 				<!-- </a> -->
 			</td>
 		</tr>
-		<tr>
+		<tr class="noprint">
 			<td colspan="21" ng-show="!hideLoading">
 				Cargando...
 			</td>

@@ -265,7 +265,15 @@ angular.module('vsko.stock')
 
 				this.isInSomeDispatch = function(previsionId) {
 					return $http.get(url + 'previsions_GET.php?previsionId='+previsionId+'&isInSomeDispatch=true');
-				}
+				};
+
+				this.weekUp = function(previsionIds) {
+					return $http.post(url + 'previsions_POST.php?weekUp=true', {ids: previsionIds});
+				};
+
+				this.weekDown = function(previsionIds) {
+					return $http.post(url + 'previsions_POST.php?weekDown=true', {ids: previsionIds});
+				};
 
         return this;
     }]);
