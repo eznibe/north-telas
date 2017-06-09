@@ -159,14 +159,28 @@
         <!-- Only to print -->
         <div class="onlyprint">
           <div class="row">
-            <div class="col-md-12">
-                <label class="control-label col-xs-4" translate>Dispatch number</label>
-                <div class="col-xs-8">
+            <div class="col-xs-4">
+                <label class="control-label col-xs-6" translate>Dispatch number</label>
+                <div class="col-xs-6">
                   <label id="d_number" class="form-control small"></label>
                 </div>
             </div>
+
+            <div class="col-xs-4">
+                <label class="control-label col-xs-6" translate>Dispatch date</label>
+                <div class="col-xs-6">
+                  <label id="d_dispatchDate" class="form-control small"></label>
+                </div>
+            </div>
+
+            <div class="col-xs-4">
+                <label class="control-label col-xs-6" translate>Value USD</label>
+                <div class="col-xs-6">
+                  <label id="d_value" class="form-control small onlyprint"></label>
+                </div>
+            </div>
           </div>
-          <div class="row">
+          <!-- <div class="row">
             <div class="col-md-12">
                 <label class="control-label col-xs-4" translate>Dispatch date</label>
                 <div class="col-xs-8">
@@ -181,17 +195,29 @@
                   <label id="d_value" class="form-control small onlyprint"></label>
                 </div>
             </div>
-          </div>
+          </div> -->
 
           <div class="row">
-            <div class="col-md-12">
-              <label class="control-label col-xs-4" translate>Destinatary</label>
-              <div class="col-xs-8">
+            <div class="col-xs-4">
+              <label class="control-label col-xs-6" translate>Destinatary</label>
+              <div class="col-xs-6">
                 <label id="d_destinatary" class="form-control small onlyprint"></label>
               </div>
             </div>
+            <div class="col-xs-4">
+                <label class="control-label col-xs-6" translate>Address</label>
+                <div class="col-xs-6">
+                  <label id="d_address" class="form-control small onlyprint"></label>
+                </div>
+            </div>
+            <div class="col-xs-4">
+                <label class="control-label col-xs-6" translate>Destiny</label>
+                <div class="col-xs-6">
+                  <label id="d_destiny" class="form-control small onlyprint"></label>
+                </div>
+            </div>
           </div>
-          <div class="row">
+          <!-- <div class="row">
             <div class="col-md-12">
                 <label class="control-label col-xs-4" translate>Address</label>
                 <div class="col-xs-8">
@@ -206,17 +232,29 @@
                   <label id="d_destiny" class="form-control small onlyprint"></label>
                 </div>
             </div>
-          </div>
+          </div> -->
 
           <div class="row">
-            <div class="col-md-12">
-                <label class="control-label col-xs-4" translate>Transport</label>
-                <div class="col-xs-8">
+            <div class="col-xs-4">
+                <label class="control-label col-xs-6" translate>Transport</label>
+                <div class="col-xs-6">
                   <label id="d_transport" class="form-control small onlyprint"></label>
                 </div>
             </div>
+            <div class="col-xs-4">
+                <label class="control-label col-xs-6" translate>Delivery type</label>
+                <div class="col-xs-6">
+                  <label id="d_deliveryType" class="form-control small onlyprint"></label>
+                </div>
+            </div>
+            <div class="col-xs-4">
+                <label class="control-label col-xs-6" translate>Tracking</label>
+                <div class="col-xs-6">
+                  <label id="d_tracking" class="form-control small onlyprint"></label>
+                </div>
+            </div>
           </div>
-          <div class="row">
+          <!-- <div class="row">
             <div class="col-md-12">
                 <label class="control-label col-xs-4" translate>Delivery type</label>
                 <div class="col-xs-8">
@@ -231,7 +269,7 @@
                   <label id="d_tracking" class="form-control small onlyprint"></label>
                 </div>
             </div>
-          </div>
+          </div> -->
 
           <div class="row">
             <div class="col-md-12">
@@ -310,7 +348,7 @@
 					</tbody>
 				</table>
 
-        <p class="break onlyprint"/>
+        <!-- <p class="break onlyprint" ng-class="{noprint: dispatch.previsions.length < 5}"/> -->
 
         <div class="row" style="margin-bottom: 25px; margin-top: 25px;">
 
