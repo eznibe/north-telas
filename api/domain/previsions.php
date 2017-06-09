@@ -687,14 +687,31 @@ function weekUp($req) {
 
 	$obj->successful = true;
 
-	foreach ($req->ids as $id) {
-		logPrevisionUpdateFull($id, 'weekUp');
-
-		$update = "UPDATE previsions SET week = week + 1 WHERE id = '$id'";
+	if (empty($req->ids)) {
+		// no selection -> update all previsions with week betwwen 1 and 8
+		$update = "UPDATE previsions SET week = week + 1 WHERE week >= 1 and week <= 8";
 
 		if(!mysql_query($update)) {
 			$obj->successful = false;
 			$obj->update = $update;
+		} else {
+			$log->type = "info.weeksUp";
+			$log->log = "";
+			$log->user = $req->user;
+			addLog($log);
+		}
+
+	} else {
+
+		foreach ($req->ids as $id) {
+			logPrevisionUpdateFull($id, 'weekUp');
+
+			$update = "UPDATE previsions SET week = week + 1 WHERE id = '$id'";
+
+			if(!mysql_query($update)) {
+				$obj->successful = false;
+				$obj->update = $update;
+			}
 		}
 	}
 
@@ -705,16 +722,34 @@ function weekDown($req) {
 
 	$obj->successful = true;
 
-	foreach ($req->ids as $id) {
-		logPrevisionUpdateFull($id, 'weekDown');
-
-		$update = "UPDATE previsions SET week = (case when week > 0 then week-1 else 0 end) WHERE id = '$id'";
+	if (empty($req->ids)) {
+		// no selection -> update all previsions with week betwwen 1 and 8
+		$update = "UPDATE previsions SET week = week - 1 WHERE week >= 2 and week <= 9";
 
 		if(!mysql_query($update)) {
 			$obj->successful = false;
 			$obj->update = $update;
+		} else {
+			$log->type = "info.weeksDown";
+			$log->log = "";
+			$log->user = $req->user;
+			addLog($log);
+		}
+
+	} else {
+
+		foreach ($req->ids as $id) {
+			logPrevisionUpdateFull($id, 'weekDown');
+
+			$update = "UPDATE previsions SET week = (case when week > 0 then week-1 else 0 end) WHERE id = '$id'";
+
+			if(!mysql_query($update)) {
+				$obj->successful = false;
+				$obj->update = $update;
+			}
 		}
 	}
+
 
 	return $obj;
 }

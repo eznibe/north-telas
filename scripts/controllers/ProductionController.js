@@ -190,24 +190,22 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 		weekUp: function() {
 			var checkedPrevisions = getCheckedPrevisions();
 
-			if (checkedPrevisions.length > 0) {
-				Previsions.weekUp(checkedPrevisions).then(function(result) {
-					if (result.data.successful) {
-						$scope.search(1);
-					}
-				});
-			}
+			// if no orders selected will update all orders with week between 1 and 8
+			Previsions.weekUp(checkedPrevisions).then(function(result) {
+				if (result.data.successful) {
+					$scope.search(1);
+				}
+			});
 		},
 		weekDown: function() {
 			var checkedPrevisions = getCheckedPrevisions();
 
-			if (checkedPrevisions.length > 0) {
-				Previsions.weekDown(checkedPrevisions).then(function(result) {
-					if (result.data.successful) {
-						$scope.search(1);
-					}
-				});
-			}
+			// if no orders selected will update all orders with week between 1 and 8
+			Previsions.weekDown(checkedPrevisions).then(function(result) {
+				if (result.data.successful) {
+					$scope.search(1);
+				}
+			});
 		}
 	}
 

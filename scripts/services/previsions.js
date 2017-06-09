@@ -268,11 +268,11 @@ angular.module('vsko.stock')
 				};
 
 				this.weekUp = function(previsionIds) {
-					return $http.post(url + 'previsions_POST.php?weekUp=true', {ids: previsionIds});
+					return $http.post(url + 'previsions_POST.php?weekUp=true', {ids: previsionIds, user: $rootScope.user.name});
 				};
 
 				this.weekDown = function(previsionIds) {
-					return $http.post(url + 'previsions_POST.php?weekDown=true', {ids: previsionIds});
+					return $http.post(url + 'previsions_POST.php?weekDown=true', {ids: previsionIds, user: $rootScope.user.name});
 				};
 
         return this;
