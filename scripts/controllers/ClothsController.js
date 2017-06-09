@@ -26,7 +26,7 @@ angular.module('vsko.stock').controller('ClothsCtrl', ['$scope', '$routeParams',
         		sum += new Number(p.stock);
         	});
 
-        	return sum;
+        	return sum != 0 && sum % 1 != 0 ? sum.toFixed(2) : sum;
         };
 
         $scope.sumPrevision = function(cloth) {
@@ -42,7 +42,7 @@ angular.module('vsko.stock').controller('ClothsCtrl', ['$scope', '$routeParams',
         		});
         	});
 
-        	return sum;
+        	return sum != 0 && sum % 1 != 0 ? sum.toFixed(2) : sum;
         };
 
         $scope.sumPending = function(cloth) {
@@ -53,7 +53,7 @@ angular.module('vsko.stock').controller('ClothsCtrl', ['$scope', '$routeParams',
         		sum += new Number(p.mtsDesign);
         	});
 
-        	return sum;
+        	return sum != 0 && sum % 1 != 0 ? sum.toFixed(2) : sum;
         };
 
         $scope.sumDjai = function(cloth) {
