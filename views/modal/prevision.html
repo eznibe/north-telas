@@ -81,7 +81,7 @@
 								<label class="control-label col-xs-4" for="edit_date" translate>Delivery date</label>
 								<div class="col-xs-8">
 									<div class="input-group input-group-sm date" date-picker>
-										<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="prevision.deliveryDate" ng-change="deliveryDateChanged()" class="form-control small" required ng-style="{'background-color': (prevision.deliveryDateChanged===true ? 'orange' : '')}">
+										<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="prevision.deliveryDate" ng-change="deliveryDateChanged('{{prevision.deliveryDate}}')" class="form-control small" required ng-style="{'background-color': (prevision.deliveryDateChanged===true || prevision.deliveryDateManuallyUpdated==='1' ? 'orange' : '')}">
 										<span class="input-group-addon">
 											<span class="glyphicon-calendar glyphicon"></span>
 										</span>

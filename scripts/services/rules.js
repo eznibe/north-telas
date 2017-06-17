@@ -63,8 +63,9 @@ angular.module('vsko.stock').factory('Rules',[ '$q', 'Previsions', 'Production',
 
         weeks = getCorrespondingWeek(selectedLine, weeksBySeason.data);
 
-        if (weeks != 0) {
+        if (weeks != 0 && prevision.deliveryDateManuallyUpdated !== '1') {
           prevision.deliveryDate = newDate.add(weeks * 7, 'days').format('DD-MM-YYYY');
+
           if(lastDeliveryDate != prevision.deliveryDate) {
             prevision.deliveryDateChanged = true;
           }

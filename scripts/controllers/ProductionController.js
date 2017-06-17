@@ -348,35 +348,43 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 	}
 
 	$scope.updateDate = function(entity, value, fieldName) {
-		// console.log('Updated date ', fieldName, ' to:', value);
-		Production.updateDate(entity, fieldName).then(function(result) {
+		// console.log('Updated date ', fieldName, 'to:', value);
+		if (entity[fieldName + '_updated']) {
 
-			if (result.data.successful) {
+			Production.updateDate(entity, fieldName).then(function(result) {
 
-				if (entity.percentageChanged) {
-					$scope.$broadcast('$$rebind::refreshColumnsValue');
-					delete entity.percentageChanged;
-				}
+				if (result.data.successful) {
 
-				Rules.updatePrevisionPercentage(entity, true);
-
-				Rules.updatePrevisionDeliveryDate(entity, true).then(function() {
-
-					if (entity.deliveryDateChanged) {
+					if (entity.percentageChanged) {
 						$scope.$broadcast('$$rebind::refreshColumnsValue');
-						$scope.$broadcast('$$rebind::refreshLinkValue');
-						delete entity.deliveryDateChanged;
-
-						if ($scope.filterOptions.selectedOrderBy && $scope.filterOptions.selectedOrderBy.key == 'deliveryDate') {
-							$scope.search(1);
-						}
+						delete entity.percentageChanged;
 					}
-				});
-			}
-			handleUpdateFieldResolve(result, entity, fieldName, 'updateDate');
-		}, function(err) {
-			handleUpdateFieldReject(err, entity, fieldName, 'updateDate');
-		});
+
+					Rules.updatePrevisionPercentage(entity, true);
+
+					if (fieldName !== 'deliveryDate') {
+
+						Rules.updatePrevisionDeliveryDate(entity, true).then(function() {
+
+							if (entity.deliveryDateChanged) {
+								$scope.$broadcast('$$rebind::refreshColumnsValue');
+								$scope.$broadcast('$$rebind::refreshLinkValue');
+								delete entity.deliveryDateChanged;
+
+								if ($scope.filterOptions.selectedOrderBy && $scope.filterOptions.selectedOrderBy.key == 'deliveryDate') {
+									$scope.search(1);
+								}
+							}
+						});
+					} else {
+						entity.deliveryDateManuallyUpdated = "1";
+					}
+				}
+				handleUpdateFieldResolve(result, entity, fieldName, 'updateDate');
+			}, function(err) {
+				handleUpdateFieldReject(err, entity, fieldName, 'updateDate');
+			});
+		}
 	};
 
 	$scope.designObservationsDisabled = function(entity) {

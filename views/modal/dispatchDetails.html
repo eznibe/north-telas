@@ -12,6 +12,7 @@
 				<a href="javascript:void(0)" class="btn btn-lg closebtn noprint" ng-click="closeDispatch()">
 					<span class="glyphicon glyphicon-remove"></span>
 				</a>
+        <div class="dispatch-logo onlyprint"></div>
 		</div>
 
 			<div class="modal-body">
@@ -156,8 +157,8 @@
 				</form>
 
 
-        <!-- Only to print -->
-        <div class="onlyprint">
+        <!-- Only to print: 3 rows-->
+        <!-- <div class="onlyprint">
           <div class="row">
             <div class="col-xs-4">
                 <label class="control-label col-xs-6" translate>Dispatch number</label>
@@ -180,22 +181,6 @@
                 </div>
             </div>
           </div>
-          <!-- <div class="row">
-            <div class="col-md-12">
-                <label class="control-label col-xs-4" translate>Dispatch date</label>
-                <div class="col-xs-8">
-                  <label id="d_dispatchDate" class="form-control small"></label>
-                </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-                <label class="control-label col-xs-4" translate>Value USD</label>
-                <div class="col-xs-8">
-                  <label id="d_value" class="form-control small onlyprint"></label>
-                </div>
-            </div>
-          </div> -->
 
           <div class="row">
             <div class="col-xs-4">
@@ -217,22 +202,6 @@
                 </div>
             </div>
           </div>
-          <!-- <div class="row">
-            <div class="col-md-12">
-                <label class="control-label col-xs-4" translate>Address</label>
-                <div class="col-xs-8">
-                  <label id="d_address" class="form-control small onlyprint"></label>
-                </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-                <label class="control-label col-xs-4" translate>Destiny</label>
-                <div class="col-xs-8">
-                  <label id="d_destiny" class="form-control small onlyprint"></label>
-                </div>
-            </div>
-          </div> -->
 
           <div class="row">
             <div class="col-xs-4">
@@ -254,22 +223,6 @@
                 </div>
             </div>
           </div>
-          <!-- <div class="row">
-            <div class="col-md-12">
-                <label class="control-label col-xs-4" translate>Delivery type</label>
-                <div class="col-xs-8">
-                  <label id="d_deliveryType" class="form-control small onlyprint"></label>
-                </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-                <label class="control-label col-xs-4" translate>Tracking</label>
-                <div class="col-xs-8">
-                  <label id="d_tracking" class="form-control small onlyprint"></label>
-                </div>
-            </div>
-          </div> -->
 
           <div class="row">
             <div class="col-md-12">
@@ -279,7 +232,133 @@
               </div>
             </div>
           </div>
+        </div> -->
+
+        <!-- Only to print: 1 row -->
+        <!-- <div class="onlyprint">
+          <div class="row">
+            <div class="col-xs-12">
+                <label class="control-label col-xs-4" translate>Dispatch number</label>
+                <label id="d_number" class="control-label col-xs-8"></label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+                <label class="control-label col-xs-4" translate="Dispatch date"></label>
+                <label id="d_dispatchDate" class="control-label col-xs-8"></label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+                <label class="control-label col-xs-4" translate>Value USD</label>
+                <label id="d_value" class="control-label col-xs-8"></label>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xs-12">
+              <label class="control-label col-xs-4" translate>Destinatary</label>
+              <label id="d_destinatary" class="control-label col-xs-8"></label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+                <label class="control-label col-xs-4" translate>Address</label>
+                <label id="d_address" class="control-label col-xs-8"></label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+                <label class="control-label col-xs-4" translate>Destiny</label>
+                <label id="d_destiny" class="control-label col-xs-8"></label>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xs-12">
+                <label class="control-label col-xs-4" translate>Transport</label>
+                <label id="d_transport" class="control-label col-xs-8"></label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+                <label class="control-label col-xs-4" translate>Delivery type</label>
+                <label id="d_deliveryType" class="control-label col-xs-8"></label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+                <label class="control-label col-xs-4" translate>Tracking</label>
+                <label id="d_tracking" class="control-label col-xs-8"></label>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <label class="control-label col-xs-4" translate>Notes</label>
+              <label id="d_notes" class="control-label col-xs-8"></label>
+            </div>
+          </div>
+        </div> -->
+
+        <!-- Only print: 2 rows -->
+        <div class="onlyprint">
+          <div class="row">
+            <div class="col-xs-6">
+                <label class="control-label col-xs-4" translate>Dispatch number</label>
+                <label id="d_number" class="control-label col-xs-8"></label>
+            </div>
+            <div class="col-xs-6">
+              <label class="control-label col-xs-4" translate>Dispatch date col</label>
+              <label id="d_dispatchDate" class="control-label col-xs-8"></label>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xs-6">
+              <label class="control-label col-xs-4" translate>Destinatary</label>
+              <label id="d_destinatary" class="control-label col-xs-8"></label>
+            </div>
+            <div class="col-xs-6">
+                <label class="control-label col-xs-4" translate>Value USD</label>
+                <label id="d_value" class="control-label col-xs-8"></label>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xs-6">
+              <label class="control-label col-xs-4" translate>Destiny</label>
+              <label id="d_destiny" class="control-label col-xs-8"></label>
+            </div>
+            <div class="col-xs-6">
+              <label class="control-label col-xs-4" translate>Transport col</label>
+              <label id="d_transport" class="control-label col-xs-8"></label>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xs-6">
+              <label class="control-label col-xs-4" translate>Delivery type</label>
+              <label id="d_deliveryType" class="control-label col-xs-8"></label>
+            </div>
+            <div class="col-xs-6">
+              <label class="control-label col-xs-4" translate>Tracking</label>
+              <label id="d_tracking" class="control-label col-xs-8"></label>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xs-6">
+              <label class="control-label col-xs-4" translate>Address</label>
+              <label id="d_address" class="control-label col-xs-8"></label>
+            </div>
+            <div class="col-xs-6">
+              <label class="control-label col-xs-4" translate>Notes</label>
+              <label id="d_notes" class="control-label col-xs-8"></label>
+            </div>
+          </div>
         </div>
+
 
 				<table id="groups" class="table table-bordered table-striped table-hover">
 					<thead>

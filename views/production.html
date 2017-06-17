@@ -170,7 +170,7 @@
 			<td class="advance" ng-show="::visibility.selected('advance')">
 				{{:refreshColumnsValue:getValue(p, 'advance')}}
 			</td>
-			<td class="deliveryDate" ng-show="::visibility.selected('deliveryDate')" class="column-date" nowrap ng-style=":refreshErrorBackground:visibility.errorStyle(p, 'deliveryDate');">
+			<td class="deliveryDate" ng-show="::visibility.selected('deliveryDate')" class="column-date" nowrap ng-style=":refreshErrorBackground:visibility.errorStyle(p, 'deliveryDate');" ng-class="{'deliveryDate-updated': p.deliveryDateManuallyUpdated==='1'}">
 				<editable-date entity="::p" field="deliveryDate" callback="::updateDate" editable-by-role="'admin,produccion'" style="display:inline-block;" required="true"></editable-date>
 			</td>
 			<td class="tentativeDate" ng-show="::visibility.selected('tentativeDate')" class="column-date" nowrap ng-style=":refreshErrorBackground:visibility.errorStyle(p, 'tentativeDate');" access-restricted="vendedor">

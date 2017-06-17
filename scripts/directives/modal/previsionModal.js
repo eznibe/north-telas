@@ -510,8 +510,14 @@ angular.module('vsko.stock')
             $scope.prevision.orderNumber = str;
           }
 
-          $scope.deliveryDateChanged = function() {
+          $scope.deliveryDateChanged = function(oldValue) {
             $scope.prevision.tentativeDate = $scope.prevision.deliveryDate;
+            // mark as manually changed
+            console.log('deliveryDate changed:', oldValue, $scope.prevision.deliveryDate)
+            if (oldValue !== $scope.prevision.deliveryDate && !$scope.prevision.isNew) {
+              $scope.prevision.deliveryDateManuallyUpdated = "1";
+              $scope.prevision.deliveryDateChanged = true
+            }
           }
 
           $scope.updateFieldsByRule = function() {

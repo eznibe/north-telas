@@ -116,6 +116,7 @@ angular.module('vsko.stock')
               $('#d_transport').html($scope.dispatch.transport);
               $('#d_deliveryType').html($scope.dispatch.deliveryType);
               $('#d_tracking').html($scope.dispatch.tracking);
+              $('#d_notes').html($scope.dispatch.notes);
 
               $('#printDispatch').printThis();
             }

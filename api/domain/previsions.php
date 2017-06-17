@@ -235,6 +235,7 @@ function savePrevision($prevision)
 	$area = isset($prevision->area) && trim($prevision->area)!='' ? $prevision->area : 'null' ;
 	$rizo = isset($prevision->rizo) && trim($prevision->rizo)!='' ? $prevision->rizo : 'null' ;
 	$country = isset($prevision->country) && trim($prevision->country)!='' ? $prevision->country : 'ARG' ;
+	$deliveryDateManuallyUpdated = $prevision->deliveryDateManuallyUpdated == '1' ? 'true' : 'false';
 
 	$week = isset($prevision->week) && trim($prevision->week)!='' ? $prevision->week : 'null' ;
 	$priority = isset($prevision->priority) && trim($prevision->priority)!='' ? $prevision->priority : 'null' ;
@@ -257,6 +258,7 @@ function savePrevision($prevision)
 																		", productionObservations = '$productionObservations', designObservations = '$designObservations', dispatchId = $dispatchId".
 																		", week = $week, priority = $priority, line = $line, seller = $seller, advance = $advance, percentage = $percentage".
 																		", tentativeDate = $tentativeDate, productionDate = $productionDate, infoDate = $infoDate, advanceDate = $advanceDate, rizo = $rizo, country = '$country'".
+																		", deliveryDateManuallyUpdated = $deliveryDateManuallyUpdated".
 																		" WHERE id = '".$prevision->id."'";
 
 		if(mysql_query($update)) {
@@ -501,6 +503,14 @@ function editPrevisionDate($prevision, $field) {
 	if(!mysql_query($update)) {
 		$obj->successful = false;
 		$obj->update = $update;
+	} else if ($field == 'deliveryDate') {
+		// special case for deliveryDate: should set as manually modified
+		$update = "UPDATE previsions SET deliveryDateManuallyUpdated = true WHERE id = '".$prevision->id."'";
+
+		if(!mysql_query($update)) {
+			$obj->successful = false;
+			$obj->update = $update;
+		}
 	}
 
 	return $obj;
@@ -758,8 +768,8 @@ function weekDown($req) {
 function logPrevisionUpdateFull($previsionId, $method) {
 	global $country;
 
-	$update = "INSERT INTO previsionfulllogs (id,orderNumber,deliveryDate,client,sailId,sailDescription,boat,type,designed,oneDesign,greaterThan44,p,e,i,j,area,sailOneDesign,observations,designedOn,createdOn,state,prevState,stateAccepted,stateChanged,stateAcceptedDate,seller,dispatchId,line,week,priority,percentage,advance,tentativeDate,productionDate,infoDate,advanceDate,deletedProductionOn,deletedProductionBy,productionObservations,designObservations,driveIdProduction,driveIdDesign,sailGroupId,rizo,country,method,insertedon)
-	 						SELECT id,orderNumber,deliveryDate,client,sailId,sailDescription,boat,type,designed,oneDesign,greaterThan44,p,e,i,j,area,sailOneDesign,observations,designedOn,createdOn,state,prevState,stateAccepted,stateChanged,stateAcceptedDate,seller,dispatchId,line,week,priority,percentage,advance,tentativeDate,productionDate,infoDate,advanceDate,deletedProductionOn,deletedProductionBy,productionObservations,designObservations,driveIdProduction,driveIdDesign,sailGroupId,rizo,country
+	$update = "INSERT INTO previsionfulllogs (id,orderNumber,deliveryDate,client,sailId,sailDescription,boat,type,designed,oneDesign,greaterThan44,p,e,i,j,area,sailOneDesign,observations,designedOn,createdOn,state,prevState,stateAccepted,stateChanged,stateAcceptedDate,seller,dispatchId,line,week,priority,percentage,advance,tentativeDate,productionDate,infoDate,advanceDate,deletedProductionOn,deletedProductionBy,productionObservations,designObservations,driveIdProduction,driveIdDesign,sailGroupId,rizo,country,deliveryDateManuallyUpdated,method,insertedon)
+	 						SELECT id,orderNumber,deliveryDate,client,sailId,sailDescription,boat,type,designed,oneDesign,greaterThan44,p,e,i,j,area,sailOneDesign,observations,designedOn,createdOn,state,prevState,stateAccepted,stateChanged,stateAcceptedDate,seller,dispatchId,line,week,priority,percentage,advance,tentativeDate,productionDate,infoDate,advanceDate,deletedProductionOn,deletedProductionBy,productionObservations,designObservations,driveIdProduction,driveIdDesign,sailGroupId,rizo,country,deliveryDateManuallyUpdated
 							, '$method', now() FROM previsions WHERE id = '$previsionId'";
 
 	$obj->successful = true;

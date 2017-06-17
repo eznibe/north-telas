@@ -839,6 +839,13 @@ angular.module('vsko.stock')
             }
           };
 
+          scope.dateUpdated = function(oldValue) {
+            // console.log('Old value:', oldValue, '- New value:', scope.entity[scope.field])
+            if (oldValue !== scope.entity[scope.field]) {
+              scope.entity[scope.field + '_updated'] = true;
+            }
+          }
+
       	  scope.changed = function(entity) {
 
             if(!scope.required || entity[scope.field]) {
