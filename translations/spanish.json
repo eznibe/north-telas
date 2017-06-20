@@ -272,6 +272,9 @@
   "New prevision state": "Nuevo estado de la previsión",
   "Refresh Previsions States": "Sincronizar cambios de estado",
   "Currency": "$",
+
+  "Exclude state calculation": "Excluir cálculo estado",
+
   "": "",
   "notify": {
     "prevision_modified": "Prevision modificada.",

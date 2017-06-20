@@ -1,5 +1,17 @@
 /* selectors to apply */
 
 .onlyprint {
-  display: none;
+  display: none !important; 
+}
+
+.dispatch-logo {
+  content: " ";
+  display: block;
+  position: absolute;
+  right: 10px;
+  top: 5px;
+  background: url(img/logo_north_go_beyond_medium.png) center top no-repeat transparent;
+  width: 100px;
+  height: 75px;
+  /*margin-top: 2px;*/
 }
