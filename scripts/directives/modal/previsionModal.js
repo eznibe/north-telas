@@ -183,6 +183,20 @@ angular.module('vsko.stock')
                 $scope.prevision.selectedSeller = $scope.prevision.seller ? $scope.sellers.findAll({name:$scope.prevision.seller})[0] : {};
               });
 
+              // designers to show depends on the prevision country
+              Production.getDesigners($scope.prevision.country).then(function(result) {
+                $scope.sellers = result.data;
+
+                if ($scope.prevision.seller && result.data.filter(function(d) {
+                    return d.name === $scope.prevision.seller;
+                  }).length == 0) {
+
+                  $scope.sellers.push({name: $scope.prevision.seller});
+                }
+
+                $scope.prevision.selectedSeller = $scope.prevision.seller ? $scope.sellers.findAll({name:$scope.prevision.seller})[0] : {};
+              });
+
 
           	  // set current selected sail
               if ($scope.prevision.sailGroupId) {

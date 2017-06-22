@@ -178,16 +178,6 @@
             <div id="collapse2" class="panel-collapse collapse" style="height: auto;">
               <div class="panel-body">
 
-                <!-- <div class="row border-top">
-      						<div class="col-md-6 nopadding">
-      								<label class="control-label col-xs-4" for="edit_type" translate>Observations</label>
-                      <span class="glyphicon glyphicon-chevron-down col-xs-1 control-label" ng-click="showObservations = showObservations ? !showObservations : true;" ng-show="!showObservations" style="text-align:center; cursor:pointer;"></span>
-                      <span class="glyphicon glyphicon-chevron-up col-xs-1 control-label" ng-click="showObservations = showObservations ? !showObservations : true;" ng-show="showObservations" style="text-align:center; cursor:pointer;"></span>
-      						</div>
-      						<div class="col-md-6 nopadding">
-      						</div>
-      					</div> -->
-
                 <div class="row" >
       						<div class="col-md-4 nopadding">
       							<label class="control-label col-xs-12" for="edit_type" translate>General observations</label>
@@ -214,6 +204,45 @@
 
               </div>
 
+            </div>
+          </div>
+
+
+          <div class="panel panel-default ng-scope">
+            <div class="panel-heading nopadding">
+              <h2 class="panel-title panel-title-minimalist fullwidth">
+                <a data-toggle="collapse" data-target="#collapse3" href="javascript:void(0)">
+                  <span translate>Design</span>
+                </a>
+              </h2>
+            </div>
+
+            <div id="collapse3" class="panel-collapse collapse in" style="height: auto;">
+              <div class="panel-body">
+
+                <div class="row">
+                  <div class="col-md-4 nopadding">
+                    <label class="control-label col-xs-6" translate>Designer</label>
+                    <div class="col-xs-6">
+                      <select name="dd_des" ng-model="prevision.selectedDesigner" ng-options="d as d.name for d in designers" class="form-control small" ng-change="">
+                        <option value="">-- choose one --</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-4 nopadding">
+                    <label class="control-label col-xs-6" translate>Hours</label>
+                    <div class="col-xs-6">
+                      <input type="text" class="form-control small" ng-model="prevision.designHours">
+                    </div>
+                  </div>
+                  <div class="col-md-4 nopadding">
+                    <label class="control-label col-xs-6" translate>Week</label>
+                    <div class="col-xs-6">
+                      <input type="number" class="form-control small" ng-model="prevision.designWeek">
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
