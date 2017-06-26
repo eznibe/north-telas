@@ -263,6 +263,10 @@ table#production tbody tr,
 	}
 }
 
+.padding-top-3 {
+	padding-top: 3px !important;
+}
+
 .flag-ARG {
   content: " ";
   display: block;

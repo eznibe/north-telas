@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('vsko.stock').controller('ProfileCtrl', ['$scope', '$translate', '$cookieStore', '$rootScope', 'Utils', 'Users', function ($scope, $translate, $cookieStore, $rootScope, Utils, Users) {
+angular.module('vsko.stock').controller('ProfileCtrl', ['$scope', '$translate', '$cookieStore', '$rootScope', 'countries', 'Utils', 'Users', function ($scope, $translate, $cookieStore, $rootScope, countries, Utils, Users) {
 
   $scope.changeLanguage = function(lang) {
     $translate.use(lang);
@@ -15,7 +15,7 @@ angular.module('vsko.stock').controller('ProfileCtrl', ['$scope', '$translate', 
   };
 
 
-  $scope.countries = ['ARG', 'BRA'];//, 'ALL'];
+  $scope.countries = countries.list;//, 'ALL'];
   $scope.country = $rootScope.user.country;
 
   $scope.changeCountry = function() {

@@ -27,6 +27,9 @@ else if(isset($_GET['plotter'])) {
 else if(isset($_GET['sellerCodes'])) {
 	$value = getSellerCodes();
 }
+else if(isset($_GET['designerCodes'])) {
+	$value = getDesignerCodes();
+}
 else {
 	$value = getUsers();
 }

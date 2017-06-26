@@ -275,7 +275,12 @@
 
   "Exclude state calculation": "Excluir cálculo estado",
   "Designer": "Diseñador",
+  "Designer col": "Diseñador",
   "Hours": "Horas",
+  "Design week col": "Sem dis.",
+  "Only design": "Solo diseño",
+  "Only design col": "Solo dis.",
+  "Design summary": "Tabla resumen",
 
   "": "",
   "notify": {

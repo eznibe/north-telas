@@ -36,7 +36,7 @@
 	    }
 	</script>
 </head>
-<body ng-app="vsko.stock" ng-controller='AuthorizationCtrl' ng-class="fontSizeClass()">
+<body ng-app="vsko.stock" ng-controller='AuthorizationCtrl' ng-class="fontSizeClass()" style="-webkit-print-color-adjust:exact;">
 		<!-- Fixed navbar -->
 		<div google-analytics ng-cloak>
 			<div class="navbar-inverse" role="navigation">
@@ -84,6 +84,7 @@
 								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'Design' | translate }} <span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">
                     <li><a href="#/design" access-restricted="plotter" translate>Design</a></li>
+                    <!-- <li><a href="#/oldDesign" access-restricted="plotter" translate>Old Design</a></li> -->
                 </ul>
 							</li>
               <li access-restricted="vendedor">
@@ -210,6 +211,7 @@
         <script src="scripts/controllers/PrevisionsController.js"></script>
         <script src="scripts/controllers/OrdersController.js"></script>
         <script src="scripts/controllers/DesignController.js"></script>
+        <script src="scripts/controllers/OldDesignController.js"></script>
         <script src="scripts/controllers/PlotterController.js"></script>
         <script src="scripts/controllers/ProductionController.js"></script>
         <script src="scripts/controllers/HistoricController.js"></script>
@@ -277,6 +279,7 @@
         <script src="scripts/directives/modal/editTextModal.js"></script>
         <script src="scripts/directives/modal/previsionFilesModal.js"></script>
         <script src="scripts/directives/modal/productionSummaryModal.js"></script>
+        <script src="scripts/directives/modal/designSummaryModal.js"></script>
         <script src="scripts/directives/modal/filterSelectionModal.js"></script>
         <script src="scripts/directives/modal/confirmCutModal.js"></script>
         <script src="scripts/directives/modal/confirmArchiveModal.js"></script>

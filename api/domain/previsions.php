@@ -21,13 +21,13 @@ function getPrevisions($clothId, $designed, $expand, $production, $historic, $se
 	$productionCondition = "";
 	$productionOrderBy = "";
 	if(isset($production)) {
-		$productionCondition = " AND p.deletedProductionOn is null ";
+		$productionCondition = " AND p.deletedProductionOn is null AND p.designOnly = false ";
 		$productionOrderBy = "p.week, ";
 	}
 
 	$historicCondition = "";
 	if(isset($historic)) {
-		$historicCondition = " AND p.deletedProductionOn is not null ";//and p.deletedProductionOn > '2016-06-01' ";
+		$historicCondition = " AND p.deletedProductionOn is not null AND p.designOnly = false ";//and p.deletedProductionOn > '2016-06-01' ";
 		$productionOrderBy = "p.orderNumber, ";
 	}
 
@@ -101,6 +101,7 @@ function getPrevisions($clothId, $designed, $expand, $production, $historic, $se
 		$row['oneDesign'] = $row['oneDesign']==1 ? true : false;
 		$row['greaterThan44'] = $row['greaterThan44']==1 ? true : false;
 		$row['excludeFromStateCalculation'] = $row['excludeFromStateCalculation']==1 ? true : false;
+		$row['designOnly'] = $row['designOnly']==1 ? true : false;
 
 		$row['count'] = $count;
 
@@ -251,6 +252,12 @@ function savePrevision($prevision)
 	$advanceDate = isset($prevision->advanceDate) && trim($prevision->advanceDate)!='' ? "STR_TO_DATE('".$prevision->advanceDate."', '%d-%m-%Y')" : 'null' ;
 	$dispatchId = isset($prevision->dispatchId) && trim($prevision->dispatchId)!='' ? "'".$prevision->dispatchId."'" : 'null' ;
 
+	$designer = isset($prevision->designer) && trim($prevision->designer)!='' ? $prevision->designer : '' ;
+	$designHours = isset($prevision->designHours) && trim($prevision->designHours)!='' ? $prevision->designHours : 'null' ;
+	$designWeek = isset($prevision->designWeek) && trim($prevision->designWeek)!='' ? $prevision->designWeek : 'null' ;
+	$designOnly = $prevision->designOnly==1 ? 'true' : 'false';
+	$designOnlyCloth = isset($prevision->designOnlyCloth) && trim($prevision->designOnlyCloth)!='' ? $prevision->designOnlyCloth : '' ;
+
 	if ($num_results != 0)
 	{
 		logPrevisionUpdateFull($prevision->id, 'savePrevision');
@@ -261,6 +268,7 @@ function savePrevision($prevision)
 																		", week = $week, priority = $priority, line = $line, seller = $seller, advance = $advance, percentage = $percentage".
 																		", tentativeDate = $tentativeDate, productionDate = $productionDate, infoDate = $infoDate, advanceDate = $advanceDate, rizo = $rizo, country = '$country'".
 																		", deliveryDateManuallyUpdated = $deliveryDateManuallyUpdated, excludeFromStateCalculation = $excludeFromStateCalculation".
+																		", designer = '$designer', designHours = $designHours, designWeek = $designWeek, designOnly = $designOnly, designOnlyCloth = '$designOnlyCloth'".
 																		" WHERE id = '".$prevision->id."'";
 
 		if(mysql_query($update)) {
@@ -276,10 +284,12 @@ function savePrevision($prevision)
 		// insert
 		$insert = "INSERT INTO previsions (id, orderNumber, deliveryDate, client, sailId, sailGroupId, sailDescription, boat,
 				type, designed, oneDesign, greaterThan44, p, e, i,j, area, sailOneDesign, observations, productionObservations, designObservations,
-				week, priority, line, seller, advance, percentage, tentativeDate, productionDate, infoDate, advanceDate, dispatchId, rizo, country, excludeFromStateCalculation)
+				week, priority, line, seller, advance, percentage, tentativeDate, productionDate, infoDate, advanceDate, dispatchId, rizo, country, excludeFromStateCalculation,
+			  designer, designHours, designWeek, designOnly, designOnlyCloth)
 				VALUES ('".$prevision->id."', '".$prevision->orderNumber."', STR_TO_DATE('".$prevision->deliveryDate."', '%d-%m-%Y'), '".$client."', $sailId, $sailGroupId, $sailDescription, '".$boat."', '".$prevision->type."', false, ".$oneDesign.", ".$greaterThan44.", ".
 								$p.", ".$e.", ".$i.", ".$j.", ".$area.", $sailOneDesign, '$observations', '$productionObservations', '$designObservations',
-								$week, $priority, $line, $seller, $advance, $percentage, $tentativeDate, $productionDate, $infoDate, $advanceDate, $dispatchId, $rizo, '$country', $excludeFromStateCalculation)" ;
+								$week, $priority, $line, $seller, $advance, $percentage, $tentativeDate, $productionDate, $infoDate, $advanceDate, $dispatchId, $rizo, '$country', $excludeFromStateCalculation,
+								'$designer', $designHours, $designWeek, $designOnly, '$designOnlyCloth')" ;
 
 		if(mysql_query($insert)) {
 			$obj->successful = true;
@@ -699,9 +709,11 @@ function weekUp($req) {
 
 	$obj->successful = true;
 
+	$column = $req->column;
+
 	if (empty($req->ids)) {
 		// no selection -> update all previsions with week betwwen 1 and 8
-		$update = "UPDATE previsions SET week = week + 1 WHERE week >= 1 and week <= 8";
+		$update = "UPDATE previsions SET $column = $column + 1 WHERE $column >= 1 and $column <= 8";
 
 		if(!mysql_query($update)) {
 			$obj->successful = false;
@@ -718,7 +730,7 @@ function weekUp($req) {
 		foreach ($req->ids as $id) {
 			logPrevisionUpdateFull($id, 'weekUp');
 
-			$update = "UPDATE previsions SET week = week + 1 WHERE id = '$id'";
+			$update = "UPDATE previsions SET $column = $column + 1 WHERE id = '$id'";
 
 			if(!mysql_query($update)) {
 				$obj->successful = false;
@@ -734,9 +746,11 @@ function weekDown($req) {
 
 	$obj->successful = true;
 
+	$column = $req->column;
+
 	if (empty($req->ids)) {
 		// no selection -> update all previsions with week betwwen 1 and 8
-		$update = "UPDATE previsions SET week = week - 1 WHERE week >= 2 and week <= 9";
+		$update = "UPDATE previsions SET $column = $column - 1 WHERE $column >= 2 and $column <= 9";
 
 		if(!mysql_query($update)) {
 			$obj->successful = false;
@@ -753,7 +767,7 @@ function weekDown($req) {
 		foreach ($req->ids as $id) {
 			logPrevisionUpdateFull($id, 'weekDown');
 
-			$update = "UPDATE previsions SET week = (case when week > 0 then week-1 else 0 end) WHERE id = '$id'";
+			$update = "UPDATE previsions SET $column = (case when $column > 0 then $column-1 else 0 end) WHERE id = '$id'";
 
 			if(!mysql_query($update)) {
 				$obj->successful = false;

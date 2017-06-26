@@ -14,6 +14,7 @@ include_once 'domain/previsionStates.php';
 
 db_connect();
 
+$storedCountry = isset($_GET['storedCountry']) ? $_GET['storedCountry'] : null;
 
 
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -44,6 +45,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$value = updateWeeksBySeason($json);
 	else if(isset($_GET['listForProduction'])) {
 		$value = getPrevisions(null, null, $expand, true, null, $_GET['sellerCode'], $_GET['offset'], $json);
+	}
+	else if(isset($_GET['listForDesign'])) {
+		$value = getPrevisions(null, 'false', $expand, null, null, $_GET['code'], $_GET['offset'], $json);
 	}
 	else if(isset($_GET['listHistoric'])) {
 		$value = getPrevisions(null, null, $expand, null, true, $_GET['sellerCode'], $_GET['offset'], $json);

@@ -28,4 +28,7 @@ angular.module('vsko.stock')
 	deleted: 'DELETED'
 })
 
-.constant('countries', ['ARG', 'BRA']);
+.constant('countries', {
+		list: ['ARG', 'BRA'],
+		designOnly: 'OTRO'
+});

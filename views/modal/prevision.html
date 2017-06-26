@@ -20,18 +20,24 @@
 
 					<div class="row">
 						<div class="col-md-6 nopadding">
-								<label class="control-label col-xs-3" for="edit_od">One design</label>
-								<div class="col-xs-3">
-									<input name="edit_od" type="checkbox" class="" ng-model="prevision.oneDesign" ng-change="oneDesignCloths()">
+								<label class="control-label col-xs-3 padding-top-3" for="edit_od">One Design</label>
+								<div class="col-xs-1">
+									<input name="edit_od" type="checkbox" class="" ng-model="prevision.oneDesign" ng-disabled="prevision.designOnly" ng-change="oneDesignCloths()">
 								</div>
 
-                <label class="control-label col-xs-5" translate>Exclude state calculation</label>
+                <!-- <label class="control-label col-xs-3 padding-top-3" for="edit_od">3DI/3DL/ESP</label>
+								<div class="col-xs-1">
+									<input name="edit_od" type="checkbox" class="" ng-model="prevision.canvas" ng-change="canvasOrder()">
+								</div> -->
+                <div class="col-xs-2"></div>
+
+                <label class="control-label col-xs-5 padding-top-3" translate>Exclude state calculation</label>
 								<div class="col-xs-1 nopadding">
 									<input type="checkbox" class="" ng-model="prevision.excludeFromStateCalculation">
 								</div>
 						</div>
             <div class="col-md-6 nopadding">
-								<label class="control-label col-xs-3" for="edit_client" translate>State</label>
+								<label class="control-label col-xs-3 padding-top-3" for="edit_client" translate>State</label>
 								<!-- <div class="col-xs-9">
                   <span style="color:black; padding:2px;" ng-style="{'background-color': (prevision.stateAccepted=='0' ? 'orange' : '')}">
       							{{prevision.state}}
@@ -44,9 +50,9 @@
       							<a href="javascript:void(0)" ng-show="prevision.stateAccepted=='0'" ng-click="acceptStateChange(prevision); $event.stopPropagation();" style="cursor:pointer;" class="tag-control"><span class="glyphicon glyphicon-ok control-label" style="text-align:center; margin-left:4px;"></span></a>
       						</span>
 								</div>
-                <label class="control-label col-xs-2" translate>Country</label>
+                <label class="control-label col-xs-2 padding-top-3" translate>Country</label>
 								<div class="col-xs-4">
-									<select ng-model="prevision.country" ng-options="c for c in countries" class="form-control small" ng-disabled="user.storedCountry == 'BRA' || prevision.isNew || (prevision.designed=='1' && prevision.id.indexOf('-prev')==-1)" ng-change="refreshCountry();">
+									<select ng-model="prevision.country" ng-options="c for c in countries" class="form-control small" ng-disabled="user.storedCountry == 'BRA' || prevision.isNew || (prevision.designed=='1' && prevision.id.indexOf('-prev')==-1) || prevision.designOnly" ng-change="refreshCountry();">
                   </select>
 								</div>
 						</div>
@@ -221,7 +227,7 @@
               <div class="panel-body">
 
                 <div class="row">
-                  <div class="col-md-4 nopadding">
+                  <div class="col-md-3 nopadding">
                     <label class="control-label col-xs-6" translate>Designer</label>
                     <div class="col-xs-6">
                       <select name="dd_des" ng-model="prevision.selectedDesigner" ng-options="d as d.name for d in designers" class="form-control small" ng-change="">
@@ -229,17 +235,23 @@
                       </select>
                     </div>
                   </div>
-                  <div class="col-md-4 nopadding">
+                  <div class="col-md-3 nopadding">
                     <label class="control-label col-xs-6" translate>Hours</label>
                     <div class="col-xs-6">
                       <input type="text" class="form-control small" ng-model="prevision.designHours">
                     </div>
                   </div>
-                  <div class="col-md-4 nopadding">
+                  <div class="col-md-3 nopadding">
                     <label class="control-label col-xs-6" translate>Week</label>
                     <div class="col-xs-6">
-                      <input type="number" class="form-control small" ng-model="prevision.designWeek">
+                      <input type="text" class="form-control small" ng-model="prevision.designWeek">
                     </div>
+                  </div>
+                  <div class="col-md-3 nopadding">
+                    <label class="control-label col-xs-6" for="edit_od" translate>Only design</label>
+    								<div class="col-xs-6">
+    									<input name="edit_od" type="checkbox" class="" ng-model="prevision.designOnly" ng-change="designOnlyOrder()">
+    								</div>
                   </div>
                 </div>
               </div>
@@ -423,7 +435,7 @@
 						</div>
 					</div>
 
-					<div class="row" ng-repeat="c in prevision.cloths">
+					<div class="row" ng-repeat="c in prevision.cloths" ng-show="!prevision.designOnly">
 						<ng-form name="innerForm">
 						<div class="col-md-6 nopadding">
 								<label class="control-label col-xs-4" for="edit_cloth" translate>Cloth</label>
@@ -442,6 +454,15 @@
 								<span class="glyphicon glyphicon-plus col-xs-1 control-label" ng-click="addCloth()" ng-show="$last" style="text-align:center; cursor:pointer;" ng-hide="prevision.designed=='1' && prevision.id.indexOf('-prev')==-1"></span>
 						</div>
 						</ng-form>
+					</div>
+
+          <div class="row" ng-show="prevision.designOnly">
+						<div class="col-md-6 nopadding">
+								<label class="control-label col-xs-4" for="edit_cloth" translate>Cloth</label>
+								<div class="col-xs-8">
+									<input ng-model="prevision.designOnlyCloth" class="form-control small">
+								</div>
+						</div>
 					</div>
 
 				</form>

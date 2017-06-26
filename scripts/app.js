@@ -210,7 +210,12 @@ angular.module("vsko.stock", [
                 controller: 'PrevisionsCtrl',
                 restricted: 'plotter'
             })
-            .when('/design', {
+            .when('/oldDesign', {
+                templateUrl: 'views/oldDesign.html',
+                controller: 'OldDesignCtrl',
+                restricted: 'plotter'
+            })
+						.when('/design', {
                 templateUrl: 'views/design.html',
                 controller: 'DesignCtrl',
                 restricted: 'plotter'

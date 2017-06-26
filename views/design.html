@@ -1,56 +1,208 @@
-<div class="jumbotron clearfix">
+<div class="nopaddingright jumbotron clearfix">
 	<h1><span translate>Design</span></h1>
+
+	<div class="row">
+		<div class="col-md-7 nopadding">
+			<label class="control-label col-xs-2" translate>Order by</label>
+			<div class="col-xs-3">
+				<select name="dd_ty" ng-model="filterOptions.selectedOrderBy" ng-options="sc as sc.name for sc in filterOptions.columns" class="form-control small">
+					<option value="">-- choose one --</option>
+				</select>
+			</div>
+
+			<div class="col-xs-1" style="padding-top: 4px;">
+				<span class="glyphicon glyphicon-sort control-label" ng-click="::changeSortOrder(1);" style="text-align:center; cursor:pointer;"></span>
+			</div>
+
+			<label class="control-label col-xs-2" translate>Then order by</label>
+			<div class="col-xs-3">
+				<select name="dd_ty" ng-model="filterOptions.selectedOrderBy2" ng-options="sc as sc.name for sc in filterOptions.columns" class="form-control small">
+					<option value="">-- choose one --</option>
+				</select>
+			</div>
+
+			<div class="col-xs-1" style="padding-top: 4px;">
+				<span class="glyphicon glyphicon-sort control-label" ng-click="::changeSortOrder(2);" style="text-align:center; cursor:pointer;"></span>
+			</div>
+		</div>
+
+		<div class="col-md-5 nopadding noprint">
+			<label class="control-label col-xs-3" translate>Design summary</label>
+			<div class="col-xs-4">
+				<span class="glyphicon glyphicon-stats control-label" ng-click="showDesignSummaryModal(allDesign)" style="text-align:center; cursor:pointer;"></span>
+			</div>
+		</div>
+	</div>
+	<div class="row noprint">
+		<div class="col-md-7 nopadding">
+			<label class="control-label col-xs-2" translate>Show all</label>
+			<div class="col-xs-4">
+				<input type="checkbox" ng-model="filterOptions.showAll">
+			</div>
+		</div>
+
+		<div class="col-md-5 nopadding">
+			<label class="control-label col-xs-3" translate>Columns filter</label>
+			<div class="col-xs-4">
+				<span class="glyphicon glyphicon-cog control-label" ng-click="::oneTimeBindings.togglePopupList('columnsSelector');" style="text-align:center; cursor:pointer;"></span>
+			</div>
+		</div>
+	</div>
+
+	<div class="row noprint">
+		<div class="col-md-7 nopadding">
+
+			<label class="control-label col-xs-2" access-allowed="admin,produccion">{{'Week' | translate}}</label>
+
+			<div class="col-xs-2" access-allowed="admin,produccion">
+				<span class="glyphicon glyphicon-chevron-down control-label" ng-click="::oneTimeBindings.weekDown();" style="text-align:center; cursor:pointer; margin-right: 15px;" title="Bajar semana"></span>
+				<span class="glyphicon glyphicon-chevron-up control-label" ng-click="::oneTimeBindings.weekUp();" style="text-align:center; cursor:pointer;" title="Subir semana"></span>
+			</div>
+
+			<label class="control-label col-xs-4" access-restricted="admin,produccion"></label>
+
+			<label class="control-label col-xs-3"></label>
+
+			<div class="col-xs-3">
+				<span class="glyphicon glyphicon-remove icon-with-label"></span>
+				<span><a ng-click="clearFilters()" class="btn-link">{{'Clear filters' | translate}}</a><span>
+			</div>
+
+			<div class="col-xs-2">
+				<span class="glyphicon glyphicon-sort-by-attributes icon-with-label"></span>
+				<span><a ng-click="search(1)" class="btn-link">{{'Sort' | translate}}</a><span>
+			</div>
+		</div>
+	</div>
 </div>
 
-<table class="table table-bordered table-striped table-hover">
+
+<table id="production" class="table table-bordered table-striped table-hover">
 	<thead>
 		<tr>
-			<th translate>Order number</th>
-			<th translate>Client</th>
-			<th translate>Sail</th>
-			<th translate>Boat</th>
-			<th translate>Cloths</th>
-			<th translate>State</th>
-			<th translate>Observations</th>
-			<th access-allowed="admin,ordenes,produccion,produccion,velas-od" translate>Designed</th>
+			<th class="noprint"></th>
+			<th class="designer"><div class="rotate"><span translate>Designer col</span></div></th>
+			<th class="designWeek" access-restricted="vendedor"><div class="rotate"><span translate>Design week col</span></div></th>
+			<th class="designHours" access-restricted="vendedor"><div class="rotate"><span translate>Hours</span></div></th>
+			<th class="orderNumber" translate>Order</th>
+			<th class="client" translate>Client</th>
+			<th class="boat" translate>Boat</th>
+			<th class="sailName" translate>Sail</th>
+			<th class="percentage"><div><span translate>%</span></div></th>
+			<th class="cloths" access-restricted="vendedor" translate>Cloths</th>
+			<th class="state" access-restricted="vendedor" translate>State col</th>
+			<th class="area" translate>Area</th>
+			<th class="country" translate>Country</th>
+			<!-- <th class="designOnly"><div class="rotate"><span translate>Only design col</span></div></th> -->
+			<th class="designObservations" translate>Design observations col</th>
+			<th access-allowed="admin,ordenes,produccion,velas-od" access-restricted="vendedor" class="noprint" translate>Designed</th>
+		</tr>
+		<tr class="production-filter">
+			<th class="noprint"></th>
+			<th class="designer" ng-style="{'background-color': headerBackgroundColor(selectionObject.designer)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('designer');" style="text-align:center; cursor:pointer;"></span></div></th>
+			<th class="designWeek" ng-style="{'background-color': headerBackgroundColor(selectionObject.designWeek)}" access-restricted="vendedor"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('designWeek');" style="text-align:center; cursor:pointer;"></span></div></th>
+			<th class="designHours" ng-style="{'background-color': headerBackgroundColor(selectionObject.designHours)}" access-restricted="vendedor"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('designHours');" style="text-align:center; cursor:pointer;"></span></div></th>
+			<th class="orderNumber" ng-style="{'background-color': headerBackgroundColor(selectionObject.orderNumber)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('orderNumber');" style="text-align:center; cursor:pointer;"></div></th>
+			<th class="client" ng-style="{'background-color': headerBackgroundColor(selectionObject.client)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('client');" style="text-align:center; cursor:pointer;"></span></div></th>
+			<th class="boat" ng-style="{'background-color': headerBackgroundColor(selectionObject.boat)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('boat');" style="text-align:center; cursor:pointer;"></div></th>
+			<th class="sailName" ng-style="{'background-color': headerBackgroundColor(selectionObject.sailName)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('sailName');" style="text-align:center; cursor:pointer;"></div></th>
+			<th class="percentage" ng-style="{'background-color': headerBackgroundColor(selectionObject.percentage)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('percentage');" style="text-align:center; cursor:pointer;"></div></th>
+			<th class="cloths" ng-style="{'background-color': headerBackgroundColor(selectionObject.cloths)}" style="min-width:95px;" access-restricted="vendedor"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('cloths');" style="text-align:center; cursor:pointer;"></div></th>
+			<th class="state" ng-style="{'background-color': headerBackgroundColor(selectionObject.state)}" access-restricted="vendedor"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('state');" style="text-align:center; cursor:pointer;"></div></th>
+			<th class="area" ng-style="{'background-color': headerBackgroundColor(selectionObject.area)}" access-restricted="vendedor"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('area');" style="text-align:center; cursor:pointer;"></div></th>
+			<th class="country" ng-style="{'background-color': headerBackgroundColor(selectionObject.country)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('country');" style="text-align:center; cursor:pointer;"></div></th>
+			<!-- <th class="designOnly" ng-style="{'background-color': headerBackgroundColor(selectionObject.designOnly)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('designOnly');" style="text-align:center; cursor:pointer;"></div></th> -->
+			<th class="designObservations"></th>
+			<th class="production-filter noprint" access-allowed="admin,produccion,velas-od" access-restricted="vendedor"></th>
 		</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="p in previsions | filter:searchBox | orderBy:'name'">
-			<td>
-				<a href="javascript:void(0)" ng-click="showPrevisionModal(p)">{{::p.orderNumber}}</a>
+		<tr ng-repeat="p in previsions track by p.id" my-repeat-directive="start" ng-style="::{'background-color': weekBackgroundColor(p)}">
+			<td class="noprint">
+				<input type="checkbox" id="{{::p.id}}"/>
 			</td>
-			<td>
-				{{::p.client}}
+			<td class="designer" ng-show="::visibility.selected('designer')">
+				<span ng-bind=":refreshColumnsValue:getValue(p, 'designer')"></span>
 			</td>
-			<td nowrap>
-				{{p.sailName}}
+			<td class="designWeek" ng-show="::visibility.selected('designWeek')" ng-mouseover="::oneTimeBindings.showPopupList('designWeeks');" ng-mouseleave="::oneTimeBindings.hidePopupList('designWeeks');" ng-style=":refreshErrorBackground:visibility.errorStyle(p, 'designWeek');">
+				<editable-production-input entity="::p" field="'designWeek'" callback="::changedPrevision.numericField" editable-by-role="'admin,ordenes,produccion,velas-od'" width="20" style="display:inline-block;"></editable-production-input>
 			</td>
-			<td>
-				{{::p.boat}}
+			<td class="designHours" ng-show="::visibility.selected('designHours')" ng-style=":refreshErrorBackground:visibility.errorStyle(p, 'designHours');">
+				<editable-production-input entity="::p" field="'designHours'" callback="::changedPrevision.numericField" editable-by-role="'admin,ordenes,produccion,velas-od'" width="20" style="display:inline-block;"></editable-production-input>
 			</td>
-			<td>
-				<design-cloths-tags cloths="::p.cloths" editable-by-role="'admin,ordenes,produccion,velas-od'" ng-model="::p.cloths"/>
+			<td class="orderNumber" ng-show="::visibility.selected('orderNumber')" nowrap>
+				<a href="javascript:void(0);" ng-click="showPrevisionModal(p)">{{:refreshColumnsValue:p.orderNumber}}</a>
 			</td>
-			<td>
-				{{::p.state}}
+			<td class="client" ng-show="::visibility.selected('client')" nowrap>
+				{{:refreshColumnsValue:getValue(p, 'client')}}
 			</td>
-			<td ng-mouseover="over = true" ng-mouseleave="over = false" >
-				{{:refreshObservations:p.designObservations}}
-				<span class="glyphicon glyphicon-pencil col-xs-1 control-label" ng-click="showEditModal(p, editObservations)" style="text-align:center; cursor:pointer; float:none; padding-left:5px; padding-right:5px;" ng-show="over" access-allowed="admin,ordenes,produccion,velas-od">&nbsp;</span>
+			<td class="boat" ng-show="::visibility.selected('boat')" nowrap>
+				{{:refreshColumnsValue:getValue(p, 'boat')}}
 			</td>
-			<td style="width:80px; text-align:center;" access-allowed="admin,ordenes,produccion,velas-od">
-				<!-- <a ng-click="showConfirmModal(p, designed)" class="btn btn-default"> -->
-					<span class="glyphicon glyphicon-ok icon-link" ng-click="showConfirmModal(p, designed)" ng-show="!p.designed"></span>
-					<span class="glyphicon glyphicon-remove icon-link" ng-click="showConfirmModal(p, designed)" ng-show="p.designed"></span>
-				<!-- </a> -->
+			<td class="sailName" ng-show="::visibility.selected('sailName')" nowrap>
+				{{:refreshColumnsValue:getValue(p, 'sailName')}}
+			</td>
+			<td class="percentage" ng-show="::visibility.selected('percentage')" style="min-width:30px;" ng-mouseover="::oneTimeBindings.showPopupList('percentages');" ng-mouseleave="::oneTimeBindings.hidePopupList('percentages');" ng-style=":refreshErrorBackground:visibility.errorStyle(p, 'percentage');">
+				<editable-production-input entity="::p" field="'percentage'" callback="::changedPrevision.numericField" editable-by-role="'admin,produccion,velas-od'" read-only-fn="::oneTimeBindings.readOnlyPercentage(p)" width="20" style="display:inline-block;"></editable-production-input>
+			</td>
+			<td class="cloths" ng-show="::visibility.selected('cloths')">
+				<prevision-cloths ng-show="!p.designOnly" prevision="::p" style="display:inline-block;"></prevision-cloths>
+				<span ng-show="p.designOnly">{{:refreshColumnsValue:getValue(p, 'designOnlyCloth')}}</span>
+			</td>
+			<td class="state" ng-show="::visibility.selected('state')" access-restricted="vendedor" style="text-align: center;">
+				<span style="padding:2px;" ng-style="::oneTimeBindings.stateStyle(p)">
+					{{:refreshColumnsValue:getValue(p, 'state')}}
+					<a href="javascript:void(0)" ng-show=":refreshStateValue:p.stateAccepted=='0'" ng-click="::oneTimeBindings.acceptStateChange(p); $event.stopPropagation();" style="cursor:pointer;" class="tag-control" access-allowed="admin,produccion">
+						<span class="glyphicon glyphicon-ok save-ok control-label" style="text-align:center; margin-left:4px;"></span>
+					</a>
+				</span>
+			</td>
+			<td class="area" ng-show="::visibility.selected('area')" access-restricted="vendedor">
+				{{:refreshColumnsValue:getValue(p, 'area')}}
+			</td>
+			<td class="country" ng-show="::visibility.selected('country')">
+				{{:refreshColumnsValue:getValue(p, 'country')}}
+			</td>
+			<!-- <td class="designOnly" ng-show="::visibility.selected('designOnly')">
+				{{:refreshColumnsValue:getValue(p, 'designOnly', true)}}
+			</td> -->
+			<td class="designObservations" ng-show="::visibility.selected('designObservations')" style="min-width:110px;" ng-style=":refreshErrorBackground:visibility.errorStyle(p, 'designObservations');">
+				<editable-production-observations entity="::p" field="'designObservations'" callback="::changedPrevision.field" edit-disabled="designObservationsDisabled" editable-by-role="'vendedor'" style="display:inline-blockzz;"></editable-production-observations>
+			</td>
+			<td style="width:80px; text-align:center;" access-allowed="admin,produccion,ordenes,velas-od" class="noprint">
+				<span class="glyphicon glyphicon-ok icon-link" ng-click="showConfirmModal(p, designed)" ></span>
+			</td>
+		</tr>
+		<tr class="noprint">
+			<td colspan="21" ng-show="!hideLoading">
+				Cargando...
 			</td>
 		</tr>
 	</tbody>
 </table>
 
-<prevision-modal>
+<ul id="pagination" class="pagination-sm"></ul>
+
+<!-- <ul id="pagination" class="pagination-sm ng-scope pagination" ng-show="previsions.length == rows">
+	<li class="page"><a href="javascript:void(0)" ng-click="::showAll()" translate>Show all</a></li>
+</ul> -->
+
+<div>
+	<production-weeks/>
+</div>
+
+<div>
+	<production-percentages/>
+</div>
+
+<div>
+	<production-columns-selector/>
+</div>
+
+<prevision-modal/>
 
 <confirm-modal/>
 
-<edit-text-modal field="'designObservations'"/>
+<design-summary-modal/>
+
+<filter-selection-modal/>

@@ -92,13 +92,15 @@ function getInTransitUpToDate($clothId, $upToDate) {
 function getToBuy($clothId) {
 
 	$result = array();
+	$addedOrders = array();
 	$orders = array_merge(getOrdersUpToDate('TO_BUY', null, 'FULL', null), getOrdersUpToDate('TO_CONFIRM', null, 'FULL', null));
 
 	foreach ($orders as $order) {
 		foreach ($order['products'] as $product) {
 
-			if($product['clothId'] == $clothId) {
+			if($product['clothId'] == $clothId && !in_array($order['orderId'], $addedOrders)) {
 				array_push($result, $order);
+				array_push($addedOrders, $order['orderId']);
 			}
 		}
 	}

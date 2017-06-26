@@ -1,0 +1,55 @@
+<div class="modal" tabindex="-1" role="dialog" >
+  <div class="modal-dialog modal-lg" style="margin-top: 0px;">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<div class="edit_person">
+					<h2>
+						<span class="glyphicon glyphicon-file"></span>
+						<span>{{'Design summary' | translate}}</span>
+					</h2>
+				</div>
+				<a href="javascript:void(0)" class="btn btn-lg closebtn" ng-click="$hide()">
+					<span class="glyphicon glyphicon-remove"></span>
+				</a>
+			</div>
+
+			<div class="modal-body">
+				<table id="groups" class="table table-bordered table-striped table-hover table-summary-production">
+					<thead>
+						<tr>
+							<th></th>
+							<th colspan="{{summary.designers.length}}" translate>Hours</th>
+              <th translate>Total</th>
+						</tr>
+            <tr>
+							<th translate>Week small</th>
+              <th ng-repeat="designer in summary.designers">
+                {{designer}}
+              </th>
+              <th translate>Hours</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="d in summary.weeksData">
+							<td style="font-weight: bold;">{{::d.week}}</td>
+              <td ng-repeat="designer in summary.designers">
+                {{::sumDesignerHours(designer, d.week)}}
+              </td>
+              <td>{{::d.sumWeekTotal(d)}}</td>
+						</tr>
+            <tr id="total1">
+							<td>Tot</td>
+              <td ng-repeat="designer in summary.designers">
+                {{::sumCol(designer)}}
+              </td>
+              <td>{{::sumTotals()}}</td>
+						</tr>
+					</tbody>
+				</table>
+
+			</div>
+
+		</div>
+	</div>
+</div>
