@@ -284,6 +284,8 @@ function savePrevision($prevision)
 		if(mysql_query($insert)) {
 			$obj->successful = true;
 			$obj->isNew = true;
+
+			logPrevisionUpdateFull($prevision->id, 'newPrevision');
 		}
 		else {
 			$obj->successfulInsert = false;

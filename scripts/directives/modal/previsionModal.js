@@ -511,7 +511,9 @@ angular.module('vsko.stock')
           }
 
           $scope.deliveryDateChanged = function(oldValue) {
-            $scope.prevision.tentativeDate = $scope.prevision.deliveryDate;
+            if (!$scope.prevision.tentativeDate || $scope.prevision.isNew) {
+              $scope.prevision.tentativeDate = $scope.prevision.deliveryDate;
+            }
             // mark as manually changed
             console.log('deliveryDate changed:', oldValue, $scope.prevision.deliveryDate)
             if (oldValue !== $scope.prevision.deliveryDate && !$scope.prevision.isNew) {
