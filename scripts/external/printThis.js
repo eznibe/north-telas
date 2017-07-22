@@ -85,7 +85,8 @@
                 var href = $(this).attr("href");
                 if (href) {
                     var media = $(this).attr("media") || "all";
-                    $head.append("<link type='text/css' rel='stylesheet' href='telas/" + href + "' media='" + media + "'>")
+                    var path = options.path ? options.path + '/' : '';
+                    $head.append("<link type='text/css' rel='stylesheet' href='" + path + href + "' media='" + media + "'>")
                 }
             });
 
