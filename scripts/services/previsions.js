@@ -263,5 +263,17 @@ angular.module('vsko.stock')
 					return $http.get(url + 'plotters_GET.php?previsionId='+previsionId+'&hasPlotterCuts=true');
 				};
 
+				this.isInSomeDispatch = function(previsionId) {
+					return $http.get(url + 'previsions_GET.php?previsionId='+previsionId+'&isInSomeDispatch=true');
+				};
+
+				this.weekUp = function(previsionIds) {
+					return $http.post(url + 'previsions_POST.php?weekUp=true', {ids: previsionIds, user: $rootScope.user.name});
+				};
+
+				this.weekDown = function(previsionIds) {
+					return $http.post(url + 'previsions_POST.php?weekDown=true', {ids: previsionIds, user: $rootScope.user.name});
+				};
+
         return this;
     }]);

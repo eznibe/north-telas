@@ -1,6 +1,6 @@
 <div class="modal" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-lg" style="margin-top: 0px;">
-		<div class="modal-content">
+		<div class="modal-content" id="printDispatch">
 
 			<div class="modal-header">
 				<div class="edit_person">
@@ -9,27 +9,27 @@
 						<span translate>Dispatch</span>
 					</h2>
 				</div>
-				<a href="javascript:void(0)" class="btn btn-lg closebtn" ng-click="closeDispatch()">
+				<a href="javascript:void(0)" class="btn btn-lg closebtn noprint" ng-click="closeDispatch()">
 					<span class="glyphicon glyphicon-remove"></span>
 				</a>
+        <div class="dispatch-logo onlyprint"></div>
 		</div>
 
 			<div class="modal-body">
 
-				<form class="form-horizontal ng-pristine ng-valid" name="form" novalidate>
+				<form class="form-horizontal ng-pristine ng-valid noprint" name="form" novalidate>
 
 					<div class="row">
 						<div class="col-md-4 nopadding">
 								<label class="control-label col-xs-4 nopaddingright" translate>Dispatch number</label>
 								<div class="col-xs-8">
-									<input name="edit_order" type="text" class="form-control small" ng-model="dispatch.number" required readonly>
+									<input type="text" class="form-control small noprint" ng-model="dispatch.number" required readonly>
 								</div>
 						</div>
             <div class="col-md-4 nopadding">
 								<label class="control-label col-xs-4 nopadding" translate>Dispatch date</label>
 								<div class="col-xs-8">
-									<!-- <input name="edit_order" type="text" class="form-control small" ng-model="dispatch.date" > -->
-                  <div class="input-group input-group-sm date" date-picker>
+                  <div class="input-group input-group-sm date noprint" date-picker>
 										<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="dispatch.dispatchDate" class="form-control small">
 										<span class="input-group-addon">
 											<span class="glyphicon-calendar glyphicon"></span>
@@ -40,13 +40,13 @@
             <div class="col-md-4 nopadding">
 								<label class="control-label col-xs-4" translate>Value USD</label>
 								<div class="col-xs-8">
-									<input name="edit_order" type="text" class="form-control small" ng-model="dispatch.value" >
+									<input type="text" class="form-control small noprint" ng-model="dispatch.value" />
 								</div>
 						</div>
 					</div>
 
           <div class="row">
-            <div class="col-md-4 nopadding">
+            <div class="col-md-4 nopadding noprint">
 								<label class="control-label col-xs-4" translate>Destinatary</label>
 									<!-- <input name="edit_order" type="text" class="form-control small" ng-model="dispatch.destinatary" > -->
                 <div class="col-xs-8">
@@ -63,16 +63,17 @@
                       input-class="form-control small"/>
 								</div>
 						</div>
+
             <div class="col-md-4 nopadding">
 								<label class="control-label col-xs-4 nopadding" translate>Address</label>
 								<div class="col-xs-8">
-									<input name="edit_order" type="text" class="form-control small" ng-model="dispatch.address" >
+									<input name="edit_order" type="text" class="form-control small noprint" ng-model="dispatch.address" >
 								</div>
 						</div>
 						<div class="col-md-4 nopadding">
 								<label class="control-label col-xs-4" translate>Destiny</label>
 								<div class="col-xs-8">
-									<input name="edit_order" type="text" class="form-control small" ng-model="dispatch.destiny">
+									<input name="edit_order" type="text" class="form-control small noprint" ng-model="dispatch.destiny">
 								</div>
 						</div>
 					</div>
@@ -81,26 +82,26 @@
             <div class="col-md-4 nopadding">
 								<label class="control-label col-xs-4" translate>Transport</label>
 								<div class="col-xs-8">
-									<input name="edit_order" type="text" class="form-control small" ng-model="dispatch.transport" >
+									<input name="edit_order" type="text" class="form-control small noprint" ng-model="dispatch.transport" >
 								</div>
 						</div>
             <div class="col-md-4 nopadding">
 								<label class="control-label col-xs-4 nopadding" translate>Delivery type</label>
 								<div class="col-xs-8">
-									<input name="edit_order" type="text" class="form-control small" ng-model="dispatch.deliveryType" >
+									<input name="edit_order" type="text" class="form-control small noprint" ng-model="dispatch.deliveryType" >
 								</div>
 						</div>
             <div class="col-md-4 nopadding">
 								<label class="control-label col-xs-4" translate>Tracking</label>
 								<div class="col-xs-8">
-									<input name="edit_order" type="text" class="form-control small" ng-model="dispatch.tracking" >
+									<input name="edit_order" type="text" class="form-control small noprint" ng-model="dispatch.tracking" >
 								</div>
 						</div>
 					</div>
 
 					<div class="row" style="margin-bottom: 25px; margin-top: 25px;">
 
-						<div class="col-md-4 nopadding">
+						<div class="col-md-4 nopadding noprint">
 								<label class="control-label col-xs-4" for="edit_obs" translate>Order</label>
 								<div class="col-xs-8">
                   <angucomplete-alt id="ex1"
@@ -116,7 +117,7 @@
 								</div>
 						</div>
 
-            <div class="col-md-7 nopadding">
+            <div class="col-md-6 nopadding noprint">
               <div class="col-xs-2">
                 <a ng-click="addPrevision(acPrevision)" class="btn nopadding" style="color: #616161;" ng-disabled="!dispatch.id" access-restricted="vendedor">
                   <span class="glyphicon glyphicon-plus"></span>
@@ -130,15 +131,234 @@
               </div>
             </div>
 
-						<div class="col-md-1 nopadding" access-restricted="read-only">
+            <div class="col-md-12 onlyprint">
+              <label class="control-label col-xs-2" translate>Notes</label>
+              <div class="col-xs-10">
+                <textarea name="edit_order" style="height: 34px;" type="text" class="form-control small" ng-model="dispatch.notes"></textarea>
+              </div>
+            </div>
+
+						<div class="col-md-1 nopadding noprint" access-restricted="read-only">
 								<div class="col-xs-12" access-restricted="vendedor">
 									<a ng-click="saveDispatch(dispatch)" class="btn btn-default floatright edit_person" ng-disabled="!form.$valid" >
 										<span class="glyphicon glyphicon-save"></span>
 									</a>
 								</div>
 						</div>
+
+            <div class="col-md-1 nopadding noprint" access-restricted="read-only">
+								<div class="col-xs-12" access-restricted="vendedor">
+									<a ng-click="printDispatch(dispatch)" class="btn btn-default floatright edit_person">
+										<span class="glyphicon glyphicon-print"></span>
+									</a>
+								</div>
+						</div>
 					</div>
 				</form>
+
+
+        <!-- Only to print: 3 rows-->
+        <!-- <div class="onlyprint">
+          <div class="row">
+            <div class="col-xs-4">
+                <label class="control-label col-xs-6" translate>Dispatch number</label>
+                <div class="col-xs-6">
+                  <label id="d_number" class="form-control small"></label>
+                </div>
+            </div>
+
+            <div class="col-xs-4">
+                <label class="control-label col-xs-6" translate>Dispatch date</label>
+                <div class="col-xs-6">
+                  <label id="d_dispatchDate" class="form-control small"></label>
+                </div>
+            </div>
+
+            <div class="col-xs-4">
+                <label class="control-label col-xs-6" translate>Value USD</label>
+                <div class="col-xs-6">
+                  <label id="d_value" class="form-control small onlyprint"></label>
+                </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xs-4">
+              <label class="control-label col-xs-6" translate>Destinatary</label>
+              <div class="col-xs-6">
+                <label id="d_destinatary" class="form-control small onlyprint"></label>
+              </div>
+            </div>
+            <div class="col-xs-4">
+                <label class="control-label col-xs-6" translate>Address</label>
+                <div class="col-xs-6">
+                  <label id="d_address" class="form-control small onlyprint"></label>
+                </div>
+            </div>
+            <div class="col-xs-4">
+                <label class="control-label col-xs-6" translate>Destiny</label>
+                <div class="col-xs-6">
+                  <label id="d_destiny" class="form-control small onlyprint"></label>
+                </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xs-4">
+                <label class="control-label col-xs-6" translate>Transport</label>
+                <div class="col-xs-6">
+                  <label id="d_transport" class="form-control small onlyprint"></label>
+                </div>
+            </div>
+            <div class="col-xs-4">
+                <label class="control-label col-xs-6" translate>Delivery type</label>
+                <div class="col-xs-6">
+                  <label id="d_deliveryType" class="form-control small onlyprint"></label>
+                </div>
+            </div>
+            <div class="col-xs-4">
+                <label class="control-label col-xs-6" translate>Tracking</label>
+                <div class="col-xs-6">
+                  <label id="d_tracking" class="form-control small onlyprint"></label>
+                </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <label class="control-label col-xs-4" translate>Notes</label>
+              <div class="col-xs-8">
+                <textarea name="edit_order" style="height: 34px;" type="text" class="form-control small" ng-model="dispatch.notes"></textarea>
+              </div>
+            </div>
+          </div>
+        </div> -->
+
+        <!-- Only to print: 1 row -->
+        <!-- <div class="onlyprint">
+          <div class="row">
+            <div class="col-xs-12">
+                <label class="control-label col-xs-4" translate>Dispatch number</label>
+                <label id="d_number" class="control-label col-xs-8"></label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+                <label class="control-label col-xs-4" translate="Dispatch date"></label>
+                <label id="d_dispatchDate" class="control-label col-xs-8"></label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+                <label class="control-label col-xs-4" translate>Value USD</label>
+                <label id="d_value" class="control-label col-xs-8"></label>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xs-12">
+              <label class="control-label col-xs-4" translate>Destinatary</label>
+              <label id="d_destinatary" class="control-label col-xs-8"></label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+                <label class="control-label col-xs-4" translate>Address</label>
+                <label id="d_address" class="control-label col-xs-8"></label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+                <label class="control-label col-xs-4" translate>Destiny</label>
+                <label id="d_destiny" class="control-label col-xs-8"></label>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xs-12">
+                <label class="control-label col-xs-4" translate>Transport</label>
+                <label id="d_transport" class="control-label col-xs-8"></label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+                <label class="control-label col-xs-4" translate>Delivery type</label>
+                <label id="d_deliveryType" class="control-label col-xs-8"></label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+                <label class="control-label col-xs-4" translate>Tracking</label>
+                <label id="d_tracking" class="control-label col-xs-8"></label>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <label class="control-label col-xs-4" translate>Notes</label>
+              <label id="d_notes" class="control-label col-xs-8"></label>
+            </div>
+          </div>
+        </div> -->
+
+        <!-- Only print: 2 rows -->
+        <div class="onlyprint">
+          <div class="row">
+            <div class="col-xs-6">
+                <label class="control-label col-xs-4" translate>Dispatch number</label>
+                <label id="d_number" class="control-label col-xs-8"></label>
+            </div>
+            <div class="col-xs-6">
+              <label class="control-label col-xs-4" translate>Dispatch date col</label>
+              <label id="d_dispatchDate" class="control-label col-xs-8"></label>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xs-6">
+              <label class="control-label col-xs-4" translate>Destinatary</label>
+              <label id="d_destinatary" class="control-label col-xs-8"></label>
+            </div>
+            <div class="col-xs-6">
+                <label class="control-label col-xs-4" translate>Value USD</label>
+                <label id="d_value" class="control-label col-xs-8"></label>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xs-6">
+              <label class="control-label col-xs-4" translate>Destiny</label>
+              <label id="d_destiny" class="control-label col-xs-8"></label>
+            </div>
+            <div class="col-xs-6">
+              <label class="control-label col-xs-4" translate>Transport col</label>
+              <label id="d_transport" class="control-label col-xs-8"></label>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xs-6">
+              <label class="control-label col-xs-4" translate>Delivery type</label>
+              <label id="d_deliveryType" class="control-label col-xs-8"></label>
+            </div>
+            <div class="col-xs-6">
+              <label class="control-label col-xs-4" translate>Tracking</label>
+              <label id="d_tracking" class="control-label col-xs-8"></label>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xs-6">
+              <label class="control-label col-xs-4" translate>Address</label>
+              <label id="d_address" class="control-label col-xs-8"></label>
+            </div>
+            <div class="col-xs-6">
+              <label class="control-label col-xs-4" translate>Notes</label>
+              <label id="d_notes" class="control-label col-xs-8"></label>
+            </div>
+          </div>
+        </div>
+
 
 				<table id="groups" class="table table-bordered table-striped table-hover">
 					<thead>
@@ -151,7 +371,7 @@
               <th translate>%</th>
               <th nowrap translate>Weight net</th>
               <th translate>Observations</th>
-							<th access-restricted="read-only,vendedor" translate>Delete</th>
+							<th access-restricted="read-only,vendedor" class="noprint" translate>Delete</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -162,10 +382,10 @@
 							<td nowrap>
 								{{o.orderNumber}}
 							</td>
-							<td ng-show="o.previsionId" style="min-width: 110px;">
+							<td ng-if="o.previsionId" style="min-width: 110px;">
 								{{o.client}}
 							</td>
-              <td ng-show="!o.previsionId" style="min-width: 110px;">
+              <td ng-if="!o.previsionId" style="min-width: 110px;">
 								<editable-production-input entity="::o" field="'client'" callback="::changedDispatch.field" width="100" editable-by-role="'admin,produccion,velas-od'" style="display:inline-block;"></editable-production-input>
 							</td>
               <td>
@@ -183,7 +403,7 @@
               <td>
                 <editable-production-textarea entity="::o" field="'observations'" callback="::changedDispatch.field" width="100" editable-by-role="'admin,produccion,velas-od'" style="display:inline-block;"></editable-production-textarea>
 							</td>
-							<td access-restricted="read-only,vendedor" style="width:80px; text-align:center;">
+							<td access-restricted="read-only,vendedor" style="width:80px; text-align:center;" class="noprint">
 								<!-- <a ng-click="showConfirmModal(o, deleteDispatchPrevision)" class="btn btn-default"> -->
 									<span class="glyphicon glyphicon-trash icon-link" ng-click="showConfirmModal(o, deleteDispatchPrevision)"></span>
 								<!-- </a> -->
@@ -202,15 +422,17 @@
                 {{ sumPrevisionsWeight() }}
 							</td>
               <td></td>
-							<td access-restricted="read-only,vendedor"></td>
+							<td access-restricted="read-only,vendedor" class="noprint"></td>
 						</tr>
 					</tbody>
 				</table>
 
+        <!-- <p class="break onlyprint" ng-class="{noprint: dispatch.previsions.length < 5}"/> -->
+
         <div class="row" style="margin-bottom: 25px; margin-top: 25px;">
 
           <div class="col-md-6">
-            <a ng-click="showCarryModal(null, 'BOX')" class="btn btn-default floatleft" style="margin-bottom: 10px;" access-restricted="read-only,vendedor">
+            <a ng-click="showCarryModal(null, 'BOX')" class="btn btn-default floatleft noprint" style="margin-bottom: 10px;" access-restricted="read-only,vendedor">
       	        <span class="glyphicon glyphicon-plus"></span>&nbsp;
       	        {{'Create new box' | translate}}
       	    </a>
@@ -220,8 +442,8 @@
                   <th translate>Box</th>
                   <th translate>Weight gross</th>
                   <th translate>Measures</th>
-                  <th access-restricted="read-only,vendedor"></th>
-                  <th access-restricted="read-only,vendedor"></th>
+                  <th access-restricted="read-only,vendedor" class="noprint"></th>
+                  <th access-restricted="read-only,vendedor" class="noprint"></th>
                 </tr>
               </thead>
               <tbody>
@@ -235,12 +457,12 @@
                   <td>
                     {{b.measures}}
                   </td>
-                  <td access-restricted="read-only,vendedor" style="width:80px; text-align:center;">
+                  <td access-restricted="read-only,vendedor" style="width:80px; text-align:center;" class="noprint">
                     <!-- <a ng-click="showCarryModal(b)" class="btn btn-default"> -->
                       <span class="glyphicon glyphicon-edit icon-link" ng-click="showCarryModal(b)"></span>
                     <!-- </a> -->
                   </td>
-                  <td access-restricted="read-only,vendedor" style="width:80px; text-align:center;">
+                  <td access-restricted="read-only,vendedor" style="width:80px; text-align:center;" class="noprint">
                     <!-- <a ng-click="showConfirmModal(b, deleteDispatchCarry)" class="btn btn-default"> -->
                       <span class="glyphicon glyphicon-trash icon-link" ng-click="showConfirmModal(b, deleteDispatchCarry)"></span>
                     <!-- </a> -->
@@ -259,7 +481,7 @@
           </div>
 
           <div class="col-md-6">
-            <a ng-click="showCarryModal(null, 'TUBE')" class="btn btn-default floatleft" style="margin-bottom: 10px;" access-restricted="read-only,vendedor">
+            <a ng-click="showCarryModal(null, 'TUBE')" class="btn btn-default floatleft noprint" style="margin-bottom: 10px;" access-restricted="read-only,vendedor">
       	        <span class="glyphicon glyphicon-plus"></span>&nbsp;
       	        {{'Create new tube' | translate}}
       	    </a>
@@ -269,8 +491,8 @@
                   <th translate>Tube</th>
                   <th translate>Weight gross</th>
                   <th translate>Measures</th>
-                  <th access-restricted="read-only,vendedor" translate></th>
-                  <th access-restricted="read-only,vendedor" translate></th>
+                  <th access-restricted="read-only,vendedor" class="noprint" translate></th>
+                  <th access-restricted="read-only,vendedor" class="noprint" translate></th>
                 </tr>
               </thead>
               <tbody>
@@ -284,12 +506,12 @@
                   <td>
                     {{t.measures}}
                   </td>
-                  <td access-restricted="read-only,vendedor" style="width:80px; text-align:center;">
+                  <td access-restricted="read-only,vendedor" style="width:80px; text-align:center;" class="noprint">
                     <!-- <a ng-click="showCarryModal(t)" class="btn btn-default"> -->
                       <span class="glyphicon glyphicon-edit icon-link" ng-click="showCarryModal(t)"></span>
                     <!-- </a> -->
                   </td>
-                  <td access-restricted="read-only,vendedor" style="width:80px; text-align:center;">
+                  <td access-restricted="read-only,vendedor" style="width:80px; text-align:center;" class="noprint">
                     <!-- <a ng-click="showConfirmModal(t, deleteDispatchCarry)" class="btn btn-default"> -->
                       <span class="glyphicon glyphicon-trash icon-link" ng-click="showConfirmModal(t, deleteDispatchCarry)"></span>
                     <!-- </a> -->

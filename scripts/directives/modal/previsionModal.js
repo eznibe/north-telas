@@ -81,10 +81,12 @@ angular.module('vsko.stock')
 
         	  OneDesign.getBoats().then(function(result) {
         		  $scope.boats = result.data;
+              $scope.allBoats = result.data;
         	  });
 
         	  OneDesign.getSails().then(function(result) {
       		    $scope.oneDesignSails = result.data;
+              $scope.allOneDesignSails = result.data;
         	  });
 
             $scope.lines = Production.getLines();
@@ -148,6 +150,8 @@ angular.module('vsko.stock')
               // handle creation/load of drive folders if they dont exists yet
               handlePrevisionDriveFolders(prevision);
 
+              // reset OD sails
+              $scope.oneDesignSails = $scope.allOneDesignSails;
 
               if(!$scope.prevision.cloths || $scope.prevision.cloths.length == 0) {
                 // init with one cloth empty, useful for creating new prevision
@@ -205,6 +209,11 @@ angular.module('vsko.stock')
 
           	  // set current selected boat
           	  $scope.prevision.selectedBoat = $scope.prevision.oneDesign ? $scope.boats.findAll({boat:$scope.prevision.boat})[0] : {};
+
+              if ($scope.prevision.selectedBoat && $scope.prevision.selectedBoat.boat) {
+                // filter sails of boat is already selected
+                $scope.oneDesignSails = $scope.prevision.selectedBoat.sails;
+              }
 
           	  // set current selected one design sail
           	  $scope.prevision.selectedOneDesignSail = $scope.prevision.oneDesign ? $scope.oneDesignSails.findAll({sail:$scope.prevision.sailOneDesign})[0] : {};
@@ -476,6 +485,7 @@ angular.module('vsko.stock')
               $scope.prevision.client = prevision.originalObject.client;
               $scope.prevision.boat = prevision.originalObject.boat;
               $scope.prevision.deliveryDate = prevision.originalObject.deliveryDate;
+              $scope.prevision.tentativeDate = prevision.originalObject.deliveryDate;
               $scope.prevision.type = prevision.originalObject.type;
               $scope.prevision.greaterThan44 = prevision.originalObject.greaterThan44;
               $scope.prevision.oneDesign = prevision.originalObject.oneDesign;
@@ -485,9 +495,9 @@ angular.module('vsko.stock')
               $scope.prevision.e = prevision.originalObject.e;
               $scope.prevision.i = prevision.originalObject.i;
               $scope.prevision.j = prevision.originalObject.j;
-              $scope.prevision.area = prevision.originalObject.area;
+              // $scope.prevision.area = prevision.originalObject.area;
 
-              $scope.prevision.selectedLine = prevision.originalObject.line ? $scope.lines.findAll({name:prevision.originalObject.line})[0] : {};
+              // $scope.prevision.selectedLine = prevision.originalObject.line ? $scope.lines.findAll({name:prevision.originalObject.line})[0] : {};
               $scope.prevision.selectedSeller = prevision.originalObject.seller ? $scope.sellers.findAll({name:prevision.originalObject.seller})[0] : {};
               $scope.prevision.priority = prevision.originalObject.priority;
 
@@ -498,6 +508,16 @@ angular.module('vsko.stock')
 
           $scope.orderNumberInputChanged = function(str) {
             $scope.prevision.orderNumber = str;
+          }
+
+          $scope.deliveryDateChanged = function(oldValue) {
+            $scope.prevision.tentativeDate = $scope.prevision.deliveryDate;
+            // mark as manually changed
+            console.log('deliveryDate changed:', oldValue, $scope.prevision.deliveryDate)
+            if (oldValue !== $scope.prevision.deliveryDate && !$scope.prevision.isNew) {
+              $scope.prevision.deliveryDateManuallyUpdated = "1";
+              $scope.prevision.deliveryDateChanged = true
+            }
           }
 
           $scope.updateFieldsByRule = function() {
@@ -720,17 +740,36 @@ angular.module('vsko.stock')
         	  return undefined;
           }
 
+          $scope.filterSails = function() {
+
+            // filter OD boat sails
+            if ($scope.prevision.oneDesign) {
+
+              if ($scope.prevision.selectedBoat && $scope.prevision.selectedBoat.boat) {
+                $scope.oneDesignSails = $scope.prevision.selectedBoat.sails;
+              } else {
+                $scope.oneDesignSails = $scope.allOneDesignSails;
+              }
+            }
+          }
+
+          $scope.setBoatBySail = function() {
+            // choose the corresponding boat according to selected OD sail
+            // Not implemented yet
+          }
+
           $scope.oneDesignCloths = function() {
 
+            // load the cloth(s) cthat corresponds to the selected combination boat - sail
         	  if($scope.prevision.oneDesign && $scope.prevision.selectedBoat && $scope.prevision.selectedBoat.boat && $scope.prevision.selectedOneDesignSail && $scope.prevision.selectedOneDesignSail.sail) {
 
-        		  var sail = $scope.prevision.selectedOneDesignSail.description;
+        		  // var sail = $scope.prevision.selectedOneDesignSail.description;
 
         		  $scope.prevision.cloths = new Array();
 
         		  OneDesign.findCloths($scope.prevision.selectedBoat.boat, escape($scope.prevision.selectedOneDesignSail.sail)).then(function(result) {
 
-        			  	$scope.prevision.cloths = new Array();
+    			  	  $scope.prevision.cloths = new Array();
 
     			    	$.each(result.data, function(index){
 
@@ -740,8 +779,8 @@ angular.module('vsko.stock')
     			    	});
 
     			    	if($scope.prevision.cloths.length==0) {
-              			  	$scope.prevision.cloths.push({});
-              		  	}
+        			  	$scope.prevision.cloths.push({});
+        		  	}
         		  });
 
         	  }

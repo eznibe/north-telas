@@ -60,10 +60,13 @@
 				<span>{{(deltaWithTransit(c)).toFixed(0)}}</span>
 			</td>
 			<td>
-				{{(c.price * c.sumAvailable).toFixed(2)}}
+				<!-- {{(c.price * c.sumAvailable).toFixed(2)}} -->
+				{{price(c).toFixed(2)}}
 			</td>
 			<td>
 				{{ delta(c) > 0 ? (c.price * delta(c)).toFixed(2) : 0 }}
+				<!-- TODO enable the below ? -->
+				<!-- {{ delta(c) > 0 ? (priceDelta(c)).toFixed(2) : 0 }} -->
 			</td>
 			<td>
 				{{ (c.price * deltaWithTransit(c)).toFixed(2) }}

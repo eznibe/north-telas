@@ -25,8 +25,8 @@
   "Priority col": "Prior.",
   "State col": "Est.",
   "Delivery date min": "F.Entrega",
-  "Tentative date min": "F.Tentativa",
-  "Tentative date": "Fecha tentativa",
+  "Tentative date min": "F.Orden",
+  "Tentative date": "Fecha de orden",
   "Production date min": "F.Producción",
   "Production date": "Fecha producción",
   "Info date min": "F.Info",
@@ -45,6 +45,7 @@
   "Destinatary": "Destinatario",
   "Destiny": "Destino",
   "Transport": "Emp. transporte",
+  "Transport col": "E.Transporte",
   "Delivery type": "Tipo de entrega",
   "Weight": "Peso",
   "Weight net": "Peso neto",
@@ -271,6 +272,9 @@
   "New prevision state": "Nuevo estado de la previsión",
   "Refresh Previsions States": "Sincronizar cambios de estado",
   "Currency": "$",
+
+  "Exclude state calculation": "Excluir cálculo estado",
+
   "": "",
   "notify": {
     "prevision_modified": "Prevision modificada.",
@@ -318,7 +322,6 @@
     "group_updated": "Grupo {{groupName}} actualizado.",
     "buy_amount": "Cantidad a comprar: {{amount}} mts",
     "buy_assigned": "Compra asignada a orden #{{orderNumber}}",
-
     "dispatch_added": "Nuevo despacho agregado.",
     "dispatch_updated": "Despacho actualizado.",
     "dispatch_removed": "Despacho borrado.",
@@ -340,7 +343,9 @@
     "cut_assigned_error": "Error asignando corte, intente de nuevo.",
     "missing_cloth_in_new_country": "No existen las siguientes telas en el nuevo país => {{missingCloths}}",
     "missing_group": "El grupo es requerido.",
-    "order_to_plotter_error": "Orden no pudo ser pasada a plotter."
+    "order_to_plotter_error": "Orden no pudo ser pasada a plotter.",
+
+    "prevision_assign_error": "Orden ya asignada en otro despacho."
   },
   "percentages": {
     "title": "% de Producción",

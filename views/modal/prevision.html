@@ -20,9 +20,14 @@
 
 					<div class="row">
 						<div class="col-md-6 nopadding">
-								<label class="control-label col-xs-4" for="edit_od">One design</label>
-								<div class="col-xs-8">
+								<label class="control-label col-xs-3" for="edit_od">One design</label>
+								<div class="col-xs-3">
 									<input name="edit_od" type="checkbox" class="" ng-model="prevision.oneDesign" ng-change="oneDesignCloths()">
+								</div>
+
+                <label class="control-label col-xs-5" translate>Exclude state calculation</label>
+								<div class="col-xs-1 nopadding">
+									<input type="checkbox" class="" ng-model="prevision.excludeFromStateCalculation">
 								</div>
 						</div>
             <div class="col-md-6 nopadding">
@@ -81,7 +86,7 @@
 								<label class="control-label col-xs-4" for="edit_date" translate>Delivery date</label>
 								<div class="col-xs-8">
 									<div class="input-group input-group-sm date" date-picker>
-										<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="prevision.deliveryDate" class="form-control small" required ng-style="{'background-color': (prevision.deliveryDateChanged===true ? 'orange' : '')}">
+										<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="prevision.deliveryDate" ng-change="deliveryDateChanged('{{prevision.deliveryDate}}')" class="form-control small" required ng-style="{'background-color': (prevision.deliveryDateChanged===true || prevision.deliveryDateManuallyUpdated==='1' ? 'orange' : '')}">
 										<span class="input-group-addon">
 											<span class="glyphicon-calendar glyphicon"></span>
 										</span>
@@ -101,9 +106,9 @@
 				                    </select>
 								</div>
 								<div class="col-xs-4" ng-show="prevision.oneDesign">
-									<select name="dd_sailod" ng-model="prevision.selectedOneDesignSail" ng-options="s as s.sail for s in oneDesignSails" class="form-control small" ng-change="oneDesignCloths()">
-				                        <option value="">-- choose one --</option>
-				                    </select>
+									<select name="dd_sailod" ng-model="prevision.selectedOneDesignSail" ng-options="s as s.sail for s in oneDesignSails" class="form-control small" ng-change="setBoatBySail(); oneDesignCloths();">
+                    <option value="">-- choose one --</option>
+                  </select>
 								</div>
 								<div class="col-xs-5" ng-show="prevision.oneDesign || prevision.selectedSailGroup.id == 9">
 									<input name="edit_sail" type="text" class="form-control small" ng-model="prevision.sailDescription">
@@ -148,7 +153,7 @@
 									<input name="edit_boat" type="text" class="form-control small" ng-model="prevision.boat">
 								</div>
 								<div class="col-xs-4" ng-show="prevision.oneDesign">
-									<select name="dd_boat" ng-model="prevision.selectedBoat" ng-options="b as b.boat for b in boats" class="form-control small" ng-change="oneDesignCloths()">
+									<select name="dd_boat" ng-model="prevision.selectedBoat" ng-options="b as b.boat for b in boats" class="form-control small" ng-change="filterSails();  oneDesignCloths();">
                     <option value="">-- choose one --</option>
                   </select>
 								</div>

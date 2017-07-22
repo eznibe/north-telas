@@ -12,7 +12,7 @@ angular.module('vsko.stock')
             var initialLoad;
 
             Previsions.getAll(true, 'NONE').then(function(result) {
-                $scope.previsionOptions = result.data;
+              $scope.previsionOptions = result.data;
             });
 
             $scope.carryTypes = [{type: 'BOX'}, {type: 'TUBE'}];
@@ -104,22 +104,53 @@ angular.module('vsko.stock')
               $scope.modalDispatch.hide();
             };
 
+            $scope.printDispatch = function(dispatch) {
+
+              $('#d_number').html($scope.dispatch.number);
+              $('#d_dispatchDate').html($scope.dispatch.dispatchDate);
+              $('#d_value').html($scope.dispatch.value);
+              $('#d_destinatary').html($scope.dispatch.destinatary);
+
+              $('#d_address').html($scope.dispatch.address);
+              $('#d_destiny').html($scope.dispatch.destiny);
+              $('#d_transport').html($scope.dispatch.transport);
+              $('#d_deliveryType').html($scope.dispatch.deliveryType);
+              $('#d_tracking').html($scope.dispatch.tracking);
+              $('#d_notes').html($scope.dispatch.notes);
+
+              $('#printDispatch').printThis();
+            }
+
             // Dispatch prevision functions
 
             $scope.addPrevision = function(prevision) {
 
               if (prevision) {
-                prevision.originalObject.previsionId = prevision.originalObject.id;
-                prevision.originalObject.dispatchId = $scope.dispatch.id;
-                Dispatchs.addPrevision(prevision.originalObject, $scope.dispatch.id).then(function(result) {
+                // first check if it's not added in some dispatch already
+                Previsions.isInSomeDispatch(prevision.originalObject.id).then(function(result) {
 
-                  if(result.data.successful) {
-                    $scope.dispatch.previsions.push(prevision.originalObject);
+                  if (!result.data) {
 
-                    delete $scope.acPrevision;
+                    prevision.originalObject.previsionId = prevision.originalObject.id;
+                    prevision.originalObject.dispatchId = $scope.dispatch.id;
+                    Dispatchs.addPrevision(prevision.originalObject, $scope.dispatch.id).then(function(result) {
+
+                      if(result.data.successful) {
+                        $scope.dispatch.previsions.push(prevision.originalObject);
+
+                        delete $scope.acPrevision;
+                      } else {
+                        Utils.showMessage('Error', 'error');
+                      }
+                    });
                   } else {
-                    Utils.showMessage('Error', 'error');
+                    // show error message
+                    Utils.showMessage('notify.prevision_assign_error', 'error');
                   }
+
+                  // clear order selection
+                  $scope.selectedACPrevision = null;
+                  delete $scope.orderNumberText;
                 });
               } else if (!prevision && $scope.orderNumberText) {
                 prevision = {orderNumber: $scope.orderNumberText};

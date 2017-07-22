@@ -47,6 +47,10 @@ table#production td a span.save-ok {
 	/*color: red;*/
 }
 
+table#production td.deliveryDate-updated .field-value {
+	background-color: orange !important;
+}
+
 /* For header rotate */
 
 table#production th,

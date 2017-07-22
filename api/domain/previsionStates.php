@@ -12,6 +12,7 @@ $touchedPrevisions = array();
 $priorityPrevisionsQueries = array();
 $builtPrevisions = array();
 $recurses = 0;
+$recursesData = array();
 
 function updateAllPrevisionsStates($clothId, $limit, $offset) {
 
@@ -121,7 +122,9 @@ function updatePrevisionState($clothIdsStr, $skipUpdateStateAccepted) {
 	global $touchedPrevisions;
 	global $builtPrevisions;
 	global $recurses;
+	global $recursesData;
 	global $country;
+	global $priorityPrevisionsQueries;
 	$touchedPrevisions = array();
 	$builtPrevisions = array();
 	$recurses = 0;
@@ -138,7 +141,7 @@ function updatePrevisionState($clothIdsStr, $skipUpdateStateAccepted) {
 			// process each of the given cloths
 
 			// seek the last prevision by delivery date (including previsions of given cloth still in plotter)
-			$query = "SELECT pre.id, pre.deliveryDate, pre.createdOn, pre.orderNumber, IF(pl.id is null, 'in_design', 'in_plotter') as location, c.country as clothCountry
+			$query = "SELECT pre.id, pre.deliveryDate, pre.createdOn, pre.orderNumber, IF(pl.id is null, 'in_design', 'in_plotter') as location, c.country as clothCountry, pre.excludeFromStateCalculation, IF(pre.excludeFromStateCalculation = true, '2999-01-01', pre.deliveryDate) as deliveryDateMod
 								FROM previsions pre
 								JOIN previsioncloth pc on pc.previsionId = pre.id
 								JOIN cloths c on c.id = pc.clothId
@@ -148,7 +151,7 @@ function updatePrevisionState($clothIdsStr, $skipUpdateStateAccepted) {
 									AND pc.clothId = '$clothId'
 									AND (pl.clothId is null or pl.clothId = '$clothId')
 								GROUP BY pre.id
-								ORDER BY pre.deliveryDate desc, pre.createdOn desc
+								ORDER BY deliveryDateMod desc, pre.deliveryDate desc, pre.createdOn desc
 								LIMIT 1";
 
 			//$obj->queryInitial = array();
@@ -172,7 +175,7 @@ function updatePrevisionState($clothIdsStr, $skipUpdateStateAccepted) {
 			}
 		}
 
-		// must do a final iteration over the modified previsions to set the ufa and uft of thos enot marked as 'completed'
+		// must do a final iteration over the modified previsions to set the ufa and uft of those not marked as 'completed'
 		// this is needed to fill those that in the first iteration were complete with a sum of ufa + uft but erased to favor others that would complete with total ufa
 		$finalPrevisions = calculateUFAandUFTofUncompleted($touchedPrevisions, $clothsDisponibility);
 
@@ -183,11 +186,13 @@ function updatePrevisionState($clothIdsStr, $skipUpdateStateAccepted) {
 		}
 
 		$obj->successful = true;
-		//$obj->tree = $previsions;
+		// $obj->tree = $previsions;
 		$obj->clothsDisponibility = $clothsDisponibility;
 		$obj->modifiedPrevisions = $modifiedPrevisions;
 		$obj->recurses = $recurses;
-		// $obj->builtPrevisions = $builtPrevisions;
+		$obj->builtPrevisions = $builtPrevisions;
+		$obj->recursesData = $recursesData;
+		$obj->priorityPrevisionsQueries = $priorityPrevisionsQueries;
 	}
 
 	return $obj;
@@ -197,6 +202,7 @@ function buildPrevisionStateData(&$clothsDisponibility, $prevision) {
 
 	global $touchedPrevisions;
 	global $recurses;
+	global $recursesData;
 	global $builtPrevisions;
 
 	$recurses += 1;
@@ -212,6 +218,11 @@ function buildPrevisionStateData(&$clothsDisponibility, $prevision) {
 		fillClothDisponibility($clothsDisponibility, $cloth['clothId']);
 
 		$priorityPrevisions = getPriorityPrevisions($cloth['clothId'], $prevision);
+
+		$res->orderNumber = $prevision['orderNumber'];
+		$res->recurses = $recurses;
+		$res->priorityPrevisions = $priorityPrevisions;
+		array_push($recursesData, $res);
 
 		if(count($priorityPrevisions) == 0) {
 			// there is no priority previsions => the sum of prior UFA and UFT are 0
@@ -360,12 +371,17 @@ function getPriorityPrevisions($clothId, &$prevision) {
 
 	$previsionId = $prevision['id'];
 	$deliveryDate = $prevision['deliveryDate'];
+	$origDeliveryDate = $prevision['deliveryDate'];
 	$createdOn = $prevision['createdOn'];
+
+	if ($prevision['excludeFromStateCalculation'] == '1') {
+		$deliveryDate = '2999-01-01';
+	}
 
 	// this query is including previsions of the given cloth not designed
 	// and also previsions of the given cloth already designed but still to be cutted
 	// all of them should be prior to the given prevision
-	$query = "SELECT pre.id, pre.deliveryDate, pre.createdOn, pre.orderNumber, IF(pl.id is null, 'in_design', 'in_plotter') as location
+	$query = "SELECT pre.id, pre.deliveryDate, pre.createdOn, pre.orderNumber, IF(pl.id is null, 'in_design', 'in_plotter') as location, pre.excludeFromStateCalculation, IF(pre.excludeFromStateCalculation = true, '2999-01-01', pre.deliveryDate) as deliveryDateMod
 					  FROM previsions pre
 						JOIN previsioncloth pc on pc.previsionId = pre.id
 						LEFT JOIN plotters pl on pl.previsionId = pre.id
@@ -374,12 +390,15 @@ function getPriorityPrevisions($clothId, &$prevision) {
 							AND pc.clothId = '$clothId'
 						  AND (pl.clothId is null or pl.clothId = '$clothId')
 						  AND
-								(pre.deliveryDate < '$deliveryDate'
+								(IF(pre.excludeFromStateCalculation = true, '2999-01-01', pre.deliveryDate) < '$deliveryDate'
 							 OR
-								(pre.deliveryDate = '$deliveryDate' AND pre.createdOn < '$createdOn'))
+								(IF(pre.excludeFromStateCalculation = true, '2999-01-01', pre.deliveryDate) = '$deliveryDate' AND pre.deliveryDate < '$origDeliveryDate')
+							 OR
+ 								(IF(pre.excludeFromStateCalculation = true, '2999-01-01', pre.deliveryDate) = '$deliveryDate' AND pre.deliveryDate = '$origDeliveryDate' AND pre.createdOn < '$createdOn')
+							)
 							AND pre.id != '$previsionId'
 					  GROUP BY pre.id
-						ORDER BY pre.deliveryDate, pre.createdOn";
+						ORDER BY deliveryDateMod, pre.deliveryDate, pre.createdOn";
 
 	//$prevision['priorityPrevQuery'] = $query;
 

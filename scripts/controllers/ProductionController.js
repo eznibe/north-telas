@@ -25,7 +25,7 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 	var firstLoad = true;
 
 	var defaultFilters = {orderList: [], limit: $scope.rows, default: true};
-	defaultFilters.orderList.push({key: 'week', type: 'str', mode: 'order.ascending'});
+	defaultFilters.orderList.push({key: 'week', type: 'str', mode: 'order.ascending', mode2: 'order.ascending'});
 
 	if (!$rootScope.forceNotLoad) { // very special case when after login it is forced to not load the initial list
 		Previsions.getPrevisionsForProduction($rootScope.user.sellerCode, defaultFilters, 0).then(function(result) {
@@ -130,7 +130,8 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 
 	$scope.filterOptions.orderTypes = [{name: 'Order ascending', key:'order.ascending'},
   													 				 {name: 'Order descending', key:'order.descending'}];
-  $scope.filterOptions.orderMode = 'order.ascending';
+  $scope.filterOptions.orderMode1 = 'order.ascending';
+	$scope.filterOptions.orderMode2 = 'order.ascending';
 	$scope.filterOptions.selectedOrderBy = $scope.filterOptions.columns[1];
   $scope.filterOptions.selectedOrderType = $scope.filterOptions.orderTypes[0];
 
@@ -185,7 +186,39 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 		},
 		readOnlyPercentage: function(p) {
 			return p.percentage < 25 && $rootScope.user.role != 'admin';
+		},
+		weekUp: function() {
+			var checkedPrevisions = getCheckedPrevisions();
+
+			// if no orders selected will update all orders with week between 1 and 8
+			Previsions.weekUp(checkedPrevisions).then(function(result) {
+				if (result.data.successful) {
+					$scope.search(1);
+				}
+			});
+		},
+		weekDown: function() {
+			var checkedPrevisions = getCheckedPrevisions();
+
+			// if no orders selected will update all orders with week between 1 and 8
+			Previsions.weekDown(checkedPrevisions).then(function(result) {
+				if (result.data.successful) {
+					$scope.search(1);
+				}
+			});
 		}
+	}
+
+	function getCheckedPrevisions() {
+		var checkedPrevisions = [];
+
+		angular.forEach($scope.previsions, function (prevision, index) {
+			if ($('#'+prevision.id).is(':checked')) {
+				checkedPrevisions.push(prevision.id);
+			}
+		});
+
+		return checkedPrevisions;
 	}
 
 	$scope.search = function(page) {
@@ -198,10 +231,10 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 
 		$scope.filter.orderList = [];
 		if ($scope.filterOptions.selectedOrderBy) {
-			$scope.filter.orderList.push({key: $scope.filterOptions.selectedOrderBy.key, type: $scope.filterOptions.selectedOrderBy.type, mode: $scope.filterOptions.orderMode});
+			$scope.filter.orderList.push({key: $scope.filterOptions.selectedOrderBy.key, type: $scope.filterOptions.selectedOrderBy.type, mode: $scope.filterOptions.orderMode1});
 		}
 		if ($scope.filterOptions.selectedOrderBy2) {
-			$scope.filter.orderList.push({key: $scope.filterOptions.selectedOrderBy2.key, type: $scope.filterOptions.selectedOrderBy2.type, mode: $scope.filterOptions.orderMode});
+			$scope.filter.orderList.push({key: $scope.filterOptions.selectedOrderBy2.key, type: $scope.filterOptions.selectedOrderBy2.type, mode: $scope.filterOptions.orderMode2});
 		}
 
 		$scope.filter.searchBox = $scope.searchBox;
@@ -315,35 +348,43 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 	}
 
 	$scope.updateDate = function(entity, value, fieldName) {
-		// console.log('Updated date ', fieldName, ' to:', value);
-		Production.updateDate(entity, fieldName).then(function(result) {
+		// console.log('Updated date ', fieldName, 'to:', value);
+		if (entity[fieldName + '_updated']) {
 
-			if (result.data.successful) {
+			Production.updateDate(entity, fieldName).then(function(result) {
 
-				if (entity.percentageChanged) {
-					$scope.$broadcast('$$rebind::refreshColumnsValue');
-					delete entity.percentageChanged;
-				}
+				if (result.data.successful) {
 
-				Rules.updatePrevisionPercentage(entity, true);
-
-				Rules.updatePrevisionDeliveryDate(entity, true).then(function() {
-
-					if (entity.deliveryDateChanged) {
+					if (entity.percentageChanged) {
 						$scope.$broadcast('$$rebind::refreshColumnsValue');
-						$scope.$broadcast('$$rebind::refreshLinkValue');
-						delete entity.deliveryDateChanged;
-
-						if ($scope.filterOptions.selectedOrderBy && $scope.filterOptions.selectedOrderBy.key == 'deliveryDate') {
-							$scope.search(1);
-						}
+						delete entity.percentageChanged;
 					}
-				});
-			}
-			handleUpdateFieldResolve(result, entity, fieldName, 'updateDate');
-		}, function(err) {
-			handleUpdateFieldReject(err, entity, fieldName, 'updateDate');
-		});
+
+					Rules.updatePrevisionPercentage(entity, true);
+
+					if (fieldName !== 'deliveryDate') {
+
+						Rules.updatePrevisionDeliveryDate(entity, true).then(function() {
+
+							if (entity.deliveryDateChanged) {
+								$scope.$broadcast('$$rebind::refreshColumnsValue');
+								$scope.$broadcast('$$rebind::refreshLinkValue');
+								delete entity.deliveryDateChanged;
+
+								if ($scope.filterOptions.selectedOrderBy && $scope.filterOptions.selectedOrderBy.key == 'deliveryDate') {
+									$scope.search(1);
+								}
+							}
+						});
+					} else {
+						entity.deliveryDateManuallyUpdated = "1";
+					}
+				}
+				handleUpdateFieldResolve(result, entity, fieldName, 'updateDate');
+			}, function(err) {
+				handleUpdateFieldReject(err, entity, fieldName, 'updateDate');
+			});
+		}
 	};
 
 	$scope.designObservationsDisabled = function(entity) {
@@ -422,9 +463,13 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 	$scope.clearFilterOption = function() {
 	};
 
-	$scope.changeSortOrder = function() {
+	$scope.changeSortOrder = function(position) {
 
-		$scope.filterOptions.orderMode = $scope.filterOptions.orderMode == 'order.ascending' ? 'order.descending' : 'order.ascending';
+		if (position === 1) {
+			$scope.filterOptions.orderMode1 = $scope.filterOptions.orderMode1 == 'order.ascending' ? 'order.descending' : 'order.ascending';
+		} else {
+			$scope.filterOptions.orderMode2 = $scope.filterOptions.orderMode2 == 'order.ascending' ? 'order.descending' : 'order.ascending';
+		}
 		$scope.search(1);
 	}
 

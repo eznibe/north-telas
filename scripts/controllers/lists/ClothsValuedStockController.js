@@ -99,6 +99,10 @@ angular.module('vsko.stock').controller('ClothsValuedStockCtrl', ['$scope', 'Sto
 				return c.sumAvailable - $scope.sumPrevision(c) - $scope.sumPending(c);
 			};
 
+			$scope.deltaRoll = function(r) {
+				return r.mts - $scope.sumPrevision(r) - $scope.sumPending(r);
+			};
+
 			$scope.deltaWithTransit = function(c) {
 				return c.sumAvailable - $scope.sumPrevision(c) - $scope.sumPending(c) + $scope.sumInTransit(c);
 			};
@@ -110,7 +114,7 @@ angular.module('vsko.stock').controller('ClothsValuedStockCtrl', ['$scope', 'Sto
 				if($scope.filter.searched) {
 					$.each($scope.cloths, function(idx, c){
 
-						var total = (c.price * c.sumAvailable).toFixed(2);
+						var total = ($scope.price(c)).toFixed(2);
 						sum += new Number(total);
 					});
 				}
@@ -157,6 +161,20 @@ angular.module('vsko.stock').controller('ClothsValuedStockCtrl', ['$scope', 'Sto
 			$scope.stock0 = function(c) {
 				// exclude thos with stock available 0 but also the pending/transit/plotter should be 0
 				return c.sumAvailable > 0 || $scope.delta(c) !== 0 || $scope.deltaWithTransit(c) !== 0 || $scope.sumTemporary(c) !== 0;
+			}
+
+			$scope.price = function(c) {
+				var totalPrice = c.rollsAvailable.reduce(function(acc, roll) {
+					return acc + (+roll.mts * +roll.price);
+				}, 0);
+				return totalPrice;
+			}
+
+			$scope.priceDelta = function(c) {
+				var totalPrice = c.rollsAvailable.reduce(function(acc, roll) {
+					return acc + (+roll.mts * +roll.price);
+				}, 0);
+				return totalPrice;
 			}
 
       function divideRollsByState(cloths) {
