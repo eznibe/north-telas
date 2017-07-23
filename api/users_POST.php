@@ -28,6 +28,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$response = acceptPrevisionsNotify($user);
 	} else	if (isset($_GET['storePrevisionNotify'])) {
 		$response = storePrevisionNotify($user);
+	} else if (isset($_GET['storeColumnsState'])) {
+		$response = storeColumnsState($user);
 	} else if (isset($_GET['updateCountry'])) {
 		$response = updateCountry($user);
 	} else {

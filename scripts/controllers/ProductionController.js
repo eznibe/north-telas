@@ -86,7 +86,12 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 				$scope.visibility.hideColumn(c.column ? c.column : c.key);
 			}
 
-			$scope.storeColumnsSelectedState($scope.filterOptions.columns);
+			// $scope.storeColumnsSelectedState($scope.filterOptions.columns);
+
+			var columns = $scope.filterOptions.columns.map(function(column) {
+				return {column: column.column ? column.column : column.key, selected: column.selected};
+			});
+			Users.storeColumnsState($rootScope.user.id, 'production', columns);
 
 			// recreate float header
 			$('table#production').floatThead('destroy');
@@ -125,7 +130,7 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 	$scope.filterOptions = {};
  	$scope.filterOptions.columns = [{name: 'Seller', key:'seller', type:'str', options: []}, {name: 'Week', key:'week', type:'nr', options: []}, {name: 'Priority', key:'priority', type:'nr', hideFromSeller: true, options: []}, {name: 'Dispatch', key:'d.number', column: 'dispatch', type:'nr', options: []},
 													{name: 'Order', key:'p.orderNumber', column: 'orderNumber', type:'str', options: []}, {name: 'Client', key:'p.client', column: 'client', type:'str', options: []}, {name: 'Boat', key:'boat', type:'str', options: []}, {name: 'Sail', key:'sailName', column: 'sailName', type:'str', options: []}, {name: 'Line', key:'line', type:'str', options: []}, {name: '%', key:'percentage', type:'nr', options: []},
-													{name: 'Advance', key:'advance', type:'nr', options: []}, {name: 'Delivery date', key:'p.deliveryDate', column: 'deliveryDate', type:'date', options: []}, {name: 'Tentative date', key:'p.tentativeDate', column: 'tentativeDate', type:'date', options: []}, {name: 'Production date', key:'p.productionDate', column: 'productionDate', type:'date', hideFromSeller: true, options: []}, {name: 'Info date', key:'p.infoDate', column: 'infoDate', type:'date', options: []},
+													{name: 'Advance', key:'advance', type:'nr', options: []}, {name: 'Delivery date', key:'p.deliveryDate', column: 'deliveryDate', type:'date', options: []}, {name: 'Tentative date', key:'p.tentativeDate', column: 'tentativeDate', type:'date', hideFromSeller: true, options: []}, {name: 'Production date', key:'p.productionDate', column: 'productionDate', type:'date', hideFromSeller: true, options: []}, {name: 'Info date', key:'p.infoDate', column: 'infoDate', type:'date', options: []},
 													{name: 'Advance date', key:'p.advanceDate', column: 'advanceDate', type:'date', options: []}, {name: 'Cloths', key:'cloths', type:'arr', options: []}, {name: 'State', key:'state', type:'str', hideFromSeller: true, options: []}, {name: 'Area', key:'area', type:'nr', hideFromSeller: true, options: []}];
 
 	$scope.filterOptions.orderTypes = [{name: 'Order ascending', key:'order.ascending'},
@@ -514,17 +519,24 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 
 		var state = $cookieStore.get('columnsState');
 
-		columns.map(function(c) {
-			var res = state ? state.filter(function(s) {
-				return s.column == c.column || s.column == c.key;
-			}) : [];
-			c.selected = res.length > 0 ? res[0].selected : true;
-			if (!c.selected) {
-				$scope.visibility.toggleColumn(c.column ? c.column : c.key);
-			}
+		Users.loadColumnsState($rootScope.user.id, 'production').then(function(resp) {
+
+			state = resp.data ? JSON.parse(resp.data) : state;
+
+			columns.map(function(c) {
+				var res = state ? state.filter(function(s) {
+					return s.column == c.column || s.column == c.key;
+				}) : [];
+				c.selected = res.length > 0 ? res[0].selected : true;
+				if (!c.selected) {
+					$scope.visibility.hideColumn(c.column ? c.column : c.key);
+				}
+			});
 		});
+
 	}
 
+	// DEPERECTAED, now storing in db
 	$scope.storeColumnsSelectedState = function(columns) {
 		$cookieStore.put('columnsState', columns.map(function(c) {
 			return {column: c.column ? c.column : c.key, selected: c.selected};

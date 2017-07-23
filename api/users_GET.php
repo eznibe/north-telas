@@ -18,6 +18,9 @@ if(isset($_GET['existsNewDispatch'])) {
 else if(isset($_GET['existsPrevisionsNotify'])) {
 	$value = existsPrevisionsNotify($_GET['id']);
 }
+else if(isset($_GET['loadColumnsState'])) {
+	$value = loadColumnsState($_GET['userId'], $_GET['type']);
+}
 else if(isset($_GET['id'])) {
 	$value = getUser($_GET['id']);
 }
