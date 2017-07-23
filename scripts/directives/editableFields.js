@@ -689,6 +689,8 @@ angular.module('vsko.stock')
         templateUrl: 'views/directives/editableProductionObservations.html',
         link: function postLink(scope, element, attrs) {
 
+          var origValue;
+
           scope.editable = false;
           scope.over = false;
           if (scope.required === undefined) {
@@ -733,7 +735,7 @@ angular.module('vsko.stock')
       	  scope.changed = function(entity) {
 
             if(!scope.required || entity[scope.field]) {
-              scope.callback(entity, entity[scope.field], scope.field);
+              scope.callback(entity, entity[scope.field], scope.field, origValue);
 
               scope.clicked(entity);
 
@@ -767,6 +769,8 @@ angular.module('vsko.stock')
                     $('#entityDisplay-'+entity.id+'-'+scope.field).fadeOut('fast');
                   });
                 }
+                
+                origValue = entity[scope.field];
 
                 scope.$broadcast('$$rebind::refreshDateInput');
       		  	}

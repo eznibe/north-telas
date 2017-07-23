@@ -67,6 +67,88 @@ function acceptNewDispatch($user) {
 	return $obj;
 }
 
+function existsPrevisionsNotify($id) {
+
+	$obj->successful = true;
+	$obj->method = 'existsPrevisionsNotify';
+
+	$query = "SELECT u.notifyPrevisions, u.country FROM usuarios u WHERE u.id = '$id'";
+	$result = mysql_query($query);
+
+	$obj->existsPrevisionsNotify = false;
+
+	$rows = array();
+	while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+
+		$obj->orders = $row['notifyPrevisions'];
+		$obj->existsPrevisionsNotify = isset($row['notifyPrevisions']);
+	}
+
+	return $obj;
+}
+
+function acceptPrevisionsNotify($user) {
+
+	$obj->successful = true;
+	$obj->method = 'acceptPrevisionsNotify';
+
+	$update = "UPDATE usuarios SET notifyPrevisions = null WHERE id = '".$user->id."'";
+	if(!mysql_query($update)) {
+		$obj->successful = false;
+		$obj->update = $update;
+	}
+
+	return $obj;
+}
+
+function storePrevisionNotify($user) {
+	global $country;
+
+	$obj->successful = true;
+	$obj->method = 'storePrevisionNotify';
+
+	$orderNumber = $user->orderNumber;
+	$userId = $user->id;
+
+	$query = "SELECT group_concat(id SEPARATOR \"', '\") as ids FROM usuarios
+					  WHERE country = '$country' AND role != 'vendedor' AND id != '$userId' GROUP BY country";
+
+	$result = mysql_query($query);
+
+	$rows = array();
+	while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+		$userIds = "'" . $row['ids'] . "'";
+	}
+
+	if ($user->role !== 'vendedor') {
+		// in case the user that made the update is not 'seller' update all non sellers + order seller
+		// => get seller of the prevision
+		$query = "SELECT u.id FROM previsions p join usuarios u on p.seller = u.code where p.orderNumber = '$orderNumber'";
+
+		$result = mysql_query($query);
+
+		$rows = array();
+		while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+			$userIds .= ", '" . $row['id'] . "'";
+		}
+
+	} else {
+		// in case the user that made the update is a 'seller', then update all users except other sellers
+		// => nothing else should be added
+	}
+
+	$update = "UPDATE usuarios
+						 SET notifyPrevisions = CASE WHEN notifyPrevisions is null THEN '$orderNumber' ELSE concat(substr(notifyPrevisions, 1, 500),', ','$orderNumber') END
+						 WHERE id in ($userIds)";
+
+	if(!mysql_query($update)) {
+		$obj->successful = false;
+		$obj->update = $update;
+	}
+
+	return $obj;
+}
+
 function updateCountry($user) {
 
 	$obj->successful = true;

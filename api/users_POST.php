@@ -24,6 +24,10 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 	if (isset($_GET['acceptNewDispatch'])) {
 		$response = acceptNewDispatch($user);
+	} else	if (isset($_GET['acceptPrevisionsNotify'])) {
+		$response = acceptPrevisionsNotify($user);
+	} else	if (isset($_GET['storePrevisionNotify'])) {
+		$response = storePrevisionNotify($user);
 	} else if (isset($_GET['updateCountry'])) {
 		$response = updateCountry($user);
 	} else {

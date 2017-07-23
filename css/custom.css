@@ -148,7 +148,8 @@ table#production tbody tr,
 }
 
 .dispatch-alert,
-.offline-alert  {
+.offline-alert,
+.notify-alert  {
 	height:25px;
 	width: 97%;
 	padding: 0;

@@ -2,7 +2,7 @@
 
 angular.module('vsko.stock')
 
-.directive('previsionModal', function($modal, $rootScope, $q, $translate, countries, Utils, Stock, Previsions, Files, OneDesign, Lists, Production, Rules, Dispatchs, DriveAPI, lkGoogleSettings) {
+.directive('previsionModal', function($modal, $rootScope, $q, $translate, countries, Utils, Stock, Previsions, Files, OneDesign, Lists, Production, Rules, Dispatchs, Users, DriveAPI, lkGoogleSettings) {
 
   return {
     restrict: 'E',
@@ -392,6 +392,11 @@ angular.module('vsko.stock')
                     Utils.showMessage('notify.prevision_modified');
 
                     waitForPossiblePrevisionStateChange = true;
+
+                    // if observations general has changed, send notify to other users
+                    if ($scope.prevision.observations !== $scope.origPrevision.observations) {
+                      Users.storePrevisionNotify($rootScope.user, $scope.prevision.orderNumber);
+                    }
 
                     updatePrevisionState($scope.prevision).then(function(state) {
                       console.log('Ended update prev state:', state);

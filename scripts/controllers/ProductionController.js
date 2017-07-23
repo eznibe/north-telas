@@ -408,9 +408,9 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 			});
 		},
 
-		field: function(entity, value, fieldName) {
+		field: function(entity, value, fieldName, origValue) {
 
-			Production.updateField(entity, fieldName).then(function(result) {
+			Production.updateField(entity, fieldName, null, origValue).then(function(result) {
 				handleUpdateFieldResolve(result, entity, fieldName, 'updateField');
 			}, function(err) {
 				handleUpdateFieldReject(err, entity, fieldName, 'updateField');

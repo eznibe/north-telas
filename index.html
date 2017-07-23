@@ -153,6 +153,11 @@
       <span style="padding-right: 20px; float: right;"><a href="javascript:void(0);" ng-click="::closeDispatchAlert();">x</a></span>
     </div>
 
+    <div class="container notify-alert" ng-cloak ng-controller='NotifyAlertCtrl' ng-hide="hidePrevisionsAlert">
+      <span style="padding-left: 20px;" ng-bind="message"></span>
+      <span style="padding-right: 20px; float: right;"><a href="javascript:void(0);" ng-click="::closePrevisionsAlert();">x</a></span>
+    </div>
+
     <div class="container offline-alert" ng-cloak ng-controller='OfflineAlertCtrl' ng-hide="online">
       <span style="padding-left: 20px;" translate>Offline alert</span>
       <span style="padding-right: 20px; float: right;"><a href="javascript:void(0);" ng-click="">x</a></span>
@@ -224,6 +229,7 @@
         <script src="scripts/controllers/UsersController.js"></script>
         <script src="scripts/controllers/QueryController.js"></script>
         <script src="scripts/controllers/DispatchAlertController.js"></script>
+        <script src="scripts/controllers/NotifyAlertController.js"></script>
         <script src="scripts/controllers/OfflineAlertController.js"></script>
         <script src="scripts/controllers/lists/OldPrevisionsController.js"></script>
         <script src="scripts/controllers/lists/BetweenDatesController.js"></script>

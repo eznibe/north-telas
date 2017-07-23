@@ -15,6 +15,9 @@ $sellerCountry = isset($_GET['sellerCountry']) ? $_GET['sellerCountry'] : null;
 if(isset($_GET['existsNewDispatch'])) {
 	$value = existsNewDispatch($_GET['id']);
 }
+else if(isset($_GET['existsPrevisionsNotify'])) {
+	$value = existsPrevisionsNotify($_GET['id']);
+}
 else if(isset($_GET['id'])) {
 	$value = getUser($_GET['id']);
 }

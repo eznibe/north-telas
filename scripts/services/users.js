@@ -58,5 +58,19 @@ angular.module('vsko.stock')
 					return $http.post(url + 'users_POST.php?acceptNewDispatch=true', user);
 				};
 
+				// used to shw alter of prevision with general obs changed
+				this.existsPrevisionsNotify = function(user) {
+					return $http.get(url + 'users_GET.php?existsPrevisionsNotify=true&id='+ user.id);
+				};
+
+				this.acceptPrevisionsNotify = function(user) {
+					return $http.post(url + 'users_POST.php?acceptPrevisionsNotify=true', user);
+				};
+
+				this.storePrevisionNotify = function(user, orderNumber) {
+					user.orderNumber = orderNumber;
+					return $http.post(url + 'users_POST.php?storePrevisionNotify=true', user);
+				};
+
         return this;
     }]);

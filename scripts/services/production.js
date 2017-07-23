@@ -4,7 +4,7 @@
 
 angular.module('vsko.stock')
 
-.factory('Production', ['$http', 'uuid4', '$q', 'Utils', function ($http, uuid4, $q, Utils) {
+.factory('Production', ['$http', 'uuid4', '$q', '$rootScope', 'Utils', 'Users', function ($http, uuid4, $q, $rootScope, Utils, Users) {
 
 		var url = telasAPIUrl;
 
@@ -43,6 +43,7 @@ angular.module('vsko.stock')
 					var failed = !result.data.successful ? '-FAILED' : '';
 
 					Utils.logTiming(startTime, url + 'production_POST.php?updateDate=true&field='+fieldName, 'production.updateDate('+fieldName+')', 'POST'+failed, prevision);
+
 					d.resolve(result);
 				}, function(err) {
 					d.reject(err);
@@ -51,7 +52,7 @@ angular.module('vsko.stock')
 				return d.promise;
 			};
 
-			this.updateField = function(prevision, fieldName, isNumeric) {
+			this.updateField = function(prevision, fieldName, isNumeric, origValue) {
 
 				var numeric = '';
 				if (isNumeric) {
@@ -65,6 +66,14 @@ angular.module('vsko.stock')
 					var failed = !result.data.successful ? '-FAILED' : '';
 
 					Utils.logTiming(startTime, url + 'previsions_POST.php?edit=true&field='+fieldName + numeric, 'production.updateField('+fieldName+')', 'POST'+failed, prevision);
+
+					if (fieldName === 'observations' && origValue !== prevision[fieldName]) {
+						// send prevision observations changed notify
+						Users.storePrevisionNotify($rootScope.user, prevision.orderNumber).then(function(result) {
+							console.log('Notify result:',result);
+						});
+					}
+
 					d.resolve(result);
 				}, function(err) {
 					d.reject(err);

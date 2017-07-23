@@ -73,6 +73,12 @@
 				<span><a ng-click="search(1)" class="btn-link">{{'Sort' | translate}}</a><span>
 			</div>
 		</div>
+		<div class="col-md-5 nopadding" access-allowed="vendedor">
+			<label class="control-label col-xs-3" translate>Help</label>
+			<div class="col-xs-4">
+				<span class="glyphicon glyphicon-question-sign control-label" ng-click="::oneTimeBindings.help();" style="text-align:center; cursor:pointer;"></span>
+			</div>
+		</div>
 	</div>
 </div>
 
@@ -80,7 +86,7 @@
 <table id="production" class="table table-bordered table-striped table-hover">
 	<thead>
 		<tr>
-			<th class="noprint"></th>
+			<th class="noprint" access-restricted="vendedor"></th>
 			<th class="seller"><div class="rotate"><span translate>Seller col</span></div></th>
 			<th class="week" access-restricted="vendedor"><div class="rotate"><span translate>Week col</span></div></th>
 			<th class="priority" access-restricted="vendedor"><div class="rotate"><span translate>Priority col</span></div></th>
@@ -100,12 +106,13 @@
 			<th class="cloths" access-restricted="vendedor" translate>Cloths</th>
 			<th class="state" access-restricted="vendedor" translate>State col</th>
 			<th class="area" access-restricted="vendedor" translate>Area</th>
-			<th class="productionObservations" access-restricted="vendedor" translate>Observations</th>
+			<th class="productionObservations" access-restricted="vendedor" translate>Production observations col</th>
 			<th class="designObservations" access-allowed="vendedor" translate>Design observations col</th>
+			<th class="generalObservations" translate>General observations col</th>
 			<th access-allowed="admin,produccion,velas-od" access-restricted="vendedor" class="noprint" translate>Archive</th>
 		</tr>
 		<tr class="production-filter">
-			<th class="noprint"></th>
+			<th class="noprint" access-restricted="vendedor"></th>
 			<th class="seller" ng-style="{'background-color': headerBackgroundColor(selectionObject.seller)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('seller');" style="text-align:center; cursor:pointer;"></span></div></th>
 			<th class="week" ng-style="{'background-color': headerBackgroundColor(selectionObject.week)}" access-restricted="vendedor"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('week');" style="text-align:center; cursor:pointer;"></span></div></th>
 			<th class="priority" ng-style="{'background-color': headerBackgroundColor(selectionObject.priority)}" access-restricted="vendedor"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('priority');" style="text-align:center; cursor:pointer;"></span></div></th>
@@ -128,12 +135,13 @@
 			<th class="area" ng-style="{'background-color': headerBackgroundColor(selectionObject.area)}" access-restricted="vendedor"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('area');" style="text-align:center; cursor:pointer;"></div></th>
 			<th class="productionObservations" access-restricted="vendedor"></th>
 			<th class="designObservations" access-allowed="vendedor"></th>
+			<th class="generalObservations"></th>
 			<th class="production-filter noprint" access-allowed="admin,produccion,velas-od" access-restricted="vendedor"></th>
 		</tr>
 	</thead>
 	<tbody>
 		<tr ng-repeat="p in previsions track by p.id" my-repeat-directive="start" ng-style="::{'background-color': weekBackgroundColor(p)}">
-			<td class="noprint">
+			<td class="noprint" access-restricted="vendedor">
 				<input type="checkbox" id="{{::p.id}}"/>
 			</td>
 			<td class="seller" ng-show="::visibility.selected('seller')">
@@ -204,6 +212,9 @@
 			</td>
 			<td class="designObservations" ng-show="::visibility.selected('designObservations')" style="min-width:110px;" access-allowed="vendedor" ng-style=":refreshErrorBackground:visibility.errorStyle(p, 'designObservations');">
 				<editable-production-observations entity="::p" field="'designObservations'" callback="::changedPrevision.field" edit-disabled="designObservationsDisabled" editable-by-role="'vendedor'" style="display:inline-blockzz;"></editable-production-observations>
+			</td>
+			<td class="generalObservations" ng-show="::visibility.selected('generalObservations')" style="min-width:110px;" ng-style=":refreshErrorBackground:visibility.errorStyle(p, 'generalObservations');">
+				<editable-production-observations entity="::p" field="'observations'" callback="::changedPrevision.field"></editable-production-observations>
 			</td>
 			<td style="width:80px; text-align:center;" access-allowed="admin,produccion,velas-od" class="noprint">
 				<!-- <a ng-click="showArchiveConfirmModal(p, null, removeFromProduction)" class="btn btn-default small-button"> -->

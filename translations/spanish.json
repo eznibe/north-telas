@@ -60,6 +60,8 @@
   "Production observations": "Producción",
   "Design observations": "Diseño",
   "Design observations col": "Observaciones dis.",
+  "Production observations col": "Observaciones prod.",
+  "General observations col": "Observaciones gen.",
   "Restore": "Restaurar",
   "Update": "Actualizar",
   "Calculate states": "Calcular estados de",
@@ -80,6 +82,7 @@
   "Order descending": "Descendiente",
   "Show all": "Mostrar todos",
   "Dispatch alert": "Se creó un nuevo despacho con número #{{dispatchNumber}}",
+  "Previsions alert": "La observación general de las siguientes ordenes fue actualizada: {{orders}}",
   "Offline alert": "Atención! No hay conexión a internet, los cambios no van a ser guardados.",
   "Files": "Archivos",
   "Files count": "Archivos ({{count}})",
@@ -274,6 +277,7 @@
   "Currency": "$",
 
   "Exclude state calculation": "Excluir cálculo estado",
+  "Help": "Ayuda",
 
   "": "",
   "notify": {
