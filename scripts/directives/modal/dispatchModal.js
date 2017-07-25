@@ -149,7 +149,8 @@ angular.module('vsko.stock')
                   }
 
                   // clear order selection
-                  $scope.selectedACPrevision = null;
+                  // $scope.selectedACPrevision = null;
+                  $scope.$broadcast('angucomplete-alt:clearInput', 'acOrder')
                   delete $scope.orderNumberText;
                 });
               } else if (!prevision && $scope.orderNumberText) {
@@ -322,6 +323,7 @@ angular.module('vsko.stock')
             $scope.selectedACPrevision = function(prevision) {
               // autocomplete option selected
               if(prevision) {
+                // console.log('Selected prevision:',prevision)
                 $scope.acPrevision = prevision;
               }
             };
