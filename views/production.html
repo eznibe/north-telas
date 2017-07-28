@@ -73,10 +73,10 @@
 				<span><a ng-click="search(1)" class="btn-link">{{'Sort' | translate}}</a><span>
 			</div>
 		</div>
-		<div class="col-md-5 nopadding" access-allowed="vendedor">
+		<div class="col-md-5 nopadding" access-allowed="vendedor" style="display: none;">
 			<label class="control-label col-xs-3" translate>Help</label>
 			<div class="col-xs-4">
-				<span class="glyphicon glyphicon-question-sign control-label" ng-click="::oneTimeBindings.help();" style="text-align:center; cursor:pointer;"></span>
+				<a href="javascript:void(0)" onClick="MyWindow=window.open('manuals/help.pdf','MyWindow',width=400,height=300); return false;" style="color: inherit;"><span class="glyphicon glyphicon-question-sign control-label" ng-click="::oneTimeBindings.help();" style="text-align:center; cursor:pointer;"></span></a>
 			</div>
 		</div>
 	</div>
