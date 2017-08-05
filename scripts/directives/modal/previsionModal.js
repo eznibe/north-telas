@@ -615,6 +615,7 @@ angular.module('vsko.stock')
                   matchIds.push(item.selectedCloth.matchClothId);
                 } else {
                   // selected cloth doesn't have a match -> copy cloth in new country
+                  // TODO is this still used?
                   promises.push(Stock.copyCloth(item, $scope.prevision.country));
                 }
               }
@@ -713,16 +714,16 @@ angular.module('vsko.stock')
         		  mts = doFormula(type, formulaValues, fields, $scope.prevision.area, line);
         	  }
 
-        	  if(mts) {
+            if(mts) {
 
               if (greaterThan44) {
                 mts = mts * 1.1;
               }
 
-        		  if(cloth2 && line == 'RA') {
-        			  cloth1.mts = Math.round((mts * 0.7).toFixed(2));
-        			  cloth2.mts = Math.round((mts * 0.3).toFixed(2));
-        		  }
+              if(cloth2 && line == 'RA') {
+                cloth1.mts = Math.round((mts * 0.7).toFixed(2));
+                cloth2.mts = Math.round((mts * 0.3).toFixed(2));
+              }
         		  else {
         			  // cloth1.mts = Math.round(mts.toFixed(2));
                 cloth1.mts = Math.round(mts.toFixed(2));
@@ -738,7 +739,7 @@ angular.module('vsko.stock')
                 return (+peijValue * +formulaValues[0]) + +formulaValues[1];
               }
               else if (line == 'RA') {
-                return +peijValue * +formulaValues[1];
+                return +peijValue * (formulaValues[1] ? +formulaValues[1] : +formulaValues[0]);
               } else {
                 return +peijValue * +formulaValues[0];
               }
