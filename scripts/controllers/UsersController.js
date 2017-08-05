@@ -5,7 +5,7 @@ angular.module('vsko.stock')
 .controller('UsersCtrl', ['$scope', 'Users', '$modal', 'countries', '$rootScope', function ($scope, Users, $modal, countries, $rootScope) {
 
         // initial list of all users
-        Users.getAllUsers().then(function(result) {
+        Users.getAllUsers($rootScope.user.storedCountry).then(function(result) {
 
         	$scope.users = result.data;
         });
@@ -58,10 +58,10 @@ angular.module('vsko.stock')
 
         $scope.deleteUser = function(user) {
 
-    		Users.deleteUser(user).then(function(result){
+      		Users.deleteUser(user).then(function(result){
 
-    			$scope.users.remove(user);
-    		});
+      			$scope.users.remove(user);
+      		});
         };
 
         $scope.close = function() {
@@ -75,4 +75,12 @@ angular.module('vsko.stock')
         	// used later to access the form elements of the modal html
         	$scope.modalCtrl = modalCtrl;
         };
+
+        $scope.canEditUser = function(user) {
+          return $rootScope.user.storedCountry === 'ARG' || user.country === 'BRA';
+        }
+
+        $scope.canEditCountry = function(user) {
+          return $rootScope.user.storedCountry === 'ARG';
+        }
 }]);

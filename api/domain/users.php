@@ -2,7 +2,14 @@
 
 function getUsers() {
 
-	$query = "SELECT * FROM usuarios order by country, name";
+	global $country, $storedCountry;
+
+	$extraCondition = "";
+	if (isset($storedCountry) && $storedCountry != 'ARG') {
+		$extraCondition = " AND country = '$storedCountry'";
+	}
+
+	$query = "SELECT * FROM usuarios WHERE 1=1 $extraCondition order by country, name";
 	$result = mysql_query($query);
 
 	$rows = array();

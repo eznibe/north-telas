@@ -18,6 +18,7 @@ angular.module('vsko.stock').controller('ProfileCtrl', ['$scope', '$translate', 
   $scope.countries = ['ARG', 'BRA'];//, 'ALL'];
   $scope.country = $rootScope.user.country;
 
+  // NOT USED?
   $scope.changeCountry = function() {
     var user = $rootScope.user;
     user.country = $scope.country;

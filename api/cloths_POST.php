@@ -40,13 +40,14 @@ function saveCloth($cloth)
 			$obj->successful = true;
 			$obj->isNew = true;
 
-			$otherCountry = $country == 'ARG' ? 'BRA' : 'ARG';
-			$insert = "INSERT INTO cloths (id, name, stockMin, groupId, matchClothId, country) VALUES ('".uniqid()."', '".$cloth->name."', '".$cloth->stockMin."', $groupId, '$matchId', '$otherCountry')" ;
-
-			if(!mysql_query($insert)) {
-				$obj->successful = false;
-				$obj->insert = $insert;
-			}
+			// NOT NEEDED ANYMORE to create cloth in the other country too
+			// $otherCountry = $country == 'ARG' ? 'BRA' : 'ARG';
+			// $insert = "INSERT INTO cloths (id, name, stockMin, groupId, matchClothId, country) VALUES ('".uniqid()."', '".$cloth->name."', '".$cloth->stockMin."', $groupId, '$matchId', '$otherCountry')" ;
+			//
+			// if(!mysql_query($insert)) {
+			// 	$obj->successful = false;
+			// 	$obj->insert = $insert;
+			// }
 		}
 
 	}

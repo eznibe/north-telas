@@ -25,7 +25,7 @@ function getGroups($expand)
 {
 	global $country;
 
-	$query = "SELECT * FROM groups g ORDER BY g.id";
+	$query = "SELECT * FROM groups g WHERE country is null or country = '$country' ORDER BY cast(g.id as unsigned)";
 	$result = mysql_query($query);
 
 	if($expand=='FULL') {
@@ -78,7 +78,7 @@ function saveGroup($group) {
 		}
 
 		// insert new group
-		$insert = "INSERT INTO groups VALUES ('".$group->id."', '".$group->name."', 'ARG')" ; // always ARG as country for the moment,those are also showed in BRA
+		$insert = "INSERT INTO groups VALUES ('".$group->id."', '".$group->name."', '$country')" ;
 
 		if(!mysql_query($insert)) {
 			$obj->successful = false;

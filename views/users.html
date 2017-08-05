@@ -37,14 +37,14 @@
 				<!-- <a href="javascript:void(0);" ng-click="showModal(u)" class="btn btn-sm btn-default">
 					<span class="glyphicon glyphicon-pencil"></span>&nbsp;
 					{{'Edit' | translate}} -->
-					<span class="glyphicon glyphicon-pencil icon-link" ng-click="showModal(u);"></span>
+					<span class="glyphicon glyphicon-pencil icon-link" ng-click="showModal(u);" ng-show="::canEditUser(u)"></span>
 				<!-- </a> -->
 			</td>
 			<td style="width:80px; text-align: center;">
 				<!-- <a href="javascript:void(0);" ng-click="showConfirmDeleteModal(u);" class="btn btn-sm btn-default"> -->
 					<!-- <span class="glyphicon glyphicon-trash"></span>&nbsp;
 					{{'Delete' | translate}} -->
-					<span class="glyphicon glyphicon-trash icon-link" ng-click="showConfirmDeleteModal(u);"></span>
+					<span class="glyphicon glyphicon-trash icon-link" ng-click="showConfirmDeleteModal(u);" ng-show="::canEditUser(u)"></span>
 					<!-- <span><a ng-click="search()" class="btn-link" ng-click="showConfirmDeleteModal(u);">{{'Delete' | translate}}</a><span> -->
 				<!-- </a> -->
 			</td>

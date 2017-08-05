@@ -14,8 +14,8 @@ angular.module('vsko.stock')
         	return $http.post(url + 'login_POST.php', data);
         };
 
-        this.getAllUsers = function() {
-        	return $http.get(url + 'users_GET.php');
+        this.getAllUsers = function(storedCountry) {
+        	return $http.get(url + 'users_GET.php?storedCountry='+storedCountry);
         } ;
 
         this.getUser = function(userId) {
