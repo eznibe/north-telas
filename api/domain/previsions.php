@@ -634,7 +634,7 @@ function createOrderByCondition($filters) {
 }
 
 function isSpecialFilterCase($key) {
-	return $key == 'sailName' || $key == "cloths";
+	return $key == 'sailName' || $key == "cloths" || $key == "seller";
 }
 
 function handleSpecialFilterCase($key, $values) {
@@ -649,7 +649,7 @@ function handleSpecialFilterCase($key, $values) {
 		$filter = substr($filter, 0, -3) . " ) ";
 		return $filter;
 
-	} else if ($key = "cloths") {
+	} else if ($key == "cloths") {
 		$previsionClothsFilter = createPrevisionClothsFilterCondition($values, 'c2.name');
 
 		if ($previsionClothsFilter != "") {
@@ -672,6 +672,14 @@ function handleSpecialFilterCase($key, $values) {
 
 			// return " AND p.id in (SELECT id FROM v_grouped_previsioncloths WHERE 1=1 $previsionClothsFilter) ";
 		}
+	} else if ($key == "seller") {
+		// the special case is because we remove the %'s' to match exactly
+		$filter = " AND ( ";
+		foreach ($values as $value) {
+			$filter .= $key . " = '". $value ."'";
+			$filter .= " OR ";
+		}
+		return substr($filter, 0, -3) . " ) ";
 	}
 
 	return "";
