@@ -335,7 +335,7 @@
     "dispatch_save_error": "Error guardando el despacho, intente de nuevo.",
     "dispatch_assign_error": "Error asignando caja o atado a la orden, intente de nuevo.",
     "dispatch_assigned": "Asignación realizada.",
-    "prevision_archived": "Orden archivadada.",
+    "prevision_archived": "Orden archivada.",
     "prevision_archived_error": "Error archivando la orden, intente de nuevo.",
     "file_deleted": "Archivo eliminado.",
     "file_delete_error": "Error eliminando archivo: {{fileName}}",
