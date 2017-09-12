@@ -101,7 +101,7 @@ angular.module('vsko.stock')
 
         	  $scope.loadSails = function() {
 
-        		  OneDesign.getSails().then(function(result){
+        		  OneDesign.getSails($rootScope.user.storedCountry).then(function(result){
             		  $scope.sails = result.data;
             	  });
         	  };

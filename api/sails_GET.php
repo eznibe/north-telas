@@ -15,6 +15,8 @@ $expand  = isset($_GET['expand']) ? $_GET['expand'] : null;
 $clothId = isset($_GET['clothId']) ? $_GET['clothId'] : null;
 $groupId = isset($_GET['groupId']) ? $_GET['groupId'] : null;
 
+$storedCountry = isset($_GET['storedCountry']) ? $_GET['storedCountry'] : null;
+
 
 if(isset($_GET['id'])) {
 	$value = getSail($_GET['id']);

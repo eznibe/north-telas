@@ -2,7 +2,7 @@
 
 angular.module('vsko.stock').controller('OnedesignCtrl', ['$scope', '$rootScope', 'Utils', 'OneDesign', '$modal', 'uuid4', function ($scope, $rootScope, Utils, OneDesign, $modal, uuid4) {
 
-		OneDesign.getBoats().then(function(result){
+		OneDesign.getBoats($rootScope.user.storedCountry).then(function(result){
 
 			$scope.boats = result.data;
 		});
@@ -38,7 +38,9 @@ angular.module('vsko.stock').controller('OnedesignCtrl', ['$scope', '$rootScope'
 				};
 
 				$scope.visibleByUserCountry = function(boat) {
-					return boat.country == $rootScope.user.storedCountry || $rootScope.user.storedCountry == 'ARG';
+					// we don't need this, if the user can see it, will be able to create/delete etc
+					// return boat.country == $rootScope.user.storedCountry || $rootScope.user.storedCountry == 'ARG';
+					return true;
 				}
 
 }]);

@@ -8,14 +8,16 @@ angular.module('vsko.stock')
 
 		var url = telasAPIUrl;
 
-        this.getBoats = function()
+        this.getBoats = function(storedCountry)
         {
-        	return $http.get(url + 'boats_GET.php?onedesign=true');
+					storedCountry = storedCountry === 'BRA' ? '&storedCountry=BRA' : '';
+        	return $http.get(url + 'boats_GET.php?onedesign=true'+storedCountry);
         };
 
-        this.getSails = function()
+        this.getSails = function(storedCountry)
         {
-        	return $http.get(url + 'sails_GET.php?onedesign=true');
+					storedCountry = storedCountry === 'BRA' ? '&storedCountry=BRA' : '';
+        	return $http.get(url + 'sails_GET.php?onedesign=true'+storedCountry);
         };
 
         this.updateSailName = function(sail) {

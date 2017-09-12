@@ -56,9 +56,14 @@ function getBoats() {
 
 
 function getOneDesignBoats() {
-	global $country;
+	global $country, $storedCountry;
 
-	$query = "SELECT boat, country FROM onedesign GROUP BY boat, country ORDER BY boat";
+	$where = "";
+	if (isset($storedCountry)) {
+		$where = " WHERE country = '$storedCountry' ";
+	}
+
+	$query = "SELECT boat, country FROM onedesign $where GROUP BY boat, country ORDER BY boat";
 
 	$result = mysql_query($query);
 
