@@ -165,7 +165,7 @@ angular.module('vsko.stock').controller('ClothsValuedStockCtrl', ['$scope', 'Sto
 
 			$scope.price = function(c) {
 				var totalPrice = c.rollsAvailable.reduce(function(acc, roll) {
-					return acc + (+roll.mts * +roll.price);
+					return acc + (+roll.mts * (roll.price != '?' ? +roll.price : 0));
 				}, 0);
 				return totalPrice;
 			}
