@@ -260,16 +260,21 @@ angular.module('vsko.stock')
               isInPlotterWithCuts($scope.prevision);
 
               // order previsions of the autocomplete by sequence number desc when same order number
-              $scope.previsionsForAC = $scope.previsions.slice().sort(function(p1, p2) {
-                var p1Split = p1.orderNumber.split('-');
-                var p2Split = p2.orderNumber.split('-');
+              if ($scope.previsions) {
 
-                if (p1Split[0] === p2Split[0]) {
-                  return p1Split[1] <= p2Split[1] ? 1 : -1;
-                }
+                $scope.previsionsForAC = $scope.previsions.slice().sort(function(p1, p2) {
+                  var p1Split = p1.orderNumber.split('-');
+                  var p2Split = p2.orderNumber.split('-');
 
-                return p1.orderNumber <= p2.orderNumber ? -1 : 1;
-              });
+                  if (p1Split[0] === p2Split[0]) {
+                    return p1Split[1] <= p2Split[1] ? 1 : -1;
+                  }
+
+                  return p1.orderNumber <= p2.orderNumber ? -1 : 1;
+                });
+              } else {
+                $scope.previsionsForAC = [];
+              }
 
           	  $scope.modalPrevision = $modal({template: 'views/modal/prevision.html', show: false, scope: $scope, backdrop:'static', animation:'am-fade-and-slide-top'});
 
