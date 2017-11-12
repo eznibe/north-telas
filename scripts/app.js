@@ -324,6 +324,11 @@ angular.module("vsko.stock", [
                 controller: 'DispatchsHistoricCtrl',
                 access: 'public'
             })
+						.when('/lists/worktickets', {
+                templateUrl: 'views/lists/worktickets.html',
+                controller: 'WorkticketsCtrl',
+                access: 'public'
+            })
             .when('/accessdenied', {
                 templateUrl: 'views/accessdenied.html',
                 access: 'public'

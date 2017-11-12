@@ -35,18 +35,29 @@ angular.module('vsko.stock').factory('DriveAPI',[ '$q', 'Utils', function ($q, U
 
   // ---- Interface functions ---- //
 
-  that.listFiles = function(parentId) {
+  that.listFiles = function(parentId, config) {
     var d = $q.defer();
+    config = config || {};
     var params = {
-      'pageSize': 10,
+      'pageSize': 20,
       // 'q': "name contains 'V8888'", // works fine
       // 'q': "'0B85OZZCDsYWNWDhqWkF0djU2R2c' in parents", // Previsions
       // 'q': "'0B85OZZCDsYWNMnEyNTBfZUZpUTg' in parents",  // V8888
-      'fields': "nextPageToken, files(id, name)"
+      'fields': "nextPageToken, files" + (config.fileProperties ? ("(" + config.fileProperties + ")") : "(id, name, parents)")
     };
     if (parentId) {
       params.q = "'" + parentId + "' in parents";
     }
+    if (config.q) {
+      var textQuery = "fullText contains '" + config.q + "'";
+      params.q = params.q ? params.q + " and " + textQuery : textQuery;
+    }
+    if (config.orderBy) {
+      params.orderBy = config.orderBy;
+    }
+
+    // console.log('Search params',params)
+
     if (typeof gapi != 'undefined') { // check of not gapi defined needed for offline or problems loading client
 
       if (gapi && gapi.client && gapi.client.drive) {
@@ -56,12 +67,12 @@ angular.module('vsko.stock').factory('DriveAPI',[ '$q', 'Utils', function ($q, U
         var request = gapi.client.drive.files.list(params);
 
         request.execute(function(resp) {
-          console.log('Files:');
+          // console.log('Files:');
           var files = resp.files;
           if (files && files.length > 0) {
             for (var i = 0; i < files.length; i++) {
               var file = files[i];
-              console.log(file.name + ' (' + file.id + ')');
+              // console.log(file.name + ' (' + file.id + ')');
             }
             d.resolve(files);
           } else {

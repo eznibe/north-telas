@@ -22,5 +22,7 @@ var designFilesFolder = '0B7pV9nMgniCgZFo1RXBON1U4UzA'; // Test Design Prevision
 
 var productionFolders = {OD: '0B7pV9nMgniCgMFFGLWFuaTZ3bk0', CA: '0B7pV9nMgniCgSGx3N1VjeDk2Qmc', NY: '0B7pV9nMgniCgMFFGLWFuaTZ3bk0', RA: '0B7pV9nMgniCgMFFGLWFuaTZ3bk0', DA: '0B7pV9nMgniCgMFFGLWFuaTZ3bk0', REP: '0B7pV9nMgniCgNWdwQ1QxeGpsN0E', LO: '0B7pV9nMgniCgaFc4d1FBekh6WVU'};
 
+var workticketsFolder = '1bknFUHd6yiYsn0hp1PeakW513BRK315N';
+
 var drive_client_id = '331531529676-qgg6ph5m6t6m9mjqkcb027knvh0chu96.apps.googleusercontent.com';
 var drive_api_key = 'AIzaSyCGEMPtsFzhy2PaqoWyKyiwkdux9irxklA';

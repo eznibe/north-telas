@@ -1,0 +1,57 @@
+<div class="jumbotron clearfix">
+	<h1><span>Worktickets</span></h1>
+	<div class="row">
+		<div class="col-md-8 nopadding">
+				<label class="control-label col-xs-1" translate>Name</label>
+				<div class="col-xs-3">
+					<input ng-model="searchText" class="form-control small" ng-keypress="keypress($event)"></input>
+				</div>
+
+				<div class="col-xs-2">
+						<span class="glyphicon glyphicon-search icon-with-label"></span>
+						<span><a ng-click="search()" class="btn-link">{{'Search' | translate}}</a><span>
+				</div>
+		</div>
+	</div>
+</div>
+
+<table class="table table-bordered table-striped table-hover">
+	<thead>
+		<tr>
+			<th></th>
+			<th translate>Name</th>
+			<th translate>Size</th>
+			<th translate>ModifiedOn</th>
+			<th translate>Open</th>
+			<th translate>Download</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="f in files" ng-show="!loading">
+			<td style="text-align: center;">
+				<img style="width:100px; height:100px; margin-top:10px;" class="" ng-src="{{::f.thumbnailLink}}">
+			</td>
+			<td nowrap>
+				<span>{{::f.name}}</span>
+			</td>
+			<td nowrap>
+				<span>{{::f.size}} Mb</span>
+			</td>
+			<td nowrap>
+				<span>{{::f.modifiedOn}}</span>
+			</td>
+			<td style="width:80px; text-align:center;">
+				<a ng-href="{{::f.webViewLink}}" target="_blank"><span class="glyphicon glyphicon-export icon-link">	</span></a>
+			</td>
+			<td style="width:80px; text-align:center;">
+				<a ng-href="{{::f.webContentLink}}" target="_blank"><span class="glyphicon glyphicon-download-alt icon-link"></span></a>
+			</td>
+		</tr>
+		<tr ng-show="loading">
+			<td colspan="6"><span translate>Loading</span></td>
+		</tr>
+		<tr ng-show="!loading && files.length === 0">
+			<td colspan="6"><span translate>No results</span></td>
+		</tr>
+	</tbody>
+</table>

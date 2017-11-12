@@ -278,6 +278,11 @@
 
   "Exclude state calculation": "Excluir cálculo estado",
   "Help": "Ayuda",
+  "Open": "Abrir",
+  "Size": "Tamaño",
+  "ModifiedOn": "F. Modificado",
+  "Loading": "Buscando...",
+  "No results": "Sin resultados.",
 
   "": "",
   "notify": {
