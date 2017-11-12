@@ -48,7 +48,7 @@ angular.module('vsko.stock')
 
         this.removePlotter = function(plotterId) {
 
-        	return $http.delete(url + 'plotters_DELETE.php?removePlotter=true&id='+ plotterId);
+        	return $http.post(url + 'plotters_DELETE.php?removePlotter=true&id='+ plotterId);
         };
 
         this.restoreToDesign = function(plotter) {
@@ -58,7 +58,7 @@ angular.module('vsko.stock')
 
         this.removeManualPlotter = function(manualPlotterId) {
 
-        	return $http.delete(url + 'plotters_DELETE.php?removeManualPlotter=true&id='+ manualPlotterId);
+        	return $http.post(url + 'plotters_DELETE.php?removeManualPlotter=true&id='+ manualPlotterId);
         };
 
 				// deprecated, use Prevision.savePlotterCut
@@ -72,7 +72,7 @@ angular.module('vsko.stock')
 
         this.removePlotterCut = function(cut) {
 
-        	return $http.delete(url + 'plotters_DELETE.php?cutId='+ cut.id);
+        	return $http.post(url + 'plotters_DELETE.php?cutId='+ cut.id);
         };
 
         this.getPossibleRolls = function(plotter, cutId)

@@ -13,7 +13,7 @@ db_connect();
 
 
 
-if($_SERVER['REQUEST_METHOD'] == 'DELETE') {
+if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 	if(isset($_GET['cutId'])) {
 
