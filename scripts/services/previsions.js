@@ -109,7 +109,7 @@ angular.module('vsko.stock')
 
         this.remove = function(prevision) {
 
-        	return $http.delete(url + 'previsions_DELETE.php?id='+ prevision.id);
+        	return $http.post(url + 'previsions_DELETE.php?id='+ prevision.id);
         };
 
         this.updateClothMts = function(cloth) {
@@ -163,13 +163,13 @@ angular.module('vsko.stock')
 					var d = $q.defer();
 					var startTime = Date.now();
 
-					$http.delete(url + 'plotters_DELETE.php?cutId='+ cut.id).then(function(result) {
+					$http.post(url + 'plotters_DELETE.php?cutId='+ cut.id).then(function(result) {
 						Utils.logTiming(startTime, url + 'plotters_DELETE.php?cutId='+ cut.id, 'previsions.removePlotterCut', 'DELETE');
 						d.resolve(result);
 					});
 
 					return d.promise;
-        	// return $http.delete(url + 'plotters_DELETE.php?cutId='+ cut.id);
+        	// return $http.post(url + 'plotters_DELETE.php?cutId='+ cut.id);
         };
 
         this.getPossibleRolls = function(plotter)

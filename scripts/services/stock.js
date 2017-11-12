@@ -131,7 +131,7 @@ angular.module('vsko.stock')
 
 				this.deleteCloth = function(cloth) {
 
-					return $http.delete(url + 'cloths_DELETE.php?clothId='+ cloth.id);
+					return $http.post(url + 'cloths_DELETE.php?clothId='+ cloth.id);
 				};
 
         this.getDjai = function(djai, expansion)

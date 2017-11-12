@@ -39,12 +39,12 @@ angular.module('vsko.stock')
 
         this.deleteCloth = function(onedesign) {
 
-        	return $http.delete(url + 'boats_DELETE.php?deleteODCloth=true&odId='+onedesign.odId);
+        	return $http.post(url + 'boats_DELETE.php?deleteODCloth=true&odId='+onedesign.odId);
         };
 
         this.deleteBoat = function(boat) {
 
-        	return $http.delete(url + 'boats_DELETE.php?deleteODBoat=true&boat='+boat.boat);
+        	return $http.post(url + 'boats_DELETE.php?deleteODBoat=true&boat='+boat.boat);
         };
 
         this.findCloths = function(boat, sail)

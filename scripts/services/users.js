@@ -47,7 +47,7 @@ angular.module('vsko.stock')
 
         this.deleteUser = function(user) {
 
-        	return $http.delete(url + 'users_DELETE.php?id='+ user.id);
+        	return $http.post(url + 'users_DELETE.php?id='+ user.id);
         };
 
 				this.existsNewDispatch = function(user) {

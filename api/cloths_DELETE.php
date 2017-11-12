@@ -10,9 +10,8 @@ include_once 'domain/cloths.php';
 
 db_connect();
 
-
-
-if($_SERVER['REQUEST_METHOD'] == 'DELETE') {
+// can't use method DELETE because doesn't work on nssudamerica-intranet domain
+if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 		$response = deleteCloth($_GET['clothId']);
 

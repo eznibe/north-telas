@@ -104,22 +104,22 @@ angular.module('vsko.stock')
 
         this.remove = function(dispatch) {
 
-        	return $http.delete(url + 'dispatchs_DELETE.php?id='+ dispatch.id);
+        	return $http.post(url + 'dispatchs_DELETE.php?id='+ dispatch.id);
         };
 
         this.removePrevision = function(prevision) {
 
-        	return $http.delete(url + 'dispatchs_DELETE.php?dispatchPrevisionId='+prevision.dpId, prevision);
+        	return $http.post(url + 'dispatchs_DELETE.php?dispatchPrevisionId='+prevision.dpId, prevision);
         };
 
 				this.removePrevisionInDispatch = function(previsionId, dispatchId) {
 
-        	return $http.delete(url + 'dispatchs_DELETE.php?previsionId='+previsionId+'&dispatchId='+dispatchId, null);
+        	return $http.post(url + 'dispatchs_DELETE.php?previsionId='+previsionId+'&dispatchId='+dispatchId, null);
         };
 
 				this.removeCarry = function(carry) {
 
-        	return $http.delete(url + 'dispatchs_DELETE.php?carryId='+carry.id, carry);
+        	return $http.post(url + 'dispatchs_DELETE.php?carryId='+carry.id, carry);
         };
 
         return this;

@@ -41,7 +41,7 @@ angular.module('vsko.stock')
         this.removeItem = function(orderproduct)
         {
         	// deletes an orden item
-        	return $http.delete(url + 'orders_DELETE.php?orderproduct=true&opId='+orderproduct.opId+"&orderId="+orderproduct.orderId+"&productId="+orderproduct.productId);
+        	return $http.post(url + 'orders_DELETE.php?orderproduct=true&opId='+orderproduct.opId+"&orderId="+orderproduct.orderId+"&productId="+orderproduct.productId);
         };
 
         this.validate = function(order)
@@ -80,7 +80,7 @@ angular.module('vsko.stock')
         this.removeOrder = function(order)
         {
         	// deletes an orden item
-        	return $http.delete(url + 'orders_DELETE.php?removeorder=true&orderId='+order.orderId);
+        	return $http.post(url + 'orders_DELETE.php?removeorder=true&orderId='+order.orderId);
         };
 
         return this;

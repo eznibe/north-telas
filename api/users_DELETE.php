@@ -9,9 +9,9 @@ include_once '../include/main.php';
 db_connect();
 
 function deleteUser($id) {
-	
+
 	$methodResult = true;
-	
+
 	// delete
 	$query = "DELETE FROM usuarios WHERE id = '".$id."'";
 	if (! mysql_query($query)) {
@@ -22,7 +22,8 @@ function deleteUser($id) {
 	return $methodResult;
 }
 
-if($_SERVER['REQUEST_METHOD'] == 'DELETE') {
+// can't use method DELETE because doesn't work on nssudamerica-intranet domain
+if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 	if(isset($_GET['id'])) {
 
