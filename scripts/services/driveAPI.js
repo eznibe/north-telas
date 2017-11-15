@@ -22,7 +22,9 @@ angular.module('vsko.stock').factory('DriveAPI',[ '$q', 'Utils', function ($q, U
       loaded = true;
       loadDriveApi();
     } else {
+      console.log('Failed auth:');
       console.log(authResult);
+      defer.reject(authResult.status);
     }
   }
 

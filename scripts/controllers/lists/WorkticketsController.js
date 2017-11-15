@@ -8,6 +8,22 @@ angular.module('vsko.stock').controller('WorkticketsCtrl', ['$scope', '$rootScop
 
 	$scope.files = [];
 
+	$scope.test = function() {
+
+		DriveAPI.init().then(function() {
+			DriveAPI.listFiles('1lrbWyaWAdxZxzw3rVLZYSVGIJUU090l_', {fileProperties: 'id, name, parents, modifiedTime'}).then(function(files) {
+				console.log('Files:',files);
+			});
+			apiLoaded = true;
+		},
+		function(error) {
+			console.log('Loaded rejected!');
+			if (error.google_logged_in === false) {
+				Utils.showMessage('notify.auth_google_drive_failed', 'error');
+			}
+		});
+	}
+
 	function listFiles() {
 
 		$scope.files = [];
@@ -33,8 +49,11 @@ angular.module('vsko.stock').controller('WorkticketsCtrl', ['$scope', '$rootScop
 				listFiles();
 				apiLoaded = true;
 			},
-			function() {
+			function(error) {
 				console.log('Loaded rejected!');
+				if (error.google_logged_in === false) {
+					Utils.showMessage('notify.auth_google_drive_failed', 'error');
+				}
 			});
 		} else {
 			listFiles();

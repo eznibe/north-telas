@@ -343,7 +343,8 @@
     "missing_group": "El grupo es requerido.",
     "order_to_plotter_error": "Orden no pudo ser pasada a plotter.",
 
-    "prevision_assign_error": "Orden ya asignada en otro despacho."
+    "prevision_assign_error": "Orden ya asignada en otro despacho.",
+    "auth_google_drive_failed": "No se pudo ejecutar la búsqueda, necesita estar logueado en su cuenta de google."
   },
   "percentages": {
     "title": "% da Produção",
