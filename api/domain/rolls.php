@@ -137,7 +137,7 @@ function updateRollField($roll, $rollField, $value) {
 			$newPlotterId = uniqid();
 
 			$insert = "INSERT INTO plotters (id, plotterDate, clothId, observations, cutted, cuttedOn, cuttedBy)
-								 VALUES ('$newPlotterId', CURRENT_DATE, '".$subrow['clothId']."', 'Plotter especial, roll mts correcion', true, CURRENT_DATE, 'automatic')";
+								 VALUES ('$newPlotterId', CURRENT_DATE, '".$subrow['clothId']."', 'Plotter especial, roll mts corrección', true, CURRENT_DATE, 'automatic')";
 
 			mysql_query($insert);
 

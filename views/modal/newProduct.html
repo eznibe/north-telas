@@ -60,7 +60,7 @@
 					{{'Cancel' | translate}}
 				</a>
 
-				<a ng-click="saveNewProduct(newProduct)" class="btn btn-default floatright edit_person" ng-disabled="!form.$valid" >
+				<a ng-click="saveNewProduct(newProduct)" class="btn btn-default floatright edit_person" ng-disabled="!form.$valid || buttonDisabled" >
 					<span class="glyphicon glyphicon-save"></span>
 					{{'Save' | translate}}
 				</a>
