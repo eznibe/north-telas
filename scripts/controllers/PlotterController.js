@@ -30,13 +30,14 @@ angular.module('vsko.stock').controller('PlotterCtrl', ['$scope', '$rootScope', 
 								Utils.showMessage('notify.previsions_state_updated');
 							});
 
-							if (plotter.previsionId) {
-								Previsions.checkAllClothsCutted(plotter.previsionId).then(function(prevision) {
-									if (prevision.data.allCutted) {
-										Rules.updatePrevisionPercentage(prevision.data, true);
-									}
-								});
-							}
+							// DEPRECTAED - This is done directly in the backend in Plotters.cutted
+							// if (plotter.previsionId) {
+							// 	Previsions.checkAllClothsCutted(plotter.previsionId).then(function(prevision) {
+							// 		if (prevision.data.allCutted) {
+							// 			Rules.updatePrevisionPercentage(prevision.data, true);
+							// 		}
+							// 	});
+							// }
 						}
 						else if(!result.data.successful) {
 							Lists.log({type: 'error.finishPlotter', log: result.data.update}).then(function(result) {});

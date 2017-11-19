@@ -163,6 +163,34 @@ function finishPlotter($plotter) {
 				logQueryError($update, 'error.plotters.finishPlotter');
 			}
 		}
+
+		// check if all cutted and update percentage
+		if ($obj->successful && $obj->successfulRolls) {
+
+			$currentPrevision = checkAllClothsCutted($plotter->previsionId);
+
+			if ($currentPrevision['allCutted']) {
+				// plotter is cutted and is last of the prevision -> update prevision percentage
+				$prevision->id = $currentPrevision['id'];
+				$prevision->percentage = 25;
+				$res = editPrevisionNumberField($prevision, 'percentage');
+
+				if ($res->successful) {
+					$log->type = 'info.finishPlotter.allCutted';
+					$log->log = '{plotterId: ' . $plotter->id . ', previsionId: ' . $plotter->previsionId . '}';
+					$log->user = $plotter->cuttedBy;
+					addLog($log);
+				} else {
+					logQueryError($res->update, 'error.plotters.allCutted');
+				}
+			} else {
+				// plotter is cutted but is not the last of the prevision
+				$log->type = 'info.finishPlotter';
+				$log->log = '{plotterId: ' . $plotter->id . ', previsionId: ' . $plotter->previsionId . '}';
+				$log->user = $plotter->cuttedBy;
+				addLog($log);
+			}
+		}
 	}
 	else {
 		$obj->successful = false;
