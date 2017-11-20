@@ -7,6 +7,7 @@ angular.module('vsko.stock').factory('DriveAPI',[ '$q', 'Utils', function ($q, U
   var SCOPES = ['https://www.googleapis.com/auth/drive'];
   var loadedFiles = [];
   var defer;
+  var auth;
 
   function loadDriveApi() {
     gapi.client.load('drive', 'v3', loadedFn);
@@ -14,17 +15,20 @@ angular.module('vsko.stock').factory('DriveAPI',[ '$q', 'Utils', function ($q, U
 
   function loadedFn() {
     console.log('Loaded drive api')
-    defer.resolve();
+    defer.resolve(auth);
   }
 
   function handleAuthResult(authResult) {
     if (authResult && !authResult.error) {
+      console.log('Success auth:');
+      console.log(authResult);
+      auth = authResult;
       loaded = true;
       loadDriveApi();
     } else {
       console.log('Failed auth:');
       console.log(authResult);
-      defer.reject(authResult.status);
+      defer.reject(authResult);
     }
   }
 
@@ -42,7 +46,7 @@ angular.module('vsko.stock').factory('DriveAPI',[ '$q', 'Utils', function ($q, U
     config = config || {};
     var params = {
       'pageSize': 20,
-      // 'q': "name contains 'V8888'", // works fine
+      // 'q': "name contains 'Ordenes'", // works fine
       // 'q': "'0B85OZZCDsYWNWDhqWkF0djU2R2c' in parents", // Previsions
       // 'q': "'0B85OZZCDsYWNMnEyNTBfZUZpUTg' in parents",  // V8888
       'fields': "nextPageToken, files" + (config.fileProperties ? ("(" + config.fileProperties + ")") : "(id, name, parents)")
@@ -84,6 +88,7 @@ angular.module('vsko.stock').factory('DriveAPI',[ '$q', 'Utils', function ($q, U
         });
       } else {
         d.reject();
+        loadDriveApi();
       }
     } else {
       console.log('No gapi var.');
@@ -202,6 +207,21 @@ angular.module('vsko.stock').factory('DriveAPI',[ '$q', 'Utils', function ($q, U
       }
     } else {
       defer.reject(false);
+    }
+
+    return defer.promise;
+  };
+
+  that.initNoAuth = function() {
+    defer = $q.defer();
+    if (typeof gapi != 'undefined') { // check of not gapi defined needed for offline or problems loading client
+      gapi.client.init({
+        'apiKey': drive_api_key,
+        'clientId': drive_client_id,
+        'scope': 'https://www.googleapis.com/auth/drive.readonly',
+      }).then(function() {
+        handleAuthResult({initNoAuth: true});
+      });
     }
 
     return defer.promise;
