@@ -45,7 +45,7 @@ angular.module('vsko.stock').factory('DriveAPI',[ '$q', 'Utils', function ($q, U
     var d = $q.defer();
     config = config || {};
     var params = {
-      'pageSize': 20,
+      'pageSize': 100,
       // 'q': "name contains 'Ordenes'", // works fine
       // 'q': "'0B85OZZCDsYWNWDhqWkF0djU2R2c' in parents", // Previsions
       // 'q': "'0B85OZZCDsYWNMnEyNTBfZUZpUTg' in parents",  // V8888
