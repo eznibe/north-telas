@@ -1,0 +1,14 @@
+<div id="designWeeks">
+ <table width="100%" valign="top" cellspacing="0" cellpadding="2" border="1" style="border-width:1px; border-style:solid; border-collapse:collapse;">
+	 <tbody>
+		 <tr class="title">
+			 <td align="center" colspan="2" translate>Week</td>
+		 </tr>
+		 <tr ng-repeat="w in designWeeks">
+			 <td align="center" ng-style="{'background-color': (w.backgroundColor ? w.backgroundColor : '')}" width="28">{{ ::w.number }}</td>
+			 <td ng-show="::w.startDay">{{ ::w.startDay }} al {{ ::w.endDay }} de {{ w.month | translate }}</td>
+			 <td ng-show="::w.label">{{ ::w.label }}</td>
+		 </tr>
+ 		</tbody>
+	</table>
+</div>

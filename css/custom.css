@@ -94,18 +94,19 @@ table#production tbody tr,
 }
 
 #weeks,
+#designWeeks,
 #columnsSelector {
 	border: 0px solid rgb(204, 204, 204);
 	display: none;
 	position: fixed;
 	right: 10px;
 	top: 10px;
-	/*width: 150px;*/
 	z-index: 25;
 }
 
 #percentages tr,
 #weeks tr,
+#designWeeks tr,
 #columnsSelector tr {
 	background-color: #a3ccf5;
 	color: #333;
@@ -114,12 +115,14 @@ table#production tbody tr,
 
 #percentages td,
 #weeks td,
+#designWeeks td,
 #columnsSelector td {
 	padding-left: 2px;
 }
 
 #percentages tr.title,
 #weeks tr.title,
+#designWeeks tr.title,
 #columnsSelector tr.title {
 	background-color: hsl(210, 100%, 40%);
 	color: #ffffcc;
@@ -249,7 +252,7 @@ table#production tbody tr,
 }
 
 .editable-input-link {
-	display: inline-block;
+	/*display: inline-block;*/
 	padding-top: 2px;
 }
 

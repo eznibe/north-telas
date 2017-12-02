@@ -760,6 +760,17 @@ angular.module('vsko.stock')
         	  return undefined;
           }
 
+          $scope.calculateDesignHours = function() {
+
+        	  if(!$scope.prevision.oneDesign && $scope.prevision.selectedSail
+              && $scope.prevision.selectedLine && $scope.prevision.area > 0) {
+
+    				  $scope.prevision.designHours = Rules.calculateDesignHours($scope.prevision);
+        	  } else {
+              $scope.prevision.designHours = null;
+            }
+          };
+
           $scope.filterSails = function() {
 
             // filter OD boat sails

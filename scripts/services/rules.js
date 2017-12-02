@@ -84,6 +84,62 @@ angular.module('vsko.stock').factory('Rules',[ '$q', 'Previsions', 'Production',
     return d.promise;
   };
 
+  that.calculateDesignHours = function(prevision) {
+
+    var lineCoefficient = 0, areaCoefficient, sailMinutes, result;
+
+    if (prevision.selectedLine.name === 'DA') {
+      lineCoefficient = 1;
+    } else if (prevision.selectedLine.name === 'RA' || prevision.selectedLine.name === 'NY') {
+      lineCoefficient = 1.1;
+    }
+
+    areaCoefficient = getAreaCoefficient(prevision.area);
+
+    sailMinutes = prevision.selectedSail.designMinutes ? +prevision.selectedSail.designMinutes : 0;
+
+    result = lineCoefficient * areaCoefficient * sailMinutes / 60;
+
+    // console.log('Calculation values:',sailMinutes, lineCoefficient, areaCoefficient);
+
+    return result > 0 ? result.toFixed(1) : null;
+  }
+
+  function getAreaCoefficient(area) {
+
+    if (area < 40)  {
+      return 1;
+    } else if (area >= 40 && area < 80) {
+      return 1.4;
+    } else if (area >= 80 && area < 120) {
+      return 1.6;
+    } else if (area >= 120 && area < 160) {
+      return 1.8;
+    } else if (area >= 160 && area < 200) {
+      return 2;
+    } else if (area >= 200 && area < 240) {
+      return 2.2;
+    } else if (area >= 240 && area < 320) {
+      return 2.4;
+    } else if (area >= 320 && area < 400) {
+      return 2.6;
+    } else if (area >= 400 && area < 480) {
+      return 2.8;
+    } else if (area >= 480 && area < 580) {
+      return 3;
+    } else if (area >= 580 && area < 680) {
+      return 3.2;
+    } else if (area >= 680 && area < 780) {
+      return 3.4;
+    } else if (area >= 780 && area < 980) {
+      return 3.4;
+    } else if (area >= 980) {
+      return 3.4;
+    }
+
+    return 0;
+  }
+
   function getCorrespondingWeek(line, weeksBySeason) {
 
     if (line && (line == 'OD' || line == 'CA' || line == 'REP')) {

@@ -77,7 +77,7 @@ function ($scope, $rootScope, $translate, $timeout, $cookieStore, countries, Uti
   $scope.filter = {};
 	$scope.filterOptions = {};
  	$scope.filterOptions.columns = [
-    {name: 'Designer', key:'designer', type:'str', options: []}, {name: 'Week', key:'designWeek', type:'nr', options: []}, {name: 'Hours', key:'designHours', type:'nr', options: []},
+    {name: 'Designer', key:'designer', type:'str', options: []}, {name: 'Week', key:'designWeek', type:'nr', options: []}, {name: 'Hours', key:'designHours', type:'nr', options: []}, {name: 'Week', key:'week', type:'nr', options: []},
 		{name: 'Order', key:'p.orderNumber', column: 'orderNumber', type:'str', options: []}, {name: 'Client', key:'p.client', column: 'client', type:'str', options: []},
     {name: 'Boat', key:'boat', type:'str', options: []}, {name: 'Sail', key:'sailName', column: 'sailName', type:'str', options: []}, {name: '%', key:'percentage', type:'nr', options: []},
 		{name: 'Cloths', key:'cloths', type:'arr', options: []}, {name: 'State', key:'state', type:'str', hideFromSeller: true, options: []},
@@ -235,6 +235,28 @@ function ($scope, $rootScope, $translate, $timeout, $cookieStore, countries, Uti
   };
 
 
+  $scope.weekBackgroundColor = function(prevision) {
+    var colorsByWeek = [{week: 1, color: '#ddee99'}, {week: 2, color: '#ffff99'}, {week: 3, color: '#a3d3ac'}, {week: 4, color: '#ffdab9'}, {week: 5, color: '#ffee99'},
+                        {week: 6, color: '#aaee99'}, {week: 7, color: '#849FE8'}, {week: 8, color: '#A9B67E'}, {week: 18, color: '#7AEEB6'},
+                        {week: 90, color: '#7AEEB6'}, {week: 98, color: '#BCBCDB'}, {week: 99, color: '#bbaa11'}];
+
+    function getColor(week) {
+      var filter = colorsByWeek.filter(function(c) {
+        return c.week == week;
+      });
+      return filter.length > 0 ? filter[0].color : '';
+    }
+
+    return prevision.designWeek ? getColor(prevision.designWeek) : '';
+  }
+
+  $scope.designerDisplayFn = function(designer, config) {
+    if (config && config.verbose) {
+      // console.log('Display designer:',designer,config.extra)
+    }
+    return designer ? designer : '';
+  };
+
   $scope.oneTimeBindings = {
 		showPopupList: function(id) {
 			$('#'+id).show();
@@ -258,6 +280,9 @@ function ($scope, $rootScope, $translate, $timeout, $cookieStore, countries, Uti
 		readOnlyPercentage: function(p) {
 			return p.percentage < 25 && $rootScope.user.role != 'admin';
 		},
+    readOnlyProductionWeek: function(p) {
+      return true;
+    },
 		weekUp: function() {
 			var checkedPrevisions = getCheckedPrevisions();
 
@@ -400,7 +425,16 @@ function ($scope, $rootScope, $translate, $timeout, $cookieStore, countries, Uti
 			}, function(err) {
 				handleUpdateFieldReject(err, entity, fieldName, 'updateField');
 			});
-		}
+		},
+
+    designerField: function(entity, selectedDesigner, fieldName) {
+      // console.log('Changed designer to:', entity, selectedDesigner, fieldName)
+      Production.updateField(entity, fieldName).then(function(result) {
+				handleUpdateFieldResolve(result, entity, fieldName, 'updateField');
+			}, function(err) {
+				handleUpdateFieldReject(err, entity, fieldName, 'updateField');
+			});
+    }
 	};
 
 
@@ -544,6 +578,13 @@ function ($scope, $rootScope, $translate, $timeout, $cookieStore, countries, Uti
 			}
 
 		});
+
+    // designers to show depends on the user country
+    Production.getDesigners($rootScope.user.country).then(function(result) {
+      $scope.designers = result.data.map(function(d) {
+        return d.name;
+      });
+    });
 	}
 
   function handleUpdateFieldResolve(result, entity, fieldName, method) {
