@@ -292,3 +292,7 @@ table#production tbody tr,
   height: 20px;
   /*margin-top: 12px;*/
 }
+
+.totals-row {
+	font-weight: bold;
+}

@@ -780,6 +780,40 @@ function weekDown($req) {
 	return $obj;
 }
 
+function getDesignHistorics($startDate, $endDate, $type) {
+
+	global $country;
+
+	// all cloths between dates
+	$condition  = " AND STR_TO_DATE('$startDate', '%d-%m-%Y') <= p.designedOn AND STR_TO_DATE('$endDate', '%d-%m-%Y') >= p.designedOn ";
+
+	if ($type === 'BY_DESIGNER') {
+		$query = "SELECT coalesce(designer, '-') as designer, count(*) amount, sum(designHours) as sumDesignHours
+							FROM previsions p
+							where p.designHours > 0 $condition
+							-- AND p.country = '$country'
+							group by designer
+							order by designer";
+
+	} else if ($type === 'BY_ORDERS') {
+
+		$query = "SELECT p.*, coalesce(designer, '-') as designer, DATE_FORMAT(designedOn,'%d-%m-%Y') as formattedDate
+							FROM previsions p
+							where designHours > 0 $condition
+							order by designedOn desc, designer, orderNumber";
+	}
+
+	// echo $query;
+
+	$result = mysql_query($query);
+
+	$rows = fetch_array($result);
+
+	$orders = array();
+
+	return $rows;
+}
+
 // will log the state of the prevision just before an update will be perfomed
 function logPrevisionUpdateFull($previsionId, $method) {
 	global $country;
