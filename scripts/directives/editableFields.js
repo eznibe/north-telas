@@ -323,8 +323,7 @@ angular.module('vsko.stock')
         	callback: '=',
           editableByRole: '=',
           readOnlyFn: '&',
-          width: '=',
-          editDisabled: '='
+          width: '@'
         },
         templateUrl: 'views/directives/editableProductionInput.html',
         link: function postLink(scope, element, attrs) {
@@ -385,7 +384,7 @@ angular.module('vsko.stock')
 
       	  scope.clicked = function(entity) {
 
-            if(!scope.readonly && (!scope.editDisabled || !scope.editDisabled(scope.entity))) {
+            if(!scope.readonly) {
 
               if(scope.editable) {
                 $('#entityEdit-'+entity.id+'-'+scope.field).hide();
@@ -567,10 +566,10 @@ angular.module('vsko.stock')
           display: '=',
         	callback: '=',
           editableByRole: '=',
-          tooltipText: '=',
-          width: '=',
-          widthEditable: '=',
-          extraLabel: "="
+          tooltipText: '@',
+          width: '@',
+          widthEditable: '@',
+          extraLabel: "@"
         },
         templateUrl: 'views/directives/editableProductionDropdown.html',
         link: function postLink(scope, element, attrs) {
@@ -613,9 +612,10 @@ angular.module('vsko.stock')
               if (!scope.entity[scope.field] || !scope.options) {
                 return '';
               }
-              return scope.display(scope.options.filter(function(o) {
+              var matchedOptions = scope.options.filter(function(o) {
                 return o.id == scope.entity[scope.field] || o === scope.entity[scope.field];
-              })[0], {verbose: false, extra: {opts:scope.options, value:scope.entity[scope.field]}});
+              });
+              return scope.display(matchedOptions[0], {verbose: false, extra: {opts:scope.options, value:scope.entity[scope.field]}});
             },
             dropdownStyle: function() {
               return {'width': scope.widthEditable ? scope.widthEditable+'px' : '100px', height: '20px', 'font-size': '10px', display: 'inline-block'};
@@ -703,7 +703,7 @@ angular.module('vsko.stock')
         	entity: '=',
         	callback: '=',
           editableByRole: '=',
-          editDisabled: '='
+          editDisabled: '&'
         },
         templateUrl: 'views/directives/editableProductionObservations.html',
         link: function postLink(scope, element, attrs) {
@@ -762,7 +762,7 @@ angular.module('vsko.stock')
 
       	  scope.clicked = function(entity) {
 
-            if(!scope.readonly && (!scope.editDisabled || !scope.editDisabled(scope.entity))) {
+            if(!scope.readonly && (!scope.editDisabled || !scope.editDisabled({entity: scope.entity}))) {
 
               if(scope.editable) {
                 $('#entityEdit-'+entity.id+'-'+scope.field).hide();

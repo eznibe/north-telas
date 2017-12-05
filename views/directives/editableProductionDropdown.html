@@ -6,8 +6,7 @@
 
 	<span  class="badge" id="entityEdit-{{::entity.id}}-{{::field}}" style="display:none; border:0; padding: 0;">
 
-		<!-- <input ng-model="entity[field]" ng-style="{'width': (width ? width+'px' : '100px'), 'height': '20px', 'font-size': '10px'}"/> -->
-		<select name="dd" ng-model="entity.selectedOption" ng-options="o as display(o) for o in options" class="form-control small" ng-style="::oneTimeBindings.dropdownStyle()">
+		<select name="dd" ng-model="entity.selectedOption" ng-options="o as ::display(o) for o in options" class="form-control small" ng-style="::oneTimeBindings.dropdownStyle()">
 			<option value="">-</option>
 		</select>
 

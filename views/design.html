@@ -125,7 +125,7 @@
 			</td>
 			<td class="designer" ng-show="::visibility.selected('designer')">
 				<!-- <span ng-bind=":refreshColumnsValue:getValue(p, 'designer')"></span> -->
-				<editable-production-dropdown entity="::p" options="::designers" field="'designer'" callback="::changedPrevision.designerField" display="::designerDisplayFn" width="25" width-editable="50" editable-by-role="'admin'" style="display:inline-block;"></editable-production-dropdown>
+				<editable-production-dropdown entity="::p" options="::listDesigners" field="'designer'" callback="::changedPrevision.designerField" display="::designerDisplayFn" width="25" width-editable="50" editable-by-role="'admin'" style="display:inline-block;"></editable-production-dropdown>
 			</td>
 			<td class="designWeek" ng-show="::visibility.selected('designWeek')" ng-mouseover="::oneTimeBindings.showPopupList('designWeeks');" ng-mouseleave="::oneTimeBindings.hidePopupList('designWeeks');" ng-style=":refreshErrorBackground:visibility.errorStyle(p, 'designWeek');">
 				<editable-production-input entity="::p" field="'designWeek'" callback="::changedPrevision.numericField" editable-by-role="'admin,ordenes,produccion,velas-od'" width="20" style="display:inline-block;"></editable-production-input>
@@ -169,11 +169,8 @@
 			<td class="country" ng-show="::visibility.selected('country')">
 				{{:refreshColumnsValue:getValue(p, 'country')}}
 			</td>
-			<!-- <td class="designOnly" ng-show="::visibility.selected('designOnly')">
-				{{:refreshColumnsValue:getValue(p, 'designOnly', true)}}
-			</td> -->
 			<td class="designObservations" ng-show="::visibility.selected('designObservations')" style="min-width:110px;" ng-style=":refreshErrorBackground:visibility.errorStyle(p, 'designObservations');">
-				<editable-production-observations entity="::p" field="'designObservations'" callback="::changedPrevision.field" edit-disabled="designObservationsDisabled" editable-by-role="'vendedor'" style="display:inline-blockzz;"></editable-production-observations>
+				<editable-production-observations entity="::p" field="'designObservations'" callback="::changedPrevision.field" editable-by-role="'admin,ordenes,produccion,velas-od'" style="display:inline-blockzz;"></editable-production-observations>
 			</td>
 			<td style="width:80px; text-align:center;" access-allowed="admin,produccion,ordenes,velas-od" class="noprint">
 				<span class="glyphicon glyphicon-ok icon-link" ng-click="showConfirmModal(p, designed)" ></span>

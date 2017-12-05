@@ -63,7 +63,7 @@ angular.module('vsko.stock')
           });
         }
 
-        return sum;
+        return sum.toFixed(1);
       };
 
 
