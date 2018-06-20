@@ -1,6 +1,7 @@
 <?php
 
 include_once 'rolls.php';
+include_once 'logs.php';
 
 //-- Statuses: TO_BUY, TO_CONFIRM, IN_TRANSIT, ARRIVED, DELETED
 
@@ -303,6 +304,33 @@ function updateProductAmount($product) {
 		$obj->successful = false;
 		$obj->update = $update;
 	}
+
+	return $obj;
+}
+
+function updateProduct($product) {
+
+	$obj->successful = true;
+	$obj->method = 'update.orderproduct';
+
+	$temporary = isset($product->temporary) && $product->temporary ? 'true' : 'false';
+
+	$update = "UPDATE orderproduct SET amount = $product->amount, temporary = $temporary ".
+			  "WHERE opId = '".$product->opId."'" ;
+
+	if(!mysql_query($update)) {
+		$obj->successful = false;
+		$obj->update = $update;		
+
+		$log->type = $obj->method . " - failed";
+	} else {
+		$log->type = $obj->method;
+	}
+
+	
+	$log->log = json_encode($product);
+	$log->user = "backend";
+	addLog($log);
 
 	return $obj;
 }

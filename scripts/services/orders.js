@@ -38,6 +38,12 @@ angular.module('vsko.stock')
         	return $http.post(url + 'orders_POST.php?update=true', order);
         };
 
+        this.orderProductSave = function(orderproduct)
+        {
+        	// updates the order product
+        	return $http.post(url + 'orders_POST.php?updateProduct=true', orderproduct);
+        };
+
         this.removeItem = function(orderproduct)
         {
         	// deletes an orden item

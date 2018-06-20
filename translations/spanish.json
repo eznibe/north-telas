@@ -288,6 +288,10 @@
   "by_designer": "Por diseñador",
   "by_orders": "Por órdenes",
 
+  "Temporaries": "Temporarias",
+  "Temporaries by dispatch": "Por despacho",
+  "Temporaries col": "Temp.",
+
   "": "",
   "notify": {
     "prevision_modified": "Prevision modificada.",
