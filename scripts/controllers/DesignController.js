@@ -580,7 +580,7 @@ function ($scope, $rootScope, $translate, $timeout, $cookieStore, countries, Uti
 		});
 
     // designers to show depends on the user country
-    Production.getDesigners($rootScope.user.country).then(function(result) {
+    Production.getDesigners().then(function(result) {
       $scope.listDesigners = result.data.map(function(d) {
         return d.name;
       });

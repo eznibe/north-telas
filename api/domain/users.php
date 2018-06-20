@@ -131,7 +131,7 @@ function getDesignerCodes() {
 
 	$country = isset($sellerCountry) ? $sellerCountry : $country;
 
-	$query = "SELECT distinct(code) as name FROM usuarios u WHERE code is not null AND u.role != 'vendedor' AND u.country = '$country' ORDER BY code";
+	$query = "SELECT distinct(code) as name FROM usuarios u WHERE code is not null AND u.role != 'vendedor' ORDER BY code";
 	$result = mysql_query($query);
 
 	$rows = array();
