@@ -810,7 +810,8 @@ angular.module('vsko.stock')
           tooltipText: '@',
           width: '@',
           required: '@',
-          extraLabel: "@"
+          extraLabel: "@",
+          fullWidth: "@"
         },
         templateUrl: 'views/directives/editableDate.html',
         link: function postLink(scope, element, attrs) {

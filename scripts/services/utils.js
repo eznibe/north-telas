@@ -55,5 +55,20 @@ angular.module('vsko.stock').factory('Utils',[ '$translate', '$http', '$timeout'
     return $http.post(baseUrl + 'log_POST.php', log);
   };
 
+  that.calculateTemporariesFileAvailable = function(file) {
+
+    var available = +file.mtsInitial * 0.95;
+
+    var totalDownloads = 0;
+    file.downloads.forEach(d => {
+      totalDownloads += +d.mts;
+      d.available = available - totalDownloads;
+    });
+
+    available -= totalDownloads;
+
+    return available.toFixed(2);
+  }
+
   return that;
 }]);

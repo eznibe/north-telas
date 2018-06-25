@@ -1,0 +1,196 @@
+<div class="modal" tabindex="-1" role="dialog" >
+  <div class="modal-dialog modal-lg" style="margin-top: 0px;">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<div class="edit_person">
+					<h2>
+						<span class="glyphicon glyphicon-file"></span>
+						<span translate>Temporaries file</span>
+					</h2>
+				</div>
+				<a href="javascript:void(0)" class="btn btn-lg closebtn" ng-click="$hide()">
+					<span class="glyphicon glyphicon-remove"></span>
+				</a>
+			</div>
+
+			<div class="modal-body">
+
+				<!-- Information collapser -->
+				<div class="panel panel-default">
+					<div class="panel-heading nopadding">
+						<h2 class="panel-title panel-title-minimalist fullwidth">
+							<a data-toggle="collapse" data-target="#collapseInfo" href="javascript:void(0)" class="">
+								<span translate>Information</span></small>
+							</a>
+						</h2>
+					</div>
+
+					<div id="collapseInfo" class="panel-collapse collapse in" style="height: auto;">
+						<div class="panel-body">
+							<form name="formOrderInfo" ng-init="setModalCtrl(this)">
+							<div class="row" style="margin-bottom: 10px;">
+								<div class="col-md-4 nopadding">
+									<label class="control-label col-xs-5" translate>Dispatch</label>
+									<div class="col-xs-7">
+										<!-- <editable-input entity="file" field="'shortName'" callback="updateDispatch" width="100" style="display:inline-block;" title="{{::file.dispatch}}"></editable-input> -->
+										<editable-production-input entity="::file" field="'shortName'" callback="::updateDispatch" style="display:inline-block;" title="{{::file.dispatch}}"></editable-production-input>
+									</div>
+								</div>
+								<div class="col-md-8 nopadding">
+									<label class="control-label col-xs-3" translate>Description</label>
+									<div class="col-xs-9" style="left: -25px;">
+										<b>{{file.cloth}}</b>
+									</div>
+								</div>								
+							</div>
+
+							<div class="row">
+								<div class="col-md-4 nopadding" ng-show="order.status!='TO_BUY'">
+									<label class="control-label col-xs-5" for="edit_type" translate>Due date</label>
+									<div class="col-xs-7">
+										<!-- <div class="input-group input-group-sm date" date-picker>
+											<input id="edit_date" name="edit_date" type="text" ng-model="file.dueDate" class="form-control small">
+											<span class="input-group-addon">
+												<span class="glyphicon-calendar glyphicon"></span>
+											</span>
+										</div> -->
+										<editable-date entity="::file" field="dueDate" callback="::updateDispatch" style="display:inline-block;" full-width="true"></editable-date>
+									</div>
+								</div>
+								<div class="col-md-4 nopadding">
+									<label class="control-label col-xs-5" translate>Cloth type</label>
+									<div class="col-xs-7">
+										{{file.clothType}}
+									</div>
+								</div>
+								<div class="col-md-4 nopadding">
+									<!-- Saldo -->
+									<label class="control-label col-xs-5" translate>Temporaries available</label>
+									<div class="col-xs-7">
+										<b>{{file.available}}</b>
+									</div>
+								</div>								
+							</div>
+
+							<div class="row">
+								<div class="col-md-4 nopadding">
+									<label class="control-label col-xs-5" translate>Arancelary</label>
+									<div class="col-xs-7">
+										<input ng-if="file.isNew" type="text" class="form-control small" ng-model="file.arancelary">
+										<!-- <editable-input ng-if="!file.isNew" entity="file" field="'arancelary'" callback="updateFile" width="100" style="display:inline-block;"></editable-input> -->
+										<editable-production-input ng-if="!file.isNew" entity="::file" field="'arancelary'" callback="::updateFile" style="display:inline-block;"></editable-production-input>
+									</div>
+								</div>
+								<div class="col-md-4 nopadding">
+									<label class="control-label col-xs-5" translate>Roll width</label>
+									<div class="col-xs-7">
+										{{file.rollWidth}}''
+									</div>
+								</div>
+								<div class="col-md-4 nopadding">
+									<label class="control-label col-xs-5">CIF</label>
+									<div class="col-xs-7">
+										<span ng-if="file.isNew"><input type="text" class="form-control small" ng-model="file.cif" style="width: 75px; display:inline-block;"> usd</span>
+										<span ng-if="!file.isNew">
+											<!-- <editable-input entity="file" field="'cif'" callback="updateFile" width="75" style="display:inline-block;"></editable-input> usd -->
+											<editable-production-input entity="::file" field="'cif'" callback="::updateFile" style="display:inline-block;"></editable-production-input> usd
+										</span>
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-md-4 nopadding">
+									<label class="control-label col-xs-5" translate>Code</label>
+									<div class="col-xs-7">
+										<span>{{file.code}}</span>
+									</div>
+								</div>
+							</div>
+
+							</form>
+						</div>
+					</div>
+				</div>
+
+				<div class="row" ng-if="!file.isNew" style="margin-bottom: 20px;">
+					<div class="col-md-12">
+						<a ng-click="showTemporariesDownloadModal(file, true)" class="btn btn-default floatright">
+							<span class="glyphicon glyphicon-plus"></span>
+							<span translate>New download</span>
+						</a>
+					</div>
+				</div>
+				
+				<table id="groups" class="table table-bordered table-striped table-hover">
+					<thead>
+						<tr>
+							<th translate>Month-Year</th>
+							<th translate>Order number col</th>
+							<th translate>Country</th>
+							<th translate>Description</th>
+							<th translate>Temporaries initial</th>
+							<th translate>Downloads</th>
+							<th translate>Temporaries available</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td>
+								{{file.mtsInitial}}	
+							</td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td>Perdida 5%</td>
+							<td></td>
+							<td>{{(file.mtsInitial * 0.05).toFixed(2)}}</td>
+							<td>{{(file.mtsInitial * 0.95).toFixed(2)}}</td>
+						</tr>
+						<tr ng-repeat="dw in file.downloads">
+							<td>
+								{{dw.downloadDate}}
+							</td>
+							<td>
+								{{dw.orderNumber}}
+							</td>
+							<td>
+								{{dw.country}}
+							</td>
+							<td>
+								{{dw.description}}
+							</td>
+							<td></td>
+							<td>
+								{{dw.mts}}
+							</td>
+							<td>
+								{{dw.available}}	
+							</td>
+						</tr>
+					</tbody>
+				</table>
+					
+			</div>
+
+			<div class="modal-footer" ng-if="file.isNew">
+				<a ng-click="saveTemporariesFile(file)" class="btn btn-default floatright">
+					<span class="glyphicon glyphicon-ok"></span>
+					<span translate>Save</span>
+				</a>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<temporaries-download callback="temporariesDownloadCreated"></temporaries-download>

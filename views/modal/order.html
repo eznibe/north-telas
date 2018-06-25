@@ -21,9 +21,9 @@
 							<th style="min-width: 150px;" translate>Product</th>
 							<th translate>Code</th>
 							<th translate>Amount</th>
-							<th translate>Temporaries col</th>
+							<th access-level="admin" translate>Temporaries col</th>
 							<th ng-show="order.status!='TO_BUY'" translate>Rolls</th>
-              <th ng-show="order.status!='TO_BUY'" style="width: 52px; border-left-style: hidden;" access-level="admin"></th><!-- Edit rolls icon -->
+              				<th ng-show="order.status!='TO_BUY'" style="width: 52px; border-left-style: hidden;" access-level="admin"></th><!-- Edit rolls icon -->
 							<th translate>Price</th>
 							<th translate>Total</th>
 							<th access-level="admin"></th>
@@ -41,14 +41,14 @@
                 				<editable-input entity="p" field="'amount'" callback="updateProductAmount" editable-by-role="'admin'" width="50" style="display:inline-block;"></editable-input>
 								<!--<span ng-if="order.status=='TO_BUY'">{{p.amount}}</span>-->
 							</td>
-							<td style="text-align: center;">
+							<td access-level="admin" style="text-align: center;">
 								<input type="checkbox" ng-model="p.temporary" ng-change="temporaryChange(p)" />
 							</td>
 							<td ng-show="order.status!='TO_BUY'"  ng-mouseover="over = true" ng-mouseleave="over = false" >
 								<order-rolls-tags ng-model="p.rolls"></order-rolls-tags>
-              </td>
-              <td ng-show="order.status!='TO_BUY'" ng-mouseover="over = true" ng-mouseleave="over = false" style="border-left-style: hidden;" access-level="admin">
-                <span class="glyphicon glyphicon-pencil col-xs-1 control-label" ng-click="showRollsModal(p)" data-placement="right" my-tooltip="'Assign rolls'|translate" style="text-align:center; cursor:pointer; float:none; padding-left:5px; padding-right:5px;" ng-show="over">&nbsp;</span>
+             				</td>
+							<td ng-show="order.status!='TO_BUY'" ng-mouseover="over = true" ng-mouseleave="over = false" style="border-left-style: hidden;" access-level="admin">
+								<span class="glyphicon glyphicon-pencil col-xs-1 control-label" ng-click="showRollsModal(p)" data-placement="right" my-tooltip="'Assign rolls'|translate" style="text-align:center; cursor:pointer; float:none; padding-left:5px; padding-right:5px;" ng-show="over">&nbsp;</span>
 							</td>
 							<td nowrap>
 								{{p.price}} USD
@@ -66,10 +66,10 @@
 							<td style="color: #000;">Total</td>
 							<td></td>
 							<td></td>
-							<td></td>
+							<td access-level="admin"></td>
 							<td ng-show="order.status!='TO_BUY'">
 							<td ng-show="order.status!='TO_BUY'" style="border-left-style: hidden;" access-level="admin"></td>
-              <td></td>
+              				<td></td>
 							<td>{{ total(order.products) }} USD</td>
 							<td access-level="admin"></td>
 						</tr>

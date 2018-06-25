@@ -314,19 +314,24 @@ angular.module("vsko.stock", [
                 controller: 'ClothsStockCtrl',
                 access: 'public'
             })
-						.when('/lists/clothsPrice', {
+			.when('/lists/clothsPrice', {
                 templateUrl: 'views/lists/clothsPrice.html',
                 controller: 'ClothsPriceCtrl',
                 restricted: 'plotter'
             })
-						.when('/lists/clothsValuedStock', {
+			.when('/lists/clothsValuedStock', {
                 templateUrl: 'views/lists/clothsValuedStock.html',
                 controller: 'ClothsValuedStockCtrl',
                 access: 'public'
             })
-						.when('/lists/dispatchsHistoric', {
+			.when('/lists/dispatchsHistoric', {
                 templateUrl: 'views/lists/dispatchsHistoric.html',
                 controller: 'DispatchsHistoricCtrl',
+                access: 'public'
+            })
+            .when('/temporaries/lists/byDispatch', {
+                templateUrl: 'views/lists/temporaries/byDispatch.html',
+                controller: 'TemporariesByDispatchCtrl',
                 access: 'public'
             })
             .when('/accessdenied', {

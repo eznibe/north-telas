@@ -1,0 +1,34 @@
+<div class="jumbotron clearfix nopaddingright">
+	<h1><span translate>Temporaries dispatch</span></h1>
+</div>
+
+<table class="table table-bordered table-striped table-hover">
+	<thead>
+		<tr>
+			<th translate>Dispatch</th>
+			<th translate>Due date</th>
+			<th translate>Cloths with available</th>
+			<th translate>Temporaries available</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="d in dispatchs | filter:searchBox ">
+			<td>
+				<span><a href="javascript:void(0);" ng-click="showTemporariesDispatchModal(d)">{{d.shortName}}</a></span>
+			</td>
+			<td nowrap>
+				{{d.dueDate}}
+			</td>
+			<td>
+				<temporaries-dispatch-cloths dispatch="d" open="showTemporariesFileModal" style="display:inline-block;"></temporaries-dispatch-cloths>
+			</td>
+			<td nowrap>
+				{{d.available}}%
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<temporaries-dispatch callback="temporariesDispatchUpdated">
+
+<temporaries-file callback="none">
