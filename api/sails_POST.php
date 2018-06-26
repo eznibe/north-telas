@@ -21,6 +21,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 	if(isset($_GET['updateSailName'])) {
 		$value = updateSailName($json);		
 	}
+	else if(isset($_GET['designMinutes'])) {
+		$value = updateSailDesignMinutes($json);		
+	}
 
 	//return JSON array
 	exit(json_encode($value));

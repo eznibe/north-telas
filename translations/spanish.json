@@ -283,6 +283,7 @@
   "Design summary": "Tabla resumen",
   "Historic design": "Históricos",
   "Designed between dates": "Diseñado entre fechas",
+  "Design hours": "Cálculo horas diseño",
   "by_designer": "Por diseñador",
   "by_orders": "Por órdenes",
 
@@ -376,7 +377,9 @@
     "missing_group": "El grupo es requerido.",
     "order_to_plotter_error": "Orden no pudo ser pasada a plotter.",
 
-    "prevision_assign_error": "Orden ya asignada en otro despacho."
+    "prevision_assign_error": "Orden ya asignada en otro despacho.",
+    "line_updated": "Valor de linea actualizado.",
+    "sail_updated": "Valor de vela actualizado."
   },
   "percentages": {
     "title": "% de Producción",

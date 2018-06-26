@@ -289,6 +289,11 @@ angular.module("vsko.stock", [
                 controller: 'SeasonWeeksCtrl',
                 access: 'admin'
             })
+            .when('/designhours', {
+                templateUrl: 'views/designhours.html',
+                controller: 'DesignHoursCtrl',
+                access: 'admin'
+            })
             .when('/lists/oldPrevisions', {
                 templateUrl: 'views/lists/oldPrevisions.html',
                 controller: 'OldPrevisionsCtrl',

@@ -54,6 +54,9 @@ else if(isset($_GET['weeksBySeason'])) {
 else if(isset($_GET['isInSomeDispatch'])) {
 	$value = isInSomeDispatch($_GET['previsionId']);
 }
+else if(isset($_GET['properties'])) {
+	$value = getProperties($_GET['filter']);
+}
 else {
 	$value = getPrevisions(null, $designed, $expand, null);
 }

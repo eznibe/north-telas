@@ -245,7 +245,11 @@ angular.module('vsko.stock')
 
 				this.getCorrespondingCountryCloth = function(matchIds, country) {
 					return $http.get(url + 'cloths_GET.php?matchIds='+matchIds.join(',')+'&previsionCountry='+country);
-				}
+        }
+        
+        this.updateSailDesignMinutes = function(sail) {
+          return $http.post(url + 'sails_POST.php?designMinutes=true', sail);
+        }
 
         return this;
     }]);

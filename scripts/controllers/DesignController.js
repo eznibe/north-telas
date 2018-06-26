@@ -406,8 +406,8 @@ function ($scope, $rootScope, $translate, $timeout, $cookieStore, countries, Uti
 
 			Production.updateField(entity, fieldName, true).then(function(result) {
 				if (result.data.successful) {
-					if (fieldName == 'week' && $scope.filterOptions.selectedOrderBy && $scope.filterOptions.selectedOrderBy.key == 'week') {
-						// only research after inline edit number if it is the week and we have selected the order by week
+					if (fieldName == 'designWeek' && $scope.filterOptions.selectedOrderBy && $scope.filterOptions.selectedOrderBy.key == 'designWeek') {
+						// only research after inline edit number if it is the designWeek and we have selected the order by week
 						$scope.search(1);
 					}
 				}

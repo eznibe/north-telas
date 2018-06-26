@@ -53,4 +53,18 @@ function updateSailName($sail) {
 	return $obj;
 }
 
+function updateSailDesignMinutes($sail) {
+
+	$obj->successful = true;
+
+	$query = "UPDATE sails SET designMinutes = ".$sail->designMinutes." WHERE id = '".$sail->id."'";
+
+	if(!mysql_query($query)) {
+		$obj->successful = false;
+		$obj->query = $query;
+	}
+
+	return $obj;
+}
+
 ?>
