@@ -1,8 +1,18 @@
 /**
  *
  */
-angular.module('vsko.stock').factory('Rules',[ '$q', 'Previsions', 'Production', function ($q, Previsions, Production) { //eslint-disable-line
+angular.module('vsko.stock').factory('Rules',[ '$q', 'Previsions', 'Production', 'OneDesign', function ($q, Previsions, Production, OneDesign) { //eslint-disable-line
   var that = {};
+
+  var linesCoefficients;
+  OneDesign.getProperties('line').then(function(result) {
+    linesCoefficients = result.data.map(function(line) {
+      return {
+        name: line.name.split('.')[1],
+        coefficient: +line.value
+      }
+    });
+  });
 
   that.updatePrevisionPercentage = function (prevision, save) {
     var lastPercentage = prevision.percentage
@@ -88,11 +98,17 @@ angular.module('vsko.stock').factory('Rules',[ '$q', 'Previsions', 'Production',
 
     var lineCoefficient = 0, areaCoefficient, sailMinutes, result;
 
-    if (prevision.selectedLine.name === 'DA') {
-      lineCoefficient = 1;
-    } else if (prevision.selectedLine.name === 'RA' || prevision.selectedLine.name === 'NY') {
-      lineCoefficient = 1.1;
-    }
+    // if (prevision.selectedLine.name === 'DA') {
+    //   lineCoefficient = 1;
+    // } else if (prevision.selectedLine.name === 'RA' || prevision.selectedLine.name === 'NY') {
+    //   lineCoefficient = 1.1;
+    // }
+
+    linesCoefficients.forEach(function(line) {
+      if (line.name === prevision.selectedLine.name) {
+        lineCoefficient = line.coefficient;
+      }
+    });
 
     areaCoefficient = getAreaCoefficient(prevision.area);
 
@@ -100,7 +116,7 @@ angular.module('vsko.stock').factory('Rules',[ '$q', 'Previsions', 'Production',
 
     result = lineCoefficient * areaCoefficient * sailMinutes / 60;
 
-    // console.log('Calculation values:',sailMinutes, lineCoefficient, areaCoefficient);
+    console.log('Calculation values:',sailMinutes, lineCoefficient, areaCoefficient);
 
     return result > 0 ? result.toFixed(1) : null;
   }

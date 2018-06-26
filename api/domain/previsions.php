@@ -814,6 +814,28 @@ function getDesignHistorics($startDate, $endDate, $type) {
 	return $rows;
 }
 
+function getProperties($filter) {
+	
+	$query = "SELECT * FROM properties WHERE name like '%$filter%'";
+	$result = mysql_query($query);
+	return fetch_array($result);
+}
+
+function updateProperties($property) {
+	
+	$obj->successful = true;
+	$obj->method = "updateProperties";
+
+	$update = "UPDATE properties SET value = ".$property->value." WHERE name = '".$property->name."'";
+	
+	if(!mysql_query($update)) {
+		$obj->successful = false;
+		$obj->update = $update;
+	}
+
+	return $obj;
+}
+
 // will log the state of the prevision just before an update will be perfomed
 function logPrevisionUpdateFull($previsionId, $method) {
 	global $country;
