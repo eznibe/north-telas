@@ -11,6 +11,16 @@ angular.module('vsko.stock')
     return $http.get(url + 'temporaries_GET.php?expand=FULL');
   } ;
 
+  this.getFilesList = function(filter)
+  {
+    return $http.post(url + 'temporaries_POST.php?filesList=true', filter);
+  };
+
+  this.getTemporariesStock = function(groupId)
+  {
+    return $http.get(url + 'temporaries_GET.php?stock=true&groupId='+groupId);
+  };
+
   /**
    * Dispatch info with an array of temporaries products to be created as files
    */
@@ -51,14 +61,19 @@ angular.module('vsko.stock')
     return $http.post(url + 'temporaries_POST.php?editFile=true&field='+fieldName + numeric, tFile)
   }
 
-  this.addDownload = function(download, loggedUser) {
+  this.saveDownload = function(download, loggedUser) {
 
     if (!download.id) {
       download.id = uuid4.generate();
     }
     download.downloadedBy = loggedUser;
     
-    return $http.post(url + 'temporaries_POST.php?addDownload=true', download);
+    return $http.post(url + 'temporaries_POST.php?saveDownload=true', download);
+  };
+
+  this.deleteDownload = function(download) {
+
+    return $http.post(url + 'temporaries_DELETE.php?deleteDownload=true', download);
   };
 
 

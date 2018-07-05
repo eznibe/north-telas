@@ -25,12 +25,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$value = saveDispatch($json);
 	else if(isset($_GET['saveFile']))
 		$value = saveFile($json);
-	else if(isset($_GET['addDownload']))
-		$value = addDownload($json);
+	else if(isset($_GET['saveDownload']))
+		$value = saveDownload($json);
 	else if(isset($_GET['editFile']))
 		$value = editFileField($json, $_GET['field'], $_GET['isNumber']);
 	else if(isset($_GET['editDispatch']))
 		$value = editDispatchField($json, $_GET['field'], $_GET['isDate']);
+	else if(isset($_GET['filesList']))
+		$value = getDispatchFiles(null, $json);
 	else
 		$value = "Not found method";
 

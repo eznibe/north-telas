@@ -67,6 +67,10 @@ angular.module('vsko.stock').factory('Utils',[ '$translate', '$http', '$timeout'
 
     available -= totalDownloads;
 
+    if (available < 0 && available > -0.05) {
+      available = 0;
+    }
+
     return available.toFixed(2);
   }
 

@@ -19,6 +19,9 @@ if(isset($_GET['id'])) {
 else if(isset($expand)) {
 	$value = getDispatchs();
 }
+else if(isset($_GET['stock'])) {
+	$value = getTemporariesStock($_GET['groupId']);
+}
 else {
 
 }

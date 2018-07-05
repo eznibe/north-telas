@@ -14,7 +14,7 @@ function getDispatchs() {
 	$rows = array();
 	while($dispatchRow = mysql_fetch_array($result, MYSQL_ASSOC)) {
 
-		$dispatchRow['files'] = getDispatchFiles($dispatchRow['id']);
+		$dispatchRow['files'] = getDispatchFiles($dispatchRow['id'], null);
 
 		array_push($rows, $dispatchRow);
 	}
@@ -22,21 +22,56 @@ function getDispatchs() {
 	return $rows;
 }
 
-function getDispatchFiles($dispatchId) {
+/**
+ * params:
+ * showbyAvailability: options 
+ * ALL: all files despite the available mts 
+ * ONLY_EMPTIES: only those files with available mts = 0
+ * ONLY_AVAILBLES: only those files with available mts > 0
+ * DISPATCH_AVAILABLE: every file in a dispatch with some available mts (some file has mts > 0)
+ */
+function getDispatchFiles($dispatchId, $filter) {
 
-	$query = "SELECT f.*, f.id as fileId, f.type as clothType, d.*, p.code, c.name as cloth, DATE_FORMAT(dueDate,'%d-%m-%Y') as dueDate, DATE_FORMAT(realDueDate,'%d-%m-%Y') as realDueDate 
-				FROM temporariesfile f 
+	// filter params parse
+	$showByAvailability = isset($filter) && isset($filter->selectedVisibility) ? $filter->selectedVisibility->key : null;
+
+	// create query conditions
+	$dispatchCondition = isset($dispatchId) ? " AND dispatchId = '$dispatchId'" : "";
+
+	$orderByCondition = isset($filter) && isset($filter->selectedSort) 
+						? $filter->selectedSort->mainOrder . ' ' . $filter->selectedSort->mode . ' ' . $filter->selectedSort->extraOrder
+						: " clothType, c.name" ;
+
+	$query = "SELECT f.*, f.id as fileId, f.type as clothType, d.*, p.code, c.name as cloth, DATE_FORMAT(dueDate,'%d-%m-%Y') as dueDate, DATE_FORMAT(realDueDate,'%d-%m-%Y') as realDueDate,
+					 f.available as fileAvailable, d.available as dispatchAvailable 
+				FROM v_temporaries_files_extended f
 				JOIN products p on p.productId = f.productId
 				JOIN cloths c on c.id = p.clothId
-				JOIN temporariesdispatch d on d.id = f.dispatchId
-				WHERE dispatchId = '$dispatchId'";
+				JOIN v_temporaries_dispatch_extended d on d.id = f.dispatchId
+				WHERE 1=1 $dispatchCondition
+				ORDER BY $orderByCondition";
 	$result = mysql_query($query);
 
 	$rows = array();
 	while($fileRow = mysql_fetch_array($result, MYSQL_ASSOC)) {
 
 		$fileRow['downloads'] = getFileDownloads($fileRow['fileId']);
-		array_push($rows, $fileRow);
+
+		$available = $fileRow['fileAvailable'];
+		$dispatchAvailable = $fileRow['dispatchAvailable'];
+
+		// debug properties
+		$fileRow['query'] = $query;
+		$fileRow['visibility'] = $showByAvailability;
+
+		if (!isset($showByAvailability) 
+			||  $showByAvailability=='ALL' 
+			|| ($showByAvailability=='ONLY_AVAILABLES' && $available > 0)
+			|| ($showByAvailability=='ONLY_EMPTIES' && $available <= 0)
+			|| ($showByAvailability=='DISPATCH_AVAILABLE' && $dispatchAvailable > 0)) {
+				
+			array_push($rows, $fileRow);
+		}
 	}
 
 	return $rows;	
@@ -176,14 +211,14 @@ function saveFile($tFile)
 /**
  * Add new download for a temporaries file
  */
-function addDownload($download)
+function saveDownload($download)
 {
 	$obj->successful = false;
-	$obj->method = 'addDownload';
-
+	
 	$downloadDate = isset($download->downloadDate) && trim($download->downloadDate)!='' ? "STR_TO_DATE('".$download->downloadDate."', '%d-%m-%Y')" : 'null' ;
-
+	
 	if ($download->isNew) {
+		$obj->method = 'saveDownload(insert)';
 
 		$insert = "INSERT INTO temporariesdownload (id, fileId, mts, downloadDate, country, orderNumber, description, downloadedBy)
 					VALUES ('".$download->id."', '".$download->fileId."', ".$download->mts.", $downloadDate, '".$download->country."', '".$download->orderNumber."', '".$download->description."', '".$download->downloadedBy."')";
@@ -194,6 +229,35 @@ function addDownload($download)
 		else {
 			$obj->insert = $insert;
 		}
+	} else {
+		$obj->method = 'saveDownload(update)';
+
+		$update = "UPDATE temporariesdownload SET mts = ".$download->mts.", downloadDate = $downloadDate, country = '".$download->country."', orderNumber = '".$download->orderNumber."', description = '".$download->description."'
+					WHERE id = '".$download->id."'";
+	
+		if(mysql_query($update)) {
+			$obj->successful = true;
+		}
+		else {
+			$obj->update = $update;
+		}
+	}
+
+	return $obj;
+}
+
+function deleteDownload($download) {
+
+	$obj->successful = false;
+	$obj->method = 'deleteDownload';
+	
+	$delete = "DELETE FROM temporariesdownload WHERE id = '".$download->id."'";
+	
+	if(mysql_query($delete)) {
+		$obj->successful = true;
+	}
+	else {
+		$obj->delete = $delete;
 	}
 
 	return $obj;
@@ -260,6 +324,30 @@ function editDispatchField($dispatch, $field, $isDate) {
 	}
 
 	return $obj;
+}
+
+function getTemporariesStock($groupId) {
+
+	$query = "  SELECT clothid, name, sum(c.mtsInitial * 0.95) as suminitials, sum(sumdws) as sumdownloads, sum(c.mtsInitial * 0.95) - sum(sumdws) as available 
+				FROM 
+				(
+					SELECT c.id as clothid, c.name, f.id, COALESCE(f.mtsInitial, 0) as mtsInitial, COALESCE(sum(d.mts), 0) as sumdws
+					FROM cloths c join products p on p.clothId=c.id left join temporariesfile f on f.productId=p.productId left join temporariesdownload d on d.fileId=f.id
+					WHERE c.groupId = '$groupId'
+					group by c.groupId, c.id, c.name, f.id
+				) c
+				group by clothid
+				order by c.name";
+
+	$result = mysql_query($query);
+
+	$rows = array();
+	while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+
+		array_push($rows, $row);
+	}
+
+	return $rows;
 }
 
 ?>

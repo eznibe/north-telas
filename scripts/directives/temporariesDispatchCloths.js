@@ -7,7 +7,7 @@ angular.module('vsko.stock')
     return {
           restrict: 'E',
           scope: {
-            dispatch: "=",
+			dispatch: "=",
             open: "=",
             editableByRole: "="
           },

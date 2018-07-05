@@ -296,3 +296,8 @@ table#production tbody tr,
 .totals-row {
 	font-weight: bold;
 }
+
+.temp_file_cards small {
+	display: inline-block;
+	width: 75px;
+}

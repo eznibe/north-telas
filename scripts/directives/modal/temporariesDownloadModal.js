@@ -13,26 +13,35 @@ angular.module('vsko.stock')
 			var params = attrs.params;
 			var index = attrs.index;
 
-			$scope.showTemporariesDownloadModal = function(file, isNew) {
+			$scope.showTemporariesDownloadModal = function(file, download) {
 
-        $scope.download = {
-          fileId: file.fileId,
-          isNew: isNew
-        };
+				if (download) {
+					$scope.download = download;
+					$scope.download.mts = +$scope.download.mts;
+				} else {
+					$scope.download = {
+						fileId: file.fileId,
+						isNew: download==null
+					};
+				}
+				
+				$scope.file = file;
 
 				$scope.modalDownload = $modal({template: 'views/modal/temporariesDownload.html', show: false, scope: $scope, callback: callback});
 
 				$scope.modalDownload.$promise.then($scope.modalDownload.show);
 			};
 
-			$scope.addDownload = function() {
+			$scope.saveDownload = function() {
 
-				Temporaries.addDownload($scope.download, $rootScope.user.name).then(function(result) {
-            $scope.modalDownload.hide();
+				Temporaries.saveDownload($scope.download, $rootScope.user.name).then(function(result) {
+					Utils.showMessage('notify.download_saved');
 
-            if ($scope[callback]) {
-              $scope[callback]($scope.download);
-            }
+					$scope.modalDownload.hide();
+
+					if ($scope[callback]) {
+						$scope[callback]($scope.download, $scope.file);
+					}
 				});
 			};
 

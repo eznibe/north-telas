@@ -66,13 +66,23 @@ function existsRoll($roll, $rows) {
 }
 
 
-function arriveRolls($orderId, $type) {
+function arriveRolls($orderId, $productId, $isTemporary) {
+
+	$obj->successful = false;
 
 	logRollPreviousModification(null, 'rolls.arriveRolls', "orderId = $orderId");
 
-	$update = "UPDATE rolls SET incoming = false, type = '$type' WHERE orderId = '$orderId'";
+	$type = $isTemporary ? 'TEMP' : 'DEF';
 
-	mysql_query($update);
+	$update = "UPDATE rolls SET incoming = false, type = '$type' WHERE orderId = '$orderId' and productId = '".$productId."'";
+
+	if (mysql_query($update)) {
+		$obj->successful = true;
+	}
+
+	$obj->update = $update;
+
+	return $obj;
 }
 
 function updateRollType($roll) {

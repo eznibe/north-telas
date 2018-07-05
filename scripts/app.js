@@ -334,9 +334,24 @@ angular.module("vsko.stock", [
                 controller: 'DispatchsHistoricCtrl',
                 access: 'public'
             })
-            .when('/temporaries/lists/byDispatch', {
-                templateUrl: 'views/lists/temporaries/byDispatch.html',
-                controller: 'TemporariesByDispatchCtrl',
+            .when('/temporaries/lists/temporariesForDispatcher', {
+                templateUrl: 'views/lists/temporaries/temporariesForDispatcher.html',
+                controller: 'TemporariesForDispatcherCtrl',
+                access: 'public'
+            })
+            .when('/temporaries/lists/temporariesStock', {
+                templateUrl: 'views/lists/temporaries/temporariesStockList.html',
+                controller: 'TemporariesStockCtrl',
+                access: 'public'
+            })
+            .when('/temporaries/lists/temporariesFiles', {
+                templateUrl: 'views/lists/temporaries/temporariesFilesList.html',
+                controller: 'TemporariesFilesCtrl',
+                access: 'public'
+            })
+            .when('/temporaries/lists/temporariesSummary', {
+                templateUrl: 'views/lists/temporaries/temporariesSummary.html',
+                controller: 'TemporariesSummaryCtrl',
                 access: 'public'
             })
             .when('/accessdenied', {

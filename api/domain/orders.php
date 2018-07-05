@@ -234,6 +234,8 @@ function changeStatus($order)
 
 	$extraSet = "";
 
+	$updatedRolls = array();
+
 	// update the status
 	if($orderRow['status'] == 'TO_BUY') {
 		$newStatus = 'TO_CONFIRM';
@@ -248,7 +250,10 @@ function changeStatus($order)
 		$extraSet = ", arriveDate = STR_TO_DATE('".$order->arriveDate."', '%d-%m-%Y') ";
 
 		// if arrived -> update rolls to incoming=false
-		arriveRolls($order->orderId, $order->type);
+		foreach ($order->products as $product) {
+			$result = arriveRolls($order->orderId, $product->productId, $product->temporary);
+			array_push($updatedRolls, $result);
+		}
 	}
 
 	$update = "UPDATE orders SET status = '$newStatus' $extraSet WHERE orderId = '".$orderRow['orderId']."'" ;
@@ -267,6 +272,8 @@ function changeStatus($order)
 	$order->formattedDate = $rows[0]['formattedDate'];
 
 	$obj->order = $order;
+
+	$obj->updatedRolls = $updatedRolls;
 
 	return $obj;
 }

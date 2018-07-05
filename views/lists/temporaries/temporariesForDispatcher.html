@@ -1,5 +1,5 @@
 <div class="jumbotron clearfix nopaddingright">
-	<h1><span translate>Temporaries dispatch</span></h1>
+	<h1><span translate>Temporaries by dispatch</span></h1>
 </div>
 
 <table class="table table-bordered table-striped table-hover">
@@ -12,9 +12,9 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="d in dispatchs | filter:searchBox ">
+		<tr ng-repeat="d in dispatchs | filter:searchBox " ng-show="d.available > 0">
 			<td>
-				<span><a href="javascript:void(0);" ng-click="showTemporariesDispatchModal(d)">{{d.shortName}}</a></span>
+				<span><a href="javascript:void(0);" ng-click="showTemporariesDispatchModal(d)" title="{{d.description}}">{{d.shortName}}</a></span>
 			</td>
 			<td nowrap>
 				{{d.dueDate}}
@@ -23,8 +23,14 @@
 				<temporaries-dispatch-cloths dispatch="d" open="showTemporariesFileModal" style="display:inline-block;"></temporaries-dispatch-cloths>
 			</td>
 			<td nowrap>
-				{{d.available}}%
+				{{(+d.available).toFixed(0)}}%
 			</td>
+		</tr>
+		<tr>
+			<td><b>Total</b></td>
+			<td></td>
+			<td><b>{{ calculateTotalMts() }} mts</b></td>
+			<td></td>
 		</tr>
 	</tbody>
 </table>

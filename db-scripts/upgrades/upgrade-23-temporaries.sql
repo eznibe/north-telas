@@ -40,3 +40,16 @@ CREATE TABLE temporariesdownload
    insertedOn timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL
 )ENGINE=MyISAM
 ;
+
+
+
+create or replace view v_temporaries_files_extended as
+SELECT f.*, coalesce(sum(dw.mts),0) as used, (f.mtsInitial * 0.95) - coalesce(sum(dw.mts),0) as available 
+FROM temporariesfile f left join temporariesdownload dw on dw.fileId = f.id
+GROUP by f.id;
+	
+
+create or replace view v_temporaries_dispatch_extended as
+SELECT d.*, sum(f.mtsInitial * 0.95) as init, coalesce(sum(f.used),0) as used, sum(f.mtsInitial * 0.95) - coalesce(sum(f.used),0) as available 
+FROM temporariesdispatch d left join v_temporaries_files_extended f on d.id = f.dispatchId
+GROUP by d.id;

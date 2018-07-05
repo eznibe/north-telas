@@ -288,7 +288,10 @@
   "by_orders": "Por órdenes",
 
   "Temporaries": "Temporarias",
-  "Temporaries by dispatch": "Por despacho",
+  "Temporaries by dispatch": "Para despachantes",
+  "Temporaries stock": "Stock",
+  "Temporaries files": "Fichas",
+  "Temporaries summary": "Resumen",
   "Temporaries col": "Temp.",
   "Temporaries dispatch": "Despacho de temporarias",
   "Temporaries dispatch short": "Descripción corta",
@@ -306,6 +309,10 @@
   "Downloads": "Descargas",
   "New download": "Descarga",
   "Download date": "F. descarga",
+  "Show": "Mostrar",
+  "Dispatch with availability": "Despachos con saldo",
+  "With availability": "Solo fichas con saldo",
+  "Without availability": "Solo fichas sin saldo",
 
   "": "",
   "notify": {
@@ -379,7 +386,9 @@
 
     "prevision_assign_error": "Orden ya asignada en otro despacho.",
     "line_updated": "Valor de linea actualizado.",
-    "sail_updated": "Valor de vela actualizado."
+    "sail_updated": "Valor de vela actualizado.",
+    "download_saved": "Descarga guardada.",
+    "download_deleted": "Descarga eliminada."
   },
   "percentages": {
     "title": "% de Producción",
