@@ -58,3 +58,5 @@ GROUP by d.id;
 alter table temporariesfile add column type_2 varchar(32);
 
 update temporariesfile set type_2=type, type = null;
+
+alter table temporariesfile add column rollWidth decimal(8,2);
