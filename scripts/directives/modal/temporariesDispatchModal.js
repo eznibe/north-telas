@@ -21,7 +21,9 @@ angular.module('vsko.stock')
         $scope.dispatch.shortName = $scope.dispatch.shortName === '<completar>' ? '' : $scope.dispatch.shortName;
 
         Temporaries.getAllDispatchs().then(function(result) {
-          $scope.allDispatchs = result.data;
+          $scope.allDispatchs = result.data.filter(function(d) {
+            return d.id != $scope.dispatch.id;
+          });
         });
 
 				$scope.modalDispatch = $modal({template: 'views/modal/temporariesDispatch.html', show: false, scope: $scope, callback: callback});
