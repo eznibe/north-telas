@@ -23,7 +23,18 @@
 							<div class="col-md-6 nopadding">
 								<label class="control-label col-xs-3" translate>Number</label>
 								<div class="col-xs-7">
-									<input type="text" class="form-control small" ng-model="dispatch.description">
+									<!-- <input type="text" class="form-control small" ng-model="dispatch.description"> -->
+									<angucomplete-alt id="ex1"
+											placeholder=""
+											pause="100"
+											selected-object="selectedDispatch"
+											initial-value="dispatch.description"
+											local-data="allDispatchs"
+											search-fields="description"
+											title-field="description"
+											input-changed="descriptionChanged"
+											minlength="2"
+											input-class="form-control small"/>
 								</div>
 							</div>
 							<div class="col-md-6 nopadding">

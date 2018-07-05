@@ -30,7 +30,7 @@
 					<a href="javascript:void(0)" ng-click="showClothModal(c)">{{c.name}}</a>
 				</td>
 				<td>
-					<span>{{+c.available>0 ? (+c.available).toFixed(2) : ''}}</span>
+					<span>{{+c.available>0 ? (+c.available * 1.05).toFixed(2) : ''}}</span>
 				</td>
 			</tr>
 		</tbody>

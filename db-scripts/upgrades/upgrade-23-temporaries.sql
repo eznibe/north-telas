@@ -44,12 +44,17 @@ CREATE TABLE temporariesdownload
 
 
 create or replace view v_temporaries_files_extended as
-SELECT f.*, coalesce(sum(dw.mts),0) as used, (f.mtsInitial * 0.95) - coalesce(sum(dw.mts),0) as available 
+SELECT f.*, coalesce(sum(dw.mts),0) as used, ((f.mtsInitial * 0.95) - coalesce(sum(dw.mts),0)) * 1.05 as available 
 FROM temporariesfile f left join temporariesdownload dw on dw.fileId = f.id
 GROUP by f.id;
 	
 
 create or replace view v_temporaries_dispatch_extended as
-SELECT d.*, sum(f.mtsInitial * 0.95) as init, coalesce(sum(f.used),0) as used, sum(f.mtsInitial * 0.95) - coalesce(sum(f.used),0) as available 
+SELECT d.*, sum(f.mtsInitial) as init, coalesce(sum(f.used),0) as used, sum(f.available) as available 
 FROM temporariesdispatch d left join v_temporaries_files_extended f on d.id = f.dispatchId
 GROUP by d.id;
+
+
+alter table temporariesfile add column type_2 varchar(32);
+
+update temporariesfile set type_2=type, type = null;

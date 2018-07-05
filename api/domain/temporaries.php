@@ -6,7 +6,7 @@ include_once 'logs.php';
 function getDispatchs() {
 	
 	$query = "SELECT *, DATE_FORMAT(dueDate,'%d-%m-%Y') as dueDate, DATE_FORMAT(realDueDate,'%d-%m-%Y') as realDueDate 
-				FROM temporariesdispatch d
+				FROM v_temporaries_dispatch_extended d
 				ORDER BY d.dueDate";
 
 	$result = mysql_query($query);
@@ -42,7 +42,7 @@ function getDispatchFiles($dispatchId, $filter) {
 						? $filter->selectedSort->mainOrder . ' ' . $filter->selectedSort->mode . ' ' . $filter->selectedSort->extraOrder
 						: " clothType, c.name" ;
 
-	$query = "SELECT f.*, f.id as fileId, f.type as clothType, d.*, p.code, c.name as cloth, DATE_FORMAT(dueDate,'%d-%m-%Y') as dueDate, DATE_FORMAT(realDueDate,'%d-%m-%Y') as realDueDate,
+	$query = "SELECT f.*, f.id as fileId, f.type as clothType, d.id as dispatchId, d.shortName, d.description, p.code, c.name as cloth, DATE_FORMAT(dueDate,'%d-%m-%Y') as dueDate, DATE_FORMAT(realDueDate,'%d-%m-%Y') as realDueDate,
 					 f.available as fileAvailable, d.available as dispatchAvailable 
 				FROM v_temporaries_files_extended f
 				JOIN products p on p.productId = f.productId
@@ -77,6 +77,23 @@ function getDispatchFiles($dispatchId, $filter) {
 	return $rows;	
 }
 
+function getDispatchByDescription($description) {
+	
+	$query = "SELECT *, DATE_FORMAT(dueDate,'%d-%m-%Y') as dueDate, DATE_FORMAT(realDueDate,'%d-%m-%Y') as realDueDate 
+				FROM temporariesdispatch d
+				WHERE d.description = '$description' and d.description != '<completar>'";
+
+	$result = mysql_query($query);
+
+	$rows = array();
+	while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+		array_push($rows, $row);
+	}
+
+	return $rows;
+}
+
+
 function getFileDownloads($fileId) {
 
 	$query = "SELECT d.*, DATE_FORMAT(downloadDate,'%d-%m-%Y') as downloadDate
@@ -97,7 +114,7 @@ function getFileDownloads($fileId) {
 // Create the temporaries file dispatch and the files associated to it
 function saveDispatch($dispatch)
 {
-	$obj->successful = false;
+	// $obj->successful = false;
 	$obj->method = 'saveDispatch';
 
 	$dueDate = isset($dispatch->dueDate) && trim($dispatch->dueDate)!='' ? "STR_TO_DATE('".$dispatch->dueDate."', '%d-%m-%Y')" : 'null' ;
@@ -125,7 +142,7 @@ function saveDispatch($dispatch)
 				$id = uniqid();
 	
 				$insertFile = "INSERT INTO temporariesfile (id, dispatchId, productId, mtsInitial, cif, type)
-								VALUES ('$id', '".$dispatch->id."', '".$tProduct->productId."', ".$tProduct->amount.", null, '".$group[0]['name']."')";
+								VALUES ('$id', '".$dispatch->id."', '".$tProduct->productId."', ".$tProduct->amount.", null, null)";
 	
 				if(mysql_query($insertFile)) {
 	
@@ -142,7 +159,7 @@ function saveDispatch($dispatch)
 					$file->dueDate = $dispatch->dueDate;
 					$file->clothType = $group[0]['name'];
 					$file->code = $tProduct->code;
-					$file->rollWidth = '-'; //TODO
+					// $file->rollWidth = '-'; //TODO
 					$file->mtsInitial = $tProduct->amount;
 					$file->downloads = array();
 	
@@ -160,6 +177,7 @@ function saveDispatch($dispatch)
 				}
 			}
 		
+			$obj->dispatchId = $dispatch->id;
 			$obj->temporariesFiles = $temporariesFiles;
 		}
 		else {
@@ -173,13 +191,62 @@ function saveDispatch($dispatch)
 
 	} else {
 		// update a dispatch that already exists
-		$query = "UPDATE temporariesdispatch SET shortName = '".$dispatch->shortName."', description = '".$dispatch->description."', dueDate = $dueDate WHERE id = '".$dispatch->id."'";
 
-		if(mysql_query($query)) {
-			$obj->successful = true;
+		if (!isset($dispatch->joinToDispatchId)) {
+			
+			$query = "UPDATE temporariesdispatch SET shortName = '".$dispatch->shortName."', description = '".$dispatch->description."', dueDate = $dueDate WHERE id = '".$dispatch->id."'";
+	
+			if(mysql_query($query)) {
+				$obj->successful = true;
+	
+				$obj->dispatchId = $dispatch->id;
+				// fill the list of files to return in result
+				$obj->temporariesFiles = getDispatchFiles($dispatch->id, null);
+			} else {
+				$obj->successful = false;
+				$obj->update = $query;
+			}
 		} else {
-			$obj->successful = false;
-			$obj->update = $query;
+			// special case when the current dispatch is joined to another one that already exists
+			// -> current dispatch files are linked to the joined one
+			// -> current dispatch is deleted
+			$joinedDispatchId = $dispatch->joinToDispatchId;
+
+			$currentTemporariesFiles = getDispatchFiles($dispatch->id, null);
+
+			$query = "UPDATE temporariesfile SET dispatchId = '".$joinedDispatchId."' WHERE dispatchId = '".$dispatch->id."'";
+	
+			if(mysql_query($query)) {
+				$obj->successfulJoin = true;
+	
+				$delete = "DELETE FROM temporariesdispatch where id = '".$dispatch->id."'";
+
+				if(mysql_query($delete)) {
+					$obj->successful = true;
+					$obj->successfulJoin = true;
+
+					// get only those files that were joined to the other dispatch
+					$allFiles = getDispatchFiles($joinedDispatchId, null);
+					$obj->temporariesFiles = array();
+
+					foreach ($allFiles as $file) {
+						foreach ($currentTemporariesFiles as $curFile) {
+							if ($curFile['fileId'] == $file['fileId']) {
+								array_push($obj->temporariesFiles, $file);
+							}
+						}
+					}
+
+				} else {
+					$obj->successfulJoin = false;
+					$obj->delete = $delete;
+				}
+			} else {
+				$obj->successfulJoin = false;
+				$obj->update = $query;
+			}
+			
+			$obj->dispatchId = $joinedDispatchId;
 		}
 	}
 
@@ -194,7 +261,8 @@ function saveFile($tFile)
 	$obj->successful = false;
 	$obj->method = 'saveFile';
 
-	$update = "UPDATE temporariesfile SET arancelary = '".$tFile->arancelary."', cif = ".$tFile->cif." WHERE id = '$tFile->id'";
+	$update = "UPDATE temporariesfile SET arancelary = '".$tFile->arancelary."', cif = ".$tFile->cif.", 
+				rollWidth = ".$tFile->rollWidth.", type = '".$tFile->type."' WHERE id = '$tFile->id'";
 
 	if(mysql_query($update)) {
 		$obj->successful = true;

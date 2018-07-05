@@ -12,7 +12,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="d in dispatchs | filter:searchBox " ng-show="d.available > 0">
+		<tr ng-repeat="d in dispatchs | filter:searchBox " ng-show="{{::dispatchAvailablePercentage(d) > 0}}">
 			<td>
 				<span><a href="javascript:void(0);" ng-click="showTemporariesDispatchModal(d)" title="{{d.description}}">{{d.shortName}}</a></span>
 			</td>
@@ -23,12 +23,12 @@
 				<!-- <temporaries-dispatch-cloths files="{{::getFiles(d,c)}}" open="showTemporariesFileModal" style="display:inline-block;"></temporaries-dispatch-cloths> -->
 				<div>
 					<span ng-repeat="f in getFiles(d, c)">
-						<a style="color:#333; display:inline-block; min-width:100px;" class="badge" ng-click="showTemporariesFileModal(f)" title="{{f.code}}">{{f.cloth}} - {{f.available}} mts.</a>
+						<a style="color:#333; display:inline-block; min-width:100px;" class="badge" ng-click="showTemporariesFileModal(f)" title="{{f.code}}">{{f.cloth}} - {{(+f.available).toFixed(2)}} mts.</a>
 					</span>
 				</div>
 			</td>
 			<td nowrap>
-				{{(+d.available).toFixed(0)}}%
+				{{::dispatchAvailablePercentage(d)}}%
 			</td>
 		</tr>
 		<tr>

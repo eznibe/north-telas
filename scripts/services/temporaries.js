@@ -11,6 +11,10 @@ angular.module('vsko.stock')
     return $http.get(url + 'temporaries_GET.php?expand=FULL');
   } ;
 
+  this.getDispatchByDescription = function(description) {
+    return $http.get(url + 'temporaries_GET.php?description='+description);
+  };
+
   this.getFilesList = function(filter)
   {
     return $http.post(url + 'temporaries_POST.php?filesList=true', filter);

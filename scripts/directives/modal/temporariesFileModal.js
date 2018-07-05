@@ -11,13 +11,15 @@ angular.module('vsko.stock')
       var $scope = scope;
       var callback = attrs.callback;
 
+      $scope.listTypes = ['Dacron', 'Dacron 36', 'Laminados', 'Nylon'];
+
       $scope.showTemporariesFileModal = function(temporariesFile) {
 
         $scope.file = temporariesFile;
 
         // calculate available
         $scope.file.available = Utils.calculateTemporariesFileAvailable($scope.file);
-        $scope.file.availableHeader = ($scope.file.available * 1.05).toFixed(2);
+        // $scope.file.availableHeader = ($scope.file.available * 1.05).toFixed(2);
 
         // show the file modal
         $scope.modalFile = $modal({template: 'views/modal/temporariesFile.html', show: false, scope: $scope, callback: callback});
@@ -66,7 +68,7 @@ angular.module('vsko.stock')
         }
 
         $scope.file.available = Utils.calculateTemporariesFileAvailable($scope.file);
-        $scope.file.availableHeader = ($scope.file.available * 1.05).toFixed(2);
+        // $scope.file.availableHeader = ($scope.file.available * 1.05).toFixed(2);
       }
 
       $scope.deleteDownload = function(download) {
@@ -85,7 +87,6 @@ angular.module('vsko.stock')
             $scope.file.dispatchAvailable = +$scope.file.dispatchAvailable + download.mts;
     
             $scope.file.available = Utils.calculateTemporariesFileAvailable($scope.file);
-            $scope.file.availableHeader = ($scope.file.available * 1.05).toFixed(2);
           }
         });
       }
@@ -96,7 +97,7 @@ angular.module('vsko.stock')
         $('#d_description').html(file.cloth);
         $('#d_duedate').html(file.dueDate);
         $('#d_clothtype').html(file.clothType);
-        $('#d_available').html(file.availableHeader);
+        $('#d_available').html(file.available);
         $('#d_arancelary').html(file.arancelary);
         $('#d_rollwidth').html(file.rollWidth + "''");
         $('#d_cif').html(file.cif + " usd");
@@ -113,6 +114,11 @@ angular.module('vsko.stock')
         }
         return input;
       };
+
+      $scope.clothTypeDisplayFn = function(t) {
+        // console.log('cloth type display:',t)
+        return t;
+      }
     }
   };
 });

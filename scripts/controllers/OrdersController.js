@@ -2,7 +2,7 @@
 
 angular.module('vsko.stock')
 
-.controller('OrdersCtrl', ['$scope', 'Utils', 'Orders', 'Previsions', 'orderStatus', '$routeParams', '$modal', function ($scope, Utils, Orders, Previsions, orderStatus, $routeParams, $modal) {
+.controller('OrdersCtrl', ['$scope', 'Utils', 'Orders', 'Previsions', 'Temporaries', 'orderStatus', '$routeParams', '$modal', function ($scope, Utils, Orders, Previsions, Temporaries, orderStatus, $routeParams, $modal) {
 
 		$scope.type = $routeParams.type;
 
@@ -115,9 +115,15 @@ angular.module('vsko.stock')
 			if (temporaryProducts.length > 0) {
 				var dispatch = {
 					isNew: true,
-					temporariesProducts: order.products.filter(p => p.temporary)
+					showFiles: true,
+					temporariesProducts: order.products.filter(p => p.temporary),
+					description: '<completar>',
+					shortName: '<completar>'
 				}
-				$scope.showTemporariesDispatchModal(dispatch);
+				Temporaries.saveDispatch(dispatch).then(function(result) {
+					dispatch.isNew = false;
+					$scope.showTemporariesDispatchModal(dispatch);
+				});
 			}
         };
 

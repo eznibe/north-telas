@@ -55,6 +55,8 @@ angular.module('vsko.stock').factory('Utils',[ '$translate', '$http', '$timeout'
     return $http.post(baseUrl + 'log_POST.php', log);
   };
 
+  // calcultes the file availble with the formula -> (initial * 0.95) - downloads) * 1.05
+  // it corresponds to excel cell J2
   that.calculateTemporariesFileAvailable = function(file) {
 
     var available = +file.mtsInitial * 0.95;
@@ -66,6 +68,8 @@ angular.module('vsko.stock').factory('Utils',[ '$translate', '$http', '$timeout'
     });
 
     available -= totalDownloads;
+
+    available = available * 1.05;
 
     if (available < 0 && available > -0.05) {
       available = 0;

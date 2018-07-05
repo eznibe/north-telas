@@ -7,7 +7,7 @@ angular.module('vsko.stock').controller('TemporariesSummaryCtrl', ['$scope', 'Ut
 	Temporaries.getAllDispatchs().then(function(result) {
     $scope.dispatchs = result.data.map(function(dispatch) {
       
-      updateDispatchAvailable(dispatch);      
+      // updateDispatchAvailable(dispatch);      
       
       return dispatch;
     });
@@ -18,6 +18,12 @@ angular.module('vsko.stock').controller('TemporariesSummaryCtrl', ['$scope', 'Ut
   $scope.temporariesDispatchUpdated = function() {
 
     console.log('Dispatch udpated')
+
+    Temporaries.getAllDispatchs().then(function(result) {
+      $scope.dispatchs = result.data;
+  
+      $scope.columns = generateColumns($scope.dispatchs);
+    });
   }
 
   $scope.getFiles = function(dispatch, column) {
@@ -27,7 +33,7 @@ angular.module('vsko.stock').controller('TemporariesSummaryCtrl', ['$scope', 'Ut
     $scope.dispatchs.forEach(function(d) {
       if (d.id === dispatch.id) {
         d.files.forEach(function(f) {
-          if (f.clothType === column) {
+          if (f.type === column) {
             files.push(f);
           }
         });
@@ -42,7 +48,7 @@ angular.module('vsko.stock').controller('TemporariesSummaryCtrl', ['$scope', 'Ut
 
     $scope.dispatchs.forEach(function(d) {
       d.files.forEach(function(f) {
-        if (f.clothType === column) {
+        if (f.type === column) {
           total += +f.available;
         }
       });
@@ -66,12 +72,15 @@ angular.module('vsko.stock').controller('TemporariesSummaryCtrl', ['$scope', 'Ut
     var columns = [];
 
     dispatchs.forEach(function(d) {
-      d.files.forEach(function(f) {
-        // var matchColumns = columns.filter(function(c) { return f.clothType === c.name});
-        if (columns.indexOf(f.clothType) === -1) {
-          columns.push(f.clothType);
-        }
-      });
+      if (+d.available > 0) {
+
+        d.files.forEach(function(f) {
+          // var matchColumns = columns.filter(function(c) { return f.type === c.name});
+          if (columns.indexOf(f.type) === -1) {
+            columns.push(f.type);
+          }
+        });
+      }
     }); 
 
     columns.sort();
@@ -79,6 +88,14 @@ angular.module('vsko.stock').controller('TemporariesSummaryCtrl', ['$scope', 'Ut
     return columns;
   }
 
+  $scope.dispatchAvailablePercentage = function(dispatch) {
+    if (!dispatch) {
+      return;
+    }
+    return (+dispatch.available * 100 / (+dispatch.init)).toFixed(0);
+  }
+
+  // deprecated
   function updateDispatchAvailable(dispatch) {
 
     var dispatchTotalAvailable = 0;
