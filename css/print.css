@@ -25,3 +25,7 @@
   height: 75px;
   /*margin-top: 2px;*/
 }
+
+#printDispatch {
+  -webkit-print-color-adjust: exact;
+}

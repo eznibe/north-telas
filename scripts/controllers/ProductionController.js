@@ -1,6 +1,8 @@
 'use strict';
 
-angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope', '$translate', '$timeout', '$cookieStore', 'Production', 'Previsions', 'Users', 'Rules', 'Files', 'DriveAPI', 'Utils', function ($scope, $rootScope, $translate, $timeout, $cookieStore, Production, Previsions, Users, Rules, Files, DriveAPI, Utils) {
+angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope', '$translate', '$timeout', '$cookieStore',
+'Production', 'Previsions', 'Users', 'Rules', 'Files', 'DriveAPI', 'Utils',
+function ($scope, $rootScope, $translate, $timeout, $cookieStore, Production, Previsions, Users, Rules, Files, DriveAPI, Utils) {
 
 	$scope.start = Date.now();
 
@@ -196,7 +198,7 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 			var checkedPrevisions = getCheckedPrevisions();
 
 			// if no orders selected will update all orders with week between 1 and 8
-			Previsions.weekUp(checkedPrevisions).then(function(result) {
+			Previsions.weekUp(checkedPrevisions, 'week').then(function(result) {
 				if (result.data.successful) {
 					$scope.search(1);
 				}
@@ -206,7 +208,7 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 			var checkedPrevisions = getCheckedPrevisions();
 
 			// if no orders selected will update all orders with week between 1 and 8
-			Previsions.weekDown(checkedPrevisions).then(function(result) {
+			Previsions.weekDown(checkedPrevisions, 'week').then(function(result) {
 				if (result.data.successful) {
 					$scope.search(1);
 				}
@@ -576,6 +578,12 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 		Previsions.getPrevisionsForProduction($rootScope.user.sellerCode, {}).then(function(result) {
 			console.log('All results in ' + (Date.now() - start) + ' ms.'); //eslint-disable-line
 
+			var specialTranslation = {
+        country: function(value) {
+          return value === countries.designOnly ? $translate.instant('Only design') : value;
+        }
+      };
+
 			$scope.allProduction = result.data;
 
 			result.data.map(function(row) {
@@ -587,7 +595,12 @@ angular.module('vsko.stock').controller('ProductionCtrl', ['$scope', '$rootScope
 
 							if ((opt.column == key || opt.key == key) && row[key] && !alreadyContains(opt.options, value.name ? value.name : value)) {
 
-								opt.options.push({value: value.name ? value.name : value, column: opt.column ? opt.column : opt.key});
+								value = value.name ? value.name : value;
+
+								opt.options.push({
+                  value: value,
+                  name: specialTranslation[key] ? specialTranslation[key](value) : value,
+                  column: opt.column ? opt.column : opt.key});
 							}
 						});
 					});

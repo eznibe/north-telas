@@ -79,6 +79,14 @@ angular.module('vsko.stock')
         	return $http.get(url + 'lists_GET.php?getPrices=true'+groupCondition);
         };
 
+				this.historicDesign = function(filter)
+				{
+					var startDate = filter.startDate ? filter.startDate : "01-01-1000";
+					var endDate = filter.endDate ? filter.endDate : "12-12-2999";
+
+					return $http.get(url + 'lists_GET.php?historicDesign=true&type='+filter.type+'&startDate='+startDate+"&endDate="+endDate);
+				};
+
 				//---------------------------------------------------------------------------//
 
         this.executeQuery = function(query)

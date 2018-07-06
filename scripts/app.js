@@ -210,7 +210,12 @@ angular.module("vsko.stock", [
                 controller: 'PrevisionsCtrl',
                 restricted: 'plotter'
             })
-            .when('/design', {
+            .when('/historicDesign', {
+                templateUrl: 'views/lists/designHistorics.html',
+                controller: 'DesignHistoricsCtrl',
+                restricted: 'plotter'
+            })
+						.when('/design', {
                 templateUrl: 'views/design.html',
                 controller: 'DesignCtrl',
                 restricted: 'plotter'
@@ -282,6 +287,11 @@ angular.module("vsko.stock", [
 						.when('/seasonweeks', {
                 templateUrl: 'views/seasonweeks.html',
                 controller: 'SeasonWeeksCtrl',
+                access: 'admin'
+            })
+            .when('/designhours', {
+                templateUrl: 'views/designhours.html',
+                controller: 'DesignHoursCtrl',
                 access: 'admin'
             })
             .when('/lists/oldPrevisions', {

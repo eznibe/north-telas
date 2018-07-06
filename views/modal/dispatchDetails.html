@@ -13,7 +13,7 @@
 					<span class="glyphicon glyphicon-remove"></span>
 				</a>
         <div class="dispatch-logo onlyprint"></div>
-		</div>
+		  </div>
 
 			<div class="modal-body">
 
@@ -376,8 +376,8 @@
 					</thead>
 					<tbody>
 						<tr ng-repeat="o in dispatch.previsions">
-              <td>
-                <editable-production-dropdown entity="::o" options="dispatch.carries" field="'carryId'" display="carryDisplayFn" callback="::changedCarry" width="75" editable-by-role="'admin,produccion,velas-od'" style="display:inline-block;"></editable-production-dropdown>
+              <td nowrap>
+                <editable-production-dropdown entity="::o" options="dispatch.carries" field="'carryId'" display="carryDisplayFn" callback="::changedCarry" width="60" width-editable="75" editable-by-role="'admin,produccion,velas-od'" style="display:inline-block;"></editable-production-dropdown>
 							</td>
 							<td nowrap>
 								{{o.orderNumber}}

@@ -60,7 +60,24 @@ angular.module('vsko.stock')
 					});
 
 					return d.promise;
-					// return $http.post(url + 'previsions_POST.php?listForProduction=true' + offset + sellerCode , filters);
+        };
+
+				this.getPrevisionsForDesign = function(designerCode, filters, offset)
+        {
+					designerCode = designerCode ? '&designerCode=' + designerCode : '';
+					offset = ((offset || offset == 0) && filters.limit) ? ('&offset=' + offset) : '';
+
+					var countryCondition = "&storedCountry="+$rootScope.user.storedCountry;
+
+					var d = $q.defer();
+					var startTime = Date.now();
+
+					$http.post(url + 'previsions_POST.php?listForDesign=true' + offset + designerCode + countryCondition, filters).then(function(result) {
+					Utils.logTiming(startTime, url + 'previsions_POST.php?listForDesign=true' + offset + designerCode + countryCondition, 'previsions.getPrevisionsForDesign', 'POST', filters);
+						d.resolve(result);
+					});
+
+					return d.promise;
         };
 
 				this.getPrevisionsHistoric = function(sellerCode, filters, offset)
@@ -267,12 +284,12 @@ angular.module('vsko.stock')
 					return $http.get(url + 'previsions_GET.php?previsionId='+previsionId+'&isInSomeDispatch=true');
 				};
 
-				this.weekUp = function(previsionIds) {
-					return $http.post(url + 'previsions_POST.php?weekUp=true', {ids: previsionIds, user: $rootScope.user.name});
+				this.weekUp = function(previsionIds, column) {
+					return $http.post(url + 'previsions_POST.php?weekUp=true', {ids: previsionIds, user: $rootScope.user.name, column: column});
 				};
 
-				this.weekDown = function(previsionIds) {
-					return $http.post(url + 'previsions_POST.php?weekDown=true', {ids: previsionIds, user: $rootScope.user.name});
+				this.weekDown = function(previsionIds, column) {
+					return $http.post(url + 'previsions_POST.php?weekDown=true', {ids: previsionIds, user: $rootScope.user.name, column: column});
 				};
 
         return this;

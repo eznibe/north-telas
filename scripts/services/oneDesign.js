@@ -53,5 +53,17 @@ angular.module('vsko.stock')
         	return $http.get(url + 'boats_GET.php?onedesignCloths=true&boat='+boat+'&sail='+sail);
         };
 
+        this.getProperties = function(name) {
+            return $http.get(url + 'previsions_GET.php?properties=true&filter='+name);
+        }
+
+        this.updateProperties = function(name, value) {
+            var property = {
+                name: name,
+                value: value
+            };
+            return $http.post(url + 'previsions_POST.php?properties=true', property);
+        }
+
         return this;
     }]);

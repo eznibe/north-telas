@@ -10,7 +10,7 @@ angular.module('vsko.stock')
         	$scope.users = result.data;
         });
 
-        $scope.countries = countries;
+        $scope.countries = countries.list;
 
         // Modal functions
         $scope.showModal = function(user) {

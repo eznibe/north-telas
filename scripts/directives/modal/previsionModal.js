@@ -12,7 +12,7 @@ angular.module('vsko.stock')
 
             $scope.files = [];
 
-            $scope.countries = countries;
+            $scope.countries = countries.list.concat(countries.designOnly);
 
 
             $scope.onBeforePickerOpen = function(elementInfo) {
@@ -153,7 +153,7 @@ angular.module('vsko.stock')
               // reset OD sails
               $scope.oneDesignSails = $scope.allOneDesignSails;
 
-              if(!$scope.prevision.cloths || $scope.prevision.cloths.length == 0) {
+              if(!$scope.prevision.designOnly && (!$scope.prevision.cloths || $scope.prevision.cloths.length == 0)) {
                 // init with one cloth empty, useful for creating new prevision
                 $scope.prevision.cloths = new Array();
                 $scope.prevision.cloths.push({});
@@ -181,6 +181,20 @@ angular.module('vsko.stock')
                 }
 
                 $scope.prevision.selectedSeller = $scope.prevision.seller ? $scope.sellers.findAll({name:$scope.prevision.seller})[0] : {};
+              });
+
+              // designers to show depends on the prevision country
+              Production.getDesigners($scope.prevision.country).then(function(result) {
+                $scope.designers = result.data;
+
+                if ($scope.prevision.designer && result.data.filter(function(d) {
+                    return d.name === $scope.prevision.designer;
+                  }).length == 0) {
+
+                  $scope.designers.push({name: $scope.prevision.designer});
+                }
+
+                $scope.prevision.selectedDesigner = $scope.prevision.designer ? $scope.designers.findAll({name:$scope.prevision.designer})[0] : {};
               });
 
 
@@ -334,6 +348,12 @@ angular.module('vsko.stock')
               $scope.prevision.seller = $scope.prevision.selectedSeller.name;
             } else {
               $scope.prevision.seller = null;
+            }
+
+            if($scope.prevision.selectedDesigner && $scope.prevision.selectedDesigner.name) {
+              $scope.prevision.designer = $scope.prevision.selectedDesigner.name;
+            } else {
+              $scope.prevision.designer = null;
             }
 
             if($scope.prevision.selectedLine && $scope.prevision.selectedLine.name) {
@@ -765,6 +785,17 @@ angular.module('vsko.stock')
         	  return undefined;
           }
 
+          $scope.calculateDesignHours = function() {
+
+        	  if(!$scope.prevision.oneDesign && $scope.prevision.selectedSail
+              && $scope.prevision.selectedLine && $scope.prevision.area > 0) {
+
+    				  $scope.prevision.designHours = Rules.calculateDesignHours($scope.prevision);
+        	  } else {
+              $scope.prevision.designHours = null;
+            }
+          };
+
           $scope.filterSails = function() {
 
             // filter OD boat sails
@@ -809,6 +840,23 @@ angular.module('vsko.stock')
         		  });
 
         	  }
+          };
+
+          $scope.designOnlyOrder = function() {
+
+            // if selected set country OTRO
+        	  if($scope.prevision.designOnly) {
+              $scope.prevision.country = countries.designOnly;
+              $scope.prevision.cloths = [];
+        	  } else if (!$scope.prevision.designOnly && $scope.prevision.country === countries.designOnly) {
+              $scope.prevision.country = $rootScope.user.country;
+              $scope.prevision.cloths = [{}];
+
+              Stock.getAllCloths(true, $scope.prevision.country).then(function(result) {
+          		  $scope.cloths = result.data;
+          	  });
+        	  } else {
+            }
           };
 
           function dbFormat(date) {

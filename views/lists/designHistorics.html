@@ -1,0 +1,120 @@
+<div class="nopaddingright jumbotron clearfix">
+	<h1><span translate>Designed between dates</span></h1>
+	<div class="row">
+		<div class="col-md-6 nopadding">
+				<label class="control-label col-xs-2" for="edit_cloth" translate>Between</label>
+				<div class="col-xs-4">
+					<div class="input-group input-group-sm date" date-picker>
+						<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="filter.startDate" class="form-control small" required>
+						<span class="input-group-addon">
+							<span class="glyphicon-calendar glyphicon"></span>
+						</span>
+					</div>
+				</div>
+
+				<label class="control-label col-xs-1" for="edit_cloth" translate>and</label>
+				<div class="col-xs-4">
+					<div class="input-group input-group-sm date" date-picker>
+						<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="filter.endDate" class="form-control small" required>
+						<span class="input-group-addon">
+							<span class="glyphicon-calendar glyphicon"></span>
+						</span>
+					</div>
+				</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6 nopadding">
+				<label class="control-label col-xs-2" translate>Type</label>
+				<div class="col-xs-4">
+					<select name="dd_cloth" ng-model="filter.selectedType" ng-options="sc as sc.key | translate for sc in filter.types" class="form-control small" ng-change="search()">
+	        </select>
+				</div>
+
+		</div>
+		<div class="col-md-6 nopadding">
+			<div class="col-xs-4">
+				<span class="glyphicon glyphicon-search icon-with-label"></span>
+				<span><a ng-click="search()" class="btn-link">{{'Search' | translate}}</a><span>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<!-- By designer -->
+<table class="table table-bordered table-striped table-hover" ng-show="filter.selectedType.id=='BY_DESIGNER'">
+	<thead>
+		<tr>
+			<th translate>Designer</th>
+			<th translate>Amount</th>
+			<th translate>Hours</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="d in designers | filter:searchBox">
+			<td>
+				{{d.designer}}
+			</td>
+			<td>
+				{{d.amount}}
+			</td>
+			<td>
+				{{d.sumDesignHours}}
+			</td>
+		</tr>
+		<tr ng-show="designers.length > 0" class="totals-row">
+			<td>
+				Total
+			</td>
+			<td>
+				-
+			</td>
+			<td>
+				{{sumTotalDesignerHours()}}
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<!-- By order -->
+<table id="orders" class="table table-bordered table-striped table-hover" ng-show="filter.selectedType.id=='BY_ORDERS'">
+	<thead>
+		<tr>
+			<th style="width:85px;" translate>Date</th>
+			<th translate>Order</th>
+			<th translate>Designer</th>
+			<th translate>Hours</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="o in orders | filter:searchBox">
+			<td>
+				{{o.formattedDate}}
+			</td>
+			<td>
+				{{o.orderNumber}}
+			</td>
+			<td>
+				{{o.designer}}
+			</td>
+			<td>
+				{{o.designHours}}
+			</td>
+		</tr>
+		<tr ng-show="orders.length > 0" class="totals-row">
+			<td>
+				Total
+			</td>
+			<td>
+				-
+			</td>
+			<td>
+				-
+			</td>
+			<td>
+				{{sumTotalDesignerHours()}}
+			</td>
+		</tr>
+	</tbody>
+</table>

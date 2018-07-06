@@ -47,6 +47,10 @@ else if(isset($_GET['getPrices'])) {
 	$value = getClothsPrices($_GET['groupId']);
 }
 
+else if(isset($_GET['historicDesign'])) {
+	$value = getDesignHistorics($_GET['startDate'], $_GET['endDate'], $_GET['type']);
+}
+
 else if(isset($_GET['executeQuery'])) {
 	$value = executeQuery($_GET['query']);
 }

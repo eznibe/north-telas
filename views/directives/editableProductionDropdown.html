@@ -1,4 +1,4 @@
-<div ng-mouseover="::oneTimeBindings.mouseOver();" ng-mouseleave="::oneTimeBindings.mouseLeave();" ng-style="{'width': (width ? (+width+5)+'px' : '100px'), 'height': '20px'}">
+<div ng-mouseover="::oneTimeBindings.mouseOver();" ng-mouseleave="::oneTimeBindings.mouseLeave();" ng-style=":refreshBoxStyle:oneTimeBindings.boxStyle()">
 	<a style="color:#333; cursor:pointer;" id="entityDisplay-{{::entity.id}}-{{::field}}" ng-click="::clicked(entity)">
 		<span>{{:refreshLinkValue:oneTimeBindings.getFieldValue()}}</span> <span>{{:refreshLinkValue:oneTimeBindings.getExtraLabel()}}</span>
 	</a>
@@ -6,11 +6,10 @@
 
 	<span  class="badge" id="entityEdit-{{::entity.id}}-{{::field}}" style="display:none; border:0; padding: 0;">
 
-		<!-- <input ng-model="entity[field]" ng-style="{'width': (width ? width+'px' : '100px'), 'height': '20px', 'font-size': '10px'}"/> -->
-		<select name="dd" ng-model="entity.selectedOption" ng-options="o as display(o) for o in options" class="form-control small" ng-style="{'width': (width ? width+'px' : '100px'), 'height': '20px', 'font-size': '10px', 'display': 'table-cell'}">
-			<option value="">-- choose one --</option>
+		<select name="dd" ng-model="entity.selectedOption" ng-options="o as ::display(o) for o in options" class="form-control small" ng-style="::oneTimeBindings.dropdownStyle()">
+			<option value="">-</option>
 		</select>
 
-		<a href="javascript:void(0)" ng-click="::changed(entity)" style="display: table-cell;" ><span class="glyphicon glyphicon-ok control-label" style="text-align:center; cursor:pointer; margin-left:4px;"></span></a>
+		<a href="javascript:void(0)" ng-click="::changed(entity)" style="display: inline-block;" ><span class="glyphicon glyphicon-ok control-label" style="text-align:center; cursor:pointer; margin-left:4px;"></span></a>
 	</span>
 </div>

@@ -36,7 +36,7 @@
 	    }
 	</script>
 </head>
-<body ng-app="vsko.stock" ng-controller='AuthorizationCtrl' ng-class="fontSizeClass()">
+<body ng-app="vsko.stock" ng-controller='AuthorizationCtrl' ng-class="fontSizeClass()" style="-webkit-print-color-adjust:exact;">
 		<!-- Fixed navbar -->
 		<div google-analytics ng-cloak>
 			<div class="navbar-inverse" role="navigation">
@@ -85,6 +85,7 @@
 								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'Design' | translate }} <span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">
                     <li><a href="#/design" access-restricted="plotter" translate>Design</a></li>
+                    <li><a href="#/historicDesign" access-restricted="plotter" translate>Historic design</a></li>
                 </ul>
 							</li>
               <li access-restricted="vendedor">
@@ -113,6 +114,7 @@
 			                        <li><a href="#/users" translate>Users</a></li>
                               <!-- <li><a href="#/sails" translate>Sail types</a></li> -->
                               <li><a href="#/seasonweeks" translate>Season weeks</a></li>
+                              <li><a href="#/designhours" translate>Design hours</a></li>
 			                    </ul>
 							</li>
 							<li>
@@ -225,6 +227,7 @@
         <script src="scripts/controllers/DolarController.js"></script>
         <script src="scripts/controllers/ProfileController.js"></script>
         <script src="scripts/controllers/SeasonWeeksController.js"></script>
+        <script src="scripts/controllers/DesignHoursController.js"></script>
         <script src="scripts/controllers/OnedesignController.js"></script>
         <script src="scripts/controllers/AuthorizationController.js"></script>
         <script src="scripts/controllers/UsersController.js"></script>
@@ -240,6 +243,7 @@
         <script src="scripts/controllers/lists/ClothsPriceController.js"></script>
         <script src="scripts/controllers/lists/ClothsValuedStockController.js"></script>
         <script src="scripts/controllers/lists/DispatchsHistoricController.js"></script>
+        <script src="scripts/controllers/lists/DesignHistoricsController.js"></script>
         <script src="scripts/controllers/lists/WorkticketsController.js"></script>
         <script src="scripts/services/stock.js"></script>
         <script src="scripts/services/previsions.js"></script>
@@ -259,6 +263,7 @@
         <script src="scripts/directives/plotterCutsTags.js"></script>
         <script src="scripts/directives/orderRollsTags.js"></script>
         <script src="scripts/directives/clothRollsTags.js"></script>
+        <script src="scripts/directives/designWeeks.js"></script>
         <script src="scripts/directives/productionWeeks.js"></script>
         <script src="scripts/directives/productionPercentages.js"></script>
         <script src="scripts/directives/productionColumnsSelector.js"></script>
@@ -285,6 +290,7 @@
         <script src="scripts/directives/modal/editTextModal.js"></script>
         <script src="scripts/directives/modal/previsionFilesModal.js"></script>
         <script src="scripts/directives/modal/productionSummaryModal.js"></script>
+        <script src="scripts/directives/modal/designSummaryModal.js"></script>
         <script src="scripts/directives/modal/filterSelectionModal.js"></script>
         <script src="scripts/directives/modal/confirmCutModal.js"></script>
         <script src="scripts/directives/modal/confirmArchiveModal.js"></script>

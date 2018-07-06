@@ -50,6 +50,9 @@ angular.module('vsko.stock')
         		var res = $scope.filterOptions.columns.filter(function(c) {
         			return c.column == column || c.key == column;
         		});
+            // if (res.length > 0 && res[0].options.length > 0) {
+            //   console.log('Options modal:',column,res[0].options)
+            // }
         		return res.length > 0 && res[0].options.length > 0 ? res[0].options : undefined;
         	}
 

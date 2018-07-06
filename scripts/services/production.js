@@ -19,6 +19,11 @@ angular.module('vsko.stock')
 				return $http.get(url + 'users_GET.php?sellerCodes=true' + (country ? '&sellerCountry='+country : ''));
       };
 
+			this.getDesigners = function(country)
+      {
+				return $http.get(url + 'users_GET.php?designerCodes=true' + (country ? '&designerCountry='+country : ''));
+      };
+
       this.getPrevisions = function(clothId)
       {
       	return $http.get(url + 'previsions_GET.php?clothId='+clothId+'&designed=false&expand=FULL');

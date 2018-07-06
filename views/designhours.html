@@ -1,0 +1,49 @@
+<div class="nopaddingright jumbotron clearfix">
+	<h1><span translate>Design hours</span></h1>
+	<form name="formDolar">
+	<div class="row">
+		<div class="col-md-6 nopadding">
+
+				<label class="control-label col-xs-2" translate>Sails</label>
+				<div class="col-xs-3">
+					<select name="dd_sail" ng-model="selectedSailGroup" ng-options="s as s.name for s in sailGroups" class="form-control small" ng-change="updateSails();">
+						<option value="">-- choose one --</option>
+					</select>
+				</div>
+				<div class="col-xs-3">
+					<select name="dd_des" ng-model="selectedSail" ng-options="s as s.description for s in sails" class="form-control small" ng-change="updateSailValue()">
+						<option value="">-- choose one --</option>
+					</select>
+				</div>
+				<div class="col-xs-3">
+					<input ng-model="sailValue" class="form-control small" type="number"/>
+				</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6 nopadding">
+
+				<label class="control-label col-xs-2" translate>Line</label>
+				<div class="col-xs-3">
+					<select name="dd_des" ng-model="selectedLine" ng-options="l as l.name for l in lines" class="form-control small" ng-change="updateLineValue()">
+						<option value="">-- choose one --</option>
+					</select>
+				</div>
+				<div class="col-xs-3">
+					<input ng-model="lineValue" class="form-control small" type="number"/>
+				</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6 nopadding">
+
+				<div class="col-xs-12">
+					<a ng-click="save()" class="btn btn-default floatright">
+						<span class="glyphicon glyphicon-save"></span>
+						{{'Save' | translate}}
+					</a>
+				</div>
+		</div>
+	</div>
+	</form>
+</div>

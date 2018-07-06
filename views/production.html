@@ -211,7 +211,7 @@
 				<editable-production-textarea entity="::p" field="'productionObservations'" callback="::changedPrevision.field" editable-by-role="'admin,produccion'" width="82" style="display:inline-block;"></editable-production-textarea>
 			</td>
 			<td class="designObservations" ng-show="::visibility.selected('designObservations')" style="min-width:110px;" access-allowed="vendedor" ng-style=":refreshErrorBackground:visibility.errorStyle(p, 'designObservations');">
-				<editable-production-observations entity="::p" field="'designObservations'" callback="::changedPrevision.field" edit-disabled="designObservationsDisabled" editable-by-role="'vendedor'" style="display:inline-blockzz;"></editable-production-observations>
+				<editable-production-observations entity="::p" field="'designObservations'" callback="::changedPrevision.field" edit-disabled="::designObservationsDisabled(entity)" editable-by-role="'vendedor'" style="display:inline-blockzz;"></editable-production-observations>
 			</td>
 			<td class="generalObservations" ng-show="::visibility.selected('generalObservations')" style="min-width:110px;" ng-style=":refreshErrorBackground:visibility.errorStyle(p, 'generalObservations');">
 				<editable-production-observations entity="::p" field="'observations'" callback="::changedPrevision.field"></editable-production-observations>

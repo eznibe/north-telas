@@ -21,13 +21,13 @@ function getPrevisions($clothId, $designed, $expand, $production, $historic, $se
 	$productionCondition = "";
 	$productionOrderBy = "";
 	if(isset($production)) {
-		$productionCondition = " AND p.deletedProductionOn is null ";
+		$productionCondition = " AND p.deletedProductionOn is null AND p.designOnly = false ";
 		$productionOrderBy = "p.week, ";
 	}
 
 	$historicCondition = "";
 	if(isset($historic)) {
-		$historicCondition = " AND p.deletedProductionOn is not null ";//and p.deletedProductionOn > '2016-06-01' ";
+		$historicCondition = " AND p.deletedProductionOn is not null AND p.designOnly = false ";//and p.deletedProductionOn > '2016-06-01' ";
 		$productionOrderBy = "p.orderNumber, ";
 	}
 
@@ -63,7 +63,7 @@ function getPrevisions($clothId, $designed, $expand, $production, $historic, $se
 		$select = "SELECT p.*, coalesce(p.sailDescription, p.sailOneDesign, concat(sg.name,' - ',s.description)) as sailName, deliveryDate as unformattedDeliveryDate, d.id as dispatchId, d.number as dispatch, ".
 							"       DATE_FORMAT(deliveryDate,'%d-%m-%Y') as deliveryDate, DATE_FORMAT(tentativeDate,'%d-%m-%Y') as tentativeDate, DATE_FORMAT(productionDate,'%d-%m-%Y') as productionDate, DATE_FORMAT(infoDate,'%d-%m-%Y') as infoDate, DATE_FORMAT(advanceDate,'%d-%m-%Y') as advanceDate, DATE_FORMAT(deletedProductionOn,'%d-%m-%Y') as deletedProductionOn ";
 		$body =   "FROM previsions p LEFT JOIN sails s on s.id=p.sailId LEFT JOIN sailgroups sg on sg.id=s.sailGroupId LEFT JOIN dispatchprevisions dp on dp.previsionId = p.id LEFT JOIN dispatchs d on d.id = dp.dispatchId ".
-							"WHERE 1=1 $countryCondition $filter $designedCondition $productionCondition $historicCondition $sellerCondition ".
+							"WHERE 1=1 AND p.orderNumber != '' $countryCondition $filter $designedCondition $productionCondition $historicCondition $sellerCondition ".
 							"ORDER by $orderBy $productionOrderBy -p.deliveryDate desc, p.orderNumber ";
 		$footer = "$limit $offset"
 							;
@@ -101,6 +101,7 @@ function getPrevisions($clothId, $designed, $expand, $production, $historic, $se
 		$row['oneDesign'] = $row['oneDesign']==1 ? true : false;
 		$row['greaterThan44'] = $row['greaterThan44']==1 ? true : false;
 		$row['excludeFromStateCalculation'] = $row['excludeFromStateCalculation']==1 ? true : false;
+		$row['designOnly'] = $row['designOnly']==1 ? true : false;
 
 		$row['count'] = $count;
 
@@ -251,6 +252,12 @@ function savePrevision($prevision)
 	$advanceDate = isset($prevision->advanceDate) && trim($prevision->advanceDate)!='' ? "STR_TO_DATE('".$prevision->advanceDate."', '%d-%m-%Y')" : 'null' ;
 	$dispatchId = isset($prevision->dispatchId) && trim($prevision->dispatchId)!='' ? "'".$prevision->dispatchId."'" : 'null' ;
 
+	$designer = isset($prevision->designer) && trim($prevision->designer)!='' ? $prevision->designer : '' ;
+	$designHours = isset($prevision->designHours) && trim($prevision->designHours)!='' ? $prevision->designHours : 'null' ;
+	$designWeek = isset($prevision->designWeek) && trim($prevision->designWeek)!='' ? $prevision->designWeek : 'null' ;
+	$designOnly = $prevision->designOnly==1 ? 'true' : 'false';
+	$designOnlyCloth = isset($prevision->designOnlyCloth) && trim($prevision->designOnlyCloth)!='' ? $prevision->designOnlyCloth : '' ;
+
 	if ($num_results != 0)
 	{
 		logPrevisionUpdateFull($prevision->id, 'savePrevision');
@@ -261,6 +268,7 @@ function savePrevision($prevision)
 																		", week = $week, priority = $priority, line = $line, seller = $seller, advance = $advance, percentage = $percentage".
 																		", tentativeDate = $tentativeDate, productionDate = $productionDate, infoDate = $infoDate, advanceDate = $advanceDate, rizo = $rizo, country = '$country'".
 																		", deliveryDateManuallyUpdated = $deliveryDateManuallyUpdated, excludeFromStateCalculation = $excludeFromStateCalculation".
+																		", designer = '$designer', designHours = $designHours, designWeek = $designWeek, designOnly = $designOnly, designOnlyCloth = '$designOnlyCloth'".
 																		" WHERE id = '".$prevision->id."'";
 
 		if(mysql_query($update)) {
@@ -276,10 +284,12 @@ function savePrevision($prevision)
 		// insert
 		$insert = "INSERT INTO previsions (id, orderNumber, deliveryDate, client, sailId, sailGroupId, sailDescription, boat,
 				type, designed, oneDesign, greaterThan44, p, e, i,j, area, sailOneDesign, observations, productionObservations, designObservations,
-				week, priority, line, seller, advance, percentage, tentativeDate, productionDate, infoDate, advanceDate, dispatchId, rizo, country, excludeFromStateCalculation)
+				week, priority, line, seller, advance, percentage, tentativeDate, productionDate, infoDate, advanceDate, dispatchId, rizo, country, excludeFromStateCalculation,
+			  designer, designHours, designWeek, designOnly, designOnlyCloth)
 				VALUES ('".$prevision->id."', '".$prevision->orderNumber."', STR_TO_DATE('".$prevision->deliveryDate."', '%d-%m-%Y'), '".$client."', $sailId, $sailGroupId, $sailDescription, '".$boat."', '".$prevision->type."', false, ".$oneDesign.", ".$greaterThan44.", ".
 								$p.", ".$e.", ".$i.", ".$j.", ".$area.", $sailOneDesign, '$observations', '$productionObservations', '$designObservations',
-								$week, $priority, $line, $seller, $advance, $percentage, $tentativeDate, $productionDate, $infoDate, $advanceDate, $dispatchId, $rizo, '$country', $excludeFromStateCalculation)" ;
+								$week, $priority, $line, $seller, $advance, $percentage, $tentativeDate, $productionDate, $infoDate, $advanceDate, $dispatchId, $rizo, '$country', $excludeFromStateCalculation,
+								'$designer', $designHours, $designWeek, $designOnly, '$designOnlyCloth')" ;
 
 		if(mysql_query($insert)) {
 			$obj->successful = true;
@@ -709,9 +719,11 @@ function weekUp($req) {
 
 	$obj->successful = true;
 
+	$column = $req->column;
+
 	if (empty($req->ids)) {
 		// no selection -> update all previsions with week betwwen 1 and 8
-		$update = "UPDATE previsions SET week = week + 1 WHERE week >= 1 and week <= 8";
+		$update = "UPDATE previsions SET $column = $column + 1 WHERE $column >= 1 and $column <= 8";
 
 		if(!mysql_query($update)) {
 			$obj->successful = false;
@@ -728,7 +740,7 @@ function weekUp($req) {
 		foreach ($req->ids as $id) {
 			logPrevisionUpdateFull($id, 'weekUp');
 
-			$update = "UPDATE previsions SET week = week + 1 WHERE id = '$id'";
+			$update = "UPDATE previsions SET $column = $column + 1 WHERE id = '$id'";
 
 			if(!mysql_query($update)) {
 				$obj->successful = false;
@@ -744,9 +756,11 @@ function weekDown($req) {
 
 	$obj->successful = true;
 
+	$column = $req->column;
+
 	if (empty($req->ids)) {
 		// no selection -> update all previsions with week betwwen 1 and 8
-		$update = "UPDATE previsions SET week = week - 1 WHERE week >= 2 and week <= 9";
+		$update = "UPDATE previsions SET $column = $column - 1 WHERE $column >= 2 and $column <= 9";
 
 		if(!mysql_query($update)) {
 			$obj->successful = false;
@@ -763,7 +777,7 @@ function weekDown($req) {
 		foreach ($req->ids as $id) {
 			logPrevisionUpdateFull($id, 'weekDown');
 
-			$update = "UPDATE previsions SET week = (case when week > 0 then week-1 else 0 end) WHERE id = '$id'";
+			$update = "UPDATE previsions SET $column = (case when $column > 0 then $column-1 else 0 end) WHERE id = '$id'";
 
 			if(!mysql_query($update)) {
 				$obj->successful = false;
@@ -772,6 +786,62 @@ function weekDown($req) {
 		}
 	}
 
+
+	return $obj;
+}
+
+function getDesignHistorics($startDate, $endDate, $type) {
+
+	global $country;
+
+	// all cloths between dates
+	$condition  = " AND STR_TO_DATE('$startDate', '%d-%m-%Y') <= p.designedOn AND STR_TO_DATE('$endDate', '%d-%m-%Y') >= p.designedOn ";
+
+	if ($type === 'BY_DESIGNER') {
+		$query = "SELECT coalesce(designer, '-') as designer, count(*) amount, sum(designHours) as sumDesignHours
+							FROM previsions p
+							where p.designHours > 0 $condition
+							-- AND p.country = '$country'
+							group by designer
+							order by designer";
+
+	} else if ($type === 'BY_ORDERS') {
+
+		$query = "SELECT p.*, coalesce(designer, '-') as designer, DATE_FORMAT(designedOn,'%d-%m-%Y') as formattedDate
+							FROM previsions p
+							where designHours > 0 $condition
+							order by designedOn desc, designer, orderNumber";
+	}
+
+	// echo $query;
+
+	$result = mysql_query($query);
+
+	$rows = fetch_array($result);
+
+	$orders = array();
+
+	return $rows;
+}
+
+function getProperties($filter) {
+	
+	$query = "SELECT * FROM properties WHERE name like '%$filter%'";
+	$result = mysql_query($query);
+	return fetch_array($result);
+}
+
+function updateProperties($property) {
+	
+	$obj->successful = true;
+	$obj->method = "updateProperties";
+
+	$update = "UPDATE properties SET value = ".$property->value." WHERE name = '".$property->name."'";
+	
+	if(!mysql_query($update)) {
+		$obj->successful = false;
+		$obj->update = $update;
+	}
 
 	return $obj;
 }

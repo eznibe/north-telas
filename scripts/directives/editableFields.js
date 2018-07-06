@@ -323,7 +323,7 @@ angular.module('vsko.stock')
         	callback: '=',
           editableByRole: '=',
           readOnlyFn: '&',
-          width: '='
+          width: '@'
         },
         templateUrl: 'views/directives/editableProductionInput.html',
         link: function postLink(scope, element, attrs) {
@@ -566,9 +566,10 @@ angular.module('vsko.stock')
           display: '=',
         	callback: '=',
           editableByRole: '=',
-          tooltipText: '=',
-          width: '=',
-          extraLabel: "="
+          tooltipText: '@',
+          width: '@',
+          widthEditable: '@',
+          extraLabel: "@"
         },
         templateUrl: 'views/directives/editableProductionDropdown.html',
         link: function postLink(scope, element, attrs) {
@@ -611,15 +612,23 @@ angular.module('vsko.stock')
               if (!scope.entity[scope.field] || !scope.options) {
                 return '';
               }
-              return scope.display(scope.options.filter(function(o) {
-                return o.id == scope.entity[scope.field];
-              })[0]);
+              var matchedOptions = scope.options.filter(function(o) {
+                return o.id == scope.entity[scope.field] || o === scope.entity[scope.field];
+              });
+              return scope.display(matchedOptions[0], {verbose: false, extra: {opts:scope.options, value:scope.entity[scope.field]}});
+            },
+            dropdownStyle: function() {
+              return {'width': scope.widthEditable ? scope.widthEditable+'px' : '100px', height: '20px', 'font-size': '10px', display: 'inline-block'};
+            },
+            boxStyle: function() {
+              var style = scope.editable ? {'width': scope.widthEditable ? (scope.widthEditable)+'px' : '100px', 'height': '20px', display: 'inline'} : {'width': scope.width ? (+scope.width)+'px' : '100px', 'height': '20px', display: 'inline-block'};
+              return style;
             }
           };
 
       	  scope.changed = function(entity) {
 
-            entity[scope.field] = entity.selectedOption ? entity.selectedOption.id : null;
+            entity[scope.field] = entity.selectedOption ? (entity.selectedOption.id || entity.selectedOption) : null;
 
             if(!scope.required || entity[scope.field]) {
               scope.callback(entity, entity[scope.field], scope.field);
@@ -637,7 +646,7 @@ angular.module('vsko.stock')
               if(scope.editable) {
                 $('#entityEdit-'+entity.id+'-'+scope.field).hide();
                 $('#entityDisplay-'+entity.id+'-'+scope.field).fadeIn('fast');
-                $('#entityPencil-'+entity.id+'-'+scope.field).fadeIn('fast');
+                $('#entityPencil-'+entity.id+'-'+scope.field).fadeIn('fast', refreshTableFloatThead);
 
                 if(scope.tooltipText) {
                   $('#value-'+scope.entity.id+'-'+scope.field).tooltip({title: scope.tooltipText });
@@ -648,18 +657,16 @@ angular.module('vsko.stock')
 
                 if (scope.entity[scope.field]) {
                   scope.entity.selectedOption = scope.options.filter(function(o) {
-                    return o.id == scope.entity[scope.field];
+                    return o.id == scope.entity[scope.field] || o === scope.entity[scope.field];
                   })[0];
 
                   $('#entityDisplay-'+entity.id+'-'+scope.field).fadeOut('fast', function() {
-                    $('#entityEdit-'+entity.id+'-'+scope.field).fadeIn('fast');
-                    $('#entityEdit-'+entity.id+'-'+scope.field).css('display', 'inline-table');
+                    $('#entityEdit-'+entity.id+'-'+scope.field).fadeIn('fast', refreshTableFloatThead);
                     $('#entityPencil-'+entity.id+'-'+scope.field).fadeOut('fast');
                   });
                 } else {
                   $('#entityPencil-'+entity.id+'-'+scope.field).fadeOut('fast', function() {
-                    $('#entityEdit-'+entity.id+'-'+scope.field).fadeIn('fast');
-                    $('#entityEdit-'+entity.id+'-'+scope.field).css('display', 'inline-table');
+                    $('#entityEdit-'+entity.id+'-'+scope.field).fadeIn('fast', refreshTableFloatThead);
                     $('#entityDisplay-'+entity.id+'-'+scope.field).fadeOut('fast');
                   });
                 }
@@ -668,8 +675,20 @@ angular.module('vsko.stock')
       		  	}
 
       		  	scope.editable = !scope.editable;
+
+              scope.$broadcast('$$rebind::refreshBoxStyle');
             }
       	  };
+
+          function refreshTableFloatThead() {
+            $('table#production').floatThead('destroy');
+            $('table#production').floatThead({
+              position: 'fixed',
+              autoReflow: true,
+              zIndex: 20,
+              floatTableClass: 'production-floatThead'
+            });
+          }
         }
       };
 	}
@@ -684,7 +703,7 @@ angular.module('vsko.stock')
         	entity: '=',
         	callback: '=',
           editableByRole: '=',
-          editDisabled: '='
+          editDisabled: '&'
         },
         templateUrl: 'views/directives/editableProductionObservations.html',
         link: function postLink(scope, element, attrs) {
@@ -745,7 +764,7 @@ angular.module('vsko.stock')
 
       	  scope.clicked = function(entity) {
 
-            if(!scope.readonly && (!scope.editDisabled || !scope.editDisabled(scope.entity))) {
+            if(!scope.readonly && (!scope.editDisabled || !scope.editDisabled({entity: scope.entity}))) {
 
               if(scope.editable) {
                 $('#entityEdit-'+entity.id+'-'+scope.field).hide();

@@ -15,7 +15,7 @@
 			</div>
 
 			<div class="modal-body" style="text-align: center;">
-				<select multiple ng-model="selectionObject[column]" ng-options="sc as sc.value for sc in getOptionsModal(column)" ng-change="selectionChanged()" style="min-width: 100px;" size="10"><option value="">-</option></select>
+				<select multiple ng-model="selectionObject[column]" ng-options="sc as sc.name for sc in getOptionsModal(column)" ng-change="selectionChanged()" style="min-width: 100px;" size="10"><option value="">-</option></select>
 			</div>
 
 			<div class="modal-footer">
