@@ -479,7 +479,8 @@
 					{{'Delete' | translate}}
 				</a>
 
-				<a ng-click="save()" class="btn btn-default floatright edit_person" ng-disabled="!form.$valid || !prevision.orderNumber" access-allowed="admin,ordenes,produccion,velas-od" >
+				<a ng-click="save()" class="btn btn-default floatright edit_person" 
+					 ng-disabled="(!form.$valid && !prevision.designOnly) || !prevision.orderNumber" access-allowed="admin,ordenes,produccion,velas-od" >
 					<span class="glyphicon glyphicon-save"></span>
 					{{'Save' | translate}}
 				</a>

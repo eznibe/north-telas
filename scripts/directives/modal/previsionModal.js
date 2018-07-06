@@ -751,7 +751,7 @@ angular.module('vsko.stock')
         		  mts = doFormula(type, formulaValues, fields, $scope.prevision.area, line);
         	  }
 
-            if(mts) {
+            if(mts && cloth1) {
 
               if (greaterThan44) {
                 mts = mts * 1.1;
