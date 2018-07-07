@@ -74,3 +74,21 @@ insert into properties (name, properties.from, properties.to, value, country, cr
 insert into properties (name, properties.from, properties.to, value, country, createdon) values ('area.designhours', 680, 779, 3.4, 'ARG', now());
 insert into properties (name, properties.from, properties.to, value, country, createdon) values ('area.designhours', 780, 979, 3.4, 'ARG', now());
 insert into properties (name, properties.from, properties.to, value, country, createdon) values ('area.designhours', 980, null, 3.4, 'ARG', now());
+
+
+-- update the desingHours fields of previsions that are have filled the combination of fields needed
+UPDATE previsions p 
+JOIN 
+(
+SELECT pre.id, pre.orderNumber, pre.area, pre.line, pre.designHours, s.description, s.designMinutes, parea.from, parea.to, parea.value as areacoeff, pline.value as linecoeff,
+round(pline.value * parea.value * s.designMinutes / 60, 1) as hours
+FROM previsions pre 
+join sails s on s.id=pre.sailId 
+join properties pline on pline.name like concat('%',pre.line,'%') 
+join properties parea on parea.from <= pre.area and parea.to >= pre.area
+where pre.sailId is not null and pre.area is not null and pre.line is not null 
+and s.designMinutes is not null 
+--and pre.id = '8d01446e-8d85-4692-9cfd-17e6a94a36dc' and  pre.designHours is not null
+) b
+ON p.id = b.id
+SET p.designHours = b.hours;

@@ -79,7 +79,7 @@ function ($scope, $rootScope, $translate, $timeout, $cookieStore, countries, Uti
  	$scope.filterOptions.columns = [
     {name: 'Designer', key:'designer', type:'str', options: []}, {name: 'Week', key:'designWeek', type:'nr', options: []}, {name: 'Hours', key:'designHours', type:'nr', options: []}, {name: 'Week', key:'week', type:'nr', options: []},
 		{name: 'Order', key:'p.orderNumber', column: 'orderNumber', type:'str', options: []}, {name: 'Client', key:'p.client', column: 'client', type:'str', options: []},
-    {name: 'Boat', key:'boat', type:'str', options: []}, {name: 'Sail', key:'sailName', column: 'sailName', type:'str', options: []}, {name: '%', key:'percentage', type:'nr', options: []},
+    {name: 'Boat', key:'boat', type:'str', options: []}, {name: 'Sail', key:'sailName', column: 'sailName', type:'str', options: []}, {name: 'Line', key:'line', type:'str', options: []}, {name: '%', key:'percentage', type:'nr', options: []},
 		{name: 'Cloths', key:'cloths', type:'arr', options: []}, {name: 'State', key:'state', type:'str', hideFromSeller: true, options: []},
     {name: 'Area', key:'area', type:'nr', hideFromSeller: true, options: []}, {name: 'Country', key:'p.country', column: 'country', type:'str', options: []}, {name: 'Only design', key:'designOnly', type:'str', options: []}];
 

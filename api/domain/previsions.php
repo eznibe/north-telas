@@ -40,14 +40,14 @@ function getPrevisions($clothId, $designed, $expand, $production, $historic, $se
 	$query = '';
 	if(isset($clothId)) {
 
-		$query = "SELECT p.*, coalesce(p.sailDescription, p.sailOneDesign, concat(sg.name,' - ',s.description)) as sailName, deliveryDate as unformattedDeliveryDate,
+		$query = "SELECT p.*, coalesce(sg.id, s.sailGroupId) as sailGroupId, coalesce(p.sailDescription, p.sailOneDesign, concat(sg.name,' - ',s.description)) as sailName, deliveryDate as unformattedDeliveryDate,
 									   DATE_FORMAT(deliveryDate,'%d-%m-%Y') as deliveryDate, DATE_FORMAT(tentativeDate,'%d-%m-%Y') as tentativeDate, DATE_FORMAT(productionDate,'%d-%m-%Y') as productionDate, DATE_FORMAT(infoDate,'%d-%m-%Y') as infoDate, DATE_FORMAT(advanceDate,'%d-%m-%Y') as advanceDate
 							FROM previsions p LEFT JOIN sails s on s.id=p.sailId LEFT JOIN sailgroups sg on sg.id=s.sailGroupId JOIN previsioncloth pc on pc.previsionId=p.id
 							WHERE pc.clothId = '$clothId' AND p.country = '$country' $designedCondition ORDER by p.deliveryDate, p.id";
 
 	}	else if (isset($expand) && $expand == 'LIST') {
 		// for the prevision cards page
-		$query = "SELECT p.*, coalesce(p.sailDescription, p.sailOneDesign, concat(sg.name,' - ',s.description)) as sailName, deliveryDate as unformattedDeliveryDate, ".
+		$query = "SELECT p.*, coalesce(sg.id, s.sailGroupId) as sailGroupId, coalesce(p.sailDescription, p.sailOneDesign, concat(sg.name,' - ',s.description)) as sailName, deliveryDate as unformattedDeliveryDate, ".
 							"       DATE_FORMAT(deliveryDate,'%d-%m-%Y') as deliveryDate, DATE_FORMAT(tentativeDate,'%d-%m-%Y') as tentativeDate, DATE_FORMAT(productionDate,'%d-%m-%Y') as productionDate, DATE_FORMAT(infoDate,'%d-%m-%Y') as infoDate, DATE_FORMAT(advanceDate,'%d-%m-%Y') as advanceDate, DATE_FORMAT(deletedProductionOn,'%d-%m-%Y') as deletedProductionOn ".
 							"FROM previsions p LEFT JOIN sails s on s.id=p.sailId LEFT JOIN sailgroups sg on sg.id=s.sailGroupId ".
 							"WHERE 1=1 AND p.country = '$country' AND (p.designed = false OR p.stateAccepted = false) ORDER by p.deliveryDate, p.orderNumber "
@@ -60,7 +60,7 @@ function getPrevisions($clothId, $designed, $expand, $production, $historic, $se
 		$limit = isset($filters->limit) ? "LIMIT ".$filters->limit : "";
 		$offset = isset($offset) ? "OFFSET ".$offset : "";
 
-		$select = "SELECT p.*, coalesce(p.sailDescription, p.sailOneDesign, concat(sg.name,' - ',s.description)) as sailName, deliveryDate as unformattedDeliveryDate, d.id as dispatchId, d.number as dispatch, ".
+		$select = "SELECT p.*, coalesce(sg.id, s.sailGroupId) as sailGroupId, coalesce(p.sailDescription, p.sailOneDesign, concat(sg.name,' - ',s.description)) as sailName, deliveryDate as unformattedDeliveryDate, d.id as dispatchId, d.number as dispatch, ".
 							"       DATE_FORMAT(deliveryDate,'%d-%m-%Y') as deliveryDate, DATE_FORMAT(tentativeDate,'%d-%m-%Y') as tentativeDate, DATE_FORMAT(productionDate,'%d-%m-%Y') as productionDate, DATE_FORMAT(infoDate,'%d-%m-%Y') as infoDate, DATE_FORMAT(advanceDate,'%d-%m-%Y') as advanceDate, DATE_FORMAT(deletedProductionOn,'%d-%m-%Y') as deletedProductionOn ";
 		$body =   "FROM previsions p LEFT JOIN sails s on s.id=p.sailId LEFT JOIN sailgroups sg on sg.id=s.sailGroupId LEFT JOIN dispatchprevisions dp on dp.previsionId = p.id LEFT JOIN dispatchs d on d.id = dp.dispatchId ".
 							"WHERE 1=1 AND p.orderNumber != '' $countryCondition $filter $designedCondition $productionCondition $historicCondition $sellerCondition ".

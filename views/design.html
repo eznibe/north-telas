@@ -89,6 +89,7 @@
 			<th class="client" translate>Client</th>
 			<th class="boat" translate>Boat</th>
 			<th class="sailName" translate>Sail</th>
+			<th class="line" access-restricted="vendedor"><div class="rotate"><span translate>Line</span></div></th>
 			<th class="percentage"><div><span translate>%</span></div></th>
 			<th class="cloths" access-restricted="vendedor" translate>Cloths</th>
 			<th class="state" access-restricted="vendedor" translate>State col</th>
@@ -108,6 +109,7 @@
 			<th class="client" ng-style="{'background-color': headerBackgroundColor(selectionObject.client)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('client');" style="text-align:center; cursor:pointer;"></span></div></th>
 			<th class="boat" ng-style="{'background-color': headerBackgroundColor(selectionObject.boat)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('boat');" style="text-align:center; cursor:pointer;"></div></th>
 			<th class="sailName" ng-style="{'background-color': headerBackgroundColor(selectionObject.sailName)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('sailName');" style="text-align:center; cursor:pointer;"></div></th>
+			<th class="line" ng-style="{'background-color': headerBackgroundColor(selectionObject.line)}" access-restricted="vendedor"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('line');" style="text-align:center; cursor:pointer;"></div></th>
 			<th class="percentage" ng-style="{'background-color': headerBackgroundColor(selectionObject.percentage)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('percentage');" style="text-align:center; cursor:pointer;"></div></th>
 			<th class="cloths" ng-style="{'background-color': headerBackgroundColor(selectionObject.cloths)}" style="min-width:95px;" access-restricted="vendedor"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('cloths');" style="text-align:center; cursor:pointer;"></div></th>
 			<th class="state" ng-style="{'background-color': headerBackgroundColor(selectionObject.state)}" access-restricted="vendedor"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('state');" style="text-align:center; cursor:pointer;"></div></th>
@@ -147,6 +149,9 @@
 			</td>
 			<td class="sailName" ng-show="::visibility.selected('sailName')" nowrap>
 				{{:refreshColumnsValue:getValue(p, 'sailName')}}
+			</td>
+			<td class="line" ng-show="::visibility.selected('line')">
+				{{:refreshColumnsValue:getValue(p, 'line')}}
 			</td>
 			<td class="percentage" ng-show="::visibility.selected('percentage')" style="min-width:30px;" ng-mouseover="::oneTimeBindings.showPopupList('percentages');" ng-mouseleave="::oneTimeBindings.hidePopupList('percentages');" ng-style=":refreshErrorBackground:visibility.errorStyle(p, 'percentage');">
 				<editable-production-input entity="::p" field="'percentage'" callback="::changedPrevision.numericField" editable-by-role="'admin,produccion,velas-od'" read-only-fn="::oneTimeBindings.readOnlyPercentage(p)" width="20" style="display:inline-block;"></editable-production-input>
