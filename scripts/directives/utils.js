@@ -216,8 +216,10 @@ angular.module('vsko.stock')
 
         scope: { cloth: '=stockTooltip' },
         link: function(scope, elem) {
-
-        	$(elem).tooltip({title: sumStockDef(scope.cloth.providers) + ' Def. / ' + sumStockTemp(scope.cloth.providers) + ' Temp.' });
+			// only add the tooltip if there are some temporaries stock
+			if (scope.cloth.temporaryAvailableWithLoss && +scope.cloth.temporaryAvailableWithLoss > 0) {
+				$(elem).tooltip({title: (+scope.cloth.temporaryAvailableWithLoss).toFixed(2) + ' Temp.' });
+			}
         }
     };
 

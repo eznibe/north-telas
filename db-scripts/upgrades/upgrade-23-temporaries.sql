@@ -44,7 +44,7 @@ CREATE TABLE temporariesdownload
 
 
 create or replace view v_temporaries_files_extended as
-SELECT f.*, coalesce(sum(dw.mts),0) as used, ((f.mtsInitial * 0.95) - coalesce(sum(dw.mts),0)) * 1.05 as available 
+SELECT f.*, coalesce(sum(dw.mts),0) as used, ((f.mtsInitial * 0.95) - coalesce(sum(dw.mts),0)) * 1.05 as available, ((f.mtsInitial * 0.95) - coalesce(sum(dw.mts),0)) as availableWithLoss 
 FROM temporariesfile f left join temporariesdownload dw on dw.fileId = f.id
 GROUP by f.id;
 	
@@ -53,6 +53,14 @@ create or replace view v_temporaries_dispatch_extended as
 SELECT d.*, sum(f.mtsInitial) as init, coalesce(sum(f.used),0) as used, sum(f.available) as available 
 FROM temporariesdispatch d left join v_temporaries_files_extended f on d.id = f.dispatchId
 GROUP by d.id;
+
+
+create or replace view v_cloths_with_temporary_stock as
+SELECT c.*, coalesce(sum(f.available), 0) as temporaryAvailable, coalesce(sum(f.availableWithLoss), 0) as temporaryAvailableWithLoss
+FROM cloths c 
+join products p on p.clothId=c.id 
+left join v_temporaries_files_extended f on f.productId=p.productId 
+GROUP by c.id, c.name;
 
 
 alter table temporariesfile add column type_2 varchar(32);

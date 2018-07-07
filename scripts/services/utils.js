@@ -57,17 +57,21 @@ angular.module('vsko.stock').factory('Utils',[ '$translate', '$http', '$timeout'
 
   // calcultes the file availble with the formula -> (initial * 0.95) - downloads) * 1.05
   // it corresponds to excel cell J2
+  // it also updates the file downloads available
   that.calculateTemporariesFileAvailable = function(file) {
 
-    var available = +file.mtsInitial * 0.95;
+    var available = +file.mtsInitial * 0.95; // up to review if this should contain the 5% loss or not
+    var availableWith5percLoss = +file.mtsInitial * 0.95;
 
     var totalDownloads = 0;
     file.downloads.forEach(d => {
       totalDownloads += +d.mts;
-      d.available = available - totalDownloads;
+      d.available = availableWith5percLoss - totalDownloads;
     });
 
     available -= totalDownloads;
+
+    file.availableWithLoss = available;
 
     available = available * 1.05;
 

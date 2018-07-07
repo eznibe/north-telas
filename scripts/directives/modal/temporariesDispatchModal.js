@@ -81,6 +81,7 @@ angular.module('vsko.stock')
         
         if (dispatch) {
           console.log('selected dispatch:',dispatch)
+          $scope.dispatch.description = dispatch.originalObject.description;
           $scope.dispatch.shortName = dispatch.originalObject.shortName;
           $scope.dispatch.dueDate = dispatch.originalObject.dueDate;
         }

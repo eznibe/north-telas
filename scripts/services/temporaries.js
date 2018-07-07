@@ -20,9 +20,12 @@ angular.module('vsko.stock')
     return $http.post(url + 'temporaries_POST.php?filesList=true', filter);
   };
 
-  this.getTemporariesStock = function(groupId)
-  {
-    return $http.get(url + 'temporaries_GET.php?stock=true&groupId='+groupId);
+  this.getTemporariesStock = function(groupId) {
+    var groupParam = '';
+    if (groupId) {
+      groupParam = '&groupId='+groupId;
+    }
+    return $http.get(url + 'temporaries_GET.php?stock=true' + groupParam);
   };
 
   /**

@@ -261,8 +261,12 @@ function saveFile($tFile)
 	$obj->successful = false;
 	$obj->method = 'saveFile';
 
-	$update = "UPDATE temporariesfile SET arancelary = '".$tFile->arancelary."', cif = ".$tFile->cif.", 
-				rollWidth = ".$tFile->rollWidth.", type = '".$tFile->type."' WHERE id = '$tFile->id'";
+	$rollWidth = isset($tFile->rollWidth) ? $tFile->rollWidth : 'null';
+	$cif = isset($tFile->cif) ? $tFile->cif : 'null';
+
+	$update = "UPDATE temporariesfile SET arancelary = '".$tFile->arancelary."', cif = ".$cif.", 
+				rollWidth = ".$rollWidth.", type = '".$tFile->type."',
+				mtsInitial = ".$tFile->mtsInitial." WHERE id = '$tFile->id'";
 
 	if(mysql_query($update)) {
 		$obj->successful = true;
@@ -396,15 +400,16 @@ function editDispatchField($dispatch, $field, $isDate) {
 
 function getTemporariesStock($groupId) {
 
-	$query = "  SELECT clothid, name, sum(c.mtsInitial * 0.95) as suminitials, sum(sumdws) as sumdownloads, sum(c.mtsInitial * 0.95) - sum(sumdws) as available 
-				FROM 
-				(
-					SELECT c.id as clothid, c.name, f.id, COALESCE(f.mtsInitial, 0) as mtsInitial, COALESCE(sum(d.mts), 0) as sumdws
-					FROM cloths c join products p on p.clothId=c.id left join temporariesfile f on f.productId=p.productId left join temporariesdownload d on d.fileId=f.id
-					WHERE c.groupId = '$groupId'
-					group by c.groupId, c.id, c.name, f.id
-				) c
-				group by clothid
+	global $country;
+
+	$groupCondition = "";
+	if (isset($groupId)) {
+		$groupCondition = "AND c.groupId = '$groupId'";
+	}
+
+	$query = "  SELECT *
+				FROM v_cloths_with_temporary_stock c
+				WHERE 1=1 $groupCondition AND c.country = '$country'
 				order by c.name";
 
 	$result = mysql_query($query);

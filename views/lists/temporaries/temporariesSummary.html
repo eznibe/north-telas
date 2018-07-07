@@ -20,9 +20,9 @@
 				{{d.dueDate}}
 			</td>
 			<td ng-repeat="c in columns">
-				<!-- <temporaries-dispatch-cloths files="{{::getFiles(d,c)}}" open="showTemporariesFileModal" style="display:inline-block;"></temporaries-dispatch-cloths> -->
 				<div>
 					<span ng-repeat="f in getFiles(d, c)">
+						<!-- this list shows the available without the 5% loss -->
 						<a style="color:#333; display:inline-block; min-width:100px;" class="badge" ng-click="showTemporariesFileModal(f)" title="{{f.code}}">{{f.cloth}} - {{(+f.available).toFixed(2)}} mts.</a>
 					</span>
 				</div>

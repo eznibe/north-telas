@@ -18,7 +18,7 @@ function getCloths($groupId, $expand)
 		$condition = ' AND c.groupId = '.$groupId;
 	}
 
-	$query = "SELECT * FROM cloths c WHERE c.country = '$country' ".$condition." ORDER BY c.name";
+	$query = "SELECT * FROM v_cloths_with_temporary_stock c WHERE c.country = '$country' ".$condition." ORDER BY c.name";
 	$result = mysql_query($query);
 
 	if(!$expand=='FULL')

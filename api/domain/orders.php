@@ -162,7 +162,8 @@ function buy($provider)
 	}
 
 	// insert order product
-	$insert = "INSERT INTO orderproduct VALUES ('".$provider->opId."', '".$orderId."', '".$provider->productId."', ".$provider->amount.", '".$provider->price."')" ;
+	$insert = "INSERT INTO orderproduct (opId, orderId, productId, amount, price, temporary)
+			   VALUES ('".$provider->opId."', '".$orderId."', '".$provider->productId."', ".$provider->amount.", '".$provider->price."', false)" ;
 
 	if(mysql_query($insert)) {
 		$obj->successfulOP = true;
@@ -203,8 +204,8 @@ function assignProduct($provider, $orderId)
 	else {
 		$opId = uniqid();
 
-		$insert = "INSERT INTO orderproduct (opId, orderId, productId, amount, price)
-							 VALUES ('$opId', '$orderId', '".$provider->productId."', ".$provider->amount.", ".$provider->price.")" ;
+		$insert = "INSERT INTO orderproduct (opId, orderId, productId, amount, price, temporary)
+					VALUES ('$opId', '$orderId', '".$provider->productId."', ".$provider->amount.", ".$provider->price.", false)" ;
 
 		if(mysql_query($insert)) {
 			$obj->successful = true;

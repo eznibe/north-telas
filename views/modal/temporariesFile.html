@@ -19,25 +19,21 @@
 
 				<form class="noprint" name="formOrderInfo" ng-init="setModalCtrl(this)">
 					<div class="row" style="margin-bottom: 10px;">
+						<div class="col-md-12 nopadding">
+							<label class="control-label col-xs-2" translate>Cloth</label>
+							<div class="col-xs-7" style="left: -25px;">
+								<span style="padding: 5px; border: 1px solid lightgray;">
+									<b style="font-size: 18px;">{{file.cloth}}</b>
+								</span>
+							</div>
+						</div>								
+					</div>
+					
+					<div class="row">
 						<div class="col-md-4 nopadding">
 							<label class="control-label col-xs-5" translate>Dispatch</label>
 							<div class="col-xs-7">
 								<editable-production-input entity="::file" field="'shortName'" callback="::updateDispatch" style="display:inline-block;" title="{{::file.dispatch}}"></editable-production-input>
-							</div>
-						</div>
-						<div class="col-md-8 nopadding">
-							<label class="control-label col-xs-3" translate>Description</label>
-							<div class="col-xs-9" style="left: -25px;">
-								<b>{{file.cloth}}</b>
-							</div>
-						</div>								
-					</div>
-
-					<div class="row">
-						<div class="col-md-4 nopadding" ng-show="order.status!='TO_BUY'">
-							<label class="control-label col-xs-5" for="edit_type" translate>Due date</label>
-							<div class="col-xs-7">
-								<editable-date entity="::file" field="dueDate" callback="::updateDispatch" style="display:inline-block;" full-width="true"></editable-date>
 							</div>
 						</div>
 						<div class="col-md-4 nopadding">
@@ -58,13 +54,12 @@
 							</div>
 						</div>								
 					</div>
-
+					
 					<div class="row">
-						<div class="col-md-4 nopadding">
-							<label class="control-label col-xs-5" translate>Arancelary</label>
+						<div class="col-md-4 nopadding" ng-show="order.status!='TO_BUY'">
+							<label class="control-label col-xs-5" for="edit_type" translate>Due date</label>
 							<div class="col-xs-7">
-								<input ng-if="file.isNew" type="text" class="form-control small" ng-model="file.arancelary">
-								<editable-production-input ng-if="!file.isNew" entity="::file" field="'arancelary'" callback="::updateFile" style="display:inline-block;"></editable-production-input>
+								<editable-date entity="::file" field="dueDate" callback="::updateDispatch" style="display:inline-block;" full-width="true"></editable-date>
 							</div>
 						</div>
 						<div class="col-md-4 nopadding">
@@ -93,6 +88,13 @@
 								<span>{{file.code}}</span>
 							</div>
 						</div>
+						<div class="col-md-4 nopadding">
+							<label class="control-label col-xs-5" translate>Arancelary</label>
+							<div class="col-xs-7">
+								<input ng-if="file.isNew" type="text" class="form-control small" ng-model="file.arancelary">
+								<editable-production-input ng-if="!file.isNew" entity="::file" field="'arancelary'" callback="::updateFile" style="display:inline-block;"></editable-production-input>
+							</div>
+						</div>
 						<div class="col-md-7 nopadding"></div>
 						
 					</div>
@@ -118,20 +120,17 @@
 				<!-- Only print: 2 rows -->
 				<div class="onlyprint">
 					<div class="row">
+						<div class="col-xs-10">
+							<label class="control-label col-xs-3" translate>Cloth</label>
+							<!-- <label id="d_description" class="control-label col-xs-8"></label>< -->
+							<span class="control-label col-xs-8" style="left: -35px"><b id="d_description" style="font-size: 18px;"></b></span>
+						</div>
+					</div>
+					
+					<div class="row">
 						<div class="col-xs-6">
 							<label class="control-label col-xs-4" translate>Dispatch</label>
 							<label id="d_dispatch" class="control-label col-xs-8"></label>
-						</div>
-						<div class="col-xs-6">
-							<label class="control-label col-xs-4" translate>Description</label>
-							<label id="d_description" class="control-label col-xs-8"></label>
-						</div>
-					</div>
-			
-					<div class="row">
-						<div class="col-xs-6">
-							<label class="control-label col-xs-4" translate>Due date</label>
-							<label id="d_duedate" class="control-label col-xs-8"></label>
 						</div>
 						<div class="col-xs-6">
 							<label class="control-label col-xs-4" translate>Temporaries available</label>
@@ -141,15 +140,15 @@
 					
 					<div class="row">
 						<div class="col-xs-6">
+							<label class="control-label col-xs-4" translate>Due date</label>
+							<label id="d_duedate" class="control-label col-xs-8"></label>
+						</div>
+						<div class="col-xs-6">
 							<label class="control-label col-xs-4" translate>Cloth type</label>
 							<label id="d_clothtype" class="control-label col-xs-8"></label>
 						</div>
-						<div class="col-xs-6">
-							<label class="control-label col-xs-4" translate>Arancelary</label>
-							<label id="d_arancelary" class="control-label col-xs-8"></label>
-						</div>						
 					</div>
-
+					
 					<div class="row">
 						<div class="col-xs-6">
 							<label class="control-label col-xs-4" translate>Roll width</label>
@@ -160,12 +159,16 @@
 							<label id="d_cif" class="control-label col-xs-8"></label>
 						</div>
 					</div>
-			
+					
 					<div class="row">
 						<div class="col-xs-6">
 							<label class="control-label col-xs-4" translate>Code</label>
 							<label id="d_code" class="control-label col-xs-8"></label>
 						</div>
+						<div class="col-xs-6">
+							<label class="control-label col-xs-4" translate>Arancelary</label>
+							<label id="d_arancelary" class="control-label col-xs-8"></label>
+						</div>						
 					</div>
 				</div>
 				
@@ -190,7 +193,9 @@
 							<td></td>
 							<td></td>
 							<td>
-								{{file.mtsInitial}}	
+								<!-- {{file.mtsInitial}}	 -->
+								<input ng-if="file.isNew" type="text" class="form-control small" ng-model="file.mtsInitial">
+								<editable-production-input ng-if="!file.isNew" entity="::file" field="'mtsInitial'" callback="::updateMtsInitial" style="display:inline-block;"></editable-production-input>
 							</td>
 							<td></td>
 							<td></td>

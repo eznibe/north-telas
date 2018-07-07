@@ -7,8 +7,10 @@ angular.module('vsko.stock').controller('TemporariesStockCtrl', ['$scope', 'Util
   Stock.getAllGroups().then(function(result) {
     
     $scope.groups = result.data;
+
+    $scope.groups.unshift({name: 'Ver todos'});
     
-    $scope.filter.selectedGroup = $scope.groups[0];
+    $scope.filter.selectedGroup = $scope.groups[1];
     
     Temporaries.getTemporariesStock($scope.filter.selectedGroup.id).then(function(result) {
           

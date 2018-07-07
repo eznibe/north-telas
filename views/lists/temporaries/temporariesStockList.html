@@ -5,7 +5,6 @@
 					<label class="control-label col-xs-1" translate>Groups</label>
 					<div class="col-xs-3">
 						<select ng-model="filter.selectedGroup" ng-options="sc as sc.name for sc in groups" class="form-control small">
-							<option value="">-- choose one --</option>
 						</select>
 					</div>
 	
@@ -30,7 +29,7 @@
 					<a href="javascript:void(0)" ng-click="showClothModal(c)">{{c.name}}</a>
 				</td>
 				<td>
-					<span>{{+c.available>0 ? (+c.available * 1.05).toFixed(2) : ''}}</span>
+					<span>{{+c.temporaryAvailableWithLoss > 0 ? (+c.temporaryAvailableWithLoss).toFixed(2) : ''}}</span>
 				</td>
 			</tr>
 		</tbody>

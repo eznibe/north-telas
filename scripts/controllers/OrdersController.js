@@ -10,24 +10,27 @@ angular.module('vsko.stock')
 
         // initial list of orders
         Orders.getOrders(orderStatus.to_buy).then(function(result) {
-        	$scope.orders_buy = result.data;
+			$scope.orders_buy = result.data;
+			parseTemporaryToBoolean($scope.orders_buy);
         });
 
 		Orders.getOrders(orderStatus.to_confirm).then(function(result) {
-        	$scope.orders_confirm = result.data;
+			$scope.orders_confirm = result.data;
+			parseTemporaryToBoolean($scope.orders_confirm);
         });
 
 		Orders.getOrders(orderStatus.in_transit).then(function(result) {
 			$scope.orders_transit = result.data;
+			parseTemporaryToBoolean($scope.orders_transit);
+		});
 
-			$.each($scope.orders_transit, function(index){
-        		//this.arriveDate = $.format.date(new Date(), "dd-MM-yyyy");
-//				this.arriveDate = $.format.date(this.arriveDate, "dd-MM-yyyy");
+		function parseTemporaryToBoolean(orders) {
+			$.each(orders, function(index){
 				this.products.forEach(p => {
 					p.temporary = p.temporary === '1';
 				});
         	});
-		});
+		}
 
 
         // Functions called as callback from order modal

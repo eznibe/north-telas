@@ -19,7 +19,6 @@ angular.module('vsko.stock')
 
         // calculate available
         $scope.file.available = Utils.calculateTemporariesFileAvailable($scope.file);
-        // $scope.file.availableHeader = ($scope.file.available * 1.05).toFixed(2);
 
         // show the file modal
         $scope.modalFile = $modal({template: 'views/modal/temporariesFile.html', show: false, scope: $scope, callback: callback});
@@ -43,7 +42,7 @@ angular.module('vsko.stock')
 
       $scope.updateFile = function(entity, newValue, field) {
         console.log('Update file field:',field)
-        Temporaries.updateFileField($scope.file, field, false);
+        return Temporaries.updateFileField($scope.file, field, false);
       };
 
       $scope.updateDispatch = function(entity, newValue, field) {
@@ -56,6 +55,16 @@ angular.module('vsko.stock')
         Temporaries.updateDispatchField(dispatch, field, field === 'dueDate');
       };
 
+      $scope.updateMtsInitial = function(entity, newValue, field) {
+        
+        $scope.updateFile(entity, newValue, field).then(function(result) {
+          if (result.data.successful) {
+            // update the file available and downloads available
+            $scope.file.available = Utils.calculateTemporariesFileAvailable($scope.file);
+          }
+        });
+      };
+
       $scope.temporariesDownloadUpdated = function(download) {
         console.log('Download updated, catched in file modal');
 
@@ -63,12 +72,12 @@ angular.module('vsko.stock')
 
           $scope.file.downloads.push(download);
 
+          // not used??
           $scope.file.fileAvailable = +$scope.file.fileAvailable - download.mts;
           $scope.file.dispatchAvailable = +$scope.file.dispatchAvailable - download.mts;
         }
 
         $scope.file.available = Utils.calculateTemporariesFileAvailable($scope.file);
-        // $scope.file.availableHeader = ($scope.file.available * 1.05).toFixed(2);
       }
 
       $scope.deleteDownload = function(download) {
@@ -83,6 +92,7 @@ angular.module('vsko.stock')
               return d.id != download.id;
             });
             
+            // not used anymore ??
             $scope.file.fileAvailable = +$scope.file.fileAvailable + download.mts;
             $scope.file.dispatchAvailable = +$scope.file.dispatchAvailable + download.mts;
     
