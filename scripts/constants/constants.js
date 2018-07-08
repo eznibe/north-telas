@@ -31,4 +31,7 @@ angular.module('vsko.stock')
 .constant('countries', {
 		list: ['ARG', 'BRA'],
 		designOnly: 'OTRO'
-});
+})
+
+.constant('temporariesPassword', 'admin.temporarias'
+);

@@ -21,7 +21,7 @@
 							<th style="min-width: 150px;" translate>Product</th>
 							<th translate>Code</th>
 							<th translate>Amount</th>
-							<th access-level="admin" translate>Temporaries col</th>
+							<th access-allowed="temporaries" translate>Temporaries col</th>
 							<th ng-show="order.status!='TO_BUY'" translate>Rolls</th>
               				<th ng-show="order.status!='TO_BUY'" style="width: 52px; border-left-style: hidden;" access-level="admin"></th><!-- Edit rolls icon -->
 							<th translate>Price</th>
@@ -41,7 +41,7 @@
                 				<editable-input entity="p" field="'amount'" callback="updateProductAmount" editable-by-role="'admin'" width="50" style="display:inline-block;"></editable-input>
 								<!--<span ng-if="order.status=='TO_BUY'">{{p.amount}}</span>-->
 							</td>
-							<td access-level="admin" style="text-align: center;">
+							<td access-allowed="temporaries" style="text-align: center;">
 								<input type="checkbox" ng-model="p.temporary" ng-change="temporaryChange(p)" />
 							</td>
 							<td ng-show="order.status!='TO_BUY'"  ng-mouseover="over = true" ng-mouseleave="over = false" >
@@ -66,7 +66,7 @@
 							<td style="color: #000;">Total</td>
 							<td></td>
 							<td></td>
-							<td access-level="admin"></td>
+							<td access-allowed="temporaries"></td>
 							<td ng-show="order.status!='TO_BUY'">
 							<td ng-show="order.status!='TO_BUY'" style="border-left-style: hidden;" access-level="admin"></td>
               				<td></td>

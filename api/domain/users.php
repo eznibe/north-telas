@@ -153,11 +153,15 @@ function addOrUpdateUser($user) {
 	$num_results = mysql_num_rows($result);
 
 	$code = isset($user->code) ? "'".$user->code."'" : 'null' ;
+	$temporaries = isset($user->temporaries) && $user->temporaries ? 'true' : 'false';
 
 	if ($num_results != 0)
 	{
 		// update
-		$query = "UPDATE usuarios SET username = '".$user->username."', password = '".$user->password."', name = '".$user->name."', role = '".$user->role."', country = '".$user->country."', code = $code WHERE id = '".$user->id."'";
+		$query = "UPDATE usuarios SET username = '".$user->username."', password = '".$user->password."', 
+					name = '".$user->name."', role = '".$user->role."', country = '".$user->country."', 
+					code = $code, temporaries = $temporaries 
+					WHERE id = '".$user->id."'";
 		if (! mysql_query($query)) {
 			// error en update
 			$methodResult = false;

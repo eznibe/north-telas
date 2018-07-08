@@ -19,6 +19,7 @@ function getUser($user, $passw)
 
 		$obj->successful = true;
 		$obj->role = $row['role'];
+		$obj->temporaries = $row['temporaries'];
 		$obj->sellerCode = $row['code'];
 		$obj->id = $row['id'];
 		$obj->country = $row['country'];

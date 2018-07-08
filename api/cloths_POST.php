@@ -23,7 +23,9 @@ function saveCloth($cloth)
 	if ($num_results != 0)
 	{
 		// update
-		$update = "UPDATE cloths SET name = '".$cloth->name."', stockMin = ".$cloth->stockMin.", groupId = '".$cloth->groupId."' WHERE id = '".$cloth->id."'";
+		$update = "UPDATE cloths SET name = '".$cloth->name."', stockMin = ".$cloth->stockMin.", 
+					groupId = '".$cloth->groupId."', arancelary = '".$cloth->arancelary."'  
+					WHERE id = '".$cloth->id."'";
 
 		if(mysql_query($update))
 			$obj->successful = true;
@@ -34,7 +36,7 @@ function saveCloth($cloth)
 
 		$matchId = uniqid();
 
-		$insert = "INSERT INTO cloths (id, name, stockMin, groupId, matchClothId, country) VALUES ('".$cloth->id."', '".$cloth->name."', '".$cloth->stockMin."', $groupId, '$matchId', '$country')" ;
+		$insert = "INSERT INTO cloths (id, name, stockMin, groupId, matchClothId, country, arancelary) VALUES ('".$cloth->id."', '".$cloth->name."', '".$cloth->stockMin."', $groupId, '$matchId', '$country', '".$cloth->arancelary."')" ;
 
 		if(mysql_query($insert)) {
 			$obj->successful = true;

@@ -12,6 +12,10 @@ angular.module('vsko.stock').controller('AuthorizationCtrl', ['$scope', '$rootSc
 					$rootScope.user.name = user;
 					$rootScope.user.password = "";
 					$rootScope.user.role = response.data.role;
+					$rootScope.user.roles = [response.data.role];
+					if (response.data.temporaries === '1') {
+						$rootScope.user.roles.push('temporaries');
+					}
 					$rootScope.user.sellerCode = response.data.sellerCode;
           $rootScope.user.id = response.data.id;
           $rootScope.user.storedCountry = response.data.country; // user country stored in db

@@ -2,7 +2,7 @@
 
 angular.module('vsko.stock')
 
-.controller('OrdersCtrl', ['$scope', 'Utils', 'Orders', 'Previsions', 'Temporaries', 'orderStatus', '$routeParams', '$modal', function ($scope, Utils, Orders, Previsions, Temporaries, orderStatus, $routeParams, $modal) {
+.controller('OrdersCtrl', ['$rootScope', '$scope', 'Utils', 'Orders', 'Previsions', 'Temporaries', 'orderStatus', '$routeParams', '$modal', function ($rootScope, $scope, Utils, Orders, Previsions, Temporaries, orderStatus, $routeParams, $modal) {
 
 		$scope.type = $routeParams.type;
 
@@ -96,26 +96,26 @@ angular.module('vsko.stock')
         	console.log('Arrive order: ', order);
 
 			// TODO uncomment this
-        	Orders.incrementStatus(order).then(function(result){
+        	// Orders.incrementStatus(order).then(function(result){
 
-				if(result.data.successful) {
-					$scope.orders_transit.remove(order);
+			// 	if(result.data.successful) {
+			// 		$scope.orders_transit.remove(order);
 
-					order = $.extend(true, order, result.data.order);
+			// 		order = $.extend(true, order, result.data.order);
 
-					Utils.showMessage('notify.order_arrived');
+			// 		Utils.showMessage('notify.order_arrived');
 
-					// NOTE: not doing this here because it bring problems when many orders are arrived in a small interval (the calcultaion doesn't finish and other start in the middle resulting in bad state assignation)
-					// for the moment use manual update after all orders arrive
-					// updatePrevisionState(order);
-				}
-			});
+			// 		// NOTE: not doing this here because it bring problems when many orders are arrived in a small interval (the calcultaion doesn't finish and other start in the middle resulting in bad state assignation)
+			// 		// for the moment use manual update after all orders arrive
+			// 		// updatePrevisionState(order);
+			// 	}
+			// });
 				
 			// create files for temporary products (cloths of the order) if neccesary
 			var temporaryProducts = order.products.filter(function(p) {
 				return p.temporary;
 			});
-			if (temporaryProducts.length > 0) {
+			if (temporaryProducts.length > 0) {				
 				var dispatch = {
 					isNew: true,
 					showFiles: true,
@@ -125,7 +125,11 @@ angular.module('vsko.stock')
 				}
 				Temporaries.saveDispatch(dispatch).then(function(result) {
 					dispatch.isNew = false;
-					$scope.showTemporariesDispatchModal(dispatch);
+					// will show the dispatch and files only if the user can access the temporaries module,
+					// otherwise will only create them in background and the will need to edit them later
+					if ($rootScope.user.roles.indexOf('temporaries') != -1) {
+						$scope.showTemporariesDispatchModal(dispatch);
+					}
 				});
 			}
         };

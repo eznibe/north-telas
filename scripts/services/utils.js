@@ -73,7 +73,7 @@ angular.module('vsko.stock').factory('Utils',[ '$translate', '$http', '$timeout'
 
     file.availableWithLoss = available;
 
-    available = available * 1.05;
+    available = available * 1.0526;
 
     if (available < 0 && available > -0.05) {
       available = 0;

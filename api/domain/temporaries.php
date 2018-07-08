@@ -42,7 +42,7 @@ function getDispatchFiles($dispatchId, $filter) {
 						? $filter->selectedSort->mainOrder . ' ' . $filter->selectedSort->mode . ' ' . $filter->selectedSort->extraOrder
 						: " clothType, c.name" ;
 
-	$query = "SELECT f.*, f.id as fileId, f.type as clothType, d.id as dispatchId, d.shortName, d.description, p.code, c.name as cloth, DATE_FORMAT(dueDate,'%d-%m-%Y') as dueDate, DATE_FORMAT(realDueDate,'%d-%m-%Y') as realDueDate,
+	$query = "SELECT f.*, f.id as fileId, f.type as clothType, coalesce(f.arancelary, c.arancelary) as arancelary, d.id as dispatchId, d.shortName, d.description, p.code, c.name as cloth, DATE_FORMAT(dueDate,'%d-%m-%Y') as dueDate, DATE_FORMAT(realDueDate,'%d-%m-%Y') as realDueDate,
 					 f.available as fileAvailable, d.available as dispatchAvailable 
 				FROM v_temporaries_files_extended f
 				JOIN products p on p.productId = f.productId
@@ -263,8 +263,9 @@ function saveFile($tFile)
 
 	$rollWidth = isset($tFile->rollWidth) ? $tFile->rollWidth : 'null';
 	$cif = isset($tFile->cif) ? $tFile->cif : 'null';
+	$arancelary = isset($tFile->arancelary) ? "'".$tFile->arancelary."'" : 'null';
 
-	$update = "UPDATE temporariesfile SET arancelary = '".$tFile->arancelary."', cif = ".$cif.", 
+	$update = "UPDATE temporariesfile SET arancelary = $arancelary, cif = ".$cif.", 
 				rollWidth = ".$rollWidth.", type = '".$tFile->type."',
 				mtsInitial = ".$tFile->mtsInitial." WHERE id = '$tFile->id'";
 

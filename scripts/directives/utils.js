@@ -141,29 +141,37 @@ angular.module('vsko.stock')
 
         link: function(scope, elem, attrs) {
             // show/hide element depending on the accesslevel set for it, watching the role of the logged user
-						var elemIsVisible = true;
+			var elemIsVisible = true;
 
-						function toggleElementVisibility(role) {
-							var elemsAccessAllowed = attrs.accessAllowed.split(',');
+			function toggleElementVisibility(roles) {
+				var elemsAccessAllowed = attrs.accessAllowed.split(',');
+				var show = false;
+				elemsAccessAllowed.forEach(function(allowed) {
 
-							if(elemsAccessAllowed.lastIndexOf(role) != -1 && !elemIsVisible) { // contains
-								$(elem).show();
-								elemIsVisible = true;
-							}
-							else if (elemsAccessAllowed.lastIndexOf(role) == -1 && elemIsVisible){
-								$(elem).hide();
-								elemIsVisible = false;
-							}
-						}
+					if(roles && roles.indexOf(allowed) != -1) { // contains
+						show = true;
+					}
+					// else if (roles.indexOf(allowed) == -1 && elemIsVisible){
+					// }
+				});
+				
+				if (show) {
+					$(elem).show();
+					// elemIsVisible = true;
+				} else {
+					$(elem).hide();
+					// elemIsVisible = false;
+				}
+			}
 
-						if (!$rootScope.user.role) {
-							// console.log('accees-allowed watch role');
-		        	$rootScope.$watch('user.role', function(role){
-        				toggleElementVisibility(role);
-		        	});
-						} else {
-							toggleElementVisibility($rootScope.user.role);
-						}
+			if (!$rootScope.user.roles) {
+				// console.log('accees-allowed watch role');
+				$rootScope.$watch('user.roles', function(roles){
+					toggleElementVisibility(roles);
+				});
+			} else {
+				toggleElementVisibility($rootScope.user.roles);
+			}
         }
     };
 }])
@@ -209,7 +217,7 @@ angular.module('vsko.stock')
 
 })
 
-.directive('stockTooltip', function() {
+.directive('stockTooltip', function($rootScope) {
 
 	return {
         restrict: 'A',
@@ -217,7 +225,8 @@ angular.module('vsko.stock')
         scope: { cloth: '=stockTooltip' },
         link: function(scope, elem) {
 			// only add the tooltip if there are some temporaries stock
-			if (scope.cloth.temporaryAvailableWithLoss && +scope.cloth.temporaryAvailableWithLoss > 0) {
+			if ($rootScope.user.roles.indexOf('temporaries') != -1
+				&& scope.cloth.temporaryAvailableWithLoss && +scope.cloth.temporaryAvailableWithLoss > 0) {
 				$(elem).tooltip({title: (+scope.cloth.temporaryAvailableWithLoss).toFixed(2) + ' Temp.' });
 			}
         }
