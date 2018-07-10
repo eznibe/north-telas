@@ -290,6 +290,7 @@
   "Temporaries": "Temporarias",
   "Temporaries by dispatch": "Para despachantes",
   "Temporaries stock": "Stock",
+  "Temporaries compare": "Stock vs Fichas a usar",
   "Temporaries files": "Fichas",
   "Temporaries summary": "Resumen",
   "Temporaries col": "Temp.",
@@ -313,6 +314,13 @@
   "Dispatch with availability": "Despachos con saldo",
   "With availability": "Solo fichas con saldo",
   "Without availability": "Solo fichas sin saldo",
+  "Stock north": "Stock velería",
+  "Files today": "Fichas",  
+  "Temporaries to arrive aereo": "Temp. en aereo",
+  "Temporaries cutted": "Cortado a exportar",
+  "Temporaries to cut": "A cortar.",
+  "Temporaries total": "Total temp.",
+  "Compare real stock": "Fichas vs stock real",
 
   "": "",
   "notify": {

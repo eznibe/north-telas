@@ -165,3 +165,60 @@ UPDATE cloths SET arancelary = '5903.90.00.919G' WHERE id = '64';
 UPDATE cloths SET arancelary = '5407.10.19.100X' WHERE id = 'e8064331-bc13-4fb7-fa5c-ac7462dbf131';
 UPDATE cloths SET arancelary = '5407.10.19.100X' WHERE id = 'df5e9ffe-e26e-4d29-c344-320e33b64867';
 UPDATE cloths SET arancelary = '5903.90.00.919G' WHERE id = 'd5bb0b4b-2011-4b88-ff15-2a7a018c7333';
+
+--
+
+alter table usuarios add column temporaries boolean default false;
+
+
+create or replace view v_cloths_in_transit_stock as
+SELECT c.*, c.id as clothid, coalesce(sum(if(o.status = 'IN_TRANSIT', op.amount, 0)), 0) as in_transit
+FROM cloths c LEFT JOIN products pro on pro.clothId=c.id LEFT JOIN orderproduct op on op.productId=pro.productId LEFT JOIN orders o on o.orderId=op.orderId
+WHERE o.status != 'ARRIVED'
+group by c.id;
+
+create or replace view v_cloths_temporaries_in_transit_stock as
+SELECT c.*, c.id as clothid, coalesce(sum(if(o.status = 'IN_TRANSIT' and o.deliveryType like 'Aereo%', op.amount, 0)), 0) as in_transit
+FROM cloths c LEFT JOIN products pro on pro.clothId=c.id LEFT JOIN orderproduct op on op.productId=pro.productId LEFT JOIN orders o on o.orderId=op.orderId
+WHERE o.status != 'ARRIVED' and op.temporary = true
+group by c.id;
+
+create or replace view v_cloths_in_house_stock as
+SELECT c.*, c.id as clothid, coalesce(sum(r.mts), 0) as stockInHouse
+FROM cloths c 
+LEFT JOIN products p on p.clothId=c.id 
+left join rolls r on r.productId = p.productId
+WHERE r.mts > 0 and r.incoming = false
+group by c.id;
+
+
+create or replace view v_cloths_to_export_cutted_stock as
+SELECT pl.clothId, count(*), coalesce(sum(pcuts.mtsCutted), 0) as mtscutted
+FROM previsions p 
+left join plotters pl on pl.previsionId = p.id
+left join plottercuts pcuts on pcuts.plotterId = pl.id
+WHERE p.priority = 2 and p.percentage >= 25 and p.deletedProductionOn is null
+group by pl.clothId;
+
+create or replace view v_cloths_to_cut_temporaries as
+SELECT c.*, c.id as clothid, coalesce(sum(pc.mts), 0) as mtsToCut
+FROM cloths c 
+LEFT JOIN previsioncloth pc on pc.clothId=c.id
+LEFT JOIN previsions p on p.id=pc.previsionId
+WHERE (p.type = 'TEMP' OR p.priority = 2) and p.percentage < 25
+group by c.id;
+
+
+create or replace view v_cloths_stock as
+SELECT c.*, coalesce(h.stockInHouse, 0) as stockInHouse, coalesce(t.in_transit, 0) as stockInTransit, coalesce(tt.in_transit, 0) as stockTemporariesInTransit, temp.temporaryAvailable, temp.temporaryAvailableWithLoss, 
+coalesce(export_cutted.mtscutted, 0) as toExportCutted, coalesce(temp_to_cut.mtsToCut, 0) as temporariesToCut, 
+coalesce(coalesce(h.stockInHouse, 0) - (temp.temporaryAvailable - coalesce(export_cutted.mtscutted, 0)), 0) as stockCompare
+FROM cloths c 
+join products p on p.clothId=c.id 
+left join v_cloths_in_house_stock h on h.clothid = c.id
+left join v_cloths_in_transit_stock t on t.clothid = c.id
+left join v_cloths_temporaries_in_transit_stock tt on tt.clothid = c.id 
+left join v_cloths_with_temporary_stock temp on temp.id = c.id
+left join v_cloths_to_export_cutted_stock export_cutted on export_cutted.clothid = c.id
+left join v_cloths_to_cut_temporaries temp_to_cut on temp_to_cut.clothid = c.id
+GROUP by c.id, c.name;

@@ -28,6 +28,10 @@ angular.module('vsko.stock').controller('TemporariesFilesCtrl', ['$scope', '$tra
     }
   }
 
+  $scope.compareStocksStyle = function(f) {
+    return +f.stockCompare < 0 ? {'color': 'red'} : {};
+  };
+
   $scope.filterOptions.sort = [
     {
       key: 'shortName',
@@ -61,6 +65,13 @@ angular.module('vsko.stock').controller('TemporariesFilesCtrl', ['$scope', '$tra
       key: 'available',
       name: 'Temporaries available',
       mainOrder: 'fileAvailable',
+      extraOrder: ', c.name, d.shortName',
+      mode: 'asc'
+    },
+    {
+      key: 'compare',
+      name: 'Compare real stock',
+      mainOrder: 'stockCompare',
       extraOrder: ', c.name, d.shortName',
       mode: 'asc'
     }

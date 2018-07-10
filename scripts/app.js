@@ -344,6 +344,11 @@ angular.module("vsko.stock", [
                 controller: 'TemporariesStockCtrl',
                 access: 'public'
             })
+            .when('/temporaries/lists/temporariesCompare', {
+                templateUrl: 'views/lists/temporaries/temporariesCompareList.html',
+                controller: 'TemporariesCompareCtrl',
+                access: 'public'
+            })
             .when('/temporaries/lists/temporariesFiles', {
                 templateUrl: 'views/lists/temporaries/temporariesFilesList.html',
                 controller: 'TemporariesFilesCtrl',

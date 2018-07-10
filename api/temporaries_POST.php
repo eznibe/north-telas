@@ -33,6 +33,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$value = editDispatchField($json, $_GET['field'], $_GET['isDate']);
 	else if(isset($_GET['filesList']))
 		$value = getDispatchFiles(null, $json);
+		else if(isset($_GET['stock']))
+		$value = getTemporariesStock($json);
 	else
 		$value = "Not found method";
 

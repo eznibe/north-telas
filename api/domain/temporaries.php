@@ -43,10 +43,10 @@ function getDispatchFiles($dispatchId, $filter) {
 						: " clothType, c.name" ;
 
 	$query = "SELECT f.*, f.id as fileId, f.type as clothType, coalesce(f.arancelary, c.arancelary) as arancelary, d.id as dispatchId, d.shortName, d.description, p.code, c.name as cloth, DATE_FORMAT(dueDate,'%d-%m-%Y') as dueDate, DATE_FORMAT(realDueDate,'%d-%m-%Y') as realDueDate,
-					 f.available as fileAvailable, d.available as dispatchAvailable 
+					 f.available as fileAvailable, d.available as dispatchAvailable, c.stockCompare 
 				FROM v_temporaries_files_extended f
 				JOIN products p on p.productId = f.productId
-				JOIN cloths c on c.id = p.clothId
+				JOIN v_cloths_stock c on c.id = p.clothId
 				JOIN v_temporaries_dispatch_extended d on d.id = f.dispatchId
 				WHERE 1=1 $dispatchCondition
 				ORDER BY $orderByCondition";
@@ -399,19 +399,23 @@ function editDispatchField($dispatch, $field, $isDate) {
 	return $obj;
 }
 
-function getTemporariesStock($groupId) {
+function getTemporariesStock($filter) {
 
 	global $country;
 
 	$groupCondition = "";
-	if (isset($groupId)) {
-		$groupCondition = "AND c.groupId = '$groupId'";
+	if (isset($filter) && isset($filter->selectedGroup->id)) {
+		$groupCondition = "AND c.groupId = '".$filter->selectedGroup->id."'";
 	}
 
+	$orderByCondition = isset($filter) && isset($filter->selectedSort) 
+						? $filter->selectedSort->mainOrder . ' ' . $filter->selectedSort->mode . ' ' . $filter->selectedSort->extraOrder
+						: " c.name" ;
+
 	$query = "  SELECT *
-				FROM v_cloths_with_temporary_stock c
+				FROM v_cloths_stock c
 				WHERE 1=1 $groupCondition AND c.country = '$country'
-				order by c.name";
+				ORDER BY $orderByCondition";
 
 	$result = mysql_query($query);
 

@@ -96,20 +96,20 @@ angular.module('vsko.stock')
         	console.log('Arrive order: ', order);
 
 			// TODO uncomment this
-        	// Orders.incrementStatus(order).then(function(result){
+        	Orders.incrementStatus(order).then(function(result){
 
-			// 	if(result.data.successful) {
-			// 		$scope.orders_transit.remove(order);
+				if(result.data.successful) {
+					$scope.orders_transit.remove(order);
 
-			// 		order = $.extend(true, order, result.data.order);
+					order = $.extend(true, order, result.data.order);
 
-			// 		Utils.showMessage('notify.order_arrived');
+					Utils.showMessage('notify.order_arrived');
 
-			// 		// NOTE: not doing this here because it bring problems when many orders are arrived in a small interval (the calcultaion doesn't finish and other start in the middle resulting in bad state assignation)
-			// 		// for the moment use manual update after all orders arrive
-			// 		// updatePrevisionState(order);
-			// 	}
-			// });
+					// NOTE: not doing this here because it bring problems when many orders are arrived in a small interval (the calcultaion doesn't finish and other start in the middle resulting in bad state assignation)
+					// for the moment use manual update after all orders arrive
+					// updatePrevisionState(order);
+				}
+			});
 				
 			// create files for temporary products (cloths of the order) if neccesary
 			var temporaryProducts = order.products.filter(function(p) {

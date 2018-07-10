@@ -43,7 +43,7 @@
 						<h3><small translate>Due date</small> <span>{{f.dueDate}}</span></h3>
 						<h3><small translate>Cloth type</small> <span>{{f.clothType}}</span></h3>
 						<h3><small translate>Temporaries available</small> <span>{{(+f.availableWithLoss).toFixed(2)}} mts</span></h3>
-						<h3><small translate>VS stock real</small> <span>- mts</span></h3>
+						<h3><small translate>VS stock real</small> <span ng-style="::compareStocksStyle(f);">{{(+f.stockCompare).toFixed(2)}} mts</span></h3>
 					</li>
 				</ul>
 			</li>

@@ -4,7 +4,7 @@ angular.module('vsko.stock').controller('TemporariesStockCtrl', ['$scope', 'Util
 
   $scope.filter = {};
   
-  Stock.getAllGroups().then(function(result) {
+  Stock.getAllGroups(true).then(function(result) {
     
     $scope.groups = result.data;
 
