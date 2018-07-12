@@ -30,7 +30,13 @@ function ($scope, $rootScope, $translate, $timeout, $cookieStore, Production, Pr
 	defaultFilters.orderList.push({key: 'week', type: 'str', mode: 'order.ascending', mode2: 'order.ascending'});
 
 	if (!$rootScope.forceNotLoad) { // very special case when after login it is forced to not load the initial list
-		Previsions.getPrevisionsForProduction($rootScope.user.sellerCode, defaultFilters, 0).then(function(result) {
+
+		var sellerCode;
+		if ($rootScope.user.role === 'vendedor') {
+			sellerCode = $rootScope.user.sellerCode;
+		}
+
+		Previsions.getPrevisionsForProduction(sellerCode, defaultFilters, 0).then(function(result) {
 
 			console.log('Results in ' + (Date.now() - $scope.start) + ' ms.'); //eslint-disable-line
 
@@ -255,7 +261,12 @@ function ($scope, $rootScope, $translate, $timeout, $cookieStore, Production, Pr
 		delete $scope.previsions;// = null;
 		$scope.hideLoading = false;
 
-		Previsions.getPrevisionsForProduction($rootScope.user.sellerCode, $scope.filter, ($scope.page-1) * $scope.rows).then(function(result) {
+		var sellerCode;
+		if ($rootScope.user.role === 'vendedor') {
+			sellerCode = $rootScope.user.sellerCode;
+		}
+
+		Previsions.getPrevisionsForProduction(sellerCode, $scope.filter, ($scope.page-1) * $scope.rows).then(function(result) {
 
 			console.log('Results in ' + (Date.now() - $scope.start) + ' ms.'); //eslint-disable-line
 
@@ -575,7 +586,12 @@ function ($scope, $rootScope, $translate, $timeout, $cookieStore, Production, Pr
 
 		var start = Date.now();
 
-		Previsions.getPrevisionsForProduction($rootScope.user.sellerCode, {}).then(function(result) {
+		var sellerCode;
+		if ($rootScope.user.role === 'vendedor') {
+			sellerCode = $rootScope.user.sellerCode;
+		}
+
+		Previsions.getPrevisionsForProduction(sellerCode, {}).then(function(result) {
 			console.log('All results in ' + (Date.now() - start) + ' ms.'); //eslint-disable-line
 
 			var specialTranslation = {
