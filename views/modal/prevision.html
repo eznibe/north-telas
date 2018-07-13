@@ -29,12 +29,13 @@
 								<div class="col-xs-1">
 									<input name="edit_od" type="checkbox" class="" ng-model="prevision.canvas" ng-change="canvasOrder()">
 								</div> -->
-                <div class="col-xs-2"></div>
-
-                <label class="control-label col-xs-5 padding-top-3" translate>Exclude state calculation</label>
+								<div class="col-xs-2"></div>
+								
+								<div class="col-xs-6"></div>
+                <!-- <label class="control-label col-xs-5 padding-top-3" translate>Exclude state calculation</label>
 								<div class="col-xs-1 nopadding">
 									<input type="checkbox" class="" ng-model="prevision.excludeFromStateCalculation">
-								</div>
+								</div> -->
 						</div>
             <div class="col-md-6 nopadding">
 								<label class="control-label col-xs-3 padding-top-3" for="edit_client" translate>State</label>
@@ -170,6 +171,21 @@
 								</div>
 						</div>
 
+					</div>
+
+					<div class="row">
+						<div class="col-md-6 nopadding">
+								
+								<label class="control-label col-xs-4 padding-top-3" title="{{'Exclude state calculation' | translate}}" translate>Exclude state calculation short</label>
+								<div class="col-xs-2">
+									<input type="checkbox" class="" ng-model="prevision.excludeFromStateCalculation">
+								</div>
+
+								<label class="control-label col-xs-5 padding-top-3" translate>Exclude temporaries calculation</label>
+								<div class="col-xs-1 nopadding">
+									<input type="checkbox" class="" ng-model="prevision.excludeFromTemporariesCalculation">
+								</div>
+						</div>
 					</div>
 
           <div class="panel panel-default ng-scope">

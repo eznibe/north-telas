@@ -110,7 +110,7 @@ angular.module('vsko.stock')
         $('#d_available').html(file.available);
         $('#d_arancelary').html(file.arancelary);
         $('#d_rollwidth').html(file.rollWidth ? (file.rollWidth + "''") : '');
-        $('#d_cif').html(file.cif + " usd");
+        $('#d_cif').html(file.cif ? (file.cif + " usd") : '');
         $('#d_code').html(file.code);
 
         $('#printFile').printThis();

@@ -17,23 +17,15 @@ angular.module('vsko.stock').controller('TemporariesCompareCtrl', ['$scope', '$t
   });
 
   
-  $scope.filterByGroup = function(selectedGroup) {
-    
-    if(selectedGroup) {
-      Temporaries.getTemporariesStock(selectedGroup.id).then(function(result) {
-          
-        $scope.cloths = result.data;
-      });
-    }
-  };
-
   $scope.search = function() {
 
     $scope.filter.groupId = $scope.filter.selectedGroup.id;
 
     Temporaries.getTemporariesStock($scope.filter).then(function(result) {
           
-      $scope.cloths = result.data;
+      $scope.cloths = result.data.filter(function(cloth) {
+        return !$scope.filter.onlyAvailable || +cloth.temporaryAvailable > 0;
+      });
     });
   };
 

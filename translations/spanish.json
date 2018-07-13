@@ -273,6 +273,7 @@
   "Currency": "$",
 
   "Exclude state calculation": "Excluir cálculo estado",
+  "Exclude state calculation short": "Excluir cálculo est.",
   "Designer": "Diseñador",
   "Designer col": "Diseñador",
   "Hours": "Horas",
@@ -288,6 +289,7 @@
   "by_orders": "Por órdenes",
 
   "Temporaries": "Temporarias",
+  "Temporaries menu": "TEST TEMP",
   "Temporaries by dispatch": "Para despachantes",
   "Temporaries stock": "Stock",
   "Temporaries compare": "Stock vs Fichas a usar",
@@ -321,6 +323,8 @@
   "Temporaries to cut": "A cortar.",
   "Temporaries total": "Total temp.",
   "Compare real stock": "Fichas vs stock real",
+  "Only available in files": "Solo con saldo",
+  "Exclude temporaries calculation": "Excluir cálculo temp.",
 
   "": "",
   "notify": {

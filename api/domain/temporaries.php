@@ -422,10 +422,58 @@ function getTemporariesStock($filter) {
 	$rows = array();
 	while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
 
+		if ($row['toExportCutted'] > 0) {
+			$row['cuttedPrevisions'] = getClothTemporariesPrevisions('CUTTED', $row['id']); 
+		} else {
+			$row['cuttedPrevisions'] = 'NONE';
+		}
+
+		if ($row['temporariesToCut'] > 0) {
+			$row['toCutPrevisions'] = getClothTemporariesPrevisions('TO_CUT', $row['id']);
+		} else {
+			$row['toCutPrevisions'] = 'NONE';
+		}
+
 		array_push($rows, $row);
 	}
 
 	return $rows;
+}
+
+function getClothTemporariesPrevisions($type, $clothId) {
+
+	if ($type == 'CUTTED') {
+
+		$query = "  SELECT GROUP_CONCAT(distinct p.orderNumber SEPARATOR ', ') as previsions, count(*)
+					FROM previsions p 
+					left join plotters pl on pl.previsionId = p.id
+					left join plottercuts pcuts on pcuts.plotterId = pl.id
+					WHERE p.priority = 2 and p.percentage >= 25 and p.deletedProductionOn is null and p.excludeFromTemporariesCalculation = false
+					and pl.clothid = '$clothId'
+					group by pl.clothid";
+
+	} else if ($type == 'TO_CUT') {
+
+		$query = "  SELECT GROUP_CONCAT(distinct p.orderNumber SEPARATOR ', ') as previsions, count(*)
+					FROM cloths c 
+					LEFT JOIN previsioncloth pc on pc.clothId=c.id
+					LEFT JOIN previsions p on p.id=pc.previsionId
+					WHERE (p.type = 'TEMP' OR p.priority = 2) and p.percentage < 25
+					and pc.clothid = '$clothId'
+					group by c.id";
+	}
+
+	$result = mysql_query($query);
+
+	if ($result) {
+
+		while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+			return $row['previsions'];
+		}
+		return $query;
+	} else {
+		return "ERROR";
+	}
 }
 
 ?>

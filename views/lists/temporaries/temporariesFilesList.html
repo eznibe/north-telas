@@ -42,7 +42,8 @@
 						<h3><small translate>Dispatch</small> <span>{{f.shortName}}</span></h3>
 						<h3><small translate>Due date</small> <span>{{f.dueDate}}</span></h3>
 						<h3><small translate>Cloth type</small> <span>{{f.clothType}}</span></h3>
-						<h3><small translate>Temporaries available</small> <span>{{(+f.availableWithLoss).toFixed(2)}} mts</span></h3>
+						<!-- It's excel cell J2, available without loss as other lists -->
+						<h3><small translate>Temporaries available</small> <span>{{(+f.available).toFixed(2)}} mts</span></h3>
 						<h3><small translate>VS stock real</small> <span ng-style="::compareStocksStyle(f);">{{(+f.stockCompare).toFixed(2)}} mts</span></h3>
 					</li>
 				</ul>

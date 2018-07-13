@@ -7,32 +7,35 @@
 					<select ng-model="filter.selectedGroup" ng-options="sc as sc.name for sc in groups" class="form-control small">
 					</select>
 				</div>
-	
-				<!-- <div class="col-xs-2">
-					<span class="glyphicon glyphicon-search icon-with-label"></span>
-					<span><a ng-click="filterByGroup(filter.selectedGroup)" class="btn-link">{{'Search' | translate}}</a><span>
-				</div> -->
 			</div>
 		</div>
 		<div class="row">
-				<div class="col-md-8 nopadding">
-					<label class="control-label col-xs-2" translate>Order by</label>
-					<div class="col-xs-3">
-						<select ng-model="filter.selectedSort" ng-options="s as s.name for s in filterOptions.sort" class="form-control small">
-							<option value="">-- choose one --</option>
-						</select>
-					</div>
+			<div class="col-md-8 nopadding">
+				<label class="control-label col-xs-2" translate>Order by</label>
+				<div class="col-xs-3">
+					<select ng-model="filter.selectedSort" ng-options="s as s.name for s in filterOptions.sort" class="form-control small">
+						<option value="">-- choose one --</option>
+					</select>
+				</div>
+
+				<div class="col-xs-1">
+					<span class="glyphicon glyphicon-sort icon-link" ng-click="changeOrder()"></span>
+				</div>
 	
-					<div class="col-xs-1">
-						<span class="glyphicon glyphicon-sort icon-link" ng-click="changeOrder()"></span>
-					</div>
-		
-					<div class="col-xs-2">
-						<span class="glyphicon glyphicon-search icon-with-label"></span>
-						<span><a ng-click="search()" class="btn-link">{{'Search' | translate}}</a><span>
-					</div>
+				<div class="col-xs-2">
+					<span class="glyphicon glyphicon-search icon-with-label"></span>
+					<span><a ng-click="search()" class="btn-link">{{'Search' | translate}}</a><span>
 				</div>
 			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-8 nopadding">
+					<label class="control-label col-xs-2" translate>Only available in files</label>
+					<div class="col-xs-3">
+						<input type="checkbox" ng-model="filter.onlyAvailable" ng-change="search()"></input>
+					</div>
+			</div>
+		</div>
 	</div>
 	
 	<table id="groups" class="table table-bordered table-striped table-hover">
@@ -71,10 +74,10 @@
 				<td>
 					<span>{{+c.stockTemporariesInTransit > 0 ? (+c.stockTemporariesInTransit).toFixed(0) : ''}}</span>
 				</td>
-				<td>
+				<td title="{{::c.cuttedPrevisions}}">
 					<span>{{+c.toExportCutted > 0 ? (+c.toExportCutted).toFixed(0) : ''}}</span>
 				</td>
-				<td>
+				<td title="{{::c.toCutPrevisions}}">
 					<span>{{+c.temporariesToCut > 0 ? (+c.temporariesToCut).toFixed(0) : ''}}</span>
 				</td>
 				<td ng-bind="::totalTemp(c)">

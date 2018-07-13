@@ -2,7 +2,7 @@
 		<h1><span translate>Temporaries stock</span></h1>
 		<div class="row">
 			<div class="col-md-8 nopadding">
-					<label class="control-label col-xs-1" translate>Groups</label>
+					<label class="control-label col-xs-2" translate>Groups</label>
 					<div class="col-xs-3">
 						<select ng-model="filter.selectedGroup" ng-options="sc as sc.name for sc in groups" class="form-control small">
 						</select>
@@ -10,7 +10,15 @@
 	
 					<div class="col-xs-2">
 						<span class="glyphicon glyphicon-search icon-with-label"></span>
-						<span><a ng-click="filterByGroup(filter.selectedGroup)" class="btn-link">{{'Search' | translate}}</a><span>
+						<span><a ng-click="search()" class="btn-link">{{'Search' | translate}}</a><span>
+					</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-8 nopadding">
+					<label class="control-label col-xs-2" translate>Only available in files</label>
+					<div class="col-xs-3">
+						<input type="checkbox" ng-model="filter.onlyAvailable" ng-change="search()"></input>
 					</div>
 			</div>
 		</div>
@@ -29,7 +37,8 @@
 					<a href="javascript:void(0)" ng-click="showClothModal(c)">{{c.name}}</a>
 				</td>
 				<td>
-					<span>{{+c.temporaryAvailableWithLoss > 0 ? (+c.temporaryAvailableWithLoss).toFixed(2) : ''}}</span>
+					<!-- requested to be available J2 (without loss) -->
+					<span>{{+c.temporaryAvailable > 0 ? (+c.temporaryAvailable).toFixed(2) : ''}}</span>
 				</td>
 			</tr>
 		</tbody>

@@ -170,6 +170,9 @@ UPDATE cloths SET arancelary = '5903.90.00.919G' WHERE id = 'd5bb0b4b-2011-4b88-
 
 alter table usuarios add column temporaries boolean default false;
 
+alter table previsions add column excludeFromTemporariesCalculation boolean default false;
+alter table previsionfulllogs add column excludeFromTemporariesCalculation boolean default false;
+
 
 create or replace view v_cloths_in_transit_stock as
 SELECT c.*, c.id as clothid, coalesce(sum(if(o.status = 'IN_TRANSIT', op.amount, 0)), 0) as in_transit
@@ -197,7 +200,7 @@ SELECT pl.clothId, count(*), coalesce(sum(pcuts.mtsCutted), 0) as mtscutted
 FROM previsions p 
 left join plotters pl on pl.previsionId = p.id
 left join plottercuts pcuts on pcuts.plotterId = pl.id
-WHERE p.priority = 2 and p.percentage >= 25 and p.deletedProductionOn is null
+WHERE p.priority = 2 and p.percentage >= 25 and p.deletedProductionOn is null and p.excludeFromTemporariesCalculation = false
 group by pl.clothId;
 
 create or replace view v_cloths_to_cut_temporaries as
@@ -222,3 +225,6 @@ left join v_cloths_with_temporary_stock temp on temp.id = c.id
 left join v_cloths_to_export_cutted_stock export_cutted on export_cutted.clothid = c.id
 left join v_cloths_to_cut_temporaries temp_to_cut on temp_to_cut.clothid = c.id
 GROUP by c.id, c.name;
+
+--
+
