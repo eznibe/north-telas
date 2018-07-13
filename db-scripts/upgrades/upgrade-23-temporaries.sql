@@ -181,7 +181,7 @@ WHERE o.status != 'ARRIVED'
 group by c.id;
 
 create or replace view v_cloths_temporaries_in_transit_stock as
-SELECT c.*, c.id as clothid, coalesce(sum(if(o.status = 'IN_TRANSIT' and o.deliveryType like 'Aereo%', op.amount, 0)), 0) as in_transit
+SELECT c.*, c.id as clothid, coalesce(sum(if(o.status = 'IN_TRANSIT', op.amount, 0)), 0) as in_transit
 FROM cloths c LEFT JOIN products pro on pro.clothId=c.id LEFT JOIN orderproduct op on op.productId=pro.productId LEFT JOIN orders o on o.orderId=op.orderId
 WHERE o.status != 'ARRIVED' and op.temporary = true
 group by c.id;

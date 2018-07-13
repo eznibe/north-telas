@@ -424,14 +424,10 @@ function getTemporariesStock($filter) {
 
 		if ($row['toExportCutted'] > 0) {
 			$row['cuttedPrevisions'] = getClothTemporariesPrevisions('CUTTED', $row['id']); 
-		} else {
-			$row['cuttedPrevisions'] = 'NONE';
 		}
 
 		if ($row['temporariesToCut'] > 0) {
 			$row['toCutPrevisions'] = getClothTemporariesPrevisions('TO_CUT', $row['id']);
-		} else {
-			$row['toCutPrevisions'] = 'NONE';
 		}
 
 		array_push($rows, $row);
