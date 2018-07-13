@@ -1,10 +1,10 @@
 <div>
-	<a style="color:#616161; cursor:pointer;" id="entityDisplay-{{entity.id}}-{{field}}" ng-click="clicked(entity)">
-		<span>{{entity[field]}}</span> <span>{{extraLabel}}</span>
+	<a style="color:#616161; cursor:pointer;" id="entityDisplay-{{::entity.id}}-{{::field}}" ng-click="::clicked(entity)">
+		<span>{{entity[field]}}</spa1en> <span>{{extraLabel}}</span>
 	</a>
-	<span  class="badge" id="entityEdit-{{entity.id}}-{{field}}" style="display:none;">
+	<span  class="badge" id="entityEdit-{{::entity.id}}-{{::field}}" style="display:none;">
 		<input type="text" ng-model="entity[field]" ng-style="{'width': (width ? width+'px' : '100px')}"/>
 
-		<a href="javascript:void(0)" ng-click="changed(entity)" ><span class="glyphicon glyphicon-ok control-label" style="text-align:center; cursor:pointer; margin-left:4px;"></span></a>
+		<a href="javascript:void(0)" ng-click="::changed(entity)" ><span class="glyphicon glyphicon-ok control-label" style="text-align:center; cursor:pointer; margin-left:4px;"></span></a>
 	</span>
 </div>

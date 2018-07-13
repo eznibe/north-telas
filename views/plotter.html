@@ -43,27 +43,27 @@
 	<tbody>
 		<tr ng-repeat="p in plotters | filter:searchBox ">
 			<td>
-				<span access-allowed="admin,ordenes,produccion,plotter"><a href="javascript:void(0);" ng-click="showManualPlotterModal(p)">{{p.sOrder}}</a></span>
-				<span access-restricted="admin,ordenes,produccion,plotter">{{p.sOrder}}</span>
+				<span access-allowed="admin,ordenes,produccion,plotter"><a href="javascript:void(0);" ng-click="::showManualPlotterModal(p)">{{::p.sOrder}}</a></span>
+				<span access-restricted="admin,ordenes,produccion,plotter">{{::p.sOrder}}</span>
 			</td>
-			<td title="{{p.tooltip}}" nowrap>
-				<span ng-show="p.cutted=='0'">
-					<a ng-hide="p.sOrder" href="javascript:void(0);" ng-click="::showPrevisionModal(p)">{{::p.orderNumber}}</a>
-					<span ng-show="p.sOrder">{{::p.orderNumber}}</span>
+			<td title="{{::p.tooltip}}" nowrap>
+				<span ng-if="::p.cutted=='0'">
+					<a ng-hide="::p.sOrder" href="javascript:void(0);" ng-click="::showPrevisionModal(p)">{{::p.orderNumber}}</a>
+					<span ng-show="::p.sOrder">{{::p.orderNumber}}</span>
 				</span>
-				<editable-input ng-show="p.cutted=='1'" entity="p" field="'orderNumber'" callback="updatePlotterField" style="display:inline-block;" editable-by-role="'admin,ordenes,produccion,plotter'"></editable-input>
+				<editable-input ng-if="::p.cutted=='1'" entity="::p" field="'orderNumber'" callback="::updatePlotterField" style="display:inline-block;" editable-by-role="'admin,ordenes,produccion,plotter'"></editable-input>
 			</td>
 			<td>
-				<span ng-show="p.cutted=='0'">{{::p.client}}</span>
-				<editable-input ng-show="p.cutted=='1'" entity="p" field="'client'" callback="updatePlotterField" style="display:inline-block;" editable-by-role="'admin,ordenes,produccion,plotter'"></editable-input>
+				<span ng-if="::p.cutted=='0'">{{::p.client}}</span>
+				<editable-input ng-if="::p.cutted=='1'" entity="p" field="'client'" callback="::updatePlotterField" style="display:inline-block;" editable-by-role="'admin,ordenes,produccion,plotter'"></editable-input>
 			</td>
 			<td>
-				<span ng-show="p.cutted=='0'">{{::p.sailName}}</span>
-				<editable-input ng-show="p.cutted=='1'" entity="p" field="'sailName'" callback="updatePlotterField" style="display:inline-block;" editable-by-role="'admin,ordenes,produccion,plotter'"></editable-input>
+				<span ng-if="::p.cutted=='0'">{{::p.sailName}}</span>
+				<editable-input ng-if="::p.cutted=='1'" entity="p" field="'sailName'" callback="updatePlotterField" style="display:inline-block;" editable-by-role="'admin,ordenes,produccion,plotter'"></editable-input>
 			</td>
 			<td>
-				<span ng-show="p.cutted=='0'">{{::p.boat}}</span>
-				<editable-input ng-show="p.cutted=='1'" entity="p" field="'boat'" callback="updatePlotterField" style="display:inline-block;" editable-by-role="'admin,ordenes,produccion,plotter'"></editable-input>
+				<span ng-if="::p.cutted=='0'">{{::p.boat}}</span>
+				<editable-input ng-if="::p.cutted=='1'" entity="p" field="'boat'" callback="updatePlotterField" style="display:inline-block;" editable-by-role="'admin,ordenes,produccion,plotter'"></editable-input>
 			</td>
 			<td>
 				{{::p.clothName}}
@@ -75,24 +75,24 @@
 				{{::p.mtsDesign}}
 			</td>
 			<td>
-				<plotter-cuts-tags plotter="p" cuts="p.cuts" editable-by-role="'admin,ordenes,produccion,plotter'" style="display:inline-block;"></plotter-cuts-tags>
-				<span ng-show="p.cutted=='0'" class="glyphicon glyphicon-plus col-xs-1 control-label" ng-click="addCut(p)" style="text-align:center; cursor:pointer; float:none; padding-left:5px; padding-right:5px;" my-tooltip="'Add cut'|translate" data-placement="right" access-allowed="admin,ordenes,produccion,plotter" >&nbsp;</span>
+				<plotter-cuts-tags plotter="::p" cuts="p.cuts" editable-by-role="'admin,ordenes,produccion,plotter'" style="display:inline-block;"></plotter-cuts-tags>
+				<span ng-show="::p.cutted=='0'" class="glyphicon glyphicon-plus col-xs-1 control-label" ng-click="::addCut(p)" style="text-align:center; cursor:pointer; float:none; padding-left:5px; padding-right:5px;" my-tooltip="'Add cut'|translate" data-placement="right" access-allowed="admin,ordenes,produccion,plotter" >&nbsp;</span>
 			</td>
 			<td ng-mouseover="over = true" ng-mouseleave="over = false" >
-				{{p.observations}}
+				{{::p.observations}}
 				<span class="glyphicon glyphicon-pencil col-xs-1 control-label" ng-click="showEditModal(p, editObservations)" style="text-align:center; cursor:pointer; float:none; padding-left:5px; padding-right:5px;" ng-show="over" access-allowed="admin,ordenes,produccion,plotter">&nbsp;</span>
 			</td>
-			<td style="width:80px; text-align:center;" ng-show="p.cutted=='1'" access-allowed="admin,ordenes,produccion,plotter">
+			<td style="width:80px; text-align:center;" ng-show="::p.cutted=='1'" access-allowed="admin,ordenes,produccion,plotter">
 					<span class="glyphicon glyphicon-remove icon-link" ng-click="showConfirmModal(p, restore)"></span>
 			</td>
-			<td style="width:80px; text-align:center;" ng-show="p.cutted=='0'" access-allowed="admin,ordenes,produccion,plotter">
+			<td style="width:80px; text-align:center;" ng-show="::p.cutted=='0'" access-allowed="admin,ordenes,produccion,plotter">
 					<span class="glyphicon glyphicon-ok icon-link"  ng-click="showCutConfirmModal(p, cutted)" ng-show="filledCuts(p)"></span>
 					<span class="glyphicon glyphicon-ok icon-disabled" ng-hide="filledCuts(p)"></span>
 			</td>
 
 			<td style="width:80px; text-align:center;" access-allowed="admin,ordenes,produccion,plotter">
-					<span class="glyphicon glyphicon-trash icon-link" ng-click="showRemovePlotterConfirmModal(p, restoreToDesign, deletePlotter)" ng-show="!p.manualPlotterId && p.cutted=='0'"></span>
-					<span class="glyphicon glyphicon-trash icon-link" ng-click="showConfirmModal(p, deleteManualPlotter)" ng-show="p.manualPlotterId && p.cutted=='0'"></span>
+					<span class="glyphicon glyphicon-trash icon-link" ng-click="showRemovePlotterConfirmModal(p, restoreToDesign, deletePlotter)" ng-show="::!p.manualPlotterId && p.cutted=='0'"></span>
+					<span class="glyphicon glyphicon-trash icon-link" ng-click="showConfirmModal(p, deleteManualPlotter)" ng-show="::p.manualPlotterId && p.cutted=='0'"></span>
 			</td>
 		</tr>
 	</tbody>
