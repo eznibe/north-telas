@@ -66,6 +66,7 @@ function getPlotters($clothId, $cutted, $search, $upToDate) {
 		$plotter['designed'] = $plotter['designed']=='1' ? true : false;
 		$plotter['oneDesign'] = $plotter['oneDesign']=='1' ? true : false;
 		$plotter['greaterThan44'] = $plotter['greaterThan44']=='1' ? true : false;
+		$plotter['designOnly'] = $plotter['designOnly']==1 ? true : false;
 
 		array_push($plotters, $plotter);
 	}
