@@ -38,6 +38,8 @@ function getDispatchFiles($dispatchId, $filter) {
 	// create query conditions
 	$dispatchCondition = isset($dispatchId) ? " AND dispatchId = '$dispatchId'" : "";
 
+	$clothCondition = isset($filter->clothId) ? " AND c.id = '".$filter->clothId."'" : "";
+
 	$orderByCondition = isset($filter) && isset($filter->selectedSort) 
 						? $filter->selectedSort->mainOrder . ' ' . $filter->selectedSort->mode . ' ' . $filter->selectedSort->extraOrder
 						: " clothType, c.name" ;
@@ -48,7 +50,7 @@ function getDispatchFiles($dispatchId, $filter) {
 				JOIN products p on p.productId = f.productId
 				JOIN v_cloths_stock c on c.id = p.clothId
 				JOIN v_temporaries_dispatch_extended d on d.id = f.dispatchId
-				WHERE 1=1 $dispatchCondition
+				WHERE 1=1 $dispatchCondition $clothCondition
 				ORDER BY $orderByCondition";
 	$result = mysql_query($query);
 

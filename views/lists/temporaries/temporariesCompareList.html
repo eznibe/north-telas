@@ -57,7 +57,7 @@
 		<tbody>
 			<tr ng-repeat="c in cloths | filter:searchBox">
 				<td>
-					<a href="javascript:void(0)" ng-click="showClothModal(c)">{{c.name}}</a>
+					<a href="javascript:void(0)" ng-click="showClothFilesModal(c)">{{c.name}}</a>
 				</td>
 				<td>
 					<span>{{(+c.stockInHouse).toFixed(0)}}</span>
@@ -87,3 +87,5 @@
 			</tr>
 		</tbody>
 	</table>
+
+	<cloth-files-modal/>
