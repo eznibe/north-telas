@@ -87,12 +87,21 @@ angular.module('vsko.stock')
           return $rootScope.user.storedCountry === 'ARG';
         }
 
+		// for temporaries checkbox 
 		$scope.temporariesChange = function() {
 			$scope.currentTemporaryState = !$scope.user.temporaries;
 
 			$scope.modalPassword = $modal({template: 'views/modal/passwordConfirm.html', show: false, scope: $scope, backdrop:'static', animation:'am-fade-and-slide-top'});
 
             $scope.modalPassword.$promise.then($scope.modalPassword.show);
+		};
+
+		$scope.passwordInputResult = function(input) {
+			$scope.modalPassword.hide();
+
+			if (input !== temporariesPassword)  {
+				$scope.user.temporaries = $scope.currentTemporaryState;
+			}
 		};
 		$scope.passwordConfirm = $scope.passwordInputResult;
 }]);
