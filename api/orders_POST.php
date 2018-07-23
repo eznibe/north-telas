@@ -27,6 +27,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 	else if(isset($_GET['updateProductAmount'])) {
 		$value = updateProductAmount($json);
 	}
+	else if(isset($_GET['updateProduct'])) {
+		$value = updateProduct($json);
+	}
 	else {
 		$value = changeStatus($json);
 	}

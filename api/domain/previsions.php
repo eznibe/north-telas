@@ -101,6 +101,7 @@ function getPrevisions($clothId, $designed, $expand, $production, $historic, $se
 		$row['oneDesign'] = $row['oneDesign']==1 ? true : false;
 		$row['greaterThan44'] = $row['greaterThan44']==1 ? true : false;
 		$row['excludeFromStateCalculation'] = $row['excludeFromStateCalculation']==1 ? true : false;
+		$row['excludeFromTemporariesCalculation'] = $row['excludeFromTemporariesCalculation']==1 ? true : false;
 		$row['designOnly'] = $row['designOnly']==1 ? true : false;
 
 		$row['count'] = $count;
@@ -230,6 +231,7 @@ function savePrevision($prevision)
 	$sailOneDesign = isset($prevision->sailOneDesign) ? "'".$prevision->sailOneDesign."'" : 'null' ;
 	$oneDesign = $prevision->oneDesign==1 ? 'true' : 'false';
 	$excludeFromStateCalculation = $prevision->excludeFromStateCalculation==1 ? 'true' : 'false';
+	$excludeFromTemporariesCalculation = $prevision->excludeFromTemporariesCalculation==1 ? 'true' : 'false';
 	$greaterThan44 = $prevision->greaterThan44==1 ? 'true' : 'false';
 	$p = isset($prevision->p) && trim($prevision->p)!='' ? $prevision->p : 'null' ;
 	$e = isset($prevision->e) && trim($prevision->e)!='' ? $prevision->e : 'null' ;
@@ -267,7 +269,7 @@ function savePrevision($prevision)
 																		", productionObservations = '$productionObservations', designObservations = '$designObservations', dispatchId = $dispatchId".
 																		", week = $week, priority = $priority, line = $line, seller = $seller, advance = $advance, percentage = $percentage".
 																		", tentativeDate = $tentativeDate, productionDate = $productionDate, infoDate = $infoDate, advanceDate = $advanceDate, rizo = $rizo, country = '$country'".
-																		", deliveryDateManuallyUpdated = $deliveryDateManuallyUpdated, excludeFromStateCalculation = $excludeFromStateCalculation".
+																		", deliveryDateManuallyUpdated = $deliveryDateManuallyUpdated, excludeFromStateCalculation = $excludeFromStateCalculation, excludeFromTemporariesCalculation = $excludeFromTemporariesCalculation".
 																		", designer = '$designer', designHours = $designHours, designWeek = $designWeek, designOnly = $designOnly, designOnlyCloth = '$designOnlyCloth'".
 																		" WHERE id = '".$prevision->id."'";
 
@@ -284,11 +286,11 @@ function savePrevision($prevision)
 		// insert
 		$insert = "INSERT INTO previsions (id, orderNumber, deliveryDate, client, sailId, sailGroupId, sailDescription, boat,
 				type, designed, oneDesign, greaterThan44, p, e, i,j, area, sailOneDesign, observations, productionObservations, designObservations,
-				week, priority, line, seller, advance, percentage, tentativeDate, productionDate, infoDate, advanceDate, dispatchId, rizo, country, excludeFromStateCalculation,
+				week, priority, line, seller, advance, percentage, tentativeDate, productionDate, infoDate, advanceDate, dispatchId, rizo, country, excludeFromStateCalculation, excludeFromTemporariesCalculation,
 			  designer, designHours, designWeek, designOnly, designOnlyCloth)
 				VALUES ('".$prevision->id."', '".$prevision->orderNumber."', STR_TO_DATE('".$prevision->deliveryDate."', '%d-%m-%Y'), '".$client."', $sailId, $sailGroupId, $sailDescription, '".$boat."', '".$prevision->type."', false, ".$oneDesign.", ".$greaterThan44.", ".
 								$p.", ".$e.", ".$i.", ".$j.", ".$area.", $sailOneDesign, '$observations', '$productionObservations', '$designObservations',
-								$week, $priority, $line, $seller, $advance, $percentage, $tentativeDate, $productionDate, $infoDate, $advanceDate, $dispatchId, $rizo, '$country', $excludeFromStateCalculation,
+								$week, $priority, $line, $seller, $advance, $percentage, $tentativeDate, $productionDate, $infoDate, $advanceDate, $dispatchId, $rizo, '$country', $excludeFromStateCalculation, $excludeFromTemporariesCalculation,
 								'$designer', $designHours, $designWeek, $designOnly, '$designOnlyCloth')" ;
 
 		if(mysql_query($insert)) {

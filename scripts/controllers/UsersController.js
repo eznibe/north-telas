@@ -2,12 +2,15 @@
 
 angular.module('vsko.stock')
 
-.controller('UsersCtrl', ['$scope', 'Users', '$modal', 'countries', '$rootScope', function ($scope, Users, $modal, countries, $rootScope) {
+.controller('UsersCtrl', ['$scope', 'Users', '$modal', 'countries', 'temporariesPassword', '$rootScope', function ($scope, Users, $modal, countries, temporariesPassword, $rootScope) {
 
         // initial list of all users
         Users.getAllUsers($rootScope.user.storedCountry).then(function(result) {
 
-        	$scope.users = result.data;
+        	$scope.users = result.data.map(function(u) {
+				u.temporaries = u.temporaries === '1';
+				return u;
+			});
         });
 
         $scope.countries = countries.list;
@@ -83,4 +86,13 @@ angular.module('vsko.stock')
         $scope.canEditCountry = function(user) {
           return $rootScope.user.storedCountry === 'ARG';
         }
+
+		$scope.temporariesChange = function() {
+			$scope.currentTemporaryState = !$scope.user.temporaries;
+
+			$scope.modalPassword = $modal({template: 'views/modal/passwordConfirm.html', show: false, scope: $scope, backdrop:'static', animation:'am-fade-and-slide-top'});
+
+            $scope.modalPassword.$promise.then($scope.modalPassword.show);
+		};
+		$scope.passwordConfirm = $scope.passwordInputResult;
 }]);

@@ -319,24 +319,49 @@ angular.module("vsko.stock", [
                 controller: 'ClothsStockCtrl',
                 access: 'public'
             })
-						.when('/lists/clothsPrice', {
+			.when('/lists/clothsPrice', {
                 templateUrl: 'views/lists/clothsPrice.html',
                 controller: 'ClothsPriceCtrl',
                 restricted: 'plotter'
             })
-						.when('/lists/clothsValuedStock', {
+			.when('/lists/clothsValuedStock', {
                 templateUrl: 'views/lists/clothsValuedStock.html',
                 controller: 'ClothsValuedStockCtrl',
                 access: 'public'
             })
-						.when('/lists/dispatchsHistoric', {
+			.when('/lists/dispatchsHistoric', {
                 templateUrl: 'views/lists/dispatchsHistoric.html',
                 controller: 'DispatchsHistoricCtrl',
                 access: 'public'
             })
-						.when('/lists/worktickets', {
+		.when('/lists/worktickets', {
                 templateUrl: 'views/lists/worktickets.html',
                 controller: 'WorkticketsCtrl',
+                access: 'public'
+            })
+            .when('/temporaries/lists/temporariesForDispatcher', {
+                templateUrl: 'views/lists/temporaries/temporariesForDispatcher.html',
+                controller: 'TemporariesForDispatcherCtrl',
+                access: 'public'
+            })
+            .when('/temporaries/lists/temporariesStock', {
+                templateUrl: 'views/lists/temporaries/temporariesStockList.html',
+                controller: 'TemporariesStockCtrl',
+                access: 'public'
+            })
+            .when('/temporaries/lists/temporariesCompare', {
+                templateUrl: 'views/lists/temporaries/temporariesCompareList.html',
+                controller: 'TemporariesCompareCtrl',
+                access: 'public'
+            })
+            .when('/temporaries/lists/temporariesFiles', {
+                templateUrl: 'views/lists/temporaries/temporariesFilesList.html',
+                controller: 'TemporariesFilesCtrl',
+                access: 'public'
+            })
+            .when('/temporaries/lists/temporariesSummary', {
+                templateUrl: 'views/lists/temporaries/temporariesSummary.html',
+                controller: 'TemporariesSummaryCtrl',
                 access: 'public'
             })
             .when('/accessdenied', {

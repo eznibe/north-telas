@@ -102,7 +102,8 @@ angular.module('vsko.stock')
 
             $scope.updateProductAmount = function(product) {
 
-              Orders.updateProductAmount(product).then(function(result){
+			//   Orders.updateProductAmount(product)
+			  Orders.orderProductSave(product).then(function(result){
 
                 console.log('Updated product amount to '+product.amount);
 
@@ -129,7 +130,11 @@ angular.module('vsko.stock')
 	      			  total += p.amount * p.price;
 	      		  });
 	      		  return +(Math.round(total + "e+2")  + "e-2");
-	      	  };
+				};
+				
+			$scope.temporaryChange = function(product) {
+				Orders.orderProductSave(product);
+			}
           }
         };
 	}

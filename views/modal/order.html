@@ -21,8 +21,9 @@
 							<th style="min-width: 150px;" translate>Product</th>
 							<th translate>Code</th>
 							<th translate>Amount</th>
+							<th access-allowed="temporaries" translate>Temporaries col</th>
 							<th ng-show="order.status!='TO_BUY'" translate>Rolls</th>
-              <th ng-show="order.status!='TO_BUY'" style="width: 52px; border-left-style: hidden;" access-level="admin"></th><!-- Edit rolls icon -->
+              				<th ng-show="order.status!='TO_BUY'" style="width: 52px; border-left-style: hidden;" access-level="admin"></th><!-- Edit rolls icon -->
 							<th translate>Price</th>
 							<th translate>Total</th>
 							<th access-level="admin"></th>
@@ -37,14 +38,17 @@
 								{{p.code}}
 							</td>
 							<td>
-                <editable-input entity="p" field="'amount'" callback="updateProductAmount" editable-by-role="'admin'" width="50" style="display:inline-block;"></editable-input>
+                				<editable-input entity="p" field="'amount'" callback="updateProductAmount" editable-by-role="'admin'" width="50" style="display:inline-block;"></editable-input>
 								<!--<span ng-if="order.status=='TO_BUY'">{{p.amount}}</span>-->
+							</td>
+							<td access-allowed="temporaries" style="text-align: center;">
+								<input type="checkbox" ng-model="p.temporary" ng-change="temporaryChange(p)" />
 							</td>
 							<td ng-show="order.status!='TO_BUY'"  ng-mouseover="over = true" ng-mouseleave="over = false" >
 								<order-rolls-tags ng-model="p.rolls"></order-rolls-tags>
-              </td>
-              <td ng-show="order.status!='TO_BUY'" ng-mouseover="over = true" ng-mouseleave="over = false" style="border-left-style: hidden;" access-level="admin">
-                <span class="glyphicon glyphicon-pencil col-xs-1 control-label" ng-click="showRollsModal(p)" data-placement="right" my-tooltip="'Assign rolls'|translate" style="text-align:center; cursor:pointer; float:none; padding-left:5px; padding-right:5px;" ng-show="over">&nbsp;</span>
+             				</td>
+							<td ng-show="order.status!='TO_BUY'" ng-mouseover="over = true" ng-mouseleave="over = false" style="border-left-style: hidden;" access-level="admin">
+								<span class="glyphicon glyphicon-pencil col-xs-1 control-label" ng-click="showRollsModal(p)" data-placement="right" my-tooltip="'Assign rolls'|translate" style="text-align:center; cursor:pointer; float:none; padding-left:5px; padding-right:5px;" ng-show="over">&nbsp;</span>
 							</td>
 							<td nowrap>
 								{{p.price}} USD
@@ -62,9 +66,10 @@
 							<td style="color: #000;">Total</td>
 							<td></td>
 							<td></td>
+							<td access-allowed="temporaries"></td>
 							<td ng-show="order.status!='TO_BUY'">
 							<td ng-show="order.status!='TO_BUY'" style="border-left-style: hidden;" access-level="admin"></td>
-              <td></td>
+              				<td></td>
 							<td>{{ total(order.products) }} USD</td>
 							<td access-level="admin"></td>
 						</tr>
@@ -122,7 +127,7 @@
 
 							<div class="row">
 								<div class="col-md-6 nopadding">
-									<label class="control-label col-xs-3" for="edit_type" translate>Type</label>
+									<!-- <label class="control-label col-xs-3" for="edit_type" translate>Type</label>
 									<div class="col-xs-7">
 										<label class="radio-inline">
 											<input type="radio" name="edit_type" value="TEMP" ng-model="order.type" required> Temp
@@ -131,9 +136,9 @@
 											<input type="radio" name="edit_type" value="DEF" ng-model="order.type" required> Def
 										</label>
 										<span ng-show="formOrderInfo.edit_type.$invalid" class="radio-inline error">!</span>
-									</div>
+									</div> -->
 								</div>
-                <div class="col-md-6 nopadding" ng-show="order.status=='IN_TRANSIT'">
+                				<div class="col-md-6 nopadding" ng-show="order.status=='IN_TRANSIT'">
 									<label class="control-label col-xs-5" for="edit_type" translate>Arrive date</label>
 									<div class="col-xs-7">
 										<div class="input-group input-group-sm date" date-picker>

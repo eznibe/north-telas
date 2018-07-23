@@ -1,0 +1,84 @@
+<div class="modal" tabindex="-1" role="dialog" >
+  <div class="modal-dialog modal-lg" style="margin-top: 0px;">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<div class="edit_person">
+					<h2>
+						<span class="glyphicon glyphicon-file"></span>
+						<span translate>Temporaries dispatch</span>
+					</h2>
+				</div>
+				<a href="javascript:void(0)" class="btn btn-lg closebtn" ng-click="$hide()">
+					<span class="glyphicon glyphicon-remove"></span>
+				</a>
+			</div>
+
+			<div class="modal-body">
+
+				<div class="panel panel-default">
+
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-md-6 nopadding">
+								<label class="control-label col-xs-3" translate>Number</label>
+								<div class="col-xs-7">
+									<!-- <input type="text" class="form-control small" ng-model="dispatch.description"> -->
+									<angucomplete-alt id="ex1"
+											placeholder=""
+											pause="100"
+											selected-object="selectedDispatch"
+											initial-value="dispatch.description"
+											local-data="allDispatchs"
+											search-fields="description"
+											title-field="description"
+											input-changed="descriptionChanged"
+											minlength="2"
+											input-class="form-control small"/>
+								</div>
+							</div>
+							<div class="col-md-6 nopadding">
+								<label class="control-label col-xs-5" translate>Temporaries dispatch short</label>
+								<div class="col-xs-7">
+									<input type="text" class="form-control small" ng-model="dispatch.shortName">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6 nopadding">
+								<label class="control-label col-xs-3" for="edit_date" translate>Due date</label>
+								<div class="col-xs-7">
+									<div class="input-group input-group-sm date" date-picker>
+										<input id="edit_date" type="text" ng-model="dispatch.dueDate" class="form-control small">
+										<span class="input-group-addon">
+											<span class="glyphicon-calendar glyphicon"></span>
+										</span>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6 nopadding">
+								<!-- <label class="control-label col-xs-3" for="edit_date" translate>Real due date</label>
+								<div class="col-xs-7">
+									<div class="input-group input-group-sm date" date-picker>
+										<input id="edit_date" type="text" ng-model="dispatch.realDueDate" class="form-control small">
+										<span class="input-group-addon">
+											<span class="glyphicon-calendar glyphicon"></span>
+										</span>
+									</div>
+								</div> -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="modal-footer">
+				<a ng-click="saveDispatch()" class="btn btn-default floatright" access-level="admin">
+					<span class="glyphicon glyphicon-ok"></span>
+					<span translate>Save</span>
+				</a>
+			</div>
+
+		</div>
+	</div>
+</div>

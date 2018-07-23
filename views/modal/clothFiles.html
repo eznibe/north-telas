@@ -1,0 +1,53 @@
+<div class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" style="margin-top: 0px;">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<div class="edit_person">
+					<h2>
+						<span class="glyphicon glyphicon-file"></span>
+						<span translate>Temporaries files</span>
+					</h2>
+				</div>
+				<a href="javascript:void(0)" class="btn btn-lg closebtn" ng-click="$hide()">
+					<span class="glyphicon glyphicon-remove"></span>
+				</a>
+
+			</div>
+
+			<div class="modal-body">
+				<div class="user_cards">
+					<ul>
+						<li class="cards">
+							<ul>
+								<li ng-repeat="f in clothfiles" style="min-height: 0px;" ng-click="showTemporariesFileModal(f)">
+									<h3>
+										<span style="color:black;">{{f.cloth}}</span>
+									</h3>
+									<h3><small translate>Dispatch</small> <span>{{f.shortName}}</span></h3>
+									<h3><small translate>Due date</small> <span>{{f.dueDate}}</span></h3>
+									<h3><small translate>Cloth type</small> <span>{{f.clothType}}</span></h3>
+									<!-- It's excel cell J2, available without loss as other lists -->
+									<h3><small translate>Temporaries available</small> <span>{{(+f.available).toFixed(2)}} mts</span></h3>
+									<h3><small translate>VS stock real</small> <span ng-style="::compareStocksStyle(f);">{{(+f.stockCompare).toFixed(2)}} mts</span></h3>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+
+			</div>
+
+			<div class="modal-footer">
+
+				<a ng-click="$hide()" class="btn btn-default floatright" >
+					<span class="glyphicon glyphicon-ok"></span>
+					Ok
+				</a>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<temporaries-file callback="temporariesFileUpdated">

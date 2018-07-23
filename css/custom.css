@@ -101,6 +101,7 @@ table#production tbody tr,
 	position: fixed;
 	right: 10px;
 	top: 10px;
+	/*width: 150px;*/
 	z-index: 25;
 }
 
@@ -296,4 +297,9 @@ table#production tbody tr,
 
 .totals-row {
 	font-weight: bold;
+}
+
+.temp_file_cards small {
+	display: inline-block;
+	width: 75px;
 }

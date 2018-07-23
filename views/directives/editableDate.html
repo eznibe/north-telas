@@ -1,4 +1,5 @@
-<div ng-mouseover="::oneTimeBindings.mouseOver();" ng-mouseleave="::oneTimeBindings.mouseLeave();" style="width:70px; height:20px;">
+<div ng-mouseover="::oneTimeBindings.mouseOver();" ng-mouseleave="::oneTimeBindings.mouseLeave();" style="height:20px;" 
+	 ng-style="{'width': (!fullWidth ? '70px' : '')}">
 	<a style="color:#616161; cursor:pointer;" id="entityDisplay-{{::entity.id}}-{{::field}}" ng-click="::clicked(entity)" class="editable-input-link">
 		<span class="field-value">{{:refreshLinkValue:oneTimeBindings.getFieldValue()}}</span> <span>{{:refreshLinkValue:oneTimeBindings.getExtraLabel()}}</span>
 	</a>

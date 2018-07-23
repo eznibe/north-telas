@@ -91,18 +91,24 @@
 										</div>
 								</div>
 								<div class="col-md-6 nopadding">
-									<label class="control-label col-xs-4" for="edit_sm" translate>Mts in rolls</label>
-									<div class="col-xs-8">
-										<a href="javascript:void(0)" ng-click="showClothRollsModal(cloth)">{{sumStock(cloth.providers)}}</a>
+									<label class="control-label col-xs-4" for="edit_sm" translate>Arancelary</label>
+									<div class="col-xs-6">
+										<input name="edit_sm" type="text" class="form-control small" ng-model="cloth.arancelary">
 									</div>
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-md-6 nopadding">
-										<label class="control-label col-xs-4" for="edit_sm" translate>Total Djai</label>
-										<div class="col-xs-8">
-											<a href="javascript:void(0)" ng-click="showClothDjaisModal(cloth)">{{cloth.sumDjais}}</a>
-										</div>
+									<label class="control-label col-xs-4" for="edit_sm" translate>Total Djai</label>
+									<div class="col-xs-8">
+										<a href="javascript:void(0)" ng-click="showClothDjaisModal(cloth)">{{cloth.sumDjais}}</a>
+									</div>
+								</div>
+								<div class="col-md-6 nopadding">
+									<label class="control-label col-xs-4" for="edit_sm" translate>Mts in rolls</label>
+									<div class="col-xs-8">
+										<a href="javascript:void(0)" ng-click="showClothRollsModal(cloth)">{{sumStock(cloth.providers)}}</a>
+									</div>
 								</div>
 							</div>
 							</form>

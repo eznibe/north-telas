@@ -1,0 +1,91 @@
+<div class="nopaddingright jumbotron clearfix">
+		<h1><span translate>Temporaries compare</span></h1>
+		<div class="row">
+			<div class="col-md-8 nopadding">
+				<label class="control-label col-xs-2" translate>Groups</label>
+				<div class="col-xs-3">
+					<select ng-model="filter.selectedGroup" ng-options="sc as sc.name for sc in groups" class="form-control small">
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-8 nopadding">
+				<label class="control-label col-xs-2" translate>Order by</label>
+				<div class="col-xs-3">
+					<select ng-model="filter.selectedSort" ng-options="s as s.name for s in filterOptions.sort" class="form-control small">
+						<option value="">-- choose one --</option>
+					</select>
+				</div>
+
+				<div class="col-xs-1">
+					<span class="glyphicon glyphicon-sort icon-link" ng-click="changeOrder()"></span>
+				</div>
+	
+				<div class="col-xs-2">
+					<span class="glyphicon glyphicon-search icon-with-label"></span>
+					<span><a ng-click="search()" class="btn-link">{{'Search' | translate}}</a><span>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-8 nopadding">
+					<label class="control-label col-xs-2" translate>Only available in files</label>
+					<div class="col-xs-3">
+						<input type="checkbox" ng-model="filter.onlyAvailable" ng-change="search()"></input>
+					</div>
+			</div>
+		</div>
+	</div>
+	
+	<table id="groups" class="table table-bordered table-striped table-hover">
+		<thead>
+			<tr>
+				<th translate>Cloth</th>
+				<th translate>Stock north</th>
+				<th translate>Transit</th>
+				<th>Stock total</th>
+				<th translate>Files today</th>
+				<th translate>Temporaries to arrive</th>
+				<th translate>Temporaries cutted</th>
+				<th translate>Temporaries to cut</th>
+				<th translate>Temporaries total</th>
+				<!-- <th ng-click="sort('compare')"><a href="javascript:void(0);"><span translate>Compare real stock</span></a></th> -->
+				<th translate>Compare real stock</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="c in cloths | filter:searchBox">
+				<td>
+					<a href="javascript:void(0)" ng-click="showClothFilesModal(c)">{{c.name}}</a>
+				</td>
+				<td>
+					<span>{{(+c.stockInHouse).toFixed(0)}}</span>
+				</td>
+				<td>
+					<span>{{+c.stockInTransit > 0 ? (+c.stockInTransit).toFixed(0) : ''}}</span>
+				</td>
+				<td>
+					<span>{{(+c.stockInHouse + +c.stockInTransit).toFixed(0)}}</span>
+				</td>
+				<td style="background-color: #e4e4e4;">
+					<span>{{(+c.temporaryAvailable).toFixed(0)}}</span>
+				</td>
+				<td>
+					<span>{{+c.stockTemporariesInTransit > 0 ? (+c.stockTemporariesInTransit).toFixed(0) : ''}}</span>
+				</td>
+				<td title="{{::c.cuttedPrevisions}}">
+					<span>{{+c.toExportCutted > 0 ? (+c.toExportCutted).toFixed(0) : ''}}</span>
+				</td>
+				<td title="{{::c.toCutPrevisions}}">
+					<span>{{+c.temporariesToCut > 0 ? (+c.temporariesToCut).toFixed(0) : ''}}</span>
+				</td>
+				<td ng-bind="::totalTemp(c)">
+				</td>
+				<td ng-style="::compareStocksStyle(c);" ng-bind="::compareStocks(c)">
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<cloth-files-modal/>

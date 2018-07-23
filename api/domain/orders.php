@@ -1,6 +1,7 @@
 <?php
 
 include_once 'rolls.php';
+include_once 'logs.php';
 
 //-- Statuses: TO_BUY, TO_CONFIRM, IN_TRANSIT, ARRIVED, DELETED
 
@@ -161,7 +162,8 @@ function buy($provider)
 	}
 
 	// insert order product
-	$insert = "INSERT INTO orderproduct VALUES ('".$provider->opId."', '".$orderId."', '".$provider->productId."', ".$provider->amount.", '".$provider->price."')" ;
+	$insert = "INSERT INTO orderproduct (opId, orderId, productId, amount, price, temporary)
+			   VALUES ('".$provider->opId."', '".$orderId."', '".$provider->productId."', ".$provider->amount.", '".$provider->price."', false)" ;
 
 	if(mysql_query($insert)) {
 		$obj->successfulOP = true;
@@ -202,8 +204,8 @@ function assignProduct($provider, $orderId)
 	else {
 		$opId = uniqid();
 
-		$insert = "INSERT INTO orderproduct (opId, orderId, productId, amount, price)
-							 VALUES ('$opId', '$orderId', '".$provider->productId."', ".$provider->amount.", ".$provider->price.")" ;
+		$insert = "INSERT INTO orderproduct (opId, orderId, productId, amount, price, temporary)
+					VALUES ('$opId', '$orderId', '".$provider->productId."', ".$provider->amount.", ".$provider->price.", false)" ;
 
 		if(mysql_query($insert)) {
 			$obj->successful = true;
@@ -233,6 +235,8 @@ function changeStatus($order)
 
 	$extraSet = "";
 
+	$updatedRolls = array();
+
 	// update the status
 	if($orderRow['status'] == 'TO_BUY') {
 		$newStatus = 'TO_CONFIRM';
@@ -247,7 +251,10 @@ function changeStatus($order)
 		$extraSet = ", arriveDate = STR_TO_DATE('".$order->arriveDate."', '%d-%m-%Y') ";
 
 		// if arrived -> update rolls to incoming=false
-		arriveRolls($order->orderId, $order->type);
+		foreach ($order->products as $product) {
+			$result = arriveRolls($order->orderId, $product->productId, $product->temporary);
+			array_push($updatedRolls, $result);
+		}
 	}
 
 	$update = "UPDATE orders SET status = '$newStatus' $extraSet WHERE orderId = '".$orderRow['orderId']."'" ;
@@ -266,6 +273,8 @@ function changeStatus($order)
 	$order->formattedDate = $rows[0]['formattedDate'];
 
 	$obj->order = $order;
+
+	$obj->updatedRolls = $updatedRolls;
 
 	return $obj;
 }
@@ -303,6 +312,33 @@ function updateProductAmount($product) {
 		$obj->successful = false;
 		$obj->update = $update;
 	}
+
+	return $obj;
+}
+
+function updateProduct($product) {
+
+	$obj->successful = true;
+	$obj->method = 'update.orderproduct';
+
+	$temporary = isset($product->temporary) && $product->temporary ? 'true' : 'false';
+
+	$update = "UPDATE orderproduct SET amount = $product->amount, temporary = $temporary ".
+			  "WHERE opId = '".$product->opId."'" ;
+
+	if(!mysql_query($update)) {
+		$obj->successful = false;
+		$obj->update = $update;		
+
+		$log->type = $obj->method . " - failed";
+	} else {
+		$log->type = $obj->method;
+	}
+
+	
+	$log->log = json_encode($product);
+	$log->user = "backend";
+	addLog($log);
 
 	return $obj;
 }

@@ -1,0 +1,45 @@
+<div class="jumbotron clearfix nopaddingright">
+	<h1><span translate>Temporaries summary</span></h1>
+</div>
+
+<table class="table table-bordered table-striped table-hover">
+	<thead>
+		<tr>
+			<th translate>Dispatch</th>
+			<th translate>Due date</th>
+			<th ng-repeat="c in columns">{{ c }}</th>
+			<th translate>Temporaries available</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="d in dispatchs | filter:searchBox " ng-show="{{::dispatchAvailablePercentage(d) > 0}}">
+			<td>
+				<span><a href="javascript:void(0);" ng-click="showTemporariesDispatchModal(d)" title="{{d.description}}">{{d.shortName}}</a></span>
+			</td>
+			<td nowrap>
+				{{d.dueDate}}
+			</td>
+			<td ng-repeat="c in columns">
+				<div>
+					<span ng-repeat="f in getFiles(d, c)">
+						<!-- this list shows the available without the 5% loss -->
+						<a style="color:#333; display:inline-block; min-width:100px;" class="badge" ng-click="showTemporariesFileModal(f)" title="{{f.code}}">{{f.cloth}} - {{(+f.available).toFixed(2)}} mts.</a>
+					</span>
+				</div>
+			</td>
+			<td nowrap>
+				{{::dispatchAvailablePercentage(d)}}%
+			</td>
+		</tr>
+		<tr>
+			<td><b>Total</b></td>
+			<td></td>
+			<td ng-repeat="c in columns"><b>{{ calculateTotalMtsForColumn(c) }} mts</b></td>
+			<td><b>{{ calculateTotalMts() }} mts</b></td>
+		</tr>
+	</tbody>
+</table>
+
+<temporaries-dispatch callback="temporariesDispatchUpdated">
+
+<temporaries-file callback="none">

@@ -70,11 +70,15 @@
 						<div class="col-md-6 nopadding">
 								<label class="control-label col-xs-3" translate>Country</label>
 								<div class="col-xs-9">
-									<select ng-model="user.country" ng-options="c for c in countries" class="form-control small" ng-disabled="::!canEditCountry()" required>
+									<select ng-model="user.country" ng-options="c for c in countries" class="form-control small" required>
                   </select>
 								</div>
 						</div>
 						<div class="col-md-6 nopadding">
+							<label class="control-label col-xs-4" for="edit_order" translate>Temporaries</label>
+							<div class="col-xs-8">
+								<input type="checkbox" ng-model="user.temporaries" ng-change="temporariesChange()">
+							</div>
 						</div>
 					</div>
 				</form>

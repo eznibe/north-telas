@@ -285,7 +285,7 @@ angular.module('vsko.stock')
                   }
                 }
               }
-              return result;
+              return result ? result.toFixed(2) : 0;
             }
 
             $scope.sumTubesWeights = function(dispatch) {
@@ -307,15 +307,15 @@ angular.module('vsko.stock')
                   result += $scope.dispatch.previsions[i].weight ? +$scope.dispatch.previsions[i].weight : 0;
                 }
               }
-              return result != 0 ? result : '';
+              return result != 0 ? result.toFixed(2) : 0;
             };
 
             $scope.sumAllWeights = function(dispatch) {
               var result = $scope.sumBoxesWeight(dispatch);
               if (dispatch) {
-                result = $scope.sumPrevisionsWeight() + $scope.sumTubesWeights(dispatch) + $scope.sumBoxesWeight(dispatch);
+                result = +$scope.sumPrevisionsWeight() + +$scope.sumTubesWeights(dispatch) + +$scope.sumBoxesWeight(dispatch);
               }
-              return result;
+              return result ? result.toFixed(2) : 0;
             };
 
             // -- Automcomplete  -- //

@@ -1,0 +1,54 @@
+<div class="nopaddingright jumbotron clearfix">
+		<h1 translate>Temporaries files</h1>
+		<div class="row">
+			<div class="col-md-8 nopadding">
+					<label class="control-label col-xs-2" translate>Order by</label>
+					<div class="col-xs-3">
+						<select ng-model="filter.selectedSort" ng-options="s as s.name for s in filterOptions.sort" class="form-control small">
+							<option value="">-- choose one --</option>
+						</select>
+					</div>
+	
+					<div class="col-xs-1">
+						<span class="glyphicon glyphicon-sort icon-link" ng-click="changeOrder()"></span>
+					</div>
+
+					<div class="col-xs-2">
+						<span class="glyphicon glyphicon-search icon-with-label"></span>
+						<span><a ng-click="search()" class="btn-link">{{'Search' | translate}}</a><span>
+					</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-8 nopadding">
+					<label class="control-label col-xs-2" translate>Show</label>
+					<div class="col-xs-3">
+						<select ng-model="filter.selectedVisibility" ng-options="s as s.name for s in filterOptions.visibility" class="form-control small">
+							<option value="">-- choose one --</option>
+						</select>
+					</div>
+			</div>
+		</div>
+</div>
+
+<div id="members" class="user_cards prevision_cards temp_file_cards">
+	<ul>
+		<li class="cards">
+			<ul>
+				<li ng-repeat="f in files | orderBy:sort.id:reverse | filter:filterStateChanged | filter:searchBox" ng-click="showTemporariesFileModal(f)">
+					<h3>
+						<span style="color:black;">{{f.cloth}}</span>
+					</h3>
+					<h3><small translate>Dispatch</small> <span>{{f.shortName}}</span></h3>
+					<h3><small translate>Due date</small> <span>{{f.dueDate}}</span></h3>
+					<h3><small translate>Cloth type</small> <span>{{f.clothType}}</span></h3>
+					<!-- It's excel cell J2, available without loss as other lists -->
+					<h3><small translate>Temporaries available</small> <span>{{(+f.available).toFixed(2)}} mts</span></h3>
+					<h3><small translate>VS stock real</small> <span ng-style="::compareStocksStyle(f);">{{(+f.stockCompare).toFixed(2)}} mts</span></h3>
+				</li>
+			</ul>
+		</li>
+	</ul>
+</div>
+
+<temporaries-file callback="temporariesFileUpdated">

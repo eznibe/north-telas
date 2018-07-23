@@ -73,14 +73,18 @@
 			                    <ul class="dropdown-menu" role="menu">
                             <li><a href="#/production" translate>Production</a></li>
                             <li><a href="#/historic" translate>Historics</a></li>
-                            <li><a href="#/lists/worktickets" translate>Worktickets</a></li>
 			                    </ul>
 							</li>
-              <!-- <li access-allowed="admin">
-								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'Production bra' | translate }} <span class="caret"></span></a>
+              <li access-allowed="temporaries">
+								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'Temporaries menu' | translate }} <span class="caret"></span></a>
 			                    <ul class="dropdown-menu" role="menu">
+                            <li><a href="#/temporaries/lists/temporariesSummary" translate>Temporaries summary</a></li>
+                            <li><a href="#/temporaries/lists/temporariesStock" translate>Temporaries stock</a></li>
+                            <li><a href="#/temporaries/lists/temporariesCompare" translate>Temporaries compare</a></li>
+                            <li><a href="#/temporaries/lists/temporariesFiles" translate>Temporaries files</a></li>
+                            <li><a href="#/temporaries/lists/temporariesForDispatcher" translate>Temporaries by dispatch</a></li>
 			                    </ul>
-							</li> -->
+							</li>
               <li access-restricted="vendedor,plotter">
 								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'Design' | translate }} <span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">
@@ -245,6 +249,11 @@
         <script src="scripts/controllers/lists/DispatchsHistoricController.js"></script>
         <script src="scripts/controllers/lists/DesignHistoricsController.js"></script>
         <script src="scripts/controllers/lists/WorkticketsController.js"></script>
+        <script src="scripts/controllers/lists/temporaries/TemporariesForDispatcherController.js"></script>
+        <script src="scripts/controllers/lists/temporaries/TemporariesStockController.js"></script>
+        <script src="scripts/controllers/lists/temporaries/TemporariesCompareController.js"></script>
+        <script src="scripts/controllers/lists/temporaries/TemporariesFilesController.js"></script>
+        <script src="scripts/controllers/lists/temporaries/TemporariesSummaryController.js"></script>
         <script src="scripts/services/stock.js"></script>
         <script src="scripts/services/previsions.js"></script>
         <script src="scripts/services/plotters.js"></script>
@@ -258,6 +267,7 @@
         <script src="scripts/services/utils.js"></script>
         <script src="scripts/services/rules.js"></script>
         <script src="scripts/services/driveAPI.js"></script>
+        <script src="scripts/services/temporaries.js"></script>
         <script src="scripts/directives/utils.js"></script>
         <script src="scripts/directives/designClothsTags.js"></script>
         <script src="scripts/directives/plotterCutsTags.js"></script>
@@ -269,6 +279,7 @@
         <script src="scripts/directives/productionColumnsSelector.js"></script>
         <script src="scripts/directives/onedesignSails.js"></script>
         <script src="scripts/directives/dispatchOrders.js"></script>
+        <script src="scripts/directives/temporariesDispatchCloths.js"></script>
         <script src="scripts/directives/previsionCloths.js"></script>
         <script src="scripts/directives/editableFields.js"></script>
         <script src="scripts/directives/uploadfile.js"></script>
@@ -279,6 +290,7 @@
         <script src="scripts/directives/modal/clothInTransitModal.js"></script>
         <script src="scripts/directives/modal/clothDjaisModal.js"></script>
         <script src="scripts/directives/modal/clothRollsModal.js"></script>
+        <script src="scripts/directives/modal/clothFilesModal.js"></script>
         <script src="scripts/directives/modal/orderModal.js"></script>
         <script src="scripts/directives/modal/previsionModal.js"></script>
         <script src="scripts/directives/modal/djaiModal.js"></script>
@@ -292,6 +304,9 @@
         <script src="scripts/directives/modal/productionSummaryModal.js"></script>
         <script src="scripts/directives/modal/designSummaryModal.js"></script>
         <script src="scripts/directives/modal/filterSelectionModal.js"></script>
+        <script src="scripts/directives/modal/temporariesDispatchModal.js"></script>
+        <script src="scripts/directives/modal/temporariesFileModal.js"></script>
+        <script src="scripts/directives/modal/temporariesDownloadModal.js"></script>
         <script src="scripts/directives/modal/confirmCutModal.js"></script>
         <script src="scripts/directives/modal/confirmArchiveModal.js"></script>
         <script src="scripts/directives/modal/confirmRemovePlotterModal.js"></script>

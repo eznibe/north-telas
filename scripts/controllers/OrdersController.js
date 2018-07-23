@@ -2,7 +2,7 @@
 
 angular.module('vsko.stock')
 
-.controller('OrdersCtrl', ['$scope', 'Utils', 'Orders', 'Previsions', 'orderStatus', '$routeParams', '$modal', function ($scope, Utils, Orders, Previsions, orderStatus, $routeParams, $modal) {
+.controller('OrdersCtrl', ['$rootScope', '$scope', 'Utils', 'Orders', 'Previsions', 'Temporaries', 'orderStatus', '$routeParams', '$modal', function ($rootScope, $scope, Utils, Orders, Previsions, Temporaries, orderStatus, $routeParams, $modal) {
 
 		$scope.type = $routeParams.type;
 
@@ -10,21 +10,27 @@ angular.module('vsko.stock')
 
         // initial list of orders
         Orders.getOrders(orderStatus.to_buy).then(function(result) {
-        	$scope.orders_buy = result.data;
+			$scope.orders_buy = result.data;
+			parseTemporaryToBoolean($scope.orders_buy);
         });
 
 		Orders.getOrders(orderStatus.to_confirm).then(function(result) {
-        	$scope.orders_confirm = result.data;
+			$scope.orders_confirm = result.data;
+			parseTemporaryToBoolean($scope.orders_confirm);
         });
 
 		Orders.getOrders(orderStatus.in_transit).then(function(result) {
 			$scope.orders_transit = result.data;
-
-			$.each($scope.orders_transit, function(index){
-        		//this.arriveDate = $.format.date(new Date(), "dd-MM-yyyy");
-//				this.arriveDate = $.format.date(this.arriveDate, "dd-MM-yyyy");
-        	});
+			parseTemporaryToBoolean($scope.orders_transit);
 		});
+
+		function parseTemporaryToBoolean(orders) {
+			$.each(orders, function(index){
+				this.products.forEach(p => {
+					p.temporary = p.temporary === '1';
+				});
+        	});
+		}
 
 
         // Functions called as callback from order modal
@@ -68,22 +74,8 @@ angular.module('vsko.stock')
 
         		if($scope.modalCtrl.formOrderInfo.$valid) { // to finish the order the info section should be completed and valid
 
-//        			Orders.validate(order).then(function(result){
-//
-//        				if(result.data.valid) {
-//        					// valid order, confirm reception
-////	        				$scope.arrive(order);
-//        				}
-//        				else {
-//        					// not valid order to receive -> rolls not filled completely (validation on server side)
-//        					result = false;
-//
-//        					$scope.showWarningModal({message: 'Hay rollos no cargados o incompletos. Desea confirmar la orden igual?'}, $scope.acceptArriveWarning, order);
-//        				}
-//        			});
-
         			// hay validacion previa en ui para que todas las telas tengan rollo asignado
-        			$scope.arrive(order);
+					$scope.arrive(order);
         		}
         		else {
         			result = false;
@@ -103,20 +95,43 @@ angular.module('vsko.stock')
         $scope.arrive = function(order) {
         	console.log('Arrive order: ', order);
 
+			// TODO uncomment this
         	Orders.incrementStatus(order).then(function(result){
 
-	    			if(result.data.successful) {
-	        			$scope.orders_transit.remove(order);
+				if(result.data.successful) {
+					$scope.orders_transit.remove(order);
 
-	        			order = $.extend(true, order, result.data.order);
+					order = $.extend(true, order, result.data.order);
 
-								Utils.showMessage('notify.order_arrived');
+					Utils.showMessage('notify.order_arrived');
 
-								// NOTE: not doing this here because it bring problems when many orders are arrived in a small interval (the calcultaion doesn't finish and other start in the middle resulting in bad state assignation)
-								// for the moment use manual update after all orders arrive
-								// updatePrevisionState(order);
-	    			}
-	    		});
+					// NOTE: not doing this here because it bring problems when many orders are arrived in a small interval (the calcultaion doesn't finish and other start in the middle resulting in bad state assignation)
+					// for the moment use manual update after all orders arrive
+					// updatePrevisionState(order);
+				}
+			});
+				
+			// create files for temporary products (cloths of the order) if neccesary
+			var temporaryProducts = order.products.filter(function(p) {
+				return p.temporary;
+			});
+			if (temporaryProducts.length > 0) {				
+				var dispatch = {
+					isNew: true,
+					showFiles: true,
+					temporariesProducts: order.products.filter(p => p.temporary),
+					description: '<completar>',
+					shortName: '<completar>'
+				}
+				Temporaries.saveDispatch(dispatch).then(function(result) {
+					dispatch.isNew = false;
+					// will show the dispatch and files only if the user can access the temporaries module,
+					// otherwise will only create them in background and the will need to edit them later
+					if ($rootScope.user.roles.indexOf('temporaries') != -1) {
+						$scope.showTemporariesDispatchModal(dispatch);
+					}
+				});
+			}
         };
 
         $scope.deleteOrder = function(order) {
