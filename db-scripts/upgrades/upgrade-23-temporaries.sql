@@ -208,7 +208,7 @@ SELECT c.*, c.id as clothid, coalesce(sum(pc.mts), 0) as mtsToCut
 FROM cloths c 
 LEFT JOIN previsioncloth pc on pc.clothId=c.id
 LEFT JOIN previsions p on p.id=pc.previsionId
-WHERE (p.type = 'TEMP' OR p.priority = 2) and p.percentage < 25
+WHERE (p.type = 'TEMP' OR p.priority = 2) and p.percentage < 25 and p.deletedProductionOn is null
 group by c.id;
 
 
@@ -273,3 +273,18 @@ insert into temporariesdispatch (id, description, shortName, dueDate, realDueDat
  INSERT INTO temporariesfile (id, dispatchId, productId, mtsInitial, cif, arancelary, type, rollWidth)  SELECT uuid(), 'id-imported-5', p.productId, 55.78, 11.39, '5407.10.19.100X', 'Dacron', 36 FROM cloths c join products p on c.id=p.clothId  WHERE c.name like '%2.8%'  and country = 'ARG' limit 1;
  INSERT INTO temporariesfile (id, dispatchId, productId, mtsInitial, cif, arancelary, type, rollWidth)  SELECT uuid(), 'id-imported-2', p.productId, 52.62, 23.51, '5407.10.19.100X', 'Dacron', 54 FROM cloths c join products p on c.id=p.clothId  WHERE c.name like '%265%'  and country = 'ARG' limit 1;
  INSERT INTO temporariesfile (id, dispatchId, productId, mtsInitial, cif, arancelary, type, rollWidth)  SELECT uuid(), 'id-imported-2', p.productId, 86.87, 20.36, '5407.10.19.100X', 'Dacron', 54 FROM cloths c join products p on c.id=p.clothId  WHERE c.name like '%R%6.3%'  and country = 'ARG' limit 1;
+
+
+--
+
+
+INSERT INTO temporariesfile (id, dispatchId, productId, mtsInitial, cif, arancelary, type, rollWidth)  SELECT uuid(), 'id-imported-1', p.productId, 201, 6.28, '5407.41.00.940E', 'Nylon', 60 FROM cloths c join products p on c.id=p.clothId  WHERE c.name like '%MPEX%70%Bl%' and country = 'ARG' limit 1;
+INSERT INTO temporariesfile (id, dispatchId, productId, mtsInitial, cif, arancelary, type, rollWidth)  SELECT uuid(), 'id-imported-1', p.productId, 42.25, 4.74, '5407.41.00.940E', 'Nylon', 60 FROM cloths c join products p on c.id=p.clothId  WHERE c.name like '%Snuffe%'  and country = 'ARG' limit 1;
+INSERT INTO temporariesfile (id, dispatchId, productId, mtsInitial, cif, arancelary, type, rollWidth)  SELECT uuid(), 'id-imported-5', p.productId, 314.55, 8.09, '5407.41.00.910E', 'Nylon', 60 FROM cloths c join products p on c.id=p.clothId  WHERE c.name like '%SK%150%Bl%'  and country = 'ARG' limit 1;
+INSERT INTO temporariesfile (id, dispatchId, productId, mtsInitial, cif, arancelary, type, rollWidth)  SELECT uuid(), 'id-imported-5', p.productId, 60.35, 9.97, '5407.41.00.910E', 'Nylon', 60 FROM cloths c join products p on c.id=p.clothId  WHERE c.name like '%SK%250%Bl%'  and country = 'ARG' limit 1;
+
+update temporariesfile set productId = '12' where mtsInitial = 248.72;
+
+update temporariesfile set productId = 'f1d0b822-8c5a-455d-ce7c-c89faeae84a1', rollWidth = 59 where mtsInitial = 137.16;
+update temporariesfile set productId = '4e005ad7-f88f-40f9-8fe5-19a79b636a73', rollWidth = 59 where mtsInitial = 87.5;
+
