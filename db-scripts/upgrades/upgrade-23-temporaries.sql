@@ -217,7 +217,7 @@ SELECT c.*, coalesce(h.stockInHouse, 0) as stockInHouse, coalesce(t.in_transit, 
 coalesce(export_cutted.mtscutted, 0) as toExportCutted, coalesce(temp_to_cut.mtsToCut, 0) as temporariesToCut, 
 coalesce(coalesce(h.stockInHouse, 0) - (temp.temporaryAvailable - coalesce(export_cutted.mtscutted, 0)), 0) as stockCompare
 FROM cloths c 
-join products p on p.clothId=c.id 
+left join products p on p.clothId=c.id 
 left join v_cloths_in_house_stock h on h.clothid = c.id
 left join v_cloths_in_transit_stock t on t.clothid = c.id
 left join v_cloths_temporaries_in_transit_stock tt on tt.clothid = c.id 
