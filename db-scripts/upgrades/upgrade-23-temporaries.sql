@@ -288,3 +288,16 @@ update temporariesfile set productId = '12' where mtsInitial = 248.72;
 update temporariesfile set productId = 'f1d0b822-8c5a-455d-ce7c-c89faeae84a1', rollWidth = 59 where mtsInitial = 137.16;
 update temporariesfile set productId = '4e005ad7-f88f-40f9-8fe5-19a79b636a73', rollWidth = 59 where mtsInitial = 87.5;
 
+--
+-- insert missing initial mts forsome temp dispatchs
+
+
+INSERT INTO temporariesfile (id, dispatchId, productId, mtsInitial, type) values ('hidden-file-1', 'id-imported-1', '99-hidden', 962.79, null);
+INSERT INTO temporariesfile (id, dispatchId, productId, mtsInitial, type) values ('hidden-file-2', 'id-imported-2', '99-hidden', 437.5, null);
+INSERT INTO temporariesfile (id, dispatchId, productId, mtsInitial, type) values ('hidden-file-3', 'id-imported-3', '99-hidden', 902.63, null);
+INSERT INTO temporariesfile (id, dispatchId, productId, mtsInitial, type) values ('hidden-file-4', 'id-imported-4', '99-hidden', 1234.49, null);
+
+insert into temporariesdownload (id, fileId, mts, downloadDate, downloadedBy) values (uuid(), 'hidden-file-1', 962.79, '2018-07-01', 'script');
+insert into temporariesdownload (id, fileId, mts, downloadDate, downloadedBy) values (uuid(), 'hidden-file-2', 437.5, '2018-07-01', 'script');
+insert into temporariesdownload (id, fileId, mts, downloadDate, downloadedBy) values (uuid(), 'hidden-file-3', 902.63, '2018-07-01', 'script');
+insert into temporariesdownload (id, fileId, mts, downloadDate, downloadedBy) values (uuid(), 'hidden-file-4', 1234.49, '2018-07-01', 'script');
