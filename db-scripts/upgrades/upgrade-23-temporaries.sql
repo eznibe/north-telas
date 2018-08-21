@@ -44,7 +44,10 @@ CREATE TABLE temporariesdownload
 
 
 create or replace view v_temporaries_files_extended as
-SELECT f.*, coalesce(sum(dw.mts),0) as used, ((f.mtsInitial * 0.95) - coalesce(sum(dw.mts),0)) * 1.0526 as available, ((f.mtsInitial * 0.95) - coalesce(sum(dw.mts),0)) as availableWithLoss 
+SELECT f.*, coalesce(sum(dw.mts),0) as used
+, ((f.mtsInitial * 0.95) - coalesce(sum(dw.mts),0)) * 1.0526 as availableWithoutLoss
+, ((f.mtsInitial * 0.95) - coalesce(sum(dw.mts),0)) as availableWithLoss
+, IF(((f.mtsInitial * 0.95) - coalesce(sum(dw.mts),0)) > -0.1 and ((f.mtsInitial * 0.95) - coalesce(sum(dw.mts),0)) < 0.1 and f.using5percLoss = true, 0, ((f.mtsInitial) - coalesce(sum(dw.mts),0))) as available
 FROM temporariesfile f left join temporariesdownload dw on dw.fileId = f.id
 GROUP by f.id;
 	

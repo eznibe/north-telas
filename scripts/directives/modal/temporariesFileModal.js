@@ -18,7 +18,8 @@ angular.module('vsko.stock')
         $scope.file = temporariesFile;
 
         // calculate available
-        $scope.file.available = Utils.calculateTemporariesFileAvailable($scope.file);
+        //$scope.file.available = 
+        Utils.calculateTemporariesFileAvailable($scope.file);
 
         // show the file modal
         $scope.modalFile = $modal({template: 'views/modal/temporariesFile.html', show: false, scope: $scope, callback: callback});
