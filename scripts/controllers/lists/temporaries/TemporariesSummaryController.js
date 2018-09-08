@@ -96,8 +96,8 @@ angular.module('vsko.stock').controller('TemporariesSummaryCtrl', ['$scope', 'Ut
     dispatch.files.forEach(function(f) {
       available += (+f.available);
     });
-    return (+available * 100 / (+dispatch.init * 0.95)).toFixed(0);
-    //return (+dispatch.available * 100 / (+dispatch.init)).toFixed(0);
+    //return (+available * 100 / (+dispatch.init * 0.95)).toFixed(0);
+    return (+dispatch.available * 100 / (+dispatch.init)).toFixed(0);
   }
 
   // deprecated

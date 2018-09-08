@@ -17,7 +17,7 @@ angular.module('vsko.stock')
 
         $scope.file = temporariesFile;
 
-        // calculate available
+        // calculate available -> NOT,just update the downloads available
         //$scope.file.available = 
         Utils.calculateTemporariesFileAvailable($scope.file);
 
