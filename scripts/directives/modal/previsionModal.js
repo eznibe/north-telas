@@ -344,6 +344,10 @@ angular.module('vsko.stock')
               $scope.prevision.sailOneDesign = $scope.prevision.selectedOneDesignSail.sail;
             }
 
+            if (!$scope.prevision.oneDesign) {
+              delete $scope.prevision.sailOneDesign;
+            }
+
             if($scope.prevision.selectedSeller && $scope.prevision.selectedSeller.name) {
               $scope.prevision.seller = $scope.prevision.selectedSeller.name;
             } else {
@@ -839,7 +843,7 @@ angular.module('vsko.stock')
         		  	}
         		  });
 
-        	  }
+            }
           };
 
           $scope.designOnlyOrder = function() {
