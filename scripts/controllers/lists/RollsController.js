@@ -6,7 +6,7 @@ angular.module('vsko.stock').controller('RollsCtrl', ['$scope', 'Stock', 'Lists'
     		$scope.rolls = result.data;
     	});
 
-    	Stock.getAllCloths().then(function(result) {
+    	Stock.getAllCloths(true).then(function(result) {
     		$scope.cloths = result.data;
     	});
 
