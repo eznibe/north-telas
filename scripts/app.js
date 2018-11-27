@@ -404,5 +404,5 @@ angular.module("vsko.stock", [
 // //            return 'english';
 //             return 'spanish';
 //           })
-          .fallbackLanguage('english');
+          .fallbackLanguage('spanish');
     }])

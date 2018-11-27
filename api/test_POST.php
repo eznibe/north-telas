@@ -6,6 +6,7 @@ include_once '../include/headers.php';
 include_once '../include/dbutils.php';
 include_once '../include/main.php';
 
+db_connect();
 
 if($_SERVER['REQUEST_METHOD'] == 'POST' || $_SERVER['REQUEST_METHOD'] == 'PUT') {
 

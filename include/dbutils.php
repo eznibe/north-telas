@@ -2,7 +2,7 @@
 
 function db_connect()
 {
- $db = mysql_pconnect("localhost", "root", "");
+ $db = mysql_pconnect("localhost", "suda", "suda");
  if (!$db)
  {
   echo "Error: No es posible conectar al motor de base de datos." . mysql_error();
