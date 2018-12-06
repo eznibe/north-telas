@@ -58,9 +58,9 @@
 			                        <li><a href="#/groups" translate>Cloths</a></li>
                               <li><a href="#/orders"  access-restricted="plotter" translate>Buys</a></li>
                               <li><a href="#/previsions" access-restricted="plotter" translate>Orders</a></li>
-                              <li><a href="#/plotter" translate>Plotter</a></li>
-                              <li><a href="#/onedesign" access-restricted="plotter" translate>One design cloths</a></li>
-                              <li><a href="#/providers" access-level="admin" translate>Providers</a></li>
+                              <li><a href="#/plotter" access-restricted="compras" translate>Plotter</a></li>
+                              <li><a href="#/onedesign" access-restricted="plotter,compras" translate>One design cloths</a></li>
+                              <li><a href="#/providers" access-allowed="admin,compras" translate>Providers</a></li>
 			                    </ul>
 							</li>
               <!-- <li access-allowed="admin">
@@ -73,6 +73,7 @@
 			                    <ul class="dropdown-menu" role="menu">
                             <li><a href="#/production" translate>Production</a></li>
                             <li><a href="#/historic" translate>Historics</a></li>
+                            <li><a href="#/lists/worktickets" translate>Worktickets</a></li>
 			                    </ul>
 							</li>
               <li access-allowed="temporaries">
