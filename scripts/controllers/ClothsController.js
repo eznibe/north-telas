@@ -61,7 +61,7 @@ angular.module('vsko.stock').controller('ClothsCtrl', ['$scope', '$routeParams',
         };
 
         $scope.deltaTotal = function(c) {
-          return ($scope.sumStock(c.providers) - $scope.sumPrevision(c) - $scope.sumPending(c) + c.sumInTransit).toFixed(0);
+          return ($scope.sumStock(c.providers) - $scope.sumPrevision(c) - $scope.sumPending(c) + +c.stockInTransit).toFixed(0);
         };
 
         $scope.negativeDeltaTotalStyle = function(c) {

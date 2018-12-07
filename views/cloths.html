@@ -40,12 +40,12 @@
 				<a href="javascript:void(0)" ng-click="showClothPendingsModal(c)" ng-show="sumPending(c) > 0">{{sumPending(c)}}</a>
 			</td>
 			<td>
-				<span ng-show="c.sumInTransit == 0">0</span>
-				<a href="javascript:void(0)" ng-click="showClothInTransitModal(c)" ng-show="c.sumInTransit > 0" class="positiveLink" access-restricted="plotter">{{c.sumInTransit}}</a>
-				<span ng-show="c.sumInTransit > 0" access-allowed="plotter">{{c.sumInTransit}}</span>
+				<span ng-show="+c.stockInTransit == 0">0</span>
+				<a href="javascript:void(0)" ng-click="showClothInTransitModal(c)" ng-show="+c.stockInTransit > 0" class="positiveLink" access-restricted="plotter">{{+c.stockInTransit}}</a>
+				<span ng-show="+c.stockInTransit > 0" access-allowed="plotter">{{+c.stockInTransit}}</span>
 			</td>
 			<td ng-style="::negativeDeltaTotalStyle(c);" ng-bind="::deltaTotal(c)">
-				<!-- {{(sumStock(c.providers) - sumPrevision(c) - sumPending(c) + c.sumInTransit).toFixed(0)}} -->
+				<!-- {{(sumStock(c.providers) - sumPrevision(c) - sumPending(c) + +c.stockInTransit).toFixed(0)}} -->
 			</td>
 			<td>
 				{{c.stockMin}}
