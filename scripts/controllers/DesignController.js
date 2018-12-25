@@ -77,7 +77,7 @@ function ($scope, $rootScope, $translate, $timeout, $cookieStore, countries, Uti
   $scope.filter = {};
 	$scope.filterOptions = {};
  	$scope.filterOptions.columns = [
-    {name: 'Designer', key:'designer', type:'str', options: []}, {name: 'Week', key:'designWeek', type:'nr', options: []}, {name: 'Hours', key:'designHours', type:'nr', options: []}, {name: 'Week', key:'week', type:'nr', options: []},
+    {name: 'Designer', key:'designer', type:'str', options: []}, {name: 'Week', key:'designWeek', type:'nr', options: []}, {name: 'Hours', key:'designHours', type:'nr', options: []}, {name: 'Week', key:'week', type:'nr', options: []}, {name: 'Seller', key:'seller', type:'str', options: []},
 		{name: 'Order', key:'p.orderNumber', column: 'orderNumber', type:'str', options: []}, {name: 'Client', key:'p.client', column: 'client', type:'str', options: []},
     {name: 'Boat', key:'boat', type:'str', options: []}, {name: 'Sail', key:'sailName', column: 'sailName', type:'str', options: []}, {name: 'Line', key:'line', type:'str', options: []}, {name: '%', key:'percentage', type:'nr', options: []},
 		{name: 'Cloths', key:'cloths', type:'arr', options: []}, {name: 'State', key:'state', type:'str', hideFromSeller: true, options: []},

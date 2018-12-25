@@ -37,7 +37,7 @@ angular.module('vsko.stock').controller('DesignHistoricsCtrl', ['$scope', 'Stock
 			total += +prevision.designHours;
 		});
 
-		return total;
+		return total.toFixed(1);
 	}
 
 }]);
