@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('vsko.stock').controller('WorkticketsCtrl', ['$scope', '$rootScope', 'Utils', 'DriveAPI', 'Lists', 'uuid4', 'lkGoogleSettings', function ($scope, $rootScope, Utils, DriveAPI, Lists, uuid4, lkGoogleSettings) {
+angular.module('vsko.stock').controller('WorkticketsCtrl', ['$scope', '$rootScope', '$modal', 'Utils', 'DriveAPI', 'Lists', 'lkGoogleSettings', function ($scope, $rootScope, $modal, Utils, DriveAPI, Lists, lkGoogleSettings) {
 
 	var apiLoaded = false;
 
@@ -25,7 +25,7 @@ angular.module('vsko.stock').controller('WorkticketsCtrl', ['$scope', '$rootScop
 
 		DriveAPI.listFiles(workticketsFolder, config).then(function(files) {
 
-			var log = {q: $scope.searchText, time: (Date.now() - startTime)};
+			var log = {q: $scope.searchText, time: (Date.now() - startTime), results: files.length};
 			Lists.log({type: 'info.search.googleDrive', log: JSON.stringify(log)});
 
 			$scope.files = files.map(function(file) {
@@ -39,26 +39,33 @@ angular.module('vsko.stock').controller('WorkticketsCtrl', ['$scope', '$rootScop
 		$scope.loading = true;
 	}
 
-  $scope.search = function() {
+  	$scope.search = function() {
 
-		if (!apiLoaded) {
-			DriveAPI.initNoAuth().then(function(authResult) {
+		// if (!apiLoaded) {
+		if (!DriveAPI.isAuthorized()) {
+			// DriveAPI.initNoAuth().then(function(authResult) {
+			DriveAPI.init2().then(function(authResult) {
 				Lists.log({type: 'info.auth.googleDrive', log: JSON.stringify(authResult)});
 				listFiles();
 				apiLoaded = true;
+				DriveAPI.setAuthorized(true);
 			},
 			function(authResult) {
 				console.log('Loaded rejected!');
-				if (authResult.status.google_logged_in === false) {
+				if (authResult.error || authResult.status.google_logged_in === false) {
 					Utils.showMessage('notify.auth_google_drive_failed', 'error');
 				}
 				Lists.log({type: 'error.auth.googleDrive', log: JSON.stringify(authResult)});
+
+				DriveAPI.setAuthorized(false);
+
+				// $scope.modalGoogle = $modal({template: 'views/modal/googleLogin.html', show: false, scope: $scope, backdrop:'static', animation:'am-fade-and-slide-top'});
+				// $scope.modalGoogle.$promise.then($scope.modalGoogle.show);
 			});
 		} else {
 			listFiles();
 		}
-
-  };
+  	};
 
 	$scope.keypress = function($event) {
 		var keyCode = $event.which || $event.keyCode;
