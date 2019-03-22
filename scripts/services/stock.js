@@ -154,10 +154,24 @@ angular.module('vsko.stock')
         	return $http.get(url + 'cloths_GET.php?dolar=true');
         };
 
-        this.saveDolar = function(value)
+        this.getHistoricDolar = function()
         {
-        	var dolar = {value: value};
+        	return $http.get(url + 'cloths_GET.php?historicdolar=true');
+        };
+
+        this.saveDolar = function(dolar)
+        {
+          if (!dolar.fromDate) {
+            var d = new Date();
+			      dolar.fromDate = d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
+          }
+        	var dolar = {value: dolar.value, fromDate: dolar.fromDate};
         	return $http.post(url + 'cloths_POST.php?dolar=true', dolar);
+        };
+
+        this.saveHistoricDolar = function(dolar)
+        {
+        	return $http.post(url + 'cloths_POST.php?dolarhistoric=true', dolar);
         };
 
 				this.getPctNac = function()
@@ -169,6 +183,17 @@ angular.module('vsko.stock')
         {
         	var pctNac = {value: value};
         	return $http.post(url + 'cloths_POST.php?pctNac=true', pctNac);
+        };
+
+        this.getInflation = function()
+        {
+        	return $http.get(url + 'cloths_GET.php?inflation=true');
+        };
+
+				this.saveInflation = function(value)
+        {
+        	var inflation = {value: value};
+        	return $http.post(url + 'cloths_POST.php?inflation=true', inflation);
         };
 
         this.getAllProviders = function()

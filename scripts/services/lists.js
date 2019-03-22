@@ -63,18 +63,23 @@ angular.module('vsko.stock')
         	return $http.get(url + 'rolls_GET.php?cuts=true'+rollParam+clothParam);
         };
 
-				this.stockUpToDate = function(groupId, date, includeStock0)
+		this.stockUpToDate = function(groupId, date, includeStock0, byOrder)
         {
-					var condIncludeStock0 = '';
-					if (includeStock0) {
-						condIncludeStock0 = '&includeStock0='+includeStock0;
-					}
-        	return $http.get(url + 'lists_GET.php?upToDate=true&groupId='+groupId+'&date='+date+condIncludeStock0);
+			var condIncludeStock0 = '';
+			if (includeStock0) {
+				condIncludeStock0 = '&includeStock0='+includeStock0;
+			}
+			let byOrderCondition = '';
+			if (byOrder) {
+				byOrderCondition = '&byOrder=true'
+			}
+
+        	return $http.get(url + 'lists_GET.php?upToDate=true&groupId='+groupId+'&date='+date+condIncludeStock0+byOrderCondition);
         };
 
-				this.getPrices = function(group)
+		this.getPrices = function(group)
         {
-					var groupCondition = group ? '&groupId='+group.id : '';
+			var groupCondition = group ? '&groupId='+group.id : '';
 
         	return $http.get(url + 'lists_GET.php?getPrices=true'+groupCondition);
         };

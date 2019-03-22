@@ -275,6 +275,11 @@ angular.module("vsko.stock", [
                 controller: 'OnedesignCtrl',
                 access: 'velas-od'
             })
+            .when('/percentages', {
+                templateUrl: 'views/percentages.html',
+                controller: 'ConfigPercentagesCtrl',
+                access: 'admin'
+            })
             .when('/dolar', {
                 templateUrl: 'views/dolar.html',
                 controller: 'DolarCtrl',
@@ -327,6 +332,11 @@ angular.module("vsko.stock", [
 			.when('/lists/clothsValuedStock', {
                 templateUrl: 'views/lists/clothsValuedStock.html',
                 controller: 'ClothsValuedStockCtrl',
+                access: 'public'
+            })
+            .when('/lists/clothsValuedStockNew', {
+                templateUrl: 'views/lists/clothsValuedStockNew.html',
+                controller: 'ClothsValuedStockNewCtrl',
                 access: 'public'
             })
 			.when('/lists/dispatchsHistoric', {

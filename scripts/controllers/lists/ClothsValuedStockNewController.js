@@ -1,10 +1,14 @@
 'use strict';
 
-angular.module('vsko.stock').controller('ClothsValuedStockCtrl', ['$scope', 'Stock', 'Lists', '$modal', function ($scope, Stock, Lists, $modal) {
+angular.module('vsko.stock').controller('ClothsValuedStockNewCtrl', ['$scope', 'Stock', 'Lists', '$modal', function ($scope, Stock, Lists, $modal) {
 
 		Stock.getAllGroups(true).then(function(result) {
 
 			$scope.groups = result.data;
+		});
+
+		Stock.getInflation().then(function(result) {
+			$scope.inflationPctYear = result.data[0].value;
 		});
 
 		var d = new Date();
@@ -14,7 +18,7 @@ angular.module('vsko.stock').controller('ClothsValuedStockCtrl', ['$scope', 'Sto
 
 			if($scope.filter.selectedGroup && $scope.filter.upToDate) {
 
-				Lists.stockUpToDate($scope.filter.selectedGroup.id, $scope.filter.upToDate, true, false).then(function(result) {
+				Lists.stockUpToDate($scope.filter.selectedGroup.id, $scope.filter.upToDate, true, true).then(function(result) {
 					$scope.cloths = result.data;
 					$scope.filter.searched = true;
 				});
@@ -114,7 +118,37 @@ angular.module('vsko.stock').controller('ClothsValuedStockCtrl', ['$scope', 'Sto
 				if($scope.filter.searched) {
 					$.each($scope.cloths, function(idx, c){
 
-						var total = ($scope.price(c)).toFixed(2);
+						let total = ($scope.price(c)).toFixed(2);
+						sum += new Number(total);
+					});
+				}
+
+				return sum.toFixed(2);
+			};
+
+			$scope.sumTotalValuedLocal = function() {
+
+				var sum = 0;
+
+				if($scope.filter.searched) {
+					$.each($scope.cloths, function(idx, c){
+
+						let total = ($scope.price(c) * +c.dolarValue).toFixed(2);
+						sum += new Number(total);
+					});
+				}
+
+				return sum.toFixed(2);
+			};
+
+			$scope.sumTotalValuedWithInflation = function() {
+
+				var sum = 0;
+
+				if($scope.filter.searched) {
+					$.each($scope.cloths, function(idx, c){
+
+						let total = ($scope.inflation(c)).toFixed(2);
 						sum += new Number(total);
 					});
 				}
@@ -159,22 +193,37 @@ angular.module('vsko.stock').controller('ClothsValuedStockCtrl', ['$scope', 'Sto
 			};
 
 			$scope.stock0 = function(c) {
-				// exclude thos with stock available 0 but also the pending/transit/plotter should be 0
-				return c.sumAvailable > 0 || $scope.delta(c) !== 0 || $scope.deltaWithTransit(c) !== 0 || $scope.sumTemporary(c) !== 0;
+				// exclude those with stock available 0 but also the pending/transit/plotter should be 0
+				return +c.available > 0 //|| $scope.delta(c) !== 0 || $scope.deltaWithTransit(c) !== 0 || $scope.sumTemporary(c) !== 0;
 			}
 
 			$scope.price = function(c) {
-				var totalPrice = c.rollsAvailable.reduce(function(acc, roll) {
-					return acc + (+roll.mts * (roll.price != '?' ? +roll.price : 0));
-				}, 0);
-				return totalPrice;
+				// var totalPrice = c.rollsAvailable.reduce(function(acc, roll) {
+				// 	return acc + (+roll.mts * (roll.price != '?' ? +roll.price : 0));
+				// }, 0);
+				// return totalPrice;
+				return +c.available * +c.price;
 			}
+			
 
 			$scope.priceDelta = function(c) {
 				var totalPrice = c.rollsAvailable.reduce(function(acc, roll) {
 					return acc + (+roll.mts * +roll.price);
 				}, 0);
 				return totalPrice;
+			}
+
+			$scope.valuedLocal = function(c) {
+				return $scope.price(c) * +c.dolarValue;
+			}
+
+			$scope.inflation = function(c) {
+
+				// let inflationPctYear = 35;
+
+				let monthsDiff = moment($scope.filter.upToDate, "DD-MM-YYYY").diff(moment(c.formattedArriveDate, "DD-MM-YYYY"), 'months', true).toFixed();
+
+				return $scope.price(c) * +c.dolarValue * (1 + ($scope.inflationPctYear / 12 * monthsDiff / 100));
 			}
 
       function divideRollsByState(cloths) {

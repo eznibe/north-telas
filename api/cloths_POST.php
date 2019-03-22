@@ -72,8 +72,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 	if(isset($_GET['dolar'])) {
 		$value = saveDolar($json);
 	}
+	else if(isset($_GET['dolarhistoric'])) {
+		$value = saveHistoricDolar($json);
+	}
 	else if(isset($_GET['pctNac'])) {
 		$value = savePctNac($json);
+	}
+	else if(isset($_GET['inflation'])) {
+		$value = saveInflation($json);
 	}
 	else if(isset($_GET['copy'])) {
 		$value = copyCloth($json, $_GET['clothCountry']);

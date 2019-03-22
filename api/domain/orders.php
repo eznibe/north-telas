@@ -290,9 +290,10 @@ function updateInfo($order) {
 	if(isset($order->deliveryType)) $deliveryType = "'".$order->deliveryType."'"; else $deliveryType = "null";
 	if(isset($order->arriveDate) && $order->arriveDate!='') $arriveDate = "STR_TO_DATE('".$order->arriveDate."', '%d-%m-%Y')"; else $arriveDate = "null";
 	if(isset($order->estimatedArriveDate) && $order->estimatedArriveDate!='') $estimatedArriveDate = "STR_TO_DATE('".$order->estimatedArriveDate."', '%d-%m-%Y')"; else $estimatedArriveDate = "null";
+	if(isset($order->dispatch)) $dispatch = "'".$order->dispatch."'"; else $dispatch = "null";
 
 
-	$update = "UPDATE orders SET invoiceNumber = $invoice, type = $type, description = $description, deliveryType = $deliveryType, arriveDate = $arriveDate, estimatedArriveDate = $estimatedArriveDate WHERE orderId = '".$order->orderId."'" ;
+	$update = "UPDATE orders SET invoiceNumber = $invoice, type = $type, description = $description, deliveryType = $deliveryType, arriveDate = $arriveDate, estimatedArriveDate = $estimatedArriveDate, dispatch = $dispatch WHERE orderId = '".$order->orderId."'" ;
 
 	if(mysql_query($update)) {
 		$obj->successful = true;
