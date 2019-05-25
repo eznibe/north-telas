@@ -148,8 +148,8 @@ function buy($provider)
 	else {
 		$orderId = uniqid();
 		// no order for the provider
-		$insert = "INSERT INTO orders (orderId, orderDate, estimatedArriveDate, arriveDate, invoiceNumber, status, type, providerId, description, deliveryType, country)
-							 VALUES ('$orderId', null, null, null, null, 'TO_BUY', null, '".$provider->providerId."', null, 'Desconocido', '$country')" ;
+		$insert = "INSERT INTO orders (orderId, orderDate, estimatedArriveDate, arriveDate, invoiceNumber, status, type, providerId, description, deliveryType, dolar, country)
+							 VALUES ('$orderId', null, null, null, null, 'TO_BUY', null, '".$provider->providerId."', null, 'Desconocido', ".$provider->dolar.", '$country')" ;
 
 		if(mysql_query($insert)) {
 			$obj->successful = true;
@@ -291,12 +291,15 @@ function updateInfo($order) {
 	if(isset($order->arriveDate) && $order->arriveDate!='') $arriveDate = "STR_TO_DATE('".$order->arriveDate."', '%d-%m-%Y')"; else $arriveDate = "null";
 	if(isset($order->estimatedArriveDate) && $order->estimatedArriveDate!='') $estimatedArriveDate = "STR_TO_DATE('".$order->estimatedArriveDate."', '%d-%m-%Y')"; else $estimatedArriveDate = "null";
 	if(isset($order->dispatch)) $dispatch = "'".$order->dispatch."'"; else $dispatch = "null";
+	if(isset($order->dolar) && $order->dolar!='') $dolar = $order->dolar; else $dolar = "null";
 
 
-	$update = "UPDATE orders SET invoiceNumber = $invoice, type = $type, description = $description, deliveryType = $deliveryType, arriveDate = $arriveDate, estimatedArriveDate = $estimatedArriveDate, dispatch = $dispatch WHERE orderId = '".$order->orderId."'" ;
+	$update = "UPDATE orders SET invoiceNumber = $invoice, type = $type, description = $description, deliveryType = $deliveryType, arriveDate = $arriveDate, estimatedArriveDate = $estimatedArriveDate, dispatch = $dispatch, dolar = $dolar WHERE orderId = '".$order->orderId."'" ;
 
 	if(mysql_query($update)) {
 		$obj->successful = true;
+	} else {
+		$obj->update = $update;
 	}
 
 	return $obj;

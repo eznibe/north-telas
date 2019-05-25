@@ -125,14 +125,19 @@ angular.module('vsko.stock')
                 $scope.modalBuy.$promise.then($scope.modalBuy.show);
             };
 
-            $scope.buy = function(amount) {
+            $scope.buy = async function(amount) {
 
             	  $scope.modalBuy.hide();
 
-            	  $scope.provider.amount = amount;
+                $scope.provider.amount = amount;
+                
+                let result = await Stock.getDolar();
+                let dolar = result.data[0].value;
 
                 // we need to identify if it should create a new order or assign the new buy to a existent order
                 if(!($scope.filter.selectedOrder && $scope.filter.selectedOrder.orderId)) {
+
+                  $scope.provider.dolar = dolar;
 
               	  Orders.buy($scope.provider).then(function(result){
 

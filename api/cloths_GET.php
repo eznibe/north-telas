@@ -29,7 +29,7 @@ else if(isset($_GET['pctNac'])) {
 	$value = getPctNac();
 }
 else if(isset($_GET['inflation'])) {
-	$value = getInflation();
+	$value = getInflation($_GET['year'], $_GET['month']);
 }
 else if(isset($_GET['matchIds'])) {
 	$value = getClothsWithMatchIdsInCountry($_GET['matchIds'], $previsionCountry);

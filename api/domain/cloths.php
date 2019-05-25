@@ -95,10 +95,10 @@ function getClothsUpToDate($groupId, $date, $includeStock0, $joinProviders) {
 	$joinProviders = isset($joinProviders);
 
 	$query = "
-						SELECT o.arriveDate, o.value as dolarValue, p.clothId, r.mtsOriginal, coalesce(cuts.mtsCutted, 0) as mtsCutted,
+						SELECT o.arriveDate, p.clothId, r.mtsOriginal, coalesce(cuts.mtsCutted, 0) as mtsCutted,
 						(r.mtsOriginal - coalesce(cuts.mtsCutted, 0)) as available, c.name, coalesce(pro.name, '?') as provider, coalesce(p.price, '?') as price, p.productId, p.code,
-						r.number, r.lote, r.mtsOriginal, r.type, r.price as rollPrice
-						FROM v_rolls r JOIN products p on p.productId=r.productId JOIN v_orders o on o.orderId=r.orderId JOIN cloths c on c.id=p.clothId left JOIN providers pro on pro.id=p.providerId
+						r.number, r.lote, r.mtsOriginal, r.type
+						FROM rolls r JOIN products p on p.productId=r.productId JOIN orders o on o.orderId=r.orderId JOIN cloths c on c.id=p.clothId left JOIN providers pro on pro.id=p.providerId
 						LEFT JOIN
 						(
 							SELECT r2.id, sum(pc.mtsCutted) as mtsCutted
@@ -112,10 +112,10 @@ function getClothsUpToDate($groupId, $date, $includeStock0, $joinProviders) {
   if($includeStock0) {
 		// union with those cloths that have 0 available up to given date
 	  $query = $query . " UNION all
-							SELECT o.arriveDate, o.value as dolarValue, p.clothId, r.mtsOriginal, coalesce(cuts.mtsCutted, 0) as mtsCutted,
+							SELECT o.arriveDate, p.clothId, r.mtsOriginal, coalesce(cuts.mtsCutted, 0) as mtsCutted,
 							(r.mtsOriginal - coalesce(cuts.mtsCutted, 0)) as available, c.name, coalesce(pro.name, '?') as provider, coalesce(p.price, '?') as price, p.productId, p.code,
-							r.number, r.lote, r.mtsOriginal, r.type, r.price as rollPrice
-							FROM v_rolls r JOIN products p on p.productId=r.productId JOIN v_orders o on o.orderId=r.orderId JOIN cloths c on c.id=p.clothId left JOIN providers pro on pro.id=p.providerId
+							r.number, r.lote, r.mtsOriginal, r.type
+							FROM rolls r JOIN products p on p.productId=r.productId JOIN orders o on o.orderId=r.orderId JOIN cloths c on c.id=p.clothId left JOIN providers pro on pro.id=p.providerId
 							LEFT JOIN
 							(
 								SELECT r2.id, sum(pc.mtsCutted) as mtsCutted
@@ -129,10 +129,10 @@ function getClothsUpToDate($groupId, $date, $includeStock0, $joinProviders) {
 
 		// union special cases of new cloths with order in transit but no cuts made yet
 		$query = $query . " UNION all
-							SELECT o.arriveDate, o.value as dolarValue, p.clothId, r.mtsOriginal, coalesce(cuts.mtsCutted, 0) as mtsCutted,
+							SELECT o.arriveDate, p.clothId, r.mtsOriginal, coalesce(cuts.mtsCutted, 0) as mtsCutted,
 							0 as available, c.name, coalesce(pro.name, '?') as provider, coalesce(p.price, '?') as price, p.productId, p.code,
-							r.number, r.lote, r.mtsOriginal, r.type, r.price as rollPrice
-							FROM v_rolls r JOIN products p on p.productId=r.productId JOIN v_orders o on o.orderId=r.orderId JOIN cloths c on c.id=p.clothId left JOIN providers pro on pro.id=p.providerId
+							r.number, r.lote, r.mtsOriginal, r.type
+							FROM rolls r JOIN products p on p.productId=r.productId JOIN orders o on o.orderId=r.orderId JOIN cloths c on c.id=p.clothId left JOIN providers pro on pro.id=p.providerId
 							LEFT JOIN
 							(
 								SELECT r2.id, sum(pc.mtsCutted) as mtsCutted
@@ -546,16 +546,16 @@ function saveInflation($inflation) {
 	global $country;
 	$obj->successful = true;
 
-	$query = "INSERT INTO inflation (value, country) VALUES (".$inflation->value.", '$country')";
+	$query = "INSERT INTO inflation (value, year, month, country) VALUES (".$inflation->value.", ".$inflation->year.", ".$inflation->month.", '$country')";
 	$result = mysql_query($query);
 
 	return $obj;
 }
 
-function getInflation()
+function getInflation($year, $month)
 {
 	global $country;
-	$query = "SELECT * FROM inflation d WHERE country = '$country' ORDER BY createdOn desc LIMIT 1";
+	$query = "SELECT * FROM inflation d WHERE country = '$country' and year = $year and month = $month ORDER BY createdOn desc LIMIT 1";
 	$result = mysql_query($query);
 
 	return fetch_array($result);

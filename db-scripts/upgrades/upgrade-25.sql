@@ -32,7 +32,7 @@ create table inflation
 create or replace view v_orders as
 SELECT o.*, d.value
 FROM orders o, dolar d
-WHERE o.arriveDate >= d.createdOn and o.arriveDate <= d.untilDate;
+WHERE o.arriveDate >= d.createdOn and (o.arriveDate <= d.untilDate or d.untilDate is null) and o.country = d.country;
 
 create or replace view v_rolls as
 SELECT r.*, op.price

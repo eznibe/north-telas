@@ -7,9 +7,9 @@ angular.module('vsko.stock').controller('ClothsValuedStockNewCtrl', ['$scope', '
 			$scope.groups = result.data;
 		});
 
-		Stock.getInflation().then(function(result) {
-			$scope.inflationPctYear = result.data[0].value;
-		});
+		// Stock.getInflation().then(function(result) {
+		// 	$scope.inflationPctYear = result.data[0].value;
+		// });
 
 		var d = new Date();
 		$scope.filter = { upToDate: (d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear()) };
@@ -219,7 +219,7 @@ angular.module('vsko.stock').controller('ClothsValuedStockNewCtrl', ['$scope', '
 
 			$scope.inflation = function(c) {
 
-				// let inflationPctYear = 35;
+				$scope.inflationPctYear = 35;
 
 				let monthsDiff = moment($scope.filter.upToDate, "DD-MM-YYYY").diff(moment(c.formattedArriveDate, "DD-MM-YYYY"), 'months', true).toFixed();
 

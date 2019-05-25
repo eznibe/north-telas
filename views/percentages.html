@@ -16,17 +16,35 @@
 
 				<label class="control-label col-xs-4" translate>Inflación</label>
 				<div class="col-xs-3">
+					<select ng-model="filter.year" ng-options="y as y.nr for y in years" class="form-control small" ng-change="updateInflationValue()">
+			        </select>
+				</div>
+
+				<div class="col-xs-3">
+					<select ng-model="filter.month" ng-options="m as m.name for m in months" class="form-control small" ng-change="updateInflationValue()">
+			        </select>
+				</div>
+
+				<div class="col-xs-2">
 					<input ng-model="inflation" class="form-control small" required/>
 				</div>
 
-				<label class="control-label col-xs-1" >&nbsp;</label>
+				<!-- <label class="control-label col-xs-1" >&nbsp;</label>
 				<div class="col-xs-4">
-					<!-- <a ng-click="save()" class="btn btn-default floatright" ng-disabled="formDolar.$invalid"> -->
 						<span class="glyphicon glyphicon-save icon-with-label"></span>
 						<span><a ng-click="save()" class="btn-link">{{'Save' | translate}}</a><span>
-					<!-- </a> -->
-				</div>
+				</div> -->
 		</div>
+		<div class="col-md-6 nopadding">
+
+			<label class="control-label col-xs-1" >&nbsp;</label>
+			<div class="col-xs-4">
+				<!-- <a ng-click="save()" class="btn btn-default floatright" ng-disabled="formDolar.$invalid"> -->
+					<span class="glyphicon glyphicon-save icon-with-label"></span>
+					<span><a ng-click="save()" class="btn-link">{{'Save' | translate}}</a><span>
+				<!-- </a> -->
+			</div>
+	</div>
 	</div>
 	</form>
 </div>

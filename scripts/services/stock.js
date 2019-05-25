@@ -185,14 +185,14 @@ angular.module('vsko.stock')
         	return $http.post(url + 'cloths_POST.php?pctNac=true', pctNac);
         };
 
-        this.getInflation = function()
+        this.getInflation = function(year, month)
         {
-        	return $http.get(url + 'cloths_GET.php?inflation=true');
+        	return $http.get(url + 'cloths_GET.php?inflation=true&year='+year+'&month='+month);
         };
 
-				this.saveInflation = function(value)
+				this.saveInflation = function(year, month, value)
         {
-        	var inflation = {value: value};
+        	var inflation = {value: value, year: year, month: month};
         	return $http.post(url + 'cloths_POST.php?inflation=true', inflation);
         };
 

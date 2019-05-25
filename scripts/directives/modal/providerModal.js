@@ -52,7 +52,7 @@ angular.module('vsko.stock')
                   $scope.modalBuy.$promise.then($scope.modalBuy.show);
               };
 
-              $scope.buy = function(amount) {
+              $scope.buy = async function(amount) {
 
             	  $scope.modalBuy.hide();
 
@@ -62,6 +62,9 @@ angular.module('vsko.stock')
             	  $scope.provider.clothId = $scope.product.clothId;
             	  $scope.provider.price = $scope.product.price;
 
+				  let result = await Stock.getDolar();
+				  $scope.provider.dolar = result.data[0].value;
+				
             	  Orders.buy($scope.provider).then(function(result){
 
             		  // show feedback message
