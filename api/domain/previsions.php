@@ -417,6 +417,8 @@ function setDesigned($prevision) {
 
 	if ($isDesigned == "0") {
 
+		$obj->successfulInsert = true;						
+
 		// insert all the cloths in the prevision in the plotters table
 		foreach ($prevision->cloths as $cloth) {
 
@@ -427,15 +429,16 @@ function setDesigned($prevision) {
 				$obj->successfulInsert = false;
 				$obj->insert = $insert;
 			}
-			else {
-				$obj->successfulInsert = true;
+		}
 
-				logPrevisionUpdateFull($prevision->id, 'setDesigned');
+		if ($obj->successfulInsert) {
 
-				$update = "UPDATE previsions SET designed = true, designedOn = CURRENT_DATE WHERE id = '".$prevision->id."'";
+			logPrevisionUpdateFull($prevision->id, 'setDesigned');
+	
+			$update = "UPDATE previsions SET designed = true, designedOn = CURRENT_DATE WHERE id = '".$prevision->id."'";
 
-				if(!mysql_query($update))
-					$obj->successful = false;
+			if(!mysql_query($update)) {
+				$obj->successful = false;
 			}
 		}
 

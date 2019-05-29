@@ -16,18 +16,25 @@ angular.module('vsko.stock')
         		  $scope.cloth = cloth;
               	
               	  Orders.getOrders(orderStatus.in_transit).then(function(result) {
-              		  var orders = result.data;
-              		  $scope.clothInTransitOrders = new Array();
+              		var orders = result.data;
+					$scope.clothInTransitOrders = new Array();
+						
+					var ordersAdded = [];
               		  
               		  $.each(orders, function(index){
               			  
               			  var order = this;
               			  $.each(order.products, function(idx){
               				  
-              				  if(this.clothId == cloth.id) {
-              					  $scope.clothInTransitOrders.push(order);
-              					  order.amount = this.amount;
-              				  }
+							if(this.clothId == cloth.id && ordersAdded.indexOf(order.number) == -1) {
+              					$scope.clothInTransitOrders.push(order);
+								order.amount = +this.amount;
+									
+								ordersAdded.push(order.number)
+							} else if(this.clothId == cloth.id && ordersAdded.indexOf(order.number) != -1) {
+								order.amount += +this.amount;
+							}
+								
               				  
               				  order.unformattedArriveDate = new Date(order.unformattedArriveDate);
               			  });

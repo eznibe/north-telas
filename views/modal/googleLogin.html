@@ -1,0 +1,39 @@
+<div class="modal" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-md" style="margin-top: 0px;">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<div class="edit_person">
+					<h2>
+						<span class="glyphicon glyphicon-file"></span>
+						<span translate>Google login</span>
+					</h2>
+				</div>
+				<a href="javascript:void(0)" class="btn btn-lg closebtn" ng-click="$hide()">
+					<span class="glyphicon glyphicon-remove"></span>
+				</a>
+			</div>
+
+			<div class="modal-body nopaddingside">
+					<div class="row">
+						<div class="col-md-12">
+							<label class="control-label col-xs-12" for="edit_order" translate>notify.auth_google_drive_failed</label>
+						</div>
+					</div>
+				</form>
+			</div>
+
+			<div class="modal-footer">
+				<a href="javascript:void(0);" class="btn btn-info floatleft" ng-click="$hide()">
+					<span class="glyphicon glyphicon-remove"></span>
+					{{'Cancel' | translate}}
+				</a>
+
+				<a href="https://accounts.google.com/ServiceLogin" target="_blank" ng-click="$hide()" class="btn btn-default floatright" >
+					<span class="glyphicon glyphicon-ok"></span>
+					{{'Login' | translate}}
+				</a>
+			</div>
+		</div>
+	</div>
+</div>

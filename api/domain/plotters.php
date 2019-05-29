@@ -139,6 +139,13 @@ function finishPlotter($plotter) {
 
 	$p = fetch_array($r);
 
+	if (!$p) {
+		$obj->successful = false;
+		$obj->successfulRolls = false;
+		$obj->update = 'No existe el plotter (id='.$plotter->id.')';
+		return $obj;
+	}
+
 	// unique result
 	if(!$p[0]['cutted']) {
 
@@ -196,7 +203,7 @@ function finishPlotter($plotter) {
 	else {
 		$obj->successful = false;
 		$obj->successfulRolls = false;
-		$obj->update = 'Ya cortado';
+		$obj->update = 'Ya cortado (id='.$plotter->id.')';
 	}
 
 	return $obj;

@@ -50,11 +50,11 @@
 				{{c.stockMin}}
 			</td>
 			<td>
-				<span ng-show="c.sumInTransit == 0">0</span>
-				<a href="javascript:void(0)" ng-click="showClothInTransitModal(c)" ng-show="c.sumInTransit > 0">{{c.sumInTransit}}</a>
+				<span ng-show="+c.stockInTransit == 0">0</span>
+				<a href="javascript:void(0)" ng-click="showClothInTransitModal(c)" ng-show="+c.stockInTransit > 0">{{+c.stockInTransit}}</a>
 			</td>
 			<td>
-				<span style="color: #e42b33;">{{(sumStock(c.providers) - sumPrevision(c) - sumPending(c) - c.stockMin + c.sumInTransit).toFixed(0)}}</span>
+				<span style="color: #e42b33;">{{(sumStock(c.providers) - sumPrevision(c) - sumPending(c) - c.stockMin + +c.stockInTransit).toFixed(0)}}</span>
 			</td>
 		</tr>
 	</tbody>

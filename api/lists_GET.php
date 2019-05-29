@@ -41,7 +41,11 @@ else if(isset($_GET['clothRolls'])) {
 	$value = getClothRolls($_GET['clothId'], $_GET['onlyAvailables']);
 }
 else if(isset($_GET['upToDate'])) {
-	$value = getClothsUpToDate($_GET['groupId'], $_GET['date'], $_GET['includeStock0'], true);
+	if (isset($_GET['byOrder'])) {
+		$value = getClothsUpToDateSplitByOrder($_GET['groupId'], $_GET['date'], $_GET['includeStock0'], true);
+	} else {
+		$value = getClothsUpToDate($_GET['groupId'], $_GET['date'], $_GET['includeStock0'], true);
+	}
 }
 else if(isset($_GET['getPrices'])) {
 	$value = getClothsPrices($_GET['groupId']);

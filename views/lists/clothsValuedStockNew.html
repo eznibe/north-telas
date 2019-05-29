@@ -1,0 +1,186 @@
+<div class="nopaddingright jumbotron clearfix">
+	<h1><span translate>Cloths valued stock</span> (TEST)</h1>
+	<div class="row">
+		<div class="col-md-8 nopadding">
+				<label class="control-label col-xs-2" translate>Groups</label>
+				<div class="col-xs-3">
+					<select ng-model="filter.selectedGroup" ng-options="sc as sc.name for sc in groups" class="form-control small">
+						<option value="">-- choose one --</option>
+			        </select>
+				</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-8 nopadding">
+				<label class="control-label col-xs-2" access-restricted="plotter" translate>Up to date</label>
+				<div class="col-xs-3">
+					<div class="input-group input-group-sm date" date-picker access-restricted="plotter">
+						<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="filter.upToDate" class="form-control small">
+						<span class="input-group-addon">
+							<span class="glyphicon-calendar glyphicon"></span>
+						</span>
+					</div>
+				</div>
+
+				<div class="col-xs-2">
+					<!-- <a ng-click="doFilter()" class="btn btn-default floatright" > -->
+						<span class="glyphicon glyphicon-search icon-with-label"></span>
+						<span><a ng-click="doFilter()" class="btn-link">{{'Search' | translate}}</a><span>
+					<!-- </a> -->
+				</div>
+		</div>
+	</div>
+</div>
+
+<table id="cloths" class="table table-bordered table-striped table-hover">
+	<thead>
+		<tr>
+			<th style="min-width: 200px" translate>Cloth</th>
+			<th translate>Arancelary</th>
+			<th translate>Invoice</th>
+			<th translate>Dispatch nr</th>
+			<th translate>Arrive date</th>
+			<th translate>Provider</th>
+			<th>Stock</th>
+			<!-- <th translate>Delta without transit</th>
+			<th translate>Delta with transit</th> -->
+			<th style="min-width: 125px" translate>Total price in usd</th>
+			<!-- <th style="min-width: 125px" translate>Delta without transit in usd</th>
+			<th style="min-width: 125px" translate>Delta with transit in usd</th> -->
+			<th>Dolar <br> fecha arribo</th>
+			<th>A valor <br> histórico <br> $</th>
+			<th>Ajustado <br> inflación <br> $</th>
+			<!-- <th translate>Temporary in mts</th> -->
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="c in cloths | filter:stock0 | filter:searchBox">
+			<td>
+				{{c.name}}
+			</td>
+			<td>
+				{{c.arancelary}}
+			</td>
+			<td>
+				{{c.invoiceNumber}}
+			</td>
+			<td>
+				{{c.dispatch}}
+			</td>
+			<td>
+				{{c.formattedArriveDate}}
+			</td>
+			<td>
+				{{c.provider}}
+			</td>
+			<td>
+				<span>{{+c.available}}</span>
+			</td>
+			<!-- <td>
+				<span>{{(delta(c)).toFixed(0)}}</span>
+			</td>
+			<td>
+				<span>{{(deltaWithTransit(c)).toFixed(0)}}</span>
+			</td> -->
+			<td>
+				{{price(c).toFixed(2)}}
+			</td>
+			<!-- <td>
+				{{ delta(c) > 0 ? (c.price * delta(c)).toFixed(2) : 0 }}
+			</td>
+			<td>
+				{{ (c.price * deltaWithTransit(c)).toFixed(2) }}
+			</td> -->
+			<td>
+				{{c.dolarValue}}
+			</td>
+			<td>
+				{{valuedLocal(c).toFixed(2)}}
+			</td>
+			<td>
+				{{inflation(c).toFixed(2)}}
+			</td>
+			<!-- <td>
+				{{ sumTemporary(c) }}
+			</td> -->
+		</tr>
+		<tr class="totalRow">
+			<td style="color: #000;" translate>Total valued</td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<!-- <td></td>
+			<td></td> -->
+			<td></td>
+			<td>
+				{{ sumTotalValued() }}
+			</td>
+			<!-- <td></td>
+			<td></td> -->
+			<td></td>
+			<td>
+				{{ sumTotalValuedLocal() }}
+			</td>
+			<td>
+				{{ sumTotalValuedWithInflation() }}
+			</td>
+			<!-- <td></td> -->
+		</tr>
+		<!-- <tr class="totalRow">
+			<td style="color: #000;" translate>Total valued positives</td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td>
+				{{ sumDeltaValued(true) }}
+			</td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr> -->
+		<!-- <tr class="totalRow">
+			<td style="color: #000;" translate>Total valued negatives</td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td>
+				{{ sumDeltaValued(false) }}
+			</td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr> -->
+		<!-- <tr class="totalRow">
+			<td style="color: #000;" translate>Total valued with transit</td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>			
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td>
+				{{ sumDeltaWithTransitValued() }}
+			</td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr> -->
+	</tbody>
+</table>

@@ -4,10 +4,12 @@
 angular.module('vsko.stock').factory('DriveAPI',[ '$q', 'Utils', function ($q, Utils) { //eslint-disable-line
   var that = {};
 
-  var SCOPES = ['https://www.googleapis.com/auth/drive'];
+  // var SCOPES = ['https://www.googleapis.com/auth/drive'];
+  var SCOPES = ['https://www.googleapis.com/auth/drive.readonly'];
   var loadedFiles = [];
   var defer;
   var auth;
+  var authorized;
 
   function loadDriveApi() {
     gapi.client.load('drive', 'v3', loadedFn);
@@ -212,6 +214,32 @@ angular.module('vsko.stock').factory('DriveAPI',[ '$q', 'Utils', function ($q, U
     return defer.promise;
   };
 
+  that.init2 = function() {
+    defer = $q.defer();
+    if (typeof gapi != 'undefined') { // check of not gapi defined needed for offline or problems loading client
+      if (gapi.auth2) {
+
+        updateApiVersion();
+
+        // TODO: possible optimization: use 'prompt: none' in case of error 'immediate_failed' try again with 'prompt: select_account'
+        // this will avoid the promt for user that already gave consent to the app automatically
+        gapi.auth2.authorize(
+            {
+              'client_id': drive_client_id,
+              'scope': SCOPES.join(' ')
+              // TODO use to avoid selecting the email every time (get from profile): 'login_hint': 'enbertran@gmail.com'
+            }, handleAuthResult);
+      } else {
+        console.log('Rejected init, no gapi.auth');
+        defer.reject(false);
+      }
+    } else {
+      defer.reject(false);
+    }
+
+    return defer.promise;
+  };
+
   that.initNoAuth = function() {
     defer = $q.defer();
     if (typeof gapi != 'undefined') { // check of not gapi defined needed for offline or problems loading client
@@ -226,6 +254,14 @@ angular.module('vsko.stock').factory('DriveAPI',[ '$q', 'Utils', function ($q, U
 
     return defer.promise;
   };
+
+  that.setAuthorized = function(value) {
+    authorized = value;
+  }
+
+  that.isAuthorized = function() {
+    return authorized;
+  }
 
   return that;
 }]);

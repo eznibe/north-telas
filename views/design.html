@@ -85,6 +85,7 @@
 			<th class="designWeek" access-restricted="vendedor"><div class="rotate"><span translate>Design week col</span></div></th>
 			<th class="designHours" access-restricted="vendedor"><div class="rotate"><span translate>Hours</span></div></th>
 			<th class="week" access-restricted="vendedor"><div class="rotate"><span translate>Production week col</span></div></th>
+			<th class="seller"><div class="rotate"><span translate>Seller col</span></div></th>
 			<th class="orderNumber" translate>Order</th>
 			<th class="client" translate>Client</th>
 			<th class="boat" translate>Boat</th>
@@ -105,6 +106,7 @@
 			<th class="designWeek" ng-style="{'background-color': headerBackgroundColor(selectionObject.designWeek)}" access-restricted="vendedor"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('designWeek');" style="text-align:center; cursor:pointer;"></span></div></th>
 			<th class="designHours" ng-style="{'background-color': headerBackgroundColor(selectionObject.designHours)}" access-restricted="vendedor"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('designHours');" style="text-align:center; cursor:pointer;"></span></div></th>
 			<th class="week" ng-style="{'background-color': headerBackgroundColor(selectionObject.week)}" access-restricted="vendedor"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('week');" style="text-align:center; cursor:pointer;"></span></div></th>
+			<th class="seller" ng-style="{'background-color': headerBackgroundColor(selectionObject.seller)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('seller');" style="text-align:center; cursor:pointer;"></span></div></th>
 			<th class="orderNumber" ng-style="{'background-color': headerBackgroundColor(selectionObject.orderNumber)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('orderNumber');" style="text-align:center; cursor:pointer;"></div></th>
 			<th class="client" ng-style="{'background-color': headerBackgroundColor(selectionObject.client)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('client');" style="text-align:center; cursor:pointer;"></span></div></th>
 			<th class="boat" ng-style="{'background-color': headerBackgroundColor(selectionObject.boat)}"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('boat');" style="text-align:center; cursor:pointer;"></div></th>
@@ -137,6 +139,9 @@
 			</td>
 			<td class="week" ng-show="::visibility.selected('week')" ng-mouseover="::oneTimeBindings.showPopupList('weeks');" ng-mouseleave="::oneTimeBindings.hidePopupList('weeks');" ng-style=":refreshErrorBackground:visibility.errorStyle(p, 'week');">
 				<editable-production-input entity="::p" field="'week'" callback="::changedPrevision.numericField" read-only-fn="::oneTimeBindings.readOnlyProductionWeek(p)" editable-by-role="'admin,ordenes,produccion,velas-od'" width="20" style="display:inline-block;"></editable-production-input>
+			</td>
+			<td class="seller" ng-show="::visibility.selected('seller')">
+				<span ng-bind=":refreshColumnsValue:getValue(p, 'seller')"></span>
 			</td>
 			<td class="orderNumber" ng-show="::visibility.selected('orderNumber')" nowrap>
 				<a href="javascript:void(0);" ng-click="showPrevisionModal(p)">{{:refreshColumnsValue:p.orderNumber}}</a>

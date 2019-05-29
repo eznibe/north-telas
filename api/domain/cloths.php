@@ -95,10 +95,10 @@ function getClothsUpToDate($groupId, $date, $includeStock0, $joinProviders) {
 	$joinProviders = isset($joinProviders);
 
 	$query = "
-						SELECT o.arriveDate, p.clothId, r.mtsOriginal, coalesce(cuts.mtsCutted, 0) as mtsCutted,
+						SELECT o.arriveDate, o.value as dolarValue, p.clothId, r.mtsOriginal, coalesce(cuts.mtsCutted, 0) as mtsCutted,
 						(r.mtsOriginal - coalesce(cuts.mtsCutted, 0)) as available, c.name, coalesce(pro.name, '?') as provider, coalesce(p.price, '?') as price, p.productId, p.code,
-						r.number, r.lote, r.mtsOriginal, r.type
-						FROM rolls r JOIN products p on p.productId=r.productId JOIN orders o on o.orderId=r.orderId JOIN cloths c on c.id=p.clothId left JOIN providers pro on pro.id=p.providerId
+						r.number, r.lote, r.mtsOriginal, r.type, r.price as rollPrice
+						FROM v_rolls r JOIN products p on p.productId=r.productId JOIN v_orders o on o.orderId=r.orderId JOIN cloths c on c.id=p.clothId left JOIN providers pro on pro.id=p.providerId
 						LEFT JOIN
 						(
 							SELECT r2.id, sum(pc.mtsCutted) as mtsCutted
@@ -112,10 +112,10 @@ function getClothsUpToDate($groupId, $date, $includeStock0, $joinProviders) {
   if($includeStock0) {
 		// union with those cloths that have 0 available up to given date
 	  $query = $query . " UNION all
-							SELECT o.arriveDate, p.clothId, r.mtsOriginal, coalesce(cuts.mtsCutted, 0) as mtsCutted,
+							SELECT o.arriveDate, o.value as dolarValue, p.clothId, r.mtsOriginal, coalesce(cuts.mtsCutted, 0) as mtsCutted,
 							(r.mtsOriginal - coalesce(cuts.mtsCutted, 0)) as available, c.name, coalesce(pro.name, '?') as provider, coalesce(p.price, '?') as price, p.productId, p.code,
-							r.number, r.lote, r.mtsOriginal, r.type
-							FROM rolls r JOIN products p on p.productId=r.productId JOIN orders o on o.orderId=r.orderId JOIN cloths c on c.id=p.clothId left JOIN providers pro on pro.id=p.providerId
+							r.number, r.lote, r.mtsOriginal, r.type, r.price as rollPrice
+							FROM v_rolls r JOIN products p on p.productId=r.productId JOIN v_orders o on o.orderId=r.orderId JOIN cloths c on c.id=p.clothId left JOIN providers pro on pro.id=p.providerId
 							LEFT JOIN
 							(
 								SELECT r2.id, sum(pc.mtsCutted) as mtsCutted
@@ -129,10 +129,10 @@ function getClothsUpToDate($groupId, $date, $includeStock0, $joinProviders) {
 
 		// union special cases of new cloths with order in transit but no cuts made yet
 		$query = $query . " UNION all
-							SELECT o.arriveDate, p.clothId, r.mtsOriginal, coalesce(cuts.mtsCutted, 0) as mtsCutted,
+							SELECT o.arriveDate, o.value as dolarValue, p.clothId, r.mtsOriginal, coalesce(cuts.mtsCutted, 0) as mtsCutted,
 							0 as available, c.name, coalesce(pro.name, '?') as provider, coalesce(p.price, '?') as price, p.productId, p.code,
-							r.number, r.lote, r.mtsOriginal, r.type
-							FROM rolls r JOIN products p on p.productId=r.productId JOIN orders o on o.orderId=r.orderId JOIN cloths c on c.id=p.clothId left JOIN providers pro on pro.id=p.providerId
+							r.number, r.lote, r.mtsOriginal, r.type, r.price as rollPrice
+							FROM v_rolls r JOIN products p on p.productId=r.productId JOIN v_orders o on o.orderId=r.orderId JOIN cloths c on c.id=p.clothId left JOIN providers pro on pro.id=p.providerId
 							LEFT JOIN
 							(
 								SELECT r2.id, sum(pc.mtsCutted) as mtsCutted
@@ -147,7 +147,7 @@ function getClothsUpToDate($groupId, $date, $includeStock0, $joinProviders) {
 
 	$query = $query . " ORDER BY name, provider desc, productId, clothId ";
 
-  $result = mysql_query($query);
+  	$result = mysql_query($query);
 
 	$lastClothId;
 	$lastProvider;
@@ -172,6 +172,7 @@ function getClothsUpToDate($groupId, $date, $includeStock0, $joinProviders) {
 		$roll->mtsOriginal = $row['mtsOriginal'];
 		$roll->type = $row['type'];
 		$roll->price = $row['price'];
+		$roll->dolarValue = $row['dolarValue'];
 
 		if($lastClothId==$row['clothId']) {
 
@@ -240,6 +241,74 @@ function getClothsUpToDate($groupId, $date, $includeStock0, $joinProviders) {
 	$clothRowsJoined = appendExtraInfo($clothRowsJoined, $date);
 
 	return $clothRowsJoined;
+}
+
+function getClothsUpToDateSplitByOrder($groupId, $date, $includeStock0, $joinProviders) {
+
+	global $country;
+
+	$includeStock0 = isset($includeStock0);
+	$joinProviders = isset($joinProviders);
+
+	$query = "
+						SELECT p.clothId, sum(r.mtsOriginal) as mtsOriginal, coalesce(cuts.mtsCutted, 0) as mtsCutted,
+						sum(r.mtsOriginal - coalesce(cuts.mtsCutted, 0)) as available, c.name, coalesce(pro.name, '?') as provider, coalesce(p.price, '?') as price, p.productId, p.code, c.arancelary,
+						r.number, r.lote, r.mtsOriginal, r.type, r.price as rollPrice, o.invoiceNumber, o.dispatch, o.arriveDate, DATE_FORMAT(o.arriveDate,'%d-%m-%Y') as formattedArriveDate, o.value as dolarValue, o.orderId
+						FROM v_rolls r JOIN products p on p.productId=r.productId JOIN v_orders o on o.orderId=r.orderId JOIN cloths c on c.id=p.clothId left JOIN providers pro on pro.id=p.providerId
+						LEFT JOIN
+						(
+							SELECT r2.id, sum(pc.mtsCutted) as mtsCutted
+							FROM plottercuts pc join plotters p on pc.plotterId=p.id join rolls r2 on r2.id=pc.rollId join cloths c on p.clothId=c.id
+							where c.groupId='$groupId' and c.country = '$country' and p.cutted = true and p.cuttedOn <= STR_TO_DATE('".$date."', '%d-%m-%Y')
+							group by r2.id
+						) cuts ON cuts.id = r.id
+						WHERE c.groupId='$groupId' and c.country = '$country' and r.incoming=false and o.arriveDate <= STR_TO_DATE('".$date."', '%d-%m-%Y')
+							and ((r.mtsOriginal - coalesce(cuts.mtsCutted, 0))) > 0
+						GROUP BY c.id, o.orderId";
+
+  if($includeStock0) {
+		// union with those cloths that have 0 available up to given date
+	  $query = $query . " UNION all
+							SELECT p.clothId, r.mtsOriginal, coalesce(cuts.mtsCutted, 0) as mtsCutted,
+							(r.mtsOriginal - coalesce(cuts.mtsCutted, 0)) as available, c.name, coalesce(pro.name, '?') as provider, coalesce(p.price, '?') as price, p.productId, p.code, c.arancelary,
+							r.number, r.lote, r.mtsOriginal, r.type, r.price as rollPrice, o.invoiceNumber, o.dispatch, o.arriveDate, DATE_FORMAT(o.arriveDate,'%d-%m-%Y') as formattedArriveDate, o.value as dolarValue, o.orderId
+							FROM v_rolls r JOIN products p on p.productId=r.productId JOIN v_orders o on o.orderId=r.orderId JOIN cloths c on c.id=p.clothId left JOIN providers pro on pro.id=p.providerId
+							LEFT JOIN
+							(
+								SELECT r2.id, sum(pc.mtsCutted) as mtsCutted
+								FROM plottercuts pc join plotters p on pc.plotterId=p.id join rolls r2 on r2.id=pc.rollId join cloths c on p.clothId=c.id
+								where c.groupId='$groupId' and c.country = '$country' and p.cutted = true and p.cuttedOn <= STR_TO_DATE('".$date."', '%d-%m-%Y')
+								group by r2.id
+							) cuts ON cuts.id = r.id
+							WHERE c.groupId='$groupId' and c.country = '$country' and r.incoming=false and o.arriveDate <= STR_TO_DATE('".$date."', '%d-%m-%Y')
+								and ((r.mtsOriginal - coalesce(cuts.mtsCutted, 0))) = 0
+							GROUP BY p.clothId	";
+
+		// union special cases of new cloths with order in transit but no cuts made yet
+		$query = $query . " UNION all
+							SELECT p.clothId, r.mtsOriginal, coalesce(cuts.mtsCutted, 0) as mtsCutted,
+							0 as available, c.name, coalesce(pro.name, '?') as provider, coalesce(p.price, '?') as price, p.productId, p.code, c.arancelary,
+							r.number, r.lote, r.mtsOriginal, r.type, r.price as rollPrice, o.invoiceNumber, o.dispatch, o.arriveDate, DATE_FORMAT(o.arriveDate,'%d-%m-%Y') as formattedArriveDate, o.value as dolarValue, o.orderId
+							FROM v_rolls r JOIN products p on p.productId=r.productId JOIN v_orders o on o.orderId=r.orderId JOIN cloths c on c.id=p.clothId left JOIN providers pro on pro.id=p.providerId
+							LEFT JOIN
+							(
+								SELECT r2.id, sum(pc.mtsCutted) as mtsCutted
+								FROM plottercuts pc join plotters p on pc.plotterId=p.id join rolls r2 on r2.id=pc.rollId join cloths c on p.clothId=c.id
+								where c.groupId='$groupId' and c.country = '$country' and p.cutted = true and p.cuttedOn <= STR_TO_DATE('".$date."', '%d-%m-%Y')
+								group by r2.id
+							) cuts ON cuts.id = r.id
+							WHERE c.groupId='$groupId' and c.country = '$country' and r.incoming=true and o.arriveDate is null and o.inTransitDate is not null
+								and o.inTransitDate <= STR_TO_DATE('".$date."', '%d-%m-%Y')
+							GROUP BY p.clothId	";
+	}
+
+	$query = $query . " ORDER BY name, clothId, arriveDate  ";
+
+	// echo $query;
+
+  	$result = mysql_query($query);
+
+	return fetch_array($result);
 }
 
 // those rows with unknown provider should be merged into the row of the same cloth with a valid provider (stock available and rolls)
@@ -388,7 +457,16 @@ function deleteCloth($clothId)
 function getDolar()
 {
 	global $country;
-	$query = "SELECT * FROM dolar d WHERE country = '$country' ORDER BY createdOn desc LIMIT 1";
+	$query = "SELECT *, DATE_FORMAT(fromDate,'%d-%m-%Y') as fromDate, DATE_FORMAT(untilDate,'%d-%m-%Y') as untilDate FROM dolar d WHERE country = '$country' AND untilDate is null LIMIT 1";
+	$result = mysql_query($query);
+
+	return fetch_array($result);
+}
+
+function getHistoricDolar()
+{
+	global $country;
+	$query = "SELECT *, DATE_FORMAT(fromDate,'%d-%m-%Y') as fromDate, DATE_FORMAT(untilDate,'%d-%m-%Y') as formattedUntilDate FROM dolar d WHERE country = '$country' AND untilDate is not null ORDER BY untilDate desc LIMIT 20";
 	$result = mysql_query($query);
 
 	return fetch_array($result);
@@ -398,8 +476,49 @@ function saveDolar($dolar) {
 	global $country;
 	$obj->successful = true;
 
-	$query = "INSERT INTO dolar (value, country) VALUES (".$dolar->value.", '$country')";
+	$query = "SELECT id from dolar where country = '$country' and untilDate is null";
 	$result = mysql_query($query);
+
+	while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+
+		$previousValueId = $row['id'];
+	}
+
+	$update = "UPDATE dolar set untilDate = now() - INTERVAL 1 DAY where id = '$previousValueId'";
+	if (! mysql_query($update)) {
+		$obj->successful = false;
+		$obj->query = $update;
+
+	} else {
+
+		$fromDate = isset($dolar->fromDate) && trim($dolar->fromDate)!='' ? "STR_TO_DATE('".$dolar->fromDate."', '%d-%m-%Y')" : 'null' ;
+	
+		$query = "INSERT INTO dolar (fromDate, value, country) VALUES ($fromDate, ".$dolar->value.", '$country')";
+
+		if (! mysql_query($query)) {
+			$obj->successful = false;
+			$obj->query = $query;
+		}
+	}
+
+
+	return $obj;
+}
+
+function saveHistoricDolar($dolar) {
+
+	global $country;
+	$obj->successful = true;
+
+	$fromDate = isset($dolar->fromDate) && trim($dolar->fromDate)!='' ? "STR_TO_DATE('".$dolar->fromDate."', '%d-%m-%Y')" : 'null' ;
+	$untilDate = isset($dolar->untilDate) && trim($dolar->untilDate)!='' ? "STR_TO_DATE('".$dolar->untilDate."', '%d-%m-%Y')" : 'null' ;
+
+	$query = "INSERT INTO dolar (fromDate, untilDate, value, country) VALUES ($fromDate, $untilDate, ".$dolar->value.", '$country')";
+
+	if (! mysql_query($query)) {
+		$obj->successful = false;
+		$obj->query = $query;
+	}
 
 	return $obj;
 }
@@ -418,6 +537,25 @@ function getPctNac()
 {
 	global $country;
 	$query = "SELECT * FROM pctnac d WHERE country = '$country' ORDER BY createdOn desc LIMIT 1";
+	$result = mysql_query($query);
+
+	return fetch_array($result);
+}
+
+function saveInflation($inflation) {
+	global $country;
+	$obj->successful = true;
+
+	$query = "INSERT INTO inflation (value, country) VALUES (".$inflation->value.", '$country')";
+	$result = mysql_query($query);
+
+	return $obj;
+}
+
+function getInflation()
+{
+	global $country;
+	$query = "SELECT * FROM inflation d WHERE country = '$country' ORDER BY createdOn desc LIMIT 1";
 	$result = mysql_query($query);
 
 	return fetch_array($result);

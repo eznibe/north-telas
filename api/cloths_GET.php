@@ -22,8 +22,14 @@ if(isset($_GET['id'])) {
 else if(isset($_GET['dolar'])) {
 	$value = getDolar();
 }
+else if(isset($_GET['historicdolar'])) {
+	$value = getHistoricDolar();
+}
 else if(isset($_GET['pctNac'])) {
 	$value = getPctNac();
+}
+else if(isset($_GET['inflation'])) {
+	$value = getInflation();
 }
 else if(isset($_GET['matchIds'])) {
 	$value = getClothsWithMatchIdsInCountry($_GET['matchIds'], $previsionCountry);

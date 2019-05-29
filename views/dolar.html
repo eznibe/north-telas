@@ -1,30 +1,66 @@
 <div class="nopaddingright jumbotron clearfix">
-	<h1><span translate>Configuration</span></h1>
+	<h1><span translate>Current dolar</span></h1>
 	<form name="formDolar">
 	<div class="row">
 		<div class="col-md-6 nopadding">
-					<label class="control-label col-xs-4" translate>Dolar</label>
-					<div class="col-xs-3">
-						<input ng-model="dolar" class="form-control small" required/>
-					</div>
+			<label class="control-label col-xs-2" translate>Dolar</label>
+			<div class="col-xs-3">
+				<input ng-model="dolar.value" class="form-control small" required/>
+			</div>
+
+			<label class="control-label col-xs-2" translate>From</label>
+			<div class="input-group input-group-sm date col-xs-3" date-picker>
+				<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="dolar.fromDate" class="form-control small">
+				<span class="input-group-addon">
+					<span class="glyphicon-calendar glyphicon"></span>
+				</span>
+			</div>
 		</div>
-	</div>
-	<div class="row">
+		
 		<div class="col-md-6 nopadding">
 
-				<label class="control-label col-xs-4" translate>% Nacional</label>
-				<div class="col-xs-3">
-					<input ng-model="pctNac" class="form-control small" required/>
-				</div>
-
-				<label class="control-label col-xs-1" >&nbsp;</label>
-				<div class="col-xs-4">
-					<!-- <a ng-click="save()" class="btn btn-default floatright" ng-disabled="formDolar.$invalid"> -->
-						<span class="glyphicon glyphicon-save icon-with-label"></span>
-						<span><a ng-click="save()" class="btn-link">{{'Save' | translate}}</a><span>
-					<!-- </a> -->
-				</div>
+			<label class="control-label col-xs-1" >&nbsp;</label>
+			<div class="col-xs-4">
+				<span class="glyphicon glyphicon-save icon-with-label"></span>
+				<span><a ng-click="save()" class="btn-link">{{'Save' | translate}}</a><span>
+			</div>
 		</div>
 	</div>
 	</form>
+
+
+	<div class="row">
+		<h2 class="col-md-6" translate>
+			Historics
+		</h2>
+		<p class="col-md-6" style="margin-top: 20px; text-align: right;">
+			<a ng-click="showModal()" class="btn btn-default">
+				<span class="glyphicon glyphicon-plus"></span>&nbsp;
+				{{'New historic dolar' | translate}}
+			</a>
+		</p>
+	</div>
+	
+	<table id="dolar" class="table table-bordered table-striped table-hover" style="margin-top: 10px;">
+		<thead>
+			<tr>
+				<th style="width: 200px" translate>From</th>
+				<th style="width: 200px" translate>Until</th>
+				<th style="width: 200px" translate>Value</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="h in historicDolars | filter:searchBox">
+				<td>
+					<span>{{h.fromDate}}</span>
+				</td>
+				<td>
+					<span>{{h.formattedUntilDate}}</span>
+				</td>
+				<td>
+					<span>{{h.value}}</span>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 </div>

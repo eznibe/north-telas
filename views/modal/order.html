@@ -127,16 +127,10 @@
 
 							<div class="row">
 								<div class="col-md-6 nopadding">
-									<!-- <label class="control-label col-xs-3" for="edit_type" translate>Type</label>
+									<label class="control-label col-xs-3" translate>Dispatch</label>
 									<div class="col-xs-7">
-										<label class="radio-inline">
-											<input type="radio" name="edit_type" value="TEMP" ng-model="order.type" required> Temp
-										</label>
-										<label class="radio-inline">
-											<input type="radio" name="edit_type" value="DEF" ng-model="order.type" required> Def
-										</label>
-										<span ng-show="formOrderInfo.edit_type.$invalid" class="radio-inline error">!</span>
-									</div> -->
+										<input type="text" class="form-control small" ng-model="order.dispatch">
+									</div>
 								</div>
                 				<div class="col-md-6 nopadding" ng-show="order.status=='IN_TRANSIT'">
 									<label class="control-label col-xs-5" for="edit_type" translate>Arrive date</label>

@@ -1,34 +1,56 @@
 'use strict';
 
-angular.module('vsko.stock').controller('DolarCtrl', ['$scope', '$translate', '$cookieStore', 'Utils', 'Stock', 'Production', function ($scope, $translate, $cookieStore, Utils, Stock, Production) {
+angular.module('vsko.stock').controller('DolarCtrl', ['$scope', '$rootScope', '$modal', 'Utils', 'Stock', function ($scope, $rootScope, $modal, Utils, Stock) {
 
-        // initial list of providers
-    	Stock.getDolar().then(function(result) {
-      	$scope.dolar = result.data[0].value;
-				$scope.dolarOrig = $scope.dolar;
-      });
+  Stock.getDolar().then(function(result) {
 
-			Stock.getPctNac().then(function(result) {
-      	$scope.pctNac = result.data[0].value;
-				$scope.pctNacOrig = $scope.pctNac;
-      });
+    $scope.dolar = { value: result.data[0].value, fromDate: result.data[0].fromDate};
+    $scope.dolarOrig = $scope.dolar.value;
+  });
+
+  Stock.getHistoricDolar().then(function(result) {
+
+    $scope.historicDolars = result.data;
+  });
 
 
-    	$scope.save = function() {
+	$scope.save = function() {
 
-				if($scope.dolarOrig != $scope.dolar) {
+		if($scope.dolarOrig !== $scope.dolar.value && $scope.dolar.value) {
 
-	    		Stock.saveDolar($scope.dolar).then(function(resut){
+			Stock.saveDolar($scope.dolar).then(function(resut){
 
-            Utils.showMessage('notify.dolar_updated');
-	    		});
-				}
+        Utils.showMessage('notify.dolar_updated');
+			});
+		}
+  }
+  
+  // Modal functions
+  $scope.showModal = function(historic) {
 
-				if($scope.pctNacOrig != $scope.pctNac) {
+    $scope.historicDolar = historic ? historic : {country: $rootScope.user.country};
 
-					Stock.savePctNac($scope.pctNac).then(function(result){
-            Utils.showMessage('notify.percentage_updated');
-	    		});
-				}
-    	}
+    $scope.modalDolar = $modal({template: 'views/modal/dolarHistoric.html', show: false, scope: $scope, backdrop:'static', animation:'am-fade-and-slide-top'});
+
+    $scope.modalDolar.$promise.then($scope.modalDolar.show);
+  };
+
+  $scope.saveHistoricDolar = function(dolar) {
+    
+    if (dolar.value && dolar.fromDate && dolar.untilDate) {
+
+      console.log('Save historic dolar:', dolar)
+      Stock.saveHistoricDolar(dolar);
+
+    } else {
+      Utils.showMessage('notify.dolar_historic_error', 'error');
+    }
+
+    $scope.modalDolar.hide();
+  }
+
+  $scope.close = function() {
+
+    $scope.modalDolar.hide();
+  };
 }]);
