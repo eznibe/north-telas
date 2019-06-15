@@ -2,13 +2,29 @@
 	<h1>{{'Buys' | translate}}</h1>
 	<div class="row" allowed-access="admin">
 		<div class="col-md-8 nopadding">
+			<label class="control-label col-xs-3" translate>Order</label>
+			<div class="col-xs-3">
+				<input ng-model="search.order" class="form-control small"></input>
+			</div>
+
+			<div class="col-xs-4">
+				<span class="glyphicon glyphicon-search icon-with-label"></span>
+				<span><a ng-click="search()" class="btn-link">{{'Search' | translate}}</a><span>
+					
+				<span class="glyphicon glyphicon-remove icon-with-label" style="margin-left:25px;"></span>
+				<span><a ng-click="clearSearch()" class="btn-link">{{'Clear' | translate}}</a><span>
+			</div>
+		</div>
+	</div>
+	<div class="row" allowed-access="admin">
+		<div class="col-md-8 nopadding">
 				<label class="control-label col-xs-3" translate>Calculate states</label>
 				<div class="col-xs-3">
 					<select ng-model="filter.deliveryType" ng-options="t for t in filter.deliveryTypes" class="form-control small" ></select>
 				</div>
 
 				<div class="col-xs-2">
-					<a ng-click="calculateStates()" class="btn btn-default floatright" ng-disabled="!filter.deliveryType">
+					<a ng-click="calculateStates()" class="btn btn-default" ng-disabled="!filter.deliveryType">
 						<span class="glyphicon glyphicon-ok"></span>
 						{{'Update' | translate}}
 					</a>
@@ -22,7 +38,7 @@
 <div id="accordion" class="panel-group">
 
 	<!-- To buy -->
-	<div class="panel panel-default">
+	<div class="panel panel-default" ng-show="!search.active">
 		<div class="panel-heading nopadding">
 			<h2 class="panel-title panel-title-minimalist">
 				<a data-toggle="collapse" data-target="#collapse1" href="javascript:void(0)" >
@@ -52,7 +68,7 @@
 	</div>
 
 	<!-- To confirm -->
-	<div class="panel panel-default">
+	<div class="panel panel-default" ng-show="!search.active">
 		<div class="panel-heading nopadding">
 			<h2 class="panel-title panel-title-minimalist">
 				<a data-toggle="collapse" data-target="#collapse2" href="javascript:void(0)" >
@@ -81,7 +97,7 @@
 	</div>
 
 	<!-- In transit -->
-	<div class="panel panel-default">
+	<div class="panel panel-default" ng-show="!search.active">
 		<div class="panel-heading nopadding">
 			<h2 class="panel-title panel-title-minimalist">
 				<a data-toggle="collapse" data-target="#collapse3" href="javascript:void(0)" >
@@ -98,6 +114,36 @@
 						<li class="cards">
 							<ul>
 								<li ng-repeat="o in orders_transit | orderBy:'orderDate' | filter:searchBox" ng-click="showOrderModal(o)">
+									<h3><span style="color:black;">{{o.provider}} - #{{o.number}}</span></h3>
+									<h3 ng-show="o.orderDate"><small translate>Date</small> <span>{{o.formattedDate}}</span></h3>
+									<h3><small translate>Nr. of Products</small> <span>{{o.products.length}}</span></h3>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Search results -->
+	<div class="panel panel-default" ng-show="search.active">
+		<div class="panel-heading nopadding">
+			<h2 class="panel-title panel-title-minimalist">
+				<a data-toggle="collapse" data-target="#collapse1" href="javascript:void(0)" >
+					<span translate>Search results</span> <small>(<span>{{orders_search.length}}</span>)</small>
+				</a>
+			</h2>
+		</div>
+
+		<div id="collapse1" class="panel-collapse collapse in" style="height: auto;" >
+			<div class="panel-body">
+
+				<div id="members" class="user_cards">
+					<ul>
+						<li class="cards">
+							<ul>
+								<li ng-repeat="o in orders_search | orderBy:'provider' | filter:searchBox" ng-click="showOrderModal(o)">
 									<h3><span style="color:black;">{{o.provider}} - #{{o.number}}</span></h3>
 									<h3 ng-show="o.orderDate"><small translate>Date</small> <span>{{o.formattedDate}}</span></h3>
 									<h3><small translate>Nr. of Products</small> <span>{{o.products.length}}</span></h3>

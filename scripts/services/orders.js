@@ -89,5 +89,9 @@ angular.module('vsko.stock')
         	return $http.post(url + 'orders_DELETE.php?removeorder=true&orderId='+order.orderId);
         };
 
+        this.searchOrders = function(value) {
+          return $http.get(url + 'orders_GET.php?search='+value);
+        }
+
         return this;
     }]);

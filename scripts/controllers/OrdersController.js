@@ -8,6 +8,8 @@ angular.module('vsko.stock')
 
 		$scope.filter = {deliveryTypes: ['Desconocido', 'Nacional', 'Courier', 'Aereo1', 'Aereo2', 'Maritimo']};
 
+		$scope.search = { active: false }
+
         // initial list of orders
         Orders.getOrders(orderStatus.to_buy).then(function(result) {
 			$scope.orders_buy = result.data;
@@ -166,11 +168,29 @@ angular.module('vsko.stock')
         	$scope.modalUser.hide();
         };
 
-				$scope.calculateStates = function() {
-					Previsions.updatePrevisionStateWithDeliveryType($scope.filter.deliveryType).then(function() {
-						Utils.showMessage('notify.previsions_state_updated');
-					});
-				};
+		$scope.calculateStates = function() {
+			Previsions.updatePrevisionStateWithDeliveryType($scope.filter.deliveryType).then(function() {
+				Utils.showMessage('notify.previsions_state_updated');
+			});
+		};
+
+		$scope.search = async function() {
+
+			if ($scope.search.order) {
+
+				let result = await Orders.searchOrders($scope.search.order);
+				$scope.orders_search = result.data;
+
+				$scope.search.active = true;
+			} else {
+				$scope.search.active = false;
+			}
+		};
+
+		$scope.clearSearch = function() {
+			$scope.search.order = '';
+			$scope.search.active = false;
+		};
 
         $scope.setModalCtrl = function(modalCtrl) {
 
@@ -181,12 +201,12 @@ angular.module('vsko.stock')
         	$.format.date(date, "dd-MM-yyyy");
         };
 
-				function updatePrevisionState(order) {
+		function updatePrevisionState(order) {
 
-					var clothsIds = order.products.map(function(p) { return p.clothId; }).join(',');
+			var clothsIds = order.products.map(function(p) { return p.clothId; }).join(',');
 
-					Previsions.updatePrevisionState(clothsIds).then(function() {
-						Utils.showMessage('notify.previsions_state_updated');
-					});
-				}
+			Previsions.updatePrevisionState(clothsIds).then(function() {
+				Utils.showMessage('notify.previsions_state_updated');
+			});
+		}
 }]);

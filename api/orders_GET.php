@@ -19,6 +19,9 @@ $status = isset($_GET['status']) ? $_GET['status'] : null;
 if(isset($_GET['id'])) {
 	$value = getOrder($_GET['id']);
 }
+else if(isset($_GET['search'])) {
+	$value = searchOrders($_GET['search']);
+}
 else {
 	$value = getOrders($status, $_GET['providerId'], $expand);
 }

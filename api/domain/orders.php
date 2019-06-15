@@ -69,6 +69,45 @@ function getOrdersUpToDate($status, $providerId, $expand, $upToDate)
 	return $rows;
 }
 
+function searchOrders($value) {
+
+	global $country;
+
+	$query = "SELECT *, DATE_FORMAT(orderDate,'%d-%m-%Y') as formattedDate,  arriveDate as unformattedArriveDate, DATE_FORMAT(arriveDate,'%d-%m-%Y') as arriveDate, DATE_FORMAT(estimatedArriveDate,'%d-%m-%Y') as estimatedArriveDate 
+				FROM orders where (number = '$value' or invoiceNumber like '%$value%' or dispatch like '%$value%') AND status = 'ARRIVED' and country = '$country' ORDER BY arriveDate desc";
+
+	$result = mysql_query($query);	
+
+	$rows = array();
+	while($orderRow = mysql_fetch_array($result, MYSQL_ASSOC)) {
+
+		$query = "SELECT pt.*, op.*, c.*, pr.name as provider ".
+			 "FROM products pt JOIN orderproduct op on pt.productId = op.productId JOIN cloths c on c.id = pt.clothId JOIN providers pr on pr.id = pt.providerId ".
+			 "WHERE op.orderId = '".$orderRow['orderId']."'";
+
+		$subresult = mysql_query($query);
+
+		$subrows = array();
+		while($subrow = mysql_fetch_array($subresult, MYSQL_ASSOC)) {
+			array_push($subrows, $subrow);
+
+			$provider = $subrow['provider'];
+		}
+
+		$orderRow['products'] = $subrows;
+		if(isset($provider)) {
+			$orderRow['provider'] = $provider;
+		}
+
+		// $orderRow['query'] = $query;
+
+		array_push($rows, $orderRow);
+	}
+
+	return $rows;
+
+}
+
 function getInTransit($clothId) {
 	return getInTransitUpToDate($clothId, null);
 }
