@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('vsko.stock').controller('ClothsValuedStockNewCtrl', ['$scope', 'Stock', 'Lists', '$modal', function ($scope, Stock, Lists, $modal) {
+angular.module('vsko.stock').controller('ClothsCountableStockCtrl', ['$scope', 'Stock', 'Lists', '$modal', function ($scope, Stock, Lists, $modal) {
 
 		Stock.getAllGroups(true).then(function(result) {
 

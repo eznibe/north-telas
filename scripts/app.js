@@ -334,9 +334,9 @@ angular.module("vsko.stock", [
                 controller: 'ClothsValuedStockCtrl',
                 access: 'public'
             })
-            .when('/lists/clothsValuedStockNew', {
-                templateUrl: 'views/lists/clothsValuedStockNew.html',
-                controller: 'ClothsValuedStockNewCtrl',
+            .when('/lists/clothsCountableStock', {
+                templateUrl: 'views/lists/clothsCountableStock.html',
+                controller: 'ClothsCountableStockCtrl',
                 access: 'public'
             })
 			.when('/lists/dispatchsHistoric', {
