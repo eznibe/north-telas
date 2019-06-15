@@ -31,6 +31,9 @@ else if(isset($_GET['pctNac'])) {
 else if(isset($_GET['inflation'])) {
 	$value = getInflation($_GET['year'], $_GET['month']);
 }
+else if(isset($_GET['inflationRange'])) {
+	$value = getInflationRange($_GET['from'], $_GET['to']);
+}
 else if(isset($_GET['matchIds'])) {
 	$value = getClothsWithMatchIdsInCountry($_GET['matchIds'], $previsionCountry);
 }

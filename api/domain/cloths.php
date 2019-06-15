@@ -253,8 +253,8 @@ function getClothsUpToDateSplitByOrder($groupId, $date, $includeStock0, $joinPro
 	$query = "
 						SELECT p.clothId, sum(r.mtsOriginal) as mtsOriginal, coalesce(cuts.mtsCutted, 0) as mtsCutted,
 						sum(r.mtsOriginal - coalesce(cuts.mtsCutted, 0)) as available, c.name, coalesce(pro.name, '?') as provider, coalesce(p.price, '?') as price, p.productId, p.code, c.arancelary,
-						r.number, r.lote, r.mtsOriginal, r.type, r.price as rollPrice, o.invoiceNumber, o.dispatch, o.arriveDate, DATE_FORMAT(o.arriveDate,'%d-%m-%Y') as formattedArriveDate, o.value as dolarValue, o.orderId
-						FROM v_rolls r JOIN products p on p.productId=r.productId JOIN v_orders o on o.orderId=r.orderId JOIN cloths c on c.id=p.clothId left JOIN providers pro on pro.id=p.providerId
+						r.number, r.lote, r.mtsOriginal, r.type, r.price as rollPrice, o.invoiceNumber, o.dispatch, o.arriveDate, DATE_FORMAT(o.arriveDate,'%d-%m-%Y') as formattedArriveDate, o.dolar as dolarValue, o.orderId
+						FROM v_rolls r JOIN products p on p.productId=r.productId JOIN orders o on o.orderId=r.orderId JOIN cloths c on c.id=p.clothId left JOIN providers pro on pro.id=p.providerId
 						LEFT JOIN
 						(
 							SELECT r2.id, sum(pc.mtsCutted) as mtsCutted
@@ -271,8 +271,8 @@ function getClothsUpToDateSplitByOrder($groupId, $date, $includeStock0, $joinPro
 	  $query = $query . " UNION all
 							SELECT p.clothId, r.mtsOriginal, coalesce(cuts.mtsCutted, 0) as mtsCutted,
 							(r.mtsOriginal - coalesce(cuts.mtsCutted, 0)) as available, c.name, coalesce(pro.name, '?') as provider, coalesce(p.price, '?') as price, p.productId, p.code, c.arancelary,
-							r.number, r.lote, r.mtsOriginal, r.type, r.price as rollPrice, o.invoiceNumber, o.dispatch, o.arriveDate, DATE_FORMAT(o.arriveDate,'%d-%m-%Y') as formattedArriveDate, o.value as dolarValue, o.orderId
-							FROM v_rolls r JOIN products p on p.productId=r.productId JOIN v_orders o on o.orderId=r.orderId JOIN cloths c on c.id=p.clothId left JOIN providers pro on pro.id=p.providerId
+							r.number, r.lote, r.mtsOriginal, r.type, r.price as rollPrice, o.invoiceNumber, o.dispatch, o.arriveDate, DATE_FORMAT(o.arriveDate,'%d-%m-%Y') as formattedArriveDate, o.dolar as dolarValue, o.orderId
+							FROM v_rolls r JOIN products p on p.productId=r.productId JOIN orders o on o.orderId=r.orderId JOIN cloths c on c.id=p.clothId left JOIN providers pro on pro.id=p.providerId
 							LEFT JOIN
 							(
 								SELECT r2.id, sum(pc.mtsCutted) as mtsCutted
@@ -288,8 +288,8 @@ function getClothsUpToDateSplitByOrder($groupId, $date, $includeStock0, $joinPro
 		$query = $query . " UNION all
 							SELECT p.clothId, r.mtsOriginal, coalesce(cuts.mtsCutted, 0) as mtsCutted,
 							0 as available, c.name, coalesce(pro.name, '?') as provider, coalesce(p.price, '?') as price, p.productId, p.code, c.arancelary,
-							r.number, r.lote, r.mtsOriginal, r.type, r.price as rollPrice, o.invoiceNumber, o.dispatch, o.arriveDate, DATE_FORMAT(o.arriveDate,'%d-%m-%Y') as formattedArriveDate, o.value as dolarValue, o.orderId
-							FROM v_rolls r JOIN products p on p.productId=r.productId JOIN v_orders o on o.orderId=r.orderId JOIN cloths c on c.id=p.clothId left JOIN providers pro on pro.id=p.providerId
+							r.number, r.lote, r.mtsOriginal, r.type, r.price as rollPrice, o.invoiceNumber, o.dispatch, o.arriveDate, DATE_FORMAT(o.arriveDate,'%d-%m-%Y') as formattedArriveDate, o.dolar as dolarValue, o.orderId
+							FROM v_rolls r JOIN products p on p.productId=r.productId JOIN orders o on o.orderId=r.orderId JOIN cloths c on c.id=p.clothId left JOIN providers pro on pro.id=p.providerId
 							LEFT JOIN
 							(
 								SELECT r2.id, sum(pc.mtsCutted) as mtsCutted
@@ -546,13 +546,34 @@ function saveInflation($inflation) {
 	global $country;
 	$obj->successful = true;
 
-	$query = "INSERT INTO inflation (value, year, month, country) VALUES (".$inflation->value.", ".$inflation->year.", ".$inflation->month.", '$country')";
-	$result = mysql_query($query);
+	if (isset($inflation->isNew)) {
+		$query = "INSERT INTO inflation (value, year, month, country) VALUES (".$inflation->value.", ".$inflation->year.", ".$inflation->month.", '$country')";
+	} else {
+		$query = "UPDATE inflation SET value = ". $inflation->value . " WHERE month = " . $inflation->month . " AND year = " . $inflation->year;
+	}
+	
+	if (!mysql_query($query)) {
+		$obj->successful = false;
+	}
+	$obj->query = $query;
 
 	return $obj;
 }
 
 function getInflation($year, $month)
+{
+	global $country;
+	if (isset($year) && isset($month)) {
+		$query = "SELECT * FROM inflation d WHERE country = '$country' and year = $year and month = $month ORDER BY createdOn desc LIMIT 1";
+	} else {
+		$query = "SELECT * FROM inflation d WHERE country = '$country' and value is not null ORDER BY year, month";
+	}
+	$result = mysql_query($query);
+
+	return fetch_array($result);
+}
+
+function getInflationRange($from, $to)
 {
 	global $country;
 	$query = "SELECT * FROM inflation d WHERE country = '$country' and year = $year and month = $month ORDER BY createdOn desc LIMIT 1";

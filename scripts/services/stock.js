@@ -187,12 +187,16 @@ angular.module('vsko.stock')
 
         this.getInflation = function(year, month)
         {
-        	return $http.get(url + 'cloths_GET.php?inflation=true&year='+year+'&month='+month);
+          let dateParams = '';
+          if (year && month) {
+            dateParams = '&year='+year+'&month='+month;
+          }
+        	return $http.get(url + 'cloths_GET.php?inflation=true' + dateParams);
         };
 
-				this.saveInflation = function(year, month, value)
+				this.saveInflation = function(year, month, value, isNew)
         {
-        	var inflation = {value: value, year: year, month: month};
+        	var inflation = {value: value, year: year, month: month, isNew: isNew};
         	return $http.post(url + 'cloths_POST.php?inflation=true', inflation);
         };
 

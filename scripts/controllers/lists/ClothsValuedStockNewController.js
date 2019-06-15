@@ -7,6 +7,10 @@ angular.module('vsko.stock').controller('ClothsValuedStockNewCtrl', ['$scope', '
 			$scope.groups = result.data;
 		});
 
+		Stock.getInflation().then(function(result) {
+			$scope.inflationData = result.data;
+		});
+
 		// Stock.getInflation().then(function(result) {
 		// 	$scope.inflationPctYear = result.data[0].value;
 		// });
@@ -20,6 +24,7 @@ angular.module('vsko.stock').controller('ClothsValuedStockNewCtrl', ['$scope', '
 
 				Lists.stockUpToDate($scope.filter.selectedGroup.id, $scope.filter.upToDate, true, true).then(function(result) {
 					$scope.cloths = result.data;
+					// $scope.cloths = [result.data[0]];
 					$scope.filter.searched = true;
 				});
 			}
@@ -202,7 +207,7 @@ angular.module('vsko.stock').controller('ClothsValuedStockNewCtrl', ['$scope', '
 				// 	return acc + (+roll.mts * (roll.price != '?' ? +roll.price : 0));
 				// }, 0);
 				// return totalPrice;
-				return +c.available * +c.price;
+				return c ? +c.available * +c.price : 0;
 			}
 			
 
@@ -221,9 +226,59 @@ angular.module('vsko.stock').controller('ClothsValuedStockNewCtrl', ['$scope', '
 
 				$scope.inflationPctYear = 35;
 
-				let monthsDiff = moment($scope.filter.upToDate, "DD-MM-YYYY").diff(moment(c.formattedArriveDate, "DD-MM-YYYY"), 'months', true).toFixed();
+				if (c) {
 
-				return $scope.price(c) * +c.dolarValue * (1 + ($scope.inflationPctYear / 12 * monthsDiff / 100));
+					// c.formattedArriveDate = '13-07-2018'
+					// $scope.filter.upToDate = '15-08-2018'
+
+					let monthsNotFound = [];
+
+					let yearsDiff = moment($scope.filter.upToDate, "DD-MM-YYYY").year() - moment(c.formattedArriveDate, "DD-MM-YYYY").year();
+					// let monthsDiff = moment($scope.filter.upToDate, "DD-MM-YYYY").diff(moment(c.formattedArriveDate, "DD-MM-YYYY"), 'months', true).toFixed();
+					
+					let toYear = moment($scope.filter.upToDate, "DD-MM-YYYY").year();
+					let toMonth = moment($scope.filter.upToDate, "DD-MM-YYYY").month() + 1;
+
+					let inflationValues = []
+					for (let i=0; i < (+yearsDiff + 1); i++) {
+	
+						let year = moment(c.formattedArriveDate, "DD-MM-YYYY").year() + i;
+						let month = 1;
+	
+						if (i==0) {
+							// first year, initial month is different						
+							month = moment(c.formattedArriveDate, "DD-MM-YYYY").month() + 2; // for moment jan = 0 and we need to start calculating since arrive next month
+						} 
+	
+						for (; month <= 12 && (year != toYear || month < toMonth) ; month++) {
+							let inflationValue = $scope.inflationData.find(i => +i.month === month && +i.year === year);
+							if (inflationValue) {
+								inflationValues.push(+inflationValue.value);
+							} else {
+								monthsNotFound.push({year: year, month: month});
+							}
+						}
+					}
+
+					// console.log('Month not found:',monthsNotFound)
+					monthsNotFound.forEach(nf => {
+						let inflationValue = $scope.inflationData.find(i => +i.month === 13 && +i.year === nf.year);
+						if (inflationValue) {
+							inflationValues.push(+inflationValue.value / 12);
+						} else {
+							inflationValues.push(0);
+						}
+					})
+
+					let sumInflation = inflationValues.reduce((total, num) => total + num, 0).toFixed(1);
+	
+					// console.log('A', c.formattedArriveDate, 'C', $scope.filter.upToDate, inflationValues, sumInflation)
+	
+					// return $scope.price(c) * +c.dolarValue * (1 + ($scope.inflationPctYear / 12 * monthsDiff / 100));
+					return $scope.price(c) * +c.dolarValue * (1 + (sumInflation / 100))
+				}
+
+				return 0;
 			}
 
       function divideRollsByState(cloths) {

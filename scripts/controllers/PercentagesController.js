@@ -21,11 +21,19 @@ angular.module('vsko.stock').controller('ConfigPercentagesCtrl', ['$scope', '$tr
 	$scope.inflation = result.data.length > 0 ? result.data[0].value : null;
 	$scope.inflationOrig = $scope.inflation;
 
+	if (!$scope.inflation) {
+		$scope.isNew = true;
+	}
+
 	
 	$scope.updateInflationValue = async function() {
 		let result =  await Stock.getInflation($scope.filter.year.nr, $scope.filter.month.nr);
 		$scope.inflation = result.data.length > 0 ? result.data[0].value : null;
 		$scope.inflationOrig = $scope.inflation;
+
+		if (!$scope.inflation) {
+			$scope.isNew = true;
+		}
 	}
 
 	$scope.save = function() {
@@ -39,8 +47,10 @@ angular.module('vsko.stock').controller('ConfigPercentagesCtrl', ['$scope', '$tr
 
 		// if($scope.inflationOrig != $scope.inflation) {
 
-			Stock.saveInflation($scope.filter.year.nr, $scope.filter.month.nr, $scope.inflation).then(function(result){
+			Stock.saveInflation($scope.filter.year.nr, $scope.filter.month.nr, $scope.inflation, $scope.isNew).then(function(result){
 				Utils.showMessage('notify.percentage_updated');
+
+				delete $scope.isNew ;
 			});
 		// }
 	}
