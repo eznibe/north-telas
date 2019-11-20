@@ -5,7 +5,7 @@
   "author": "ezequiel",
   "license": "private",
   "dependencies": {
-    "angular": "1.4.5",
+    "angular": "1.7.9",
     "angular-animate": "1.4.5",
     "angular-bind-notifier": "~1.1.6",
     "angular-cookies": "1.4.5",
