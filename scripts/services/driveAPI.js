@@ -35,9 +35,9 @@ angular.module('vsko.stock').factory('DriveAPI',[ '$q', 'Utils', function ($q, U
   }
 
   function updateApiVersion() {
-    if (gapi.client && gapi.client.drive && gapi.client.drive.kB.servicePath.indexOf('v2') != -1) {
+    if (gapi.client && gapi.client.drive && gapi.client.drive.WF.servicePath.indexOf('v2') != -1) {
       // patch to fix problem when opening first the google picker then the gapi version loaded is v2
-      gapi.client.drive.kB.servicePath = 'drive/v3/';
+      gapi.client.drive.WF.servicePath = 'drive/v3/';
     }
   }
 
