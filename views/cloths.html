@@ -1,5 +1,14 @@
 <div class="nopaddingright jumbotron clearfix">
 	<h1><span translate>Cloths</span><span ng-show="group"> {{'of Group' | translate}} '{{group.name}}'</span></h1>
+	<div class="row">
+		<div class="col-md-8 nopadding">
+				<div class="col-xs-6">
+						<span class="glyphicon glyphicon-tasks icon-with-label"></span>
+						<span ng-if="!onlyWithStock"><a href="#/cloths/onlyWithStock" class="btn-link">{{'Only with stock' | translate}}</a></span>
+						<span ng-if="onlyWithStock"><a href="#/cloths" class="btn-link">{{'See all' | translate}}</a><span></span>
+				</div>
+		</div>
+	</div>
 	<p class="bigmargin">
 	    <a ng-click="showClothModal()" class="btn btn-default floatright" access-level="admin">
 	        <span class="glyphicon glyphicon-plus"></span>&nbsp;

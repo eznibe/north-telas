@@ -2,20 +2,37 @@
 
 angular.module('vsko.stock').controller('ClothsCtrl', ['$scope', '$routeParams', 'Stock', '$modal', function ($scope, $routeParams, Stock, $modal) {
 
-        // initial list of cloth groups
-        if($routeParams.groupId) {
-        	$scope.groupId = Number($routeParams.groupId);
+		$scope.onlyWithStock = $routeParams.onlyWithStock;
 
-        	Stock.getGroup($scope.groupId, 'FULL').then(function(result) {
-        		$scope.group = result.data;
-        		$scope.cloths = $scope.group.cloths;
-        	});
-        }
-        else {
-        	Stock.getAllCloths().then(function(result) {
-        		$scope.cloths = result.data;
-        	});
-        }
+		$scope.search = function() {
+
+			// initial list of cloth groups
+			if($routeParams.groupId) {
+				$scope.groupId = Number($routeParams.groupId);
+	
+				Stock.getGroup($scope.groupId, 'FULL').then(function(result) {
+					$scope.group = result.data;
+					$scope.cloths = $scope.group.cloths;
+				});
+			}
+			else {
+				Stock.getAllCloths().then(function(result) {
+					$scope.cloths = result.data.filter(c => {
+						if ($scope.onlyWithStock) {
+							if (c.name.indexOf('AIRX 650 Silver')!==-1) {
+								console.log('AIRX 650 Silver:', c, $scope.deltaTotal(c))
+							}
+							return $scope.sumStock(c.providers) > 0
+							  || +c.stockMin > 0
+							  || +$scope.deltaTotal(c) < 0;
+						}
+						return true;
+					});
+				});
+			}
+		}
+
+		$scope.search();
 
 
         $scope.sumStock = function(providers) {
@@ -66,5 +83,18 @@ angular.module('vsko.stock').controller('ClothsCtrl', ['$scope', '$routeParams',
 
         $scope.negativeDeltaTotalStyle = function(c) {
           return $scope.deltaTotal(c) < 0 ? {'color': 'red', 'background-color': '#e4e4e4'} : {'background-color': '#e4e4e4'};
-        };
+		};
+		
+		$scope.changeOnlyWithStock = function() {
+			$scope.onlyWithStock = !$scope.onlyWithStock;
+			
+			if ($scope.onlyWithStock) {
+				$scope.cloths = $scope.allResults.filter(c => {
+					return $scope.sumStock(c.providers) > 0;
+				});
+				$scope.$apply();
+			} else {
+				$scope.cloths = $scope.allResults;
+			}
+		} 
 }]);

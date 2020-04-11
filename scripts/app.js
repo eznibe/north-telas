@@ -205,6 +205,11 @@ angular.module("vsko.stock", [
                 controller: 'ClothsCtrl',
                 access: 'public'
             })
+            .when('/cloths/:onlyWithStock', {
+                templateUrl: 'views/cloths.html',
+                controller: 'ClothsCtrl',
+                access: 'public'
+            })
             .when('/previsions', {
                 templateUrl: 'views/previsions.html',
                 controller: 'PrevisionsCtrl',
