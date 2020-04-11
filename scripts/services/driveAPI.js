@@ -35,9 +35,12 @@ angular.module('vsko.stock').factory('DriveAPI',[ '$q', 'Utils', function ($q, U
   }
 
   function updateApiVersion() {
-    if (gapi.client && gapi.client.drive && gapi.client.drive.WF.servicePath.indexOf('v2') != -1) {
-      // patch to fix problem when opening first the google picker then the gapi version loaded is v2
-      gapi.client.drive.WF.servicePath = 'drive/v3/';
+    if (gapi.client && gapi.client.drive) {
+      let key = Object.keys(gapi.client.drive).find(key => gapi.client.drive[key].servicePath)
+      if (key && gapi.client.drive[key].servicePath.indexOf('v2') !== -1) {
+        // patch to fix problem when opening first the google picker then the gapi version loaded is v2
+        gapi.client.drive[key].servicePath = 'drive/v3/';
+      }
     }
   }
 
