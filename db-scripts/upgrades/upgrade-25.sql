@@ -35,5 +35,5 @@ FROM orders o, dolar d
 WHERE o.arriveDate >= d.createdOn and (o.arriveDate <= d.untilDate or d.untilDate is null) and o.country = d.country;
 
 create or replace view v_rolls as
-SELECT r.*, op.price
-FROM rolls r join orderproduct op on r.productId = op.productId and r.orderId = op.orderId;
+SELECT r.*, coalesce(op.price, p.price) as price
+FROM rolls r join products p on r.productId = p.productId left join orderproduct op on r.productId = op.productId and r.orderId = op.orderId
