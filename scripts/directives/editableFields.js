@@ -258,7 +258,8 @@ angular.module('vsko.stock')
           editableByRole: '=',
           tooltipText: '=',
           width: '=',
-          extraLabel: "="
+          extraLabel: "=",
+          allowEmpty: "=?"
         },
         templateUrl: 'views/directives/editableInput.html',
         link: function postLink(scope, element, attrs) {
@@ -271,16 +272,29 @@ angular.module('vsko.stock')
             if(scope.tooltipText && scope.entity.id) {
               $timeout(function() {
           			$('#entityDisplay-'+scope.entity.id+'-'+scope.field).tooltip({title: scope.tooltipText });
-          		}, 500);
+              })
             }
           });
 
+          scope.oneTimeBindings = {
+            mouseOver: function(entity) {
+              scope.over = true;
+              scope.$broadcast('$$rebind::refreshPencil');
+            },
+            mouseLeave: function(entity) {
+              scope.over = false;
+              scope.$broadcast('$$rebind::refreshPencil');
+            },
+            showPencil: function() {
+              return !scope.entity[scope.field] && scope.over && !scope.editable && !scope.readonly;
+            }
+          };
 
       	  /*scope.value = scope.entity[scope.field];*/
 
       	  scope.changed = function(entity) {
 
-            if(entity[scope.field]) {
+            if(entity[scope.field] || scope.allowEmpty) {
         		  scope.callback(entity, entity[scope.field], scope.field);
 
         		  scope.clicked(entity);

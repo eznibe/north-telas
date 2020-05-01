@@ -365,8 +365,9 @@ function updateProduct($product) {
 	$obj->method = 'update.orderproduct';
 
 	$temporary = isset($product->temporary) && $product->temporary ? 'true' : 'false';
+	$ar = isset($product->ar) && $product->ar ? ("'" . $product->ar . "'") : 'null';
 
-	$update = "UPDATE orderproduct SET amount = $product->amount, temporary = $temporary ".
+	$update = "UPDATE orderproduct SET amount = $product->amount, temporary = $temporary, ar = $ar ".
 			  "WHERE opId = '".$product->opId."'" ;
 
 	if(!mysql_query($update)) {
@@ -376,6 +377,7 @@ function updateProduct($product) {
 		$log->type = $obj->method . " - failed";
 	} else {
 		$log->type = $obj->method;
+		$obj->update = $update;		
 	}
 
 	

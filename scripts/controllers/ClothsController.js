@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('vsko.stock').controller('ClothsCtrl', ['$scope', '$routeParams', 'Stock', '$modal', function ($scope, $routeParams, Stock, $modal) {
+angular.module('vsko.stock').controller('ClothsCtrl', ['$scope', '$routeParams', 'Stock', 'Lists', '$modal', function ($scope, $routeParams, Stock, Lists, $modal) {
 
 		$scope.onlyWithStock = $routeParams.onlyWithStock;
 
@@ -19,15 +19,16 @@ angular.module('vsko.stock').controller('ClothsCtrl', ['$scope', '$routeParams',
 				Stock.getAllCloths().then(function(result) {
 					$scope.cloths = result.data.filter(c => {
 						if ($scope.onlyWithStock) {
-							if (c.name.indexOf('AIRX 650 Silver')!==-1) {
-								console.log('AIRX 650 Silver:', c, $scope.deltaTotal(c))
-							}
 							return $scope.sumStock(c.providers) > 0
 							  || +c.stockMin > 0
 							  || +$scope.deltaTotal(c) < 0;
 						}
 						return true;
 					});
+
+					if ($routeParams.onlyWithStock) {
+						Lists.log({type: 'info.cloths.onlyWithStock', log: ('Results: ' + $scope.cloths.length)});
+					}
 				});
 			}
 		}

@@ -113,7 +113,15 @@ angular.module('vsko.stock')
         					});
                 }
               });
-            }
+			}
+			
+			$scope.updateProductAR = function(product) {
+
+				Orders.orderProductSave(product).then(function(result){
+					console.log('Updated product AR to '+product.ar);
+				});
+			}
+			
 
 	      	  $scope.isEmptyRoll = function(roll) {
 	      		  return !roll.number && !roll.lote && !roll.mts;

@@ -1,7 +1,10 @@
-<div>
+<div ng-mouseover="::oneTimeBindings.mouseOver();" ng-mouseleave="::oneTimeBindings.mouseLeave();" style="height:20px;" 
+		ng-style="{'width': (!fullWidth ? '70px' : '')}">
 	<a style="color:#616161; cursor:pointer;" id="entityDisplay-{{::entity.id}}-{{::field}}" ng-click="::clicked(entity)">
 		<span>{{entity[field]}}</spa1en> <span>{{extraLabel}}</span>
 	</a>
+	<span ng-show=":refreshPencil:oneTimeBindings.showPencil();"  ng-click="::clicked(entity)" id="entityPencil-{{::entity.id}}-{{::field}}" class="glyphicon glyphicon-pencil control-label" style="text-align:center; cursor:pointer; float:none; padding-left:5px; padding-right:5px;">&nbsp;</span>
+
 	<span  class="badge" id="entityEdit-{{::entity.id}}-{{::field}}" style="display:none;">
 		<input type="text" ng-model="entity[field]" ng-style="{'width': (width ? width+'px' : '100px')}"/>
 

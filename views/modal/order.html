@@ -20,6 +20,7 @@
 						<tr>
 							<th style="min-width: 150px;" translate>Product</th>
 							<th translate>Code</th>
+							<th ng-show="order.status!='TO_BUY'">AR</th>
 							<th translate>Amount</th>
 							<th access-allowed="temporaries" translate>Temporaries col</th>
 							<th ng-show="order.status!='TO_BUY'" translate>Rolls</th>
@@ -30,12 +31,15 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="p in order.products">
+						<tr ng-repeat="p in order.products" style="height: 41px;">
 							<td>
 								<a href="javascript:void(0)" ng-click="showUpdateModal(p)">{{p.name}}</a>
 							</td>
 							<td nowrap>
 								{{p.code}}
+							</td>
+							<td ng-show="order.status!='TO_BUY'">
+								<editable-input entity="p" field="'ar'" callback="updateProductAR" allow-empty="true" editable-by-role="'admin'" width="50" style="display:inline-block;"></editable-input>
 							</td>
 							<td>
                 				<editable-input entity="p" field="'amount'" callback="updateProductAmount" editable-by-role="'admin'" width="50" style="display:inline-block;"></editable-input>
@@ -64,6 +68,7 @@
 						</tr>
 						<tr class="totalRow">
 							<td style="color: #000;">Total</td>
+							<td></td>
 							<td></td>
 							<td></td>
 							<td access-allowed="temporaries"></td>

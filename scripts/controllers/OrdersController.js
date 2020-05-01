@@ -174,7 +174,7 @@ angular.module('vsko.stock')
 			});
 		};
 
-		$scope.search = async function() {
+		$scope.searchOrder = async function() {
 
 			if ($scope.search.order) {
 

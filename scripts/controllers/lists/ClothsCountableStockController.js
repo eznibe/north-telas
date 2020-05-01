@@ -207,7 +207,7 @@ angular.module('vsko.stock').controller('ClothsCountableStockCtrl', ['$scope', '
 				// 	return acc + (+roll.mts * (roll.price != '?' ? +roll.price : 0));
 				// }, 0);
 				// return totalPrice;
-				return c ? +c.available * +c.price : 0;
+				return c && +c.available && +c.price ? +c.available * +c.price : 0;
 			}
 			
 
