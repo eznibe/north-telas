@@ -64,15 +64,20 @@ angular.module('vsko.stock').controller('HistoricCtrl', ['$scope', '$rootScope',
 		$scope.filter.searchBox = $scope.searchBox;
 		$scope.filter.limit = rows;
 
+		$scope.filter.orderList = [];
+		if ($scope.filter.orderByKey) {
+			$scope.filter.orderList.push({key: $scope.filter.orderByKey, type: $scope.filter.orderByKeyType, mode: $scope.filter.orderType});
+		}
+
 		Previsions.getPrevisionsHistoric($rootScope.user.sellerCode, $scope.filter, (page-1) * rows).then(function(result) {
 			$scope.previsions = result.data;
 
-			if ($('#pagination').data("twbs-pagination") && ($scope.page == 1 || result.data[0].count <= rows)) {
+			if ($('#pagination').data("twbs-pagination") && ($scope.page == 1 || !result.data[0] || result.data[0].count <= rows)) {
 				$('#pagination').twbsPagination('destroy');
 				firstLoad = true;
 			}
 
-			if (result.data[0].count > rows) {
+			if (result.data[0] && result.data[0].count > rows) {
 				$('#pagination').twbsPagination({
 							totalPages: (result.data[0].count / rows) + 1,
 							visiblePages: 7,

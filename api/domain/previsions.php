@@ -71,7 +71,7 @@ function getPrevisions($clothId, $designed, $expand, $production, $historic, $se
 		$query = $select . $body . $footer;
 	}
 
- // 	return $query;
+ 	// return $query;
 
  	$count = "SELECT count(*) as count " . $body;
 	$result = mysql_query($count);
@@ -625,7 +625,8 @@ function createFilterCondition($filters) {
 	}
 
 	if (isset($filters->searchBox) && $filters->searchBox != "") {
-		$filter .= " AND (p.orderNumber LIKE '%". $filters->searchBox . "%' OR p.client LIKE '%". $filters->searchBox . "%' OR p.boat LIKE '%". $filters->searchBox . "%')";
+		$filter .= " AND (p.orderNumber LIKE '%". $filters->searchBox . "%' OR p.client LIKE '%". $filters->searchBox . "%' OR p.boat LIKE '%". $filters->searchBox . "%' ".
+				"OR coalesce(p.sailDescription, p.sailOneDesign, concat(sg.name,' - ',s.description)) LIKE '%". $filters->searchBox . "%')";
 	}
 
 	return $filter;

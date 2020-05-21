@@ -78,7 +78,8 @@
 				{{::(p.dispatch ? '#' + p.dispatch : '')}}
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('order')" nowrap>
-				{{:refreshColumnsValue:getValue(p, 'orderNumber')}}
+				<a href="javascript:void(0);" ng-click="showPrevisionModal(p)" access-restricted="vendedor">{{:refreshColumnsValue:getValue(p, 'orderNumber')}}</a>
+				<!-- {{:refreshColumnsValue:getValue(p, 'orderNumber')}} -->
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('client')">
 				{{:refreshColumnsValue:getValue(p, 'client')}}
@@ -151,3 +152,5 @@
 
 
 <confirm-modal/>
+
+<prevision-modal/>
