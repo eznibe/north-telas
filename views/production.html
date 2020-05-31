@@ -104,6 +104,7 @@
 			<th class="infoDate" translate style="min-width:95px;">Info date min</th>
 			<th class="advanceDate" translate style="min-width:95px;">Advance date min</th>
 			<th class="cloths" access-restricted="vendedor" translate>Cloths</th>
+			<th class="kitco"><div class="rotate"><span translate>KitCo</span></div></th>
 			<th class="state" access-restricted="vendedor" translate>State col</th>
 			<th class="area" access-restricted="vendedor" translate>Area</th>
 			<th class="productionObservations" access-restricted="vendedor" translate>Production observations col</th>
@@ -131,6 +132,7 @@
 			<th class="advanceDate" ng-style="{'background-color': headerBackgroundColor(selectionObject.advanceDate)}" style="min-width:95px;"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('advanceDate');" style="text-align:center; cursor:pointer;"></div></th>
 			<th class="cloths" ng-style="{'background-color': headerBackgroundColor(selectionObject.cloths)}" style="min-width:95px;" access-restricted="vendedor"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('cloths');" style="text-align:center; cursor:pointer;"></div></th>
 			<!-- <th class="cloths"></th> -->
+			<th class="kitco" ng-style="{'background-color': headerBackgroundColor(selectionObject.kitco)}" access-restricted="vendedor"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('kitco');" style="text-align:center; cursor:pointer;"></div></th>
 			<th class="state" ng-style="{'background-color': headerBackgroundColor(selectionObject.state)}" access-restricted="vendedor"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('state');" style="text-align:center; cursor:pointer;"></div></th>
 			<th class="area" ng-style="{'background-color': headerBackgroundColor(selectionObject.area)}" access-restricted="vendedor"><div><span class="glyphicon glyphicon-filter control-label" ng-click="::showFilterSelectionModal('area');" style="text-align:center; cursor:pointer;"></div></th>
 			<th class="productionObservations" access-restricted="vendedor"></th>
@@ -196,6 +198,10 @@
 			</td>
 			<td class="cloths" ng-show="::visibility.selected('cloths')" access-restricted="vendedor">
 				<prevision-cloths prevision="::p" style="display:inline-block;"></prevision-cloths>
+			</td>
+			<td class="kitco" ng-show="::visibility.selected('kitco')" style="min-width:30px;" ng-style=":refreshErrorBackground:visibility.errorStyle(p, 'kitco');">
+				<!-- {{:refreshColumnsValue:getValue(p, 'kitco')}} -->
+				<editable-production-dropdown entity="::p" options="::listKitcos" field="'kitco'" callback="::changedPrevision.field" display="::kitcoDisplayFn" width="25" width-editable="50" editable-by-role="'admin,produccion'" style="display:inline-block;"></editable-production-dropdown>
 			</td>
 			<td class="state" ng-show="::visibility.selected('state')" access-restricted="vendedor" style="text-align: center;">
 				<span style="color:black; padding:2px;" ng-style="::oneTimeBindings.stateStyle(p)">

@@ -14,6 +14,7 @@ angular.module('vsko.stock')
 
             $scope.countries = countries.list.concat(countries.designOnly);
 
+            $scope.kitcos = ['', 'NO', 'AEREO', 'CURRIER', 'OK', 'NACIONAL'];
 
             $scope.onBeforePickerOpen = function(elementInfo) {
               // TODO change the drive folder id (prod/design) according to clicked button -> check elementInfo.id == 'productionPicker' / 'designPicker'
@@ -235,6 +236,8 @@ angular.module('vsko.stock')
 
               $scope.prevision.selectedLine = $scope.prevision.line ? $scope.lines.findAll({name:$scope.prevision.line})[0] : {};
 
+              $scope.prevision.selectedKitco = $scope.prevision.kitco || $scope.kitcos[0];
+
               if (!$scope.prevision.week) {
                 $scope.prevision.week = 19;
               }
@@ -272,6 +275,13 @@ angular.module('vsko.stock')
           		});
 
               isInPlotterWithCuts($scope.prevision);
+
+              // load info for last modification kitco column
+              Previsions.getColumnLastModification($scope.prevision.id, 'kitco').then(function(result){
+                $scope.kitcoLastModification = result.data.length > 0 
+                  ? 'Ultima modificacion: ' + result.data[0].lastModificationDate 
+                  : '';
+          		});
 
               // order previsions of the autocomplete by sequence number desc when same order number
               if ($scope.previsions) {
@@ -362,6 +372,7 @@ angular.module('vsko.stock')
               $scope.prevision.line = null;
             }
 
+            $scope.prevision.kitco = $scope.prevision.selectedKitco || '';
 
             $scope.prevision.dispatchId = $scope.prevision.selectedDispatch ? $scope.prevision.selectedDispatch.id : null;
 

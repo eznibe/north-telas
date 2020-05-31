@@ -292,5 +292,9 @@ angular.module('vsko.stock')
 					return $http.post(url + 'previsions_POST.php?weekDown=true', {ids: previsionIds, user: $rootScope.user.name, column: column});
 				};
 
+		this.getColumnLastModification = function(previsionId, column) {
+			return $http.get(url + 'previsions_GET.php?previsionId='+previsionId+'&column='+column+'&lastModification=true');
+		};
+
         return this;
     }]);

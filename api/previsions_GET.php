@@ -54,6 +54,9 @@ else if(isset($_GET['weeksBySeason'])) {
 else if(isset($_GET['isInSomeDispatch'])) {
 	$value = isInSomeDispatch($_GET['previsionId']);
 }
+else if(isset($_GET['lastModification'])) {
+	$value = lastColumnModificationDate($_GET['previsionId'], $_GET['column']);
+}
 else if(isset($_GET['properties'])) {
 	$value = getProperties($_GET['filter']);
 }

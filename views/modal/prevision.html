@@ -161,14 +161,27 @@
 								</div>
 								<div class="col-xs-4" ng-show="prevision.oneDesign">
 									<select name="dd_boat" ng-model="prevision.selectedBoat" ng-options="b as b.boat for b in boats" class="form-control small" ng-change="filterSails();  oneDesignCloths();">
-                    <option value="">-- choose one --</option>
-                  </select>
+										<option value="">-- choose one --</option>
+									</select>
 								</div>
 
 								<label class="control-label col-xs-2" for="edit_feet" ng-show="prevision.selectedSailGroup.id != 8">&gt; 44</label>
 								<div class="col-xs-2" ng-hide="prevision.selectedSailGroup.id == 8">
 									<input name="edit_feet" type="checkbox" style="margin-top:8px;" ng-model="prevision.greaterThan44"  ng-change="calculateMts()">
 								</div>
+						</div>
+
+					</div>
+
+					<div class="row">
+						<div class="col-md-6 nopadding">
+							<label class="control-label col-xs-4" for="edit_kitco" translate>KitCo</label>
+							<div class="col-xs-4">
+								<select name="dd_kitco" ng-model="prevision.selectedKitco" ng-options="k as k for k in kitcos" class="form-control small" title="{{kitcoLastModification}}">
+								</select>
+							</div>
+						</div>
+						<div class="col-md-6 nopadding">
 						</div>
 
 					</div>

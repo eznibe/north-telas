@@ -56,6 +56,7 @@
 			<th ng-show=":refreshColumns:visibility.showColumn('infoDate')" translate style="min-width:95px;">Info date min</th>
 			<th ng-show=":refreshColumns:visibility.showColumn('advanceDate')" translate style="min-width:95px;">Advance date min</th>
 			<th ng-show=":refreshColumns:visibility.showColumn('cloths')" translate>Cloths</th>
+			<th ng-show=":refreshColumns:visibility.showColumn('kitco')" translate access-restricted="vendedor">KitCo</th>
 			<th ng-show=":refreshColumns:visibility.showColumn('state')" translate access-restricted="vendedor">State col</th>
 			<th ng-show=":refreshColumns:visibility.showColumn('area')" translate access-restricted="vendedor">Area</th>
 			<th ng-show=":refreshColumns:visibility.showColumn('productionObservations')" translate access-restricted="vendedor">Observations</th>
@@ -121,6 +122,9 @@
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('cloths')">
 				<prevision-cloths prevision="p" style="display:inline-block;"></prevision-cloths>
+			</td>
+			<td ng-show=":refreshColumns:visibility.showColumn('kitco')" access-restricted="vendedor">
+				{{:refreshColumnsValue:getValue(p, 'kitco')}}
 			</td>
 			<td ng-show=":refreshColumns:visibility.showColumn('state')" access-restricted="vendedor">
 				{{:refreshColumnsValue:getValue(p, 'state')}}

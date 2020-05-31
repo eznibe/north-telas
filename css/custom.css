@@ -302,3 +302,8 @@ table#production tbody tr,
 	display: inline-block;
 	width: 75px;
 }
+
+.kitco a {
+	position: absolute;
+	margin-top: 4px;
+}

@@ -173,6 +173,17 @@ function getPrevision($id) {
 	return $obj;
 }
 
+function lastColumnModificationDate($previsionId, $column)
+{
+	global $country;
+
+	$query = "SELECT DATE_FORMAT(min(insertedOn),'%d-%m-%Y') as lastModificationDate FROM previsionfulllogs where id = '$previsionId' and $column is not null group by id, $column having min(insertedOn) order by min(insertedOn) desc limit 1";
+
+	$result = mysql_query($query);
+
+	return fetch_array($result);
+}
+
 // check if the given orderNumber already exist in the system
 function validateOrderNumber($orderNumber) {
 
@@ -259,6 +270,7 @@ function savePrevision($prevision)
 	$designWeek = isset($prevision->designWeek) && trim($prevision->designWeek)!='' ? $prevision->designWeek : 'null' ;
 	$designOnly = $prevision->designOnly==1 ? 'true' : 'false';
 	$designOnlyCloth = isset($prevision->designOnlyCloth) && trim($prevision->designOnlyCloth)!='' ? $prevision->designOnlyCloth : '' ;
+	$kitco = isset($prevision->kitco) && trim($prevision->kitco)!='' ? $prevision->kitco : '' ;
 
 	if ($num_results != 0)
 	{
@@ -270,7 +282,7 @@ function savePrevision($prevision)
 																		", week = $week, priority = $priority, line = $line, seller = $seller, advance = $advance, percentage = $percentage".
 																		", tentativeDate = $tentativeDate, productionDate = $productionDate, infoDate = $infoDate, advanceDate = $advanceDate, rizo = $rizo, country = '$country'".
 																		", deliveryDateManuallyUpdated = $deliveryDateManuallyUpdated, excludeFromStateCalculation = $excludeFromStateCalculation, excludeFromTemporariesCalculation = $excludeFromTemporariesCalculation".
-																		", designer = '$designer', designHours = $designHours, designWeek = $designWeek, designOnly = $designOnly, designOnlyCloth = '$designOnlyCloth'".
+																		", designer = '$designer', designHours = $designHours, designWeek = $designWeek, designOnly = $designOnly, designOnlyCloth = '$designOnlyCloth', kitco = '$kitco'".
 																		" WHERE id = '".$prevision->id."'";
 
 		if(mysql_query($update)) {
@@ -287,11 +299,11 @@ function savePrevision($prevision)
 		$insert = "INSERT INTO previsions (id, orderNumber, deliveryDate, client, sailId, sailGroupId, sailDescription, boat,
 				type, designed, oneDesign, greaterThan44, p, e, i,j, area, sailOneDesign, observations, productionObservations, designObservations,
 				week, priority, line, seller, advance, percentage, tentativeDate, productionDate, infoDate, advanceDate, dispatchId, rizo, country, excludeFromStateCalculation, excludeFromTemporariesCalculation,
-			  designer, designHours, designWeek, designOnly, designOnlyCloth)
+			  designer, designHours, designWeek, designOnly, designOnlyCloth, kitco)
 				VALUES ('".$prevision->id."', '".$prevision->orderNumber."', STR_TO_DATE('".$prevision->deliveryDate."', '%d-%m-%Y'), '".$client."', $sailId, $sailGroupId, $sailDescription, '".$boat."', '".$prevision->type."', false, ".$oneDesign.", ".$greaterThan44.", ".
 								$p.", ".$e.", ".$i.", ".$j.", ".$area.", $sailOneDesign, '$observations', '$productionObservations', '$designObservations',
 								$week, $priority, $line, $seller, $advance, $percentage, $tentativeDate, $productionDate, $infoDate, $advanceDate, $dispatchId, $rizo, '$country', $excludeFromStateCalculation, $excludeFromTemporariesCalculation,
-								'$designer', $designHours, $designWeek, $designOnly, '$designOnlyCloth')" ;
+								'$designer', $designHours, $designWeek, $designOnly, '$designOnlyCloth', '$kitco')" ;
 
 		if(mysql_query($insert)) {
 			$obj->successful = true;
@@ -856,8 +868,8 @@ function updateProperties($property) {
 function logPrevisionUpdateFull($previsionId, $method) {
 	global $country;
 
-	$update = "INSERT INTO previsionfulllogs (id,orderNumber,deliveryDate,client,sailId,sailDescription,boat,type,designed,oneDesign,greaterThan44,p,e,i,j,area,sailOneDesign,observations,designedOn,createdOn,state,prevState,stateAccepted,stateChanged,stateAcceptedDate,seller,dispatchId,line,week,priority,percentage,advance,tentativeDate,productionDate,infoDate,advanceDate,deletedProductionOn,deletedProductionBy,productionObservations,designObservations,driveIdProduction,driveIdDesign,sailGroupId,rizo,country,deliveryDateManuallyUpdated,method,insertedon)
-	 						SELECT id,orderNumber,deliveryDate,client,sailId,sailDescription,boat,type,designed,oneDesign,greaterThan44,p,e,i,j,area,sailOneDesign,observations,designedOn,createdOn,state,prevState,stateAccepted,stateChanged,stateAcceptedDate,seller,dispatchId,line,week,priority,percentage,advance,tentativeDate,productionDate,infoDate,advanceDate,deletedProductionOn,deletedProductionBy,productionObservations,designObservations,driveIdProduction,driveIdDesign,sailGroupId,rizo,country,deliveryDateManuallyUpdated
+	$update = "INSERT INTO previsionfulllogs (id,orderNumber,deliveryDate,client,sailId,sailDescription,boat,type,designed,oneDesign,greaterThan44,p,e,i,j,area,sailOneDesign,observations,designedOn,createdOn,state,prevState,stateAccepted,stateChanged,stateAcceptedDate,seller,dispatchId,line,week,priority,percentage,advance,tentativeDate,productionDate,infoDate,advanceDate,deletedProductionOn,deletedProductionBy,productionObservations,designObservations,driveIdProduction,driveIdDesign,sailGroupId,rizo,country,deliveryDateManuallyUpdated,kitco,method,insertedon)
+	 						SELECT id,orderNumber,deliveryDate,client,sailId,sailDescription,boat,type,designed,oneDesign,greaterThan44,p,e,i,j,area,sailOneDesign,observations,designedOn,createdOn,state,prevState,stateAccepted,stateChanged,stateAcceptedDate,seller,dispatchId,line,week,priority,percentage,advance,tentativeDate,productionDate,infoDate,advanceDate,deletedProductionOn,deletedProductionBy,productionObservations,designObservations,driveIdProduction,driveIdDesign,sailGroupId,rizo,country,deliveryDateManuallyUpdated,kitco
 							, '$method', now() FROM previsions WHERE id = '$previsionId'";
 
 	$obj->successful = true;

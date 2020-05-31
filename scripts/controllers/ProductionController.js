@@ -15,6 +15,8 @@ function ($scope, $rootScope, $translate, $timeout, $cookieStore, Production, Pr
 	}
 	$rootScope.searchBoxChangedObservers.push($scope.refreshBySearchBox);
 
+	$scope.listKitcos = ['', 'NO', 'AEREO', 'CURRIER', 'OK', 'NACIONAL'];
+
 	// just init the drive api to ensure we have the v3 loaded (avoiding problems with v2 loaded by the google picker)
 	$timeout(function() {
 		DriveAPI.init();
@@ -139,7 +141,7 @@ function ($scope, $rootScope, $translate, $timeout, $cookieStore, Production, Pr
  	$scope.filterOptions.columns = [{name: 'Seller', key:'seller', type:'str', options: []}, {name: 'Week', key:'week', type:'nr', options: []}, {name: 'Priority', key:'priority', type:'nr', hideFromSeller: true, options: []}, {name: 'Dispatch', key:'d.number', column: 'dispatch', type:'nr', options: []},
 													{name: 'Order', key:'p.orderNumber', column: 'orderNumber', type:'str', options: []}, {name: 'Client', key:'p.client', column: 'client', type:'str', options: []}, {name: 'Boat', key:'boat', type:'str', options: []}, {name: 'Sail', key:'sailName', column: 'sailName', type:'str', options: []}, {name: 'Line', key:'line', type:'str', options: []}, {name: '%', key:'percentage', type:'nr', options: []},
 													{name: 'Advance', key:'advance', type:'nr', options: []}, {name: 'Delivery date', key:'p.deliveryDate', column: 'deliveryDate', type:'date', options: []}, {name: 'Tentative date', key:'p.tentativeDate', column: 'tentativeDate', type:'date', hideFromSeller: true, options: []}, {name: 'Production date', key:'p.productionDate', column: 'productionDate', type:'date', hideFromSeller: true, options: []}, {name: 'Info date', key:'p.infoDate', column: 'infoDate', type:'date', options: []},
-													{name: 'Advance date', key:'p.advanceDate', column: 'advanceDate', type:'date', options: []}, {name: 'Cloths', key:'cloths', type:'arr', options: []}, {name: 'State', key:'state', type:'str', hideFromSeller: true, options: []}, {name: 'Area', key:'area', type:'nr', hideFromSeller: true, options: []}];
+													{name: 'Advance date', key:'p.advanceDate', column: 'advanceDate', type:'date', options: []}, {name: 'Cloths', key:'cloths', type:'arr', options: []}, {name: 'Kitco', key:'kitco', type:'str', hideFromSeller: true, options: []}, {name: 'State', key:'state', type:'str', hideFromSeller: true, options: []}, {name: 'Area', key:'area', type:'nr', hideFromSeller: true, options: []}];
 
 	$scope.filterOptions.orderTypes = [{name: 'Order ascending', key:'order.ascending'},
   													 				 {name: 'Order descending', key:'order.descending'}];
@@ -517,6 +519,13 @@ function ($scope, $rootScope, $translate, $timeout, $cookieStore, Production, Pr
 
 		return prevision.week ? getColor(prevision.week) : '';
 	}
+
+	$scope.kitcoDisplayFn = function(kitco, config) {
+		if (config && config.verbose) {
+		  // console.log('Display designer:',designer,config.extra)
+		}
+		return kitco ? kitco.substr(0, 3) : '';
+	  };
 
 	function translateOptions(options) {
 

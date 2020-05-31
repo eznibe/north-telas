@@ -36,7 +36,7 @@ angular.module('vsko.stock').controller('HistoricCtrl', ['$scope', '$rootScope',
 	});
 
 	$scope.columns = {seller: true, week: true, priority: true, dispatch: true, order: true, client: true, boat: true, sail: true, line: true, percentage: true, advance: false, deliveryDate: true
-									 ,tentativeDate: false, productionDate: true, infoDate: true, advanceDate: true, cloths: true, state: false, area: true, productionObservations: false, archivedDate: true};
+									 ,tentativeDate: false, productionDate: true, infoDate: true, advanceDate: true, cloths: true, kitco: true, state: false, area: true, productionObservations: false, archivedDate: true};
 
 	 // initial filter options
 	 $scope.filter = {};
@@ -44,7 +44,7 @@ angular.module('vsko.stock').controller('HistoricCtrl', ['$scope', '$rootScope',
 	 $scope.filterOptions.columns = [{name: 'Seller', key:'seller', type:'str', options: []}, {name: 'Week', key:'week', type:'nr', options: []}, {name: 'Priority', key:'priority', type:'nr', options: []}, {name: 'Dispatch', key:'d.number', column: 'dispatch', type:'nr', options: []},
 	 												{name: 'Order', key:'p.orderNumber', column: 'orderNumber', type:'str', options: []}, {name: 'Client', key:'p.client', column: 'client', type:'str', options: []}, {name: 'Boat', key:'boat', type:'str', options: []}, {name: 'Sail', key:'sailName', type:'str', options: []}, {name: 'Line', key:'line', type:'str', options: []}, {name: '%', key:'percentage', type:'nr', options: []},
 	 												{name: 'Advance', key:'advance', type:'nr', options: []}, {name: 'Delivery date', key:'p.deliveryDate', type:'date', options: []}, {name: 'Tentative date', key:'p.tentativeDate', type:'date', options: []}, {name: 'Production date', key:'p.productionDate', type:'date', options: []}, {name: 'Info date', key:'p.infoDate', type:'date', options: []},
-	 												{name: 'Advance date', key:'p.advanceDate', type:'date', options: []}, {name: 'State', key:'state', type:'str', options: []}, {name: 'Area', key:'area', type:'nr', options: []}, {name: 'Archived date', key:'p.deletedProductionOn', type:'date', options: []}];
+	 												{name: 'Advance date', key:'p.advanceDate', type:'date', options: []}, {name: 'KitCo', key:'kitco', type:'str', options: []}, {name: 'State', key:'state', type:'str', options: []}, {name: 'Area', key:'area', type:'nr', options: []}, {name: 'Archived date', key:'p.deletedProductionOn', type:'date', options: []}];
 
 	 $scope.filterOptions.orderTypes = [{name: 'Order ascending', key:'order.ascending'},
 	 																	  {name: 'Order descending', key:'order.descending'}];
