@@ -22,7 +22,8 @@ angular.module('vsko.stock').controller('TemporariesForDispatcherCtrl', ['$scope
 
       $scope.dispatchs.forEach(function(dispatch) {
         dispatch.files.forEach(function(f) {
-          total += (+f.mtsInitial * 0.95) - +f.used;
+          //total += (+f.mtsInitial * 0.95) - +f.used;
+          total += +f.available;
         });
       });
     }
@@ -38,8 +39,8 @@ angular.module('vsko.stock').controller('TemporariesForDispatcherCtrl', ['$scope
     dispatch.files.forEach(function(f) {
       availableWithLoss += (+f.mtsInitial * 0.95) - +f.used;
     });
-    return (+availableWithLoss * 100 / (+dispatch.init * 0.95)).toFixed(0);
-    // return (+dispatch.available * 100 / (+dispatch.init)).toFixed(0);
+    //return (+availableWithLoss * 100 / (+dispatch.init * 0.95)).toFixed(0);
+    return (+dispatch.available * 100 / (+dispatch.init)).toFixed(0);
   }
 
 }]);

@@ -138,7 +138,7 @@
               </div>
             </div>
 
-						<div class="col-md-1 nopadding noprint" access-restricted="read-only">
+						<div class="col-md-1 nopadding noprint" access-restricted="read-only,plotter">
 								<div class="col-xs-12" access-restricted="vendedor">
 									<a ng-click="saveDispatch(dispatch)" class="btn btn-default floatright edit_person" ng-disabled="!form.$valid" >
 										<span class="glyphicon glyphicon-save"></span>
@@ -146,7 +146,7 @@
 								</div>
 						</div>
 
-            <div class="col-md-1 nopadding noprint" access-restricted="read-only">
+            <div class="col-md-1 nopadding noprint" access-restricted="read-only,plotter">
 								<div class="col-xs-12" access-restricted="vendedor">
 									<a ng-click="printDispatch(dispatch)" class="btn btn-default floatright edit_person">
 										<span class="glyphicon glyphicon-print"></span>
@@ -371,7 +371,7 @@
               <th translate>%</th>
               <th nowrap translate>Weight net</th>
               <th translate>Observations</th>
-							<th access-restricted="read-only,vendedor" class="noprint" translate>Delete</th>
+							<th access-restricted="read-only,plotter,vendedor" class="noprint" translate>Delete</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -403,7 +403,7 @@
               <td>
                 <editable-production-textarea entity="::o" field="'observations'" callback="::changedDispatch.field" width="100" editable-by-role="'admin,produccion,velas-od'" style="display:inline-block;"></editable-production-textarea>
 							</td>
-							<td access-restricted="read-only,vendedor" style="width:80px; text-align:center;" class="noprint">
+							<td access-restricted="read-only,plotter,plotter,vendedor" style="width:80px; text-align:center;" class="noprint">
 								<!-- <a ng-click="showConfirmModal(o, deleteDispatchPrevision)" class="btn btn-default"> -->
 									<span class="glyphicon glyphicon-trash icon-link" ng-click="showConfirmModal(o, deleteDispatchPrevision)"></span>
 								<!-- </a> -->
@@ -422,7 +422,7 @@
                 {{ sumPrevisionsWeight() }}
 							</td>
               <td></td>
-							<td access-restricted="read-only,vendedor" class="noprint"></td>
+							<td access-restricted="read-only,plotter,plotter,vendedor" class="noprint"></td>
 						</tr>
 					</tbody>
 				</table>
@@ -432,7 +432,7 @@
         <div class="row" style="margin-bottom: 25px; margin-top: 25px;">
 
           <div class="col-md-6">
-            <a ng-click="showCarryModal(null, 'BOX')" class="btn btn-default floatleft noprint" style="margin-bottom: 10px;" access-restricted="read-only,vendedor">
+            <a ng-click="showCarryModal(null, 'BOX')" class="btn btn-default floatleft noprint" style="margin-bottom: 10px;" access-restricted="read-only,plotter,plotter,vendedor">
       	        <span class="glyphicon glyphicon-plus"></span>&nbsp;
       	        {{'Create new box' | translate}}
       	    </a>
@@ -442,8 +442,8 @@
                   <th translate>Box</th>
                   <th translate>Weight gross</th>
                   <th translate>Measures</th>
-                  <th access-restricted="read-only,vendedor" class="noprint"></th>
-                  <th access-restricted="read-only,vendedor" class="noprint"></th>
+                  <th access-restricted="read-only,plotter,plotter,vendedor" class="noprint"></th>
+                  <th access-restricted="read-only,plotter,plotter,vendedor" class="noprint"></th>
                 </tr>
               </thead>
               <tbody>
@@ -457,12 +457,12 @@
                   <td>
                     {{b.measures}}
                   </td>
-                  <td access-restricted="read-only,vendedor" style="width:80px; text-align:center;" class="noprint">
+                  <td access-restricted="read-only,plotter,vendedor" style="width:80px; text-align:center;" class="noprint">
                     <!-- <a ng-click="showCarryModal(b)" class="btn btn-default"> -->
                       <span class="glyphicon glyphicon-edit icon-link" ng-click="showCarryModal(b)"></span>
                     <!-- </a> -->
                   </td>
-                  <td access-restricted="read-only,vendedor" style="width:80px; text-align:center;" class="noprint">
+                  <td access-restricted="read-only,plotter,vendedor" style="width:80px; text-align:center;" class="noprint">
                     <!-- <a ng-click="showConfirmModal(b, deleteDispatchCarry)" class="btn btn-default"> -->
                       <span class="glyphicon glyphicon-trash icon-link" ng-click="showConfirmModal(b, deleteDispatchCarry)"></span>
                     <!-- </a> -->
@@ -481,7 +481,7 @@
           </div>
 
           <div class="col-md-6">
-            <a ng-click="showCarryModal(null, 'TUBE')" class="btn btn-default floatleft noprint" style="margin-bottom: 10px;" access-restricted="read-only,vendedor">
+            <a ng-click="showCarryModal(null, 'TUBE')" class="btn btn-default floatleft noprint" style="margin-bottom: 10px;" access-restricted="read-only,plotter,vendedor">
       	        <span class="glyphicon glyphicon-plus"></span>&nbsp;
       	        {{'Create new tube' | translate}}
       	    </a>
@@ -491,8 +491,8 @@
                   <th translate>Tube</th>
                   <th translate>Weight gross</th>
                   <th translate>Measures</th>
-                  <th access-restricted="read-only,vendedor" class="noprint" translate></th>
-                  <th access-restricted="read-only,vendedor" class="noprint" translate></th>
+                  <th access-restricted="read-only,plotter,vendedor" class="noprint" translate></th>
+                  <th access-restricted="read-only,plotter,vendedor" class="noprint" translate></th>
                 </tr>
               </thead>
               <tbody>
@@ -506,12 +506,12 @@
                   <td>
                     {{t.measures}}
                   </td>
-                  <td access-restricted="read-only,vendedor" style="width:80px; text-align:center;" class="noprint">
+                  <td access-restricted="read-only,plotter,vendedor" style="width:80px; text-align:center;" class="noprint">
                     <!-- <a ng-click="showCarryModal(t)" class="btn btn-default"> -->
                       <span class="glyphicon glyphicon-edit icon-link" ng-click="showCarryModal(t)"></span>
                     <!-- </a> -->
                   </td>
-                  <td access-restricted="read-only,vendedor" style="width:80px; text-align:center;" class="noprint">
+                  <td access-restricted="read-only,plotter,vendedor" style="width:80px; text-align:center;" class="noprint">
                     <!-- <a ng-click="showConfirmModal(t, deleteDispatchCarry)" class="btn btn-default"> -->
                       <span class="glyphicon glyphicon-trash icon-link" ng-click="showConfirmModal(t, deleteDispatchCarry)"></span>
                     <!-- </a> -->

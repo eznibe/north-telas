@@ -92,6 +92,11 @@ angular.module('vsko.stock').controller('TemporariesSummaryCtrl', ['$scope', 'Ut
     if (!dispatch) {
       return;
     }
+    var available = 0;
+    dispatch.files.forEach(function(f) {
+      available += (+f.available);
+    });
+    //return (+available * 100 / (+dispatch.init * 0.95)).toFixed(0);
     return (+dispatch.available * 100 / (+dispatch.init)).toFixed(0);
   }
 

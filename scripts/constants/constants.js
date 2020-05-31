@@ -9,7 +9,8 @@ angular.module('vsko.stock')
 	'velas-od': [1, '/groups'], // 001
 	'read-only': [1, '/groups'], // 001
 	vendedor: [1, '/production'], // 001
-	produccion: [2, '/production'] // 100
+	produccion: [2, '/production'], // 100
+	compras: [3, '/groups'] // 100
 })
 
 .constant('accessLevels', {

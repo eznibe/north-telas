@@ -1,7 +1,8 @@
 <div>
 	<span ng-repeat="f in dispatch.files">
 		<a style="color:#333; display:inline-block; min-width:100px;" class="badge" ng-click="open(f)" title="{{f.cloth}}">
-			{{f.code}} - {{((+f.mtsInitial * 0.95) - +f.used).toFixed(2)}} mts.
+			<!-- {{f.code}} - {{((+f.mtsInitial) - +f.used).toFixed(2)}} mts. -->
+			{{f.code}} - {{(+f.available).toFixed(2)}} mts.
 		</a>
 	</span>
 </div>

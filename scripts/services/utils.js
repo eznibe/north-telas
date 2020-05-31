@@ -60,20 +60,21 @@ angular.module('vsko.stock').factory('Utils',[ '$translate', '$http', '$timeout'
   // it also updates the file downloads available
   that.calculateTemporariesFileAvailable = function(file) {
 
-    var available = +file.mtsInitial * 0.95; // up to review if this should contain the 5% loss or not
+    var available = +file.mtsInitial; // up to review if this should contain the 5% loss or not -> after review: it shouldn't
     var availableWith5percLoss = +file.mtsInitial * 0.95;
+    //var availableInitial = +file.mtsInitial;
 
     var totalDownloads = 0;
     file.downloads.forEach(d => {
       totalDownloads += +d.mts;
-      d.available = availableWith5percLoss - totalDownloads;
+      d.available = available - totalDownloads;
     });
 
     available -= totalDownloads;
 
     file.availableWithLoss = available;
 
-    available = available * 1.0526;
+    //available = available * 1.0526;
 
     if (available < 0 && available > -0.05) {
       available = 0;

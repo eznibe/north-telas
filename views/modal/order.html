@@ -24,10 +24,10 @@
 							<th translate>Amount</th>
 							<th access-allowed="temporaries" translate>Temporaries col</th>
 							<th ng-show="order.status!='TO_BUY'" translate>Rolls</th>
-              				<th ng-show="order.status!='TO_BUY'" style="width: 52px; border-left-style: hidden;" access-level="admin"></th><!-- Edit rolls icon -->
+              				<th ng-show="order.status!='TO_BUY'" style="width: 52px; border-left-style: hidden;" access-allowed="admin,compras"></th><!-- Edit rolls icon -->
 							<th translate>Price</th>
 							<th translate>Total</th>
-							<th access-level="admin"></th>
+							<th access-allowed="admin,compras"></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -42,7 +42,7 @@
 								<editable-input entity="p" field="'ar'" callback="updateProductAR" allow-empty="true" editable-by-role="'admin'" width="50" style="display:inline-block;"></editable-input>
 							</td>
 							<td>
-                				<editable-input entity="p" field="'amount'" callback="updateProductAmount" editable-by-role="'admin'" width="50" style="display:inline-block;"></editable-input>
+                				<editable-input entity="p" field="'amount'" callback="updateProductAmount" editable-by-role="'admin,compras'" width="50" style="display:inline-block;"></editable-input>
 								<!--<span ng-if="order.status=='TO_BUY'">{{p.amount}}</span>-->
 							</td>
 							<td access-allowed="temporaries" style="text-align: center;">
@@ -51,7 +51,7 @@
 							<td ng-show="order.status!='TO_BUY'"  ng-mouseover="over = true" ng-mouseleave="over = false" >
 								<order-rolls-tags ng-model="p.rolls"></order-rolls-tags>
              				</td>
-							<td ng-show="order.status!='TO_BUY'" ng-mouseover="over = true" ng-mouseleave="over = false" style="border-left-style: hidden;" access-level="admin">
+							<td ng-show="order.status!='TO_BUY'" ng-mouseover="over = true" ng-mouseleave="over = false" style="border-left-style: hidden;" access-allowed="admin,compras">
 								<span class="glyphicon glyphicon-pencil col-xs-1 control-label" ng-click="showRollsModal(p)" data-placement="right" my-tooltip="'Assign rolls'|translate" style="text-align:center; cursor:pointer; float:none; padding-left:5px; padding-right:5px;" ng-show="over">&nbsp;</span>
 							</td>
 							<td nowrap>
@@ -60,7 +60,7 @@
 							<td nowrap>
 								{{subTotal(p)}} USD
 							</td>
-							<td style="width:80px; text-align:center;" access-level="admin">
+							<td style="width:80px; text-align:center;" access-allowed="admin,compras">
 								<!-- <a ng-click="showConfirmModal(p, removeItem)" class="btn btn-default" > -->
 									<span ng-click="showConfirmModal(p, removeItem)" class="glyphicon glyphicon-trash icon-link"></span>
 								<!-- </a> -->
@@ -73,10 +73,10 @@
 							<td></td>
 							<td access-allowed="temporaries"></td>
 							<td ng-show="order.status!='TO_BUY'">
-							<td ng-show="order.status!='TO_BUY'" style="border-left-style: hidden;" access-level="admin"></td>
+							<td ng-show="order.status!='TO_BUY'" style="border-left-style: hidden;" access-allowed="admin,compras"></td>
               				<td></td>
 							<td>{{ total(order.products) }} USD</td>
-							<td access-level="admin"></td>
+							<td access-allowed="admin,compras"></td>
 						</tr>
 					</tbody>
 				</table>
@@ -162,7 +162,7 @@
 							</form>
 						</div>
 
-						<div class="panel-footer" access-level="admin">
+						<div class="panel-footer" access-allowed="admin,compras">
 							<a ng-click="partialSave(order)" class="btn floatright" my-tooltip="'Save' | translate" data-placement="right" ng-class="{'btn-default': !formOrderInfo.$dirty, 'btn-warning': formOrderInfo.$dirty}">
 									<span class="glyphicon glyphicon-save"></span>
 								</a>
@@ -176,12 +176,12 @@
 					<span class="glyphicon glyphicon-remove"></span>
 					{{'Close' | translate}}
 				</a>
-				<a href="javascript:void(0)" class="btn btn-warning floatleft" ng-show="order.orderId && order.status!='TO_BUY'" ng-click="showConfirmDeleteModal(order)" access-level="admin">
+				<a href="javascript:void(0)" class="btn btn-warning floatleft" ng-show="order.orderId && order.status!='TO_BUY'" ng-click="showConfirmDeleteModal(order)" access-allowed="admin,compras">
 					<span class="glyphicon glyphicon-trash"></span>
 					{{'Delete' | translate}}
 				</a>
 
-				<a ng-click="confirmModal()" class="btn btn-default floatright" ng-disabled="formOrderInfo.$invalid" ng-show="order.status=='TO_BUY' || order.status=='TO_CONFIRM'" access-level="admin">
+				<a ng-click="confirmModal()" class="btn btn-default floatright" ng-disabled="formOrderInfo.$invalid" ng-show="order.status=='TO_BUY' || order.status=='TO_CONFIRM'" access-allowed="admin,compras">
 					<span class="glyphicon glyphicon-ok"></span>
 					<span ng-switch on="order.status">
 						<span ng-switch-when="TO_BUY" translate>Buy</span>
@@ -189,7 +189,7 @@
 					</span>
 				</a>
 
-				<a ng-click="receive()" class="btn btn-default floatright" ng-disabled="formOrderInfo.$invalid" ng-show="order.status=='IN_TRANSIT'" access-level="admin">
+				<a ng-click="receive()" class="btn btn-default floatright" ng-disabled="formOrderInfo.$invalid" ng-show="order.status=='IN_TRANSIT'" access-allowed="admin,compras">
 					<span class="glyphicon glyphicon-ok"></span>
 					<span ng-switch on="order.status">
 						<span ng-switch-when="IN_TRANSIT" translate>Receive</span>

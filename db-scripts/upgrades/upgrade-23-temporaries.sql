@@ -44,7 +44,10 @@ CREATE TABLE temporariesdownload
 
 
 create or replace view v_temporaries_files_extended as
-SELECT f.*, coalesce(sum(dw.mts),0) as used, ((f.mtsInitial * 0.95) - coalesce(sum(dw.mts),0)) * 1.0526 as available, ((f.mtsInitial * 0.95) - coalesce(sum(dw.mts),0)) as availableWithLoss 
+SELECT f.*, coalesce(sum(dw.mts),0) as used
+, ((f.mtsInitial * 0.95) - coalesce(sum(dw.mts),0)) * 1.0526 as availableWithoutLoss
+, ((f.mtsInitial * 0.95) - coalesce(sum(dw.mts),0)) as availableWithLoss
+, ((f.mtsInitial) - coalesce(sum(dw.mts),0)) as available
 FROM temporariesfile f left join temporariesdownload dw on dw.fileId = f.id
 GROUP by f.id;
 	
@@ -217,7 +220,7 @@ SELECT c.*, coalesce(h.stockInHouse, 0) as stockInHouse, coalesce(t.in_transit, 
 coalesce(export_cutted.mtscutted, 0) as toExportCutted, coalesce(temp_to_cut.mtsToCut, 0) as temporariesToCut, 
 coalesce(coalesce(h.stockInHouse, 0) - (temp.temporaryAvailable - coalesce(export_cutted.mtscutted, 0)), 0) as stockCompare
 FROM cloths c 
-join products p on p.clothId=c.id 
+left join products p on p.clothId=c.id 
 left join v_cloths_in_house_stock h on h.clothid = c.id
 left join v_cloths_in_transit_stock t on t.clothid = c.id
 left join v_cloths_temporaries_in_transit_stock tt on tt.clothid = c.id 
@@ -288,3 +291,16 @@ update temporariesfile set productId = '12' where mtsInitial = 248.72;
 update temporariesfile set productId = 'f1d0b822-8c5a-455d-ce7c-c89faeae84a1', rollWidth = 59 where mtsInitial = 137.16;
 update temporariesfile set productId = '4e005ad7-f88f-40f9-8fe5-19a79b636a73', rollWidth = 59 where mtsInitial = 87.5;
 
+--
+-- insert missing initial mts forsome temp dispatchs
+
+
+INSERT INTO temporariesfile (id, dispatchId, productId, mtsInitial, type) values ('hidden-file-1', 'id-imported-1', '99-hidden', 962.79, null);
+INSERT INTO temporariesfile (id, dispatchId, productId, mtsInitial, type) values ('hidden-file-2', 'id-imported-2', '99-hidden', 437.5, null);
+INSERT INTO temporariesfile (id, dispatchId, productId, mtsInitial, type) values ('hidden-file-3', 'id-imported-3', '99-hidden', 902.63, null);
+INSERT INTO temporariesfile (id, dispatchId, productId, mtsInitial, type) values ('hidden-file-4', 'id-imported-4', '99-hidden', 1234.49, null);
+
+insert into temporariesdownload (id, fileId, mts, downloadDate, downloadedBy) values (uuid(), 'hidden-file-1', 962.79, '2018-07-01', 'script');
+insert into temporariesdownload (id, fileId, mts, downloadDate, downloadedBy) values (uuid(), 'hidden-file-2', 437.5, '2018-07-01', 'script');
+insert into temporariesdownload (id, fileId, mts, downloadDate, downloadedBy) values (uuid(), 'hidden-file-3', 902.63, '2018-07-01', 'script');
+insert into temporariesdownload (id, fileId, mts, downloadDate, downloadedBy) values (uuid(), 'hidden-file-4', 1234.49, '2018-07-01', 'script');

@@ -1,7 +1,7 @@
 <div class="jumbotron clearfix nopaddingright">
 	<h1><span translate>Dispatchs</span></h1>
 	<p class="bigmargin">
-	    <a ng-click="showDispatchModal()" class="btn btn-default floatright" access-restricted="read-only">
+	    <a ng-click="showDispatchModal()" class="btn btn-default floatright" access-restricted="read-only,plotter">
 	        <span class="glyphicon glyphicon-plus"></span>&nbsp;
 	        {{'Create new dispatch' | translate}}
 	    </a>
@@ -17,8 +17,8 @@
 			<th translate>Destiny</th>
 			<th translate>Transport</th>
 			<th translate>Orders</th>
-			<th access-restricted="read-only" translate>Archive</th>
-			<th access-restricted="read-only" translate>Delete</th>
+			<th access-restricted="read-only,plotter" translate>Archive</th>
+			<th access-restricted="read-only,plotter" translate>Delete</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -41,13 +41,13 @@
 			<td>
 				<dispatch-orders dispatch="d" open="showDispatchModal" style="display:inline-block;"></dispatch-orders>
 			</td>
-			<td access-restricted="read-only" style="width:80px; text-align:center;">
+			<td access-restricted="read-only,plotter" style="width:80px; text-align:center;">
 				<!-- <a ng-click="showConfirmModal(d, archiveDispatch)" class="btn btn-default" ng-disabled="!d.dispatchDate"> -->
 					<span class="glyphicon glyphicon-ok icon-link" ng-click="showConfirmModal(d, archiveDispatch, 'Dispatch archive confirm')" ng-show="d.dispatchDate"></span>
 					<span class="glyphicon glyphicon-ok icon-disabled" ng-show="!d.dispatchDate"></span>
 				<!-- </a> -->
 			</td>
-			<td access-restricted="read-only" style="width:80px; text-align:center;">
+			<td access-restricted="read-only,plotter" style="width:80px; text-align:center;">
 				<!-- <a ng-click="showConfirmModal(d, deleteDispatch)" class="btn btn-default"> -->
 					<span class="glyphicon glyphicon-trash icon-link" ng-click="showConfirmModal(d, deleteDispatch)"></span>
 				<!-- </a> -->

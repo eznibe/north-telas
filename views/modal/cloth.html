@@ -29,19 +29,19 @@
 					<tbody>
 						<tr ng-repeat="p in cloth.providers" ng-show="p.name">
 							<td>
-								<a href="javascript:void(0)" ng-click="showBuyModal(p)" my-tooltip="'Buy'|translate" data-placement="right" access-level="admin">{{p.name}}</a>
-                <span access-restricted='admin'>{{p.name}}</span>
+								<a href="javascript:void(0)" ng-click="showBuyModal(p)" my-tooltip="'Buy'|translate" data-placement="right" access-allowed="admin,compras">{{p.name}}</a>
+                				<span access-restricted='admin,compras'>{{p.name}}</span>
 							</td>
 							<td>
 								<!--<editable-code ng-model="p" style="display:inline-block;"></editable-code>-->
-                <editable-input entity="p" field="'code'" callback="changedCode" editable-by-role="'admin'" width="140" style="display:inline-block;"></editable-input>
+                				<editable-input entity="p" field="'code'" callback="changedCode" editable-by-role="'admin,compras'" width="140" style="display:inline-block;"></editable-input>
 							</td>
 							<td>
 								{{p.stock}}
 							</td>
 							<td access-restricted="plotter">
 								<!--<editable-price ng-model="p" style="display:inline-block;"></editable-price>-->
-                <editable-input entity="p" field="'price'" tooltip-text="(p.price * 0.9144).toFixed(2) + ' / yds'" callback="changedPrice" editable-by-role="'admin'" extra-label="'USD'" width="50" style="display:inline-block;"></editable-input>
+                				<editable-input entity="p" field="'price'" tooltip-text="(p.price * 0.9144).toFixed(2) + ' / yds'" callback="changedPrice" editable-by-role="'admin,compras'" extra-label="'USD'" width="50" style="display:inline-block;"></editable-input>
 							</td>
 							<td access-restricted="plotter">
 								{{ toPriceNac(p.price) }} USD
@@ -119,19 +119,14 @@
       					<span class="glyphicon glyphicon-remove"></span>
       					{{'Cancel' | translate}}
       				</a>-->
-      				<a href="javascript:void(0)" class="btn btn-warning floatleft" ng-click="showConfirmDeleteModal(cloth)" title="Eliminar" access-level="admin">
+      				<a href="javascript:void(0)" class="btn btn-warning floatleft" ng-click="showConfirmDeleteModal(cloth)" title="Eliminar" access-allowed="admin,compras">
       					<span class="glyphicon glyphicon-trash"></span>
       				</a>
 
-      				<a ng-click="saveCloth(cloth)" class="btn btn-default floatright edit_person" ng-disabled="formClothInfo.$invalid" access-level="admin" >
+      				<a ng-click="saveCloth(cloth)" class="btn btn-default floatright edit_person" ng-disabled="formClothInfo.$invalid" access-allowed="admin,compras" >
       					<span class="glyphicon glyphicon-save"></span>
       					{{'Save' | translate}}
       				</a>
-
-						<!--	<a ng-click="saveCloth(cloth)" class="btn btn-default floatright" ng-disabled="formClothInfo.$invalid">
-								<span class="glyphicon glyphicon-save"></span>
-								<span translate>Save</span>
-							</a>-->
 						</div>
 					</div>
 				</div>
