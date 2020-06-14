@@ -1,0 +1,10 @@
+{
+    "functions": {
+      "version.php": {
+        "runtime": "now-php@0.0.7"
+      },
+      "api/test.php": {
+        "runtime": "now-php@0.0.7"
+      }
+    }
+  }
