@@ -11,7 +11,7 @@
 
 // LOCAL keys
 // var telasAPIUrl = 'http://localhost:90/telas/api/';
-var telasAPIUrl = 'http://north-telas.now.sh/api/';
+var telasAPIUrl = 'https://north-telas.now.sh/api/';
 //var telasAPIUrl = 'http://192.168.0.210:90/telas/api/';
 var remoteAPIUrl = 'http://northserver.byethost7.com/remoteapi/';
 // var remoteAPIUrl = 'http://northserver.no-ip.biz/telas/remoteapi/';
