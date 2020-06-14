@@ -4,7 +4,10 @@ angular.module('vsko.stock').controller('DispatchCtrl', ['$scope', '$rootScope',
 
 		Dispatchs.getDispatchs('CURRENTS').then(function(result){
 
-			$scope.dispatchs = result.data;
+			$scope.dispatchs = result.data.map(r => {
+				r.closedForSellers = r.closedForSellers === "1" ? true : false;
+				return r;
+			});
 		});
 
 
@@ -43,4 +46,19 @@ angular.module('vsko.stock').controller('DispatchCtrl', ['$scope', '$rootScope',
 			});
 		};
 
+		$scope.isSeller = $rootScope.user.role === 'vendedor';
+
+		$scope.openDispatch = async (dispatch) => {
+			if (!$scope.isSeller) {
+				dispatch.closedForSellers = false;
+				await Dispatchs.toggleClosedForSellers(dispatch);
+			}
+		}
+
+		$scope.closeDispatch = async (dispatch) => {
+			if (!$scope.isSeller) {
+				dispatch.closedForSellers = true;
+				await Dispatchs.toggleClosedForSellers(dispatch);
+			}
+		}
 }]);

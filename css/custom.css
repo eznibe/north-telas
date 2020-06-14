@@ -225,12 +225,12 @@ table#production tbody tr,
 	width: 20px;
 }
 
-.icon-link {
+.icon-link, .iconLink {
 	text-align: center;
 	cursor: pointer;
 }
 
-.icon-disabled {
+.icon-disabled, .iconDisabled {
 	color: lightgray;
 }
 

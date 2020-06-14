@@ -100,7 +100,12 @@ angular.module('vsko.stock')
 				this.restore = function(dispatch) {
 
         	return $http.post(url + 'dispatchs_POST.php?restore=true', dispatch);
-        };
+		};
+		
+		this.toggleClosedForSellers = function(dispatch) {
+
+        	return $http.post(url + 'dispatchs_POST.php?toggleClosedForSellers=true', dispatch);
+		};
 
         this.remove = function(dispatch) {
 
@@ -120,7 +125,7 @@ angular.module('vsko.stock')
 				this.removeCarry = function(carry) {
 
         	return $http.post(url + 'dispatchs_DELETE.php?carryId='+carry.id, carry);
-        };
-
+		};
+		
         return this;
     }]);

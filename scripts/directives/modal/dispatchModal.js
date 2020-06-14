@@ -14,22 +14,28 @@ angular.module('vsko.stock')
             Previsions.getAll(true, 'NONE').then(function(result) {
               $scope.previsionOptions = result.data;
             });
-
+            
             $scope.carryTypes = [{type: 'BOX'}, {type: 'TUBE'}];
             $scope.carryTypes.map(function(c) {
               $translate(c.type).then(function(value) {
                 c.translation = value;
               })
             });
-
+            
             Dispatchs.getDispatchDestinataries().then(function(result) {
               $scope.destinataries = result.data;
             });
-
-
+            
+            
         	  $scope.showDispatchModal = function(dispatch) {
+              
+              $scope.dispatch = dispatch ? dispatch : {isNew: true, id: uuid4.generate(), previsions: [], carries: [], allCarries: [], closedForSellers: false};
 
-        		  $scope.dispatch = dispatch ? dispatch : {isNew: true, id: uuid4.generate(), previsions: [], carries: [], allCarries: []};
+              $scope.dispatch.closedForSellers = $scope.dispatch.closedForSellers === "1" || $scope.dispatch.closedForSellers === true 
+                ? true : false;
+
+              $scope.isSeller = $rootScope.user.role === 'vendedor';
+              $scope.hideForSeller = $scope.isSeller && $scope.dispatch.closedForSellers;
 
               // clear possible previously chosen autocmolte destinatary
               delete $scope.acDestinatary;
@@ -45,6 +51,9 @@ angular.module('vsko.stock')
                     for (var attrname in result.data) { $scope.dispatch[attrname] = result.data[attrname]; }
 
                     $scope.dispatch.carries = result.data.boxes.concat(result.data.tubes);
+
+                    $scope.dispatch.closedForSellers = result.data.closedForSellers === "1" ? true : false;
+                    $scope.hideForSeller = $scope.isSeller && $scope.dispatch.closedForSellers;
 
                     // fill destinatary autocomplete with dispatch info if present
                     if (result.data.destinatary) {
@@ -90,7 +99,7 @@ angular.module('vsko.stock')
               });
         	  };
 
-            $scope.closeDispatch = function() {
+            $scope.closeDispatchModal = function() {
 
               if ($scope.dispatch.isNew) {
                 // details closed but dispatch was not created -> remove possible previsions assignations

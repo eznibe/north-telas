@@ -33,7 +33,7 @@ function getDispatchs($expand, $startDate, $endDate, $filterKey, $filterValue)
 							FROM dispatchs d LEFT JOIN dispatchprevisions dp on d.id = dp.dispatchId LEFT JOIN previsions p on p.id = dp.previsionId
 							WHERE d.archived = true AND d.country = '$country'  $condition
 							GROUP BY d.id
-							ORDER BY d.number";
+							ORDER BY d.number desc";
 	}
 
 	$result = mysql_query($query);
@@ -211,8 +211,8 @@ function saveDispatch($dispatch)
 	}
 	else {
 		// insert
-		$insert = "INSERT INTO dispatchs (id, number, dispatchDate, destinatary, destiny, transport, deliveryType, address, value, tracking, notes, country)
-				VALUES ('".$dispatch->id."', $dispatch->number, $dispatchDate, $destinatary, $destiny, $transport, $deliveryType, $address, $value, $tracking, $notes, '$country')" ;
+		$insert = "INSERT INTO dispatchs (id, number, dispatchDate, destinatary, destiny, transport, deliveryType, address, value, tracking, notes, country, closedForSellers)
+				VALUES ('".$dispatch->id."', $dispatch->number, $dispatchDate, $destinatary, $destiny, $transport, $deliveryType, $address, $value, $tracking, $notes, '$country', false)" ;
 
 		if(mysql_query($insert)) {
 			$obj->successful = true;
@@ -275,6 +275,22 @@ function restore($dispatch) {
 		$obj->successfulUpdate = false;
 		$obj->update = $update;
 	}
+
+	return $obj;
+}
+
+function toggleClosedForSellers($dispatch) {
+
+	$closedForSellers = $dispatch->closedForSellers==1 ? 'true' : 'false';
+
+	$update = "UPDATE dispatchs SET closedForSellers = $closedForSellers WHERE id = '".$dispatch->id."'";
+
+	if(mysql_query($update))
+		$obj->successful = true;
+	else {
+		$obj->successfulUpdate = false;
+	}
+	$obj->update = $update;
 
 	return $obj;
 }

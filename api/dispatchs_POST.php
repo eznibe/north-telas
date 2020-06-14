@@ -33,6 +33,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$value = archive($json);
 	else if(isset($_GET['restore']))
 		$value = restore($json);
+	else if(isset($_GET['toggleClosedForSellers']))
+		$value = toggleClosedForSellers($json);
 	else
 		$value = saveDispatch($json);
 

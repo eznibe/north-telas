@@ -243,7 +243,7 @@ angular.module("vsko.stock", [
 						.when('/dispatch', {
                 templateUrl: 'views/dispatchs.html',
                 controller: 'DispatchCtrl',
-                restricted: 'vendedor'
+                access: 'public'
             })
 						.when('/canvas', {
                 templateUrl: 'views/canvas.html',
