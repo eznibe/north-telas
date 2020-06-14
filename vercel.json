@@ -1,6 +1,6 @@
 {
     "functions": {
-      "version.php": {
+      "api/version.php": {
         "runtime": "now-php@0.0.7"
       },
       "api/test.php": {
