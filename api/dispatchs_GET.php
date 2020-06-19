@@ -17,7 +17,7 @@ if(isset($_GET['id'])) {
 	$value = getDispatch($_GET['id']);
 }
 else if(isset($expand)) {
-	$value = getDispatchs($expand, $_GET['startDate'], $_GET['endDate'], $_GET['filterKey'], $_GET['filterValue']);
+	$value = getDispatchs($expand, $_GET['startDate'], $_GET['endDate'], $_GET['filterKey'], $_GET['filterValue'], isset($_GET['isSeller']));
 }
 else if(isset($_GET['carriesOf'])) {
 	$value = getDispatchCarries($_GET['carriesOf']);

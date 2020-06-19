@@ -1,6 +1,6 @@
 <?php
 
-function getDispatchs($expand, $startDate, $endDate, $filterKey, $filterValue)
+function getDispatchs($expand, $startDate, $endDate, $filterKey, $filterValue, $isSeller)
 {
 	global $country, $dispatchCountry;
 
@@ -12,10 +12,22 @@ function getDispatchs($expand, $startDate, $endDate, $filterKey, $filterValue)
 							WHERE d.country = '$country' ";
 
 	} else if ($expand == 'CURRENTS') {
-		$query = "SELECT *, DATE_FORMAT(dispatchDate,'%d-%m-%Y') as dispatchDate, d.dispatchDate as unformattedDispatchDate
-							FROM dispatchs d
-							WHERE d.archived = false AND d.country = '$country'
-							ORDER BY d.number, d.dispatchDate";
+		$query = "SELECT d.*, DATE_FORMAT(dispatchDate,'%d-%m-%Y') as dispatchDate, d.dispatchDate as unformattedDispatchDate
+							FROM dispatchs d left join dispatchprevisions dp on dp.dispatchId = d.id left join previsions p on p.id=dp.previsionId
+							WHERE d.archived = false AND d.country = '$country' ".
+							($isSeller ? "and p.seller = 'RZ' " : "")
+							. "GROUP BY d.id
+							HAVING count(*) > 0
+							";
+
+		if ($isSeller) {
+			$query .= "UNION
+			SELECT d2.*, DATE_FORMAT(dispatchDate,'%d-%m-%Y') as dispatchDate, d2.dispatchDate as unformattedDispatchDate 
+			FROM dispatchs d2 left join dispatchprevisions dp on dp.dispatchId = d2.id 
+			where d2.archived = false AND d2.country = '$country' and dp.id is null ";
+		}
+
+		$query .= "ORDER BY number ";
 
 	} else if ($expand == 'HISTORIC') {
 

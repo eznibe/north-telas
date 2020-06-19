@@ -2,13 +2,15 @@
 
 angular.module('vsko.stock').controller('DispatchCtrl', ['$scope', '$rootScope', 'Utils', 'Dispatchs', '$modal', 'uuid4', function ($scope, $rootScope, Utils, Dispatchs, $modal, uuid4) {
 
-		Dispatchs.getDispatchs('CURRENTS').then(function(result){
+	$scope.isSeller = $rootScope.user.role === 'vendedor';
 
-			$scope.dispatchs = result.data.map(r => {
-				r.closedForSellers = r.closedForSellers === "1" ? true : false;
-				return r;
-			});
+	Dispatchs.getDispatchs('CURRENTS', null, null, $scope.isSeller).then(function(result){
+
+		$scope.dispatchs = result.data.map(r => {
+			r.closedForSellers = r.closedForSellers === "1" ? true : false;
+			return r;
 		});
+	});
 
 
     $scope.addOrder = function(onedesign) {
@@ -45,8 +47,6 @@ angular.module('vsko.stock').controller('DispatchCtrl', ['$scope', '$rootScope',
 				}
 			});
 		};
-
-		$scope.isSeller = $rootScope.user.role === 'vendedor';
 
 		$scope.openDispatch = async (dispatch) => {
 			if (!$scope.isSeller) {

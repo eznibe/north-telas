@@ -382,11 +382,11 @@
 							<td nowrap>
 								{{o.orderNumber}}
 							</td>
-							<td ng-if="o.previsionId" style="min-width: 110px;">
+							<td ng-if="o.previsionId || hideForSeller" style="min-width: 110px;">
 								{{o.client}}
 							</td>
-              <td ng-if="!o.previsionId" style="min-width: 110px;">
-								<editable-production-input entity="::o" field="'client'" callback="::changedDispatch.field" width="100" editable-by-role="'admin,produccion,velas-od'" style="display:inline-block;"></editable-production-input>
+              <td ng-if="!o.previsionId && !hideForSeller" style="min-width: 110px;">
+								<editable-production-input entity="::o" field="'client'" callback="::changedDispatch.field" width="100" editable-by-role="'admin,produccion,velas-od,vendedor'" style="display:inline-block;"></editable-production-input>
 							</td>
               <td>
 								{{o.boat}}
@@ -397,11 +397,17 @@
 							<td>
 								{{o.percentage}}
 							</td>
-              <td>
-                <editable-production-input entity="::o" field="'weight'" callback="::changedDispatch.numericField" width="40" editable-by-role="'admin,produccion,velas-od'" style="display:inline-block;"></editable-production-input>
+              <td ng-if="!hideForSeller">
+                <editable-production-input entity="::o" field="'weight'" callback="::changedDispatch.numericField" width="40" editable-by-role="'admin,produccion,velas-od,vendedor'" style="display:inline-block;"></editable-production-input>
+              </td>
+              <td ng-if="hideForSeller">
+                {{o.weight}}
 							</td>
-              <td>
-                <editable-production-textarea entity="::o" field="'observations'" callback="::changedDispatch.field" width="100" editable-by-role="'admin,produccion,velas-od'" style="display:inline-block;"></editable-production-textarea>
+              <td ng-if="!hideForSeller">
+                <editable-production-textarea entity="::o" field="'observations'" callback="::changedDispatch.field" width="100" editable-by-role="'admin,produccion,velas-od,vendedor'" style="display:inline-block;"></editable-production-textarea>
+              </td>
+              <td ng-if="hideForSeller">
+                {{o.observations}}
 							</td>
 							<td access-restricted="read-only,plotter,plotter" ng-if="!hideForSeller" style="width:80px; text-align:center;" class="noprint">
 								<!-- <a ng-click="showConfirmModal(o, deleteDispatchPrevision)" class="btn btn-default"> -->

@@ -10,8 +10,8 @@
 // var productionFolders = {OD: '0B3ufmcTU0qqcM0U0WkZwcHlkcEE', CA: '0B3ufmcTU0qqcbjlQcEhXMVZIaHc', NY: '0B3ufmcTU0qqcM0U0WkZwcHlkcEE', RA: '0B3ufmcTU0qqcM0U0WkZwcHlkcEE', DA: '0B3ufmcTU0qqcM0U0WkZwcHlkcEE', REP: '0B3ufmcTU0qqcd054ZkJMVDQ1YzA', LO: '0B3ufmcTU0qqcWmdWdXRJN0RyNDA'};
 
 // LOCAL keys
-// var telasAPIUrl = 'http://localhost:90/telas/api/';
-var telasAPIUrl = 'https://north-telas.now.sh/api/';
+var telasAPIUrl = 'http://localhost:90/telas/api/';
+// var telasAPIUrl = 'https://north-telas.now.sh/api/';
 //var telasAPIUrl = 'http://192.168.0.210:90/telas/api/';
 var remoteAPIUrl = 'http://northserver.byethost7.com/remoteapi/';
 // var remoteAPIUrl = 'http://northserver.no-ip.biz/telas/remoteapi/';
