@@ -1,6 +1,6 @@
 <?php
 
-function getDispatchs($expand, $startDate, $endDate, $filterKey, $filterValue, $isSeller)
+function getDispatchs($expand, $startDate, $endDate, $filterKey, $filterValue, $seller)
 {
 	global $country, $dispatchCountry;
 
@@ -15,12 +15,12 @@ function getDispatchs($expand, $startDate, $endDate, $filterKey, $filterValue, $
 		$query = "SELECT d.*, DATE_FORMAT(dispatchDate,'%d-%m-%Y') as dispatchDate, d.dispatchDate as unformattedDispatchDate
 							FROM dispatchs d left join dispatchprevisions dp on dp.dispatchId = d.id left join previsions p on p.id=dp.previsionId
 							WHERE d.archived = false AND d.country = '$country' ".
-							($isSeller ? "and p.seller = 'RZ' " : "")
+							(isset($seller) ? "and p.seller = '$seller' " : "")
 							. "GROUP BY d.id
 							HAVING count(*) > 0
 							";
 
-		if ($isSeller) {
+		if (isset($seller)) {
 			$query .= "UNION
 			SELECT d2.*, DATE_FORMAT(dispatchDate,'%d-%m-%Y') as dispatchDate, d2.dispatchDate as unformattedDispatchDate 
 			FROM dispatchs d2 left join dispatchprevisions dp on dp.dispatchId = d2.id 

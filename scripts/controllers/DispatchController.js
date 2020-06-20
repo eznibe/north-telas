@@ -4,7 +4,7 @@ angular.module('vsko.stock').controller('DispatchCtrl', ['$scope', '$rootScope',
 
 	$scope.isSeller = $rootScope.user.role === 'vendedor';
 
-	Dispatchs.getDispatchs('CURRENTS', null, null, $scope.isSeller).then(function(result){
+	Dispatchs.getDispatchs('CURRENTS', null, null, $rootScope.user.sellerCode).then(function(result){
 
 		$scope.dispatchs = result.data.map(r => {
 			r.closedForSellers = r.closedForSellers === "1" ? true : false;
