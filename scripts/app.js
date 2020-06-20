@@ -193,7 +193,8 @@ angular.module("vsko.stock", [
             .when('/groups', {
                 templateUrl: 'views/groups.html',
                 controller: 'GroupsCtrl',
-                access: 'public'
+                access: 'public',
+                restricted: 'vendedor'
             })
             .when('/groups/:groupId', {
                 templateUrl: 'views/cloths.html',
@@ -388,8 +389,13 @@ angular.module("vsko.stock", [
                 controller: 'QueryCtrl',
                 access: 'admin'
             })
+            .when('/default', {
+                templateUrl: 'views/default.html',
+                controller: 'DefaultPageCtrl',
+                access: 'public'
+            })
             .otherwise({
-                redirectTo: '/groups'
+                redirectTo: '/default'
             });
 
 
