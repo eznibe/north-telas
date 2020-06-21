@@ -22,9 +22,16 @@ function getDispatchs($expand, $startDate, $endDate, $filterKey, $filterValue, $
 
 		if (isset($seller)) {
 			$query .= "UNION
-			SELECT d2.*, DATE_FORMAT(dispatchDate,'%d-%m-%Y') as dispatchDate, d2.dispatchDate as unformattedDispatchDate 
-			FROM dispatchs d2 left join dispatchprevisions dp on dp.dispatchId = d2.id 
-			where d2.archived = false AND d2.country = '$country' and dp.id is null ";
+			SELECT d.*, DATE_FORMAT(dispatchDate,'%d-%m-%Y') as dispatchDate, d.dispatchDate as unformattedDispatchDate 
+			FROM dispatchs d
+			WHERE d.archived = false AND d.country = '$country' 
+			AND d.id not in
+			(
+				SELECT d2.id
+				FROM dispatchs d2 join dispatchprevisions dp on dp.dispatchId = d2.id join previsions p on p.id = dp.previsionId
+				where d2.archived = false AND d2.country = '$country' 
+				group by d2.id
+			) ";
 		}
 
 		$query .= "ORDER BY number ";
