@@ -186,20 +186,44 @@
 
 					</div>
 
-					<div class="row">
-						<div class="col-md-6 nopadding">
-								
-								<label class="control-label col-xs-4 padding-top-3" title="{{'Exclude state calculation' | translate}}" translate>Exclude state calculation short</label>
+			<div class="panel panel-default ng-scope">
+				<div class="panel-heading nopadding">
+					<h2 class="panel-title panel-title-minimalist fullwidth">
+					<a data-toggle="collapse" data-target="#collapseConf" href="javascript:void(0)">
+						<span translate>Configuration</span>
+					</a>
+					</h2>
+				</div>
+	
+				<div id="collapseConf" class="panel-collapse collapse in" style="height: auto;">
+					<div class="panel-body">
+	
+						<div class="row">
+							<div class="col-md-6 nopadding">
+									
+									<label class="control-label col-xs-4 padding-top-3" title="{{'Exclude state calculation' | translate}}" translate>Exclude state calculation short</label>
+									<div class="col-xs-2">
+										<input type="checkbox" class="" ng-model="prevision.excludeFromStateCalculation">
+									</div>
+	
+									<label class="control-label col-xs-5 padding-top-3" translate>Exclude temporaries calculation</label>
+									<div class="col-xs-1 nopadding">
+										<input type="checkbox" class="" ng-model="prevision.excludeFromTemporariesCalculation">
+									</div>
+							</div>
+							<div class="col-md-6 nopadding">
+									
+								<label class="control-label col-xs-4 padding-top-3" title="{{'Exclude auto reprogramation' | translate}}" translate>Exclude auto reprogramation short</label>
 								<div class="col-xs-2">
-									<input type="checkbox" class="" ng-model="prevision.excludeFromStateCalculation">
-								</div>
-
-								<label class="control-label col-xs-5 padding-top-3" translate>Exclude temporaries calculation</label>
-								<div class="col-xs-1 nopadding">
-									<input type="checkbox" class="" ng-model="prevision.excludeFromTemporariesCalculation">
+									<input type="checkbox" class="" ng-model="prevision.excludeAutoUpdateDeliveryDate">
 								</div>
 						</div>
+						</div>
+	
 					</div>
+	
+				</div>
+			</div>
 
           <div class="panel panel-default ng-scope">
             <div class="panel-heading nopadding">

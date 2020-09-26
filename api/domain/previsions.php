@@ -102,6 +102,7 @@ function getPrevisions($clothId, $designed, $expand, $production, $historic, $se
 		$row['greaterThan44'] = $row['greaterThan44']==1 ? true : false;
 		$row['excludeFromStateCalculation'] = $row['excludeFromStateCalculation']==1 ? true : false;
 		$row['excludeFromTemporariesCalculation'] = $row['excludeFromTemporariesCalculation']==1 ? true : false;
+		$row['excludeAutoUpdateDeliveryDate'] = $row['excludeAutoUpdateDeliveryDate']==1 ? true : false;
 		$row['designOnly'] = $row['designOnly']==1 ? true : false;
 
 		$row['count'] = $count;
@@ -272,6 +273,8 @@ function savePrevision($prevision)
 	$designOnlyCloth = isset($prevision->designOnlyCloth) && trim($prevision->designOnlyCloth)!='' ? $prevision->designOnlyCloth : '' ;
 	$kitco = isset($prevision->kitco) && trim($prevision->kitco)!='' ? $prevision->kitco : '' ;
 
+	$excludeAutoUpdateDeliveryDate = $prevision->excludeAutoUpdateDeliveryDate==1 ? 'true' : 'false';
+
 	if ($num_results != 0)
 	{
 		logPrevisionUpdateFull($prevision->id, 'savePrevision');
@@ -281,7 +284,7 @@ function savePrevision($prevision)
 																		", productionObservations = '$productionObservations', designObservations = '$designObservations', dispatchId = $dispatchId".
 																		", week = $week, priority = $priority, line = $line, seller = $seller, advance = $advance, percentage = $percentage".
 																		", tentativeDate = $tentativeDate, productionDate = $productionDate, infoDate = $infoDate, advanceDate = $advanceDate, rizo = $rizo, country = '$country'".
-																		", deliveryDateManuallyUpdated = $deliveryDateManuallyUpdated, excludeFromStateCalculation = $excludeFromStateCalculation, excludeFromTemporariesCalculation = $excludeFromTemporariesCalculation".
+																		", deliveryDateManuallyUpdated = $deliveryDateManuallyUpdated, excludeFromStateCalculation = $excludeFromStateCalculation, excludeFromTemporariesCalculation = $excludeFromTemporariesCalculation, excludeAutoUpdateDeliveryDate = $excludeAutoUpdateDeliveryDate".
 																		", designer = '$designer', designHours = $designHours, designWeek = $designWeek, designOnly = $designOnly, designOnlyCloth = '$designOnlyCloth', kitco = '$kitco'".
 																		" WHERE id = '".$prevision->id."'";
 
@@ -298,11 +301,11 @@ function savePrevision($prevision)
 		// insert
 		$insert = "INSERT INTO previsions (id, orderNumber, deliveryDate, client, sailId, sailGroupId, sailDescription, boat,
 				type, designed, oneDesign, greaterThan44, p, e, i,j, area, sailOneDesign, observations, productionObservations, designObservations,
-				week, priority, line, seller, advance, percentage, tentativeDate, productionDate, infoDate, advanceDate, dispatchId, rizo, country, excludeFromStateCalculation, excludeFromTemporariesCalculation,
+				week, priority, line, seller, advance, percentage, tentativeDate, productionDate, infoDate, advanceDate, dispatchId, rizo, country, excludeFromStateCalculation, excludeFromTemporariesCalculation, excludeAutoUpdateDeliveryDate, 
 			  designer, designHours, designWeek, designOnly, designOnlyCloth, kitco)
 				VALUES ('".$prevision->id."', '".$prevision->orderNumber."', STR_TO_DATE('".$prevision->deliveryDate."', '%d-%m-%Y'), '".$client."', $sailId, $sailGroupId, $sailDescription, '".$boat."', '".$prevision->type."', false, ".$oneDesign.", ".$greaterThan44.", ".
 								$p.", ".$e.", ".$i.", ".$j.", ".$area.", $sailOneDesign, '$observations', '$productionObservations', '$designObservations',
-								$week, $priority, $line, $seller, $advance, $percentage, $tentativeDate, $productionDate, $infoDate, $advanceDate, $dispatchId, $rizo, '$country', $excludeFromStateCalculation, $excludeFromTemporariesCalculation,
+								$week, $priority, $line, $seller, $advance, $percentage, $tentativeDate, $productionDate, $infoDate, $advanceDate, $dispatchId, $rizo, '$country', $excludeFromStateCalculation, $excludeFromTemporariesCalculation, $excludeAutoUpdateDeliveryDate,
 								'$designer', $designHours, $designWeek, $designOnly, '$designOnlyCloth', '$kitco')" ;
 
 		if(mysql_query($insert)) {
@@ -868,8 +871,8 @@ function updateProperties($property) {
 function logPrevisionUpdateFull($previsionId, $method) {
 	global $country;
 
-	$update = "INSERT INTO previsionfulllogs (id,orderNumber,deliveryDate,client,sailId,sailDescription,boat,type,designed,oneDesign,greaterThan44,p,e,i,j,area,sailOneDesign,observations,designedOn,createdOn,state,prevState,stateAccepted,stateChanged,stateAcceptedDate,seller,dispatchId,line,week,priority,percentage,advance,tentativeDate,productionDate,infoDate,advanceDate,deletedProductionOn,deletedProductionBy,productionObservations,designObservations,driveIdProduction,driveIdDesign,sailGroupId,rizo,country,deliveryDateManuallyUpdated,kitco,method,insertedon)
-	 						SELECT id,orderNumber,deliveryDate,client,sailId,sailDescription,boat,type,designed,oneDesign,greaterThan44,p,e,i,j,area,sailOneDesign,observations,designedOn,createdOn,state,prevState,stateAccepted,stateChanged,stateAcceptedDate,seller,dispatchId,line,week,priority,percentage,advance,tentativeDate,productionDate,infoDate,advanceDate,deletedProductionOn,deletedProductionBy,productionObservations,designObservations,driveIdProduction,driveIdDesign,sailGroupId,rizo,country,deliveryDateManuallyUpdated,kitco
+	$update = "INSERT INTO previsionfulllogs (id,orderNumber,deliveryDate,client,sailId,sailDescription,boat,type,designed,oneDesign,greaterThan44,p,e,i,j,area,sailOneDesign,observations,designedOn,createdOn,state,prevState,stateAccepted,stateChanged,stateAcceptedDate,seller,dispatchId,line,week,priority,percentage,advance,tentativeDate,productionDate,infoDate,advanceDate,deletedProductionOn,deletedProductionBy,productionObservations,designObservations,driveIdProduction,driveIdDesign,sailGroupId,rizo,country,deliveryDateManuallyUpdated,kitco,excludeAutoUpdateDeliveryDate,method,insertedon)
+	 						SELECT id,orderNumber,deliveryDate,client,sailId,sailDescription,boat,type,designed,oneDesign,greaterThan44,p,e,i,j,area,sailOneDesign,observations,designedOn,createdOn,state,prevState,stateAccepted,stateChanged,stateAcceptedDate,seller,dispatchId,line,week,priority,percentage,advance,tentativeDate,productionDate,infoDate,advanceDate,deletedProductionOn,deletedProductionBy,productionObservations,designObservations,driveIdProduction,driveIdDesign,sailGroupId,rizo,country,deliveryDateManuallyUpdated,kitco,excludeAutoUpdateDeliveryDate
 							, '$method', now() FROM previsions WHERE id = '$previsionId'";
 
 	$obj->successful = true;
