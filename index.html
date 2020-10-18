@@ -126,9 +126,11 @@
 							</li>
 							<li>
 								<a class="dropdown-toggle" data-toggle="dropdown" onclick="focusSearch()">{{ 'Search' | translate }}</a>
-			                    <ul class="dropdown-menu" role="menu">
-			                        <li style="padding:0px 10px;"><input type="search" id="appsearch" ng-model="$parent.searchBox" ng-change="::$parent.searchBoxChanged()" stop-propagation/></li>
-			                    </ul>
+                <ul class="dropdown-menu" role="menu">
+                  <li style="padding:0px 10px;">
+                    <input type="search" id="appsearch" ng-model="$parent.searchBox" ng-change="::$parent.searchBoxChanged()" ng-model-options="{ debounce: 1000 }" stop-propagation/>
+                  </li>
+                </ul>
 							</li>
               <!-- <li> -->
               <!-- </li> -->
