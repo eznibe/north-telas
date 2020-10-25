@@ -7,7 +7,7 @@ function ($scope, $rootScope, $translate, $timeout, $cookieStore, Production, Pr
 	$scope.start = Date.now();
 
 	$scope.refreshBySearchBox = function(value) {
-		// console.log('Notified search box', value);
+		console.log('Notified search box', value);
 		if (value.length >= 4 || value == '') {
 			$scope.searchBox = value;
 			$scope.search(1);

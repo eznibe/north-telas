@@ -4,7 +4,7 @@
 
 angular.module('vsko.stock')
 
-.factory('OneDesign', ['$http', '$q', 'uuid4', function ($http, $q, uuid4) {
+.factory('OneDesign', ['$http', '$q', 'uuid4', 'Utils', function ($http, $q, uuid4, Utils) {
 
 		var url = telasAPIUrl;
 
@@ -20,6 +20,35 @@ angular.module('vsko.stock')
         	return $http.get(url + 'sails_GET.php?onedesign=true'+storedCountry);
         };
 
+        this.getModels = async function(storedCountry)
+        {
+            storedCountry = storedCountry === 'BRA' ? '&storedCountry=BRA' : '';
+            
+            const startTime = Date.now();
+
+            const result = await $http.get(url + 'onedesign_GET.php?onedesignmodels=true'+storedCountry);
+            Utils.logTiming(startTime, url + 'onedesign_GET.php?onedesignmodels=true'+storedCountry, 'onedesignmodels.getAll', 'GET');
+
+            return result;
+        };
+
+        this.getModelsHistoricData = async function(boat, sail, year)
+        {
+            const startTime = Date.now();
+
+            const modelParam = boat && sail ? `&boat=${boat}&sail=${sail}` : '';
+            const yearParam = year ? `&year=${year}` : '';
+
+            const requestUrl = boat && sail 
+                ? `${url}onedesign_GET.php?onedesignmodelsHistoricByModel=true${modelParam}${yearParam}`
+                : `${url}onedesign_GET.php?onedesignmodelsHistoric=true`; 
+            
+            const result = await $http.get(requestUrl);
+            Utils.logTiming(startTime, requestUrl, 'onedesignmodelsHistoric.getAll', 'GET');
+
+            return result;
+        };
+
         this.updateSailName = function(sail) {
 
         	return $http.post(url + 'sails_POST.php?updateSailName=true', sail);
@@ -30,6 +59,10 @@ angular.module('vsko.stock')
        		onedesign.id = uuid4.generate();
 
         	return $http.post(url + 'boats_POST.php?onedesign=true', onedesign);
+        };
+
+        this.saveModel = function(model) {
+            return $http.post(url + 'onedesign_POST.php?updateODModel=true', model);
         };
 
         this.updateBoatName = function(boat) {
@@ -63,6 +96,14 @@ angular.module('vsko.stock')
                 value: value
             };
             return $http.post(url + 'previsions_POST.php?properties=true', property);
+        }
+
+        this.getNextModelSerie = function(boat, sail) {
+            return $http.get(`${url}onedesign_GET.php?modelNextSerie=true&boat=${boat}&sail=${sail}`);
+        }
+
+        this.getModelPrevisions = function(boat, sail, onlyAvailables = false, onlyAssigned = false) {
+            return $http.get(`${url}onedesign_GET.php?modelPrevisions=true&boat=${boat}&sail=${sail}&onlyAvailables=${onlyAvailables}&onlyAssigned=${onlyAssigned}`);
         }
 
         return this;

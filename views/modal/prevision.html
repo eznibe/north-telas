@@ -20,41 +20,32 @@
 
 					<div class="row">
 						<div class="col-md-6 nopadding">
-								<label class="control-label col-xs-3 padding-top-3" for="edit_od">One Design</label>
+								<label class="control-label col-xs-4 padding-top-3" for="edit_od">One Design</label>
 								<div class="col-xs-1">
 									<input name="edit_od" type="checkbox" class="" ng-model="prevision.oneDesign" ng-disabled="prevision.designOnly" ng-change="oneDesignCloths()">
 								</div>
 
-                <!-- <label class="control-label col-xs-3 padding-top-3" for="edit_od">3DI/3DL/ESP</label>
-								<div class="col-xs-1">
-									<input name="edit_od" type="checkbox" class="" ng-model="prevision.canvas" ng-change="canvasOrder()">
-								</div> -->
-								<div class="col-xs-2"></div>
+								<div class="col-xs-7" style="text-align: right;" ng-if="prevision.oneDesign">
+									<label class="control-label col-xs-8 padding-top-3" for="edit_od_assign">Asignada a orden</label>
+									<div class="col-xs-1">
+										<input name="edit_od_assign" type="checkbox" class="" ng-model="prevision.odAssigned" ng-value="prevision.odAssigned" ng-disabled="!prevision.odAssigned && !prevision.ownProduction" ng-change="oneDesignToggleAssigned()">
+									</div>
+								</div>
 								
 								<div class="col-xs-6"></div>
-                <!-- <label class="control-label col-xs-5 padding-top-3" translate>Exclude state calculation</label>
-								<div class="col-xs-1 nopadding">
-									<input type="checkbox" class="" ng-model="prevision.excludeFromStateCalculation">
-								</div> -->
 						</div>
-            <div class="col-md-6 nopadding">
-								<label class="control-label col-xs-3 padding-top-3" for="edit_client" translate>State</label>
-								<!-- <div class="col-xs-9">
-                  <span style="color:black; padding:2px;" ng-style="{'background-color': (prevision.stateAccepted=='0' ? 'orange' : '')}">
-      							{{prevision.state}}
-      							<a href="javascript:void(0)" ng-show="prevision.stateAccepted=='0'" ng-click="acceptStateChange(prevision); $event.stopPropagation();" style="cursor:pointer;" class="tag-control"><span class="glyphicon glyphicon-ok control-label" style="text-align:center; margin-left:4px;"></span></a>
+            			<div class="col-md-6 nopadding">
+								<label class="control-label col-xs-3 padding-top-3" for="edit_state" translate>State</label>
+               		 			<div class="col-xs-3">
+                  					<span style="color:black; padding:2px;" ng-style="{'background-color': (prevision.stateAccepted=='0' ? 'orange' : '')}">
+										{{prevision.state}}
+										<a href="javascript:void(0)" ng-show="prevision.stateAccepted=='0'" ng-click="acceptStateChange(prevision); $event.stopPropagation();" style="cursor:pointer;" class="tag-control"><span class="glyphicon glyphicon-ok control-label" style="text-align:center; margin-left:4px;"></span></a>
+									</span>
 								</div>
-              </span> -->
-                <div class="col-xs-3">
-                  <span style="color:black; padding:2px;" ng-style="{'background-color': (prevision.stateAccepted=='0' ? 'orange' : '')}">
-      							{{prevision.state}}
-      							<a href="javascript:void(0)" ng-show="prevision.stateAccepted=='0'" ng-click="acceptStateChange(prevision); $event.stopPropagation();" style="cursor:pointer;" class="tag-control"><span class="glyphicon glyphicon-ok control-label" style="text-align:center; margin-left:4px;"></span></a>
-      						</span>
-								</div>
-                <label class="control-label col-xs-2 padding-top-3" translate>Country</label>
+                				<label class="control-label col-xs-2 padding-top-3" translate>Country</label>
 								<div class="col-xs-4">
 									<select ng-model="prevision.country" ng-options="c for c in countries" class="form-control small" ng-disabled="user.storedCountry == 'BRA' || prevision.isNew || (prevision.designed=='1' && prevision.id.indexOf('-prev')==-1) || prevision.designOnly" ng-change="refreshCountry();">
-                  </select>
+                  					</select>
 								</div>
 						</div>
 					</div>
@@ -65,25 +56,25 @@
 						<div class="col-md-6 nopadding">
 								<label class="control-label col-xs-4" for="edit_order" translate>Order number</label>
 								<div class="col-xs-8">
-									<input name="edit_order" type="text" class="form-control small" ng-model="prevision.orderNumber" required ng-class="{error: form.edit_order.$dirty && form.edit_order.$invalid}" ng-show="prevision.id">
-                  <angucomplete-alt id="ex1"
-                      placeholder=""
-                      pause="100"
-                      selected-object="selectedPrevision"
-                      local-data="previsionsForAC"
-                      search-fields="orderNumber"
-                      title-field="orderNumber"
-                      input-changed="orderNumberInputChanged"
-                      minlength="2"
-                      input-class="form-control small"
-                      required ng-class="{error: form.edit_order.$dirty && form.edit_order.$invalid}"
-                      ng-show="!prevision.id"/>
+									<input name="edit_order" type="text" class="form-control small" ng-model="prevision.orderNumber" required ng-class="{error: form.edit_order.$dirty && form.edit_order.$invalid}" ng-show="prevision.id || odDisabledOrderFields()" ng-disabled="odDisabledOrderFields()">
+									<angucomplete-alt id="ex1"
+										placeholder=""
+										pause="100"
+										selected-object="selectedPrevision"
+										local-data="previsionsForAC"
+										search-fields="orderNumber"
+										title-field="orderNumber"
+										input-changed="orderNumberInputChanged"
+										minlength="2"
+										input-class="form-control small"
+										required ng-class="{error: form.edit_order.$dirty && form.edit_order.$invalid}"
+										ng-if="!prevision.id && !odDisabledOrderFields()"/>
 								</div>
 						</div>
 						<div class="col-md-6 nopadding">
 								<label class="control-label col-xs-3" for="edit_client" translate>Client</label>
 								<div class="col-xs-9">
-									<input name="edit_client" type="text" class="form-control small" ng-model="prevision.client">
+									<input name="edit_client" type="text" class="form-control small" ng-model="prevision.client" ng-disabled="odDisabledOrderFields()">
 								</div>
 						</div>
 					</div>
@@ -93,7 +84,7 @@
 								<label class="control-label col-xs-4" for="edit_date" translate>Delivery date</label>
 								<div class="col-xs-8">
 									<div class="input-group input-group-sm date" date-picker>
-										<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="prevision.deliveryDate" ng-change="deliveryDateChanged('{{prevision.deliveryDate}}')" class="form-control small" required ng-style="{'background-color': (prevision.deliveryDateChanged===true || prevision.deliveryDateManuallyUpdated==='1' ? 'orange' : '')}">
+										<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="prevision.deliveryDate" ng-change="deliveryDateChanged('{{prevision.deliveryDate}}')" class="form-control small" required ng-style="{'background-color': (prevision.deliveryDateChanged===true || prevision.deliveryDateManuallyUpdated==='1' ? 'orange' : '')}" ng-disabled="odDisabledOrderFields()">
 										<span class="input-group-addon">
 											<span class="glyphicon-calendar glyphicon"></span>
 										</span>
@@ -101,46 +92,40 @@
 								</div>
 						</div>
 						<div class="col-md-6 nopadding">
-								<label class="control-label col-xs-3" for="dd_sail" translate>Sail</label>
-                <div class="col-xs-4" ng-show="!prevision.oneDesign">
-									<select name="dd_sail" ng-model="prevision.selectedSailGroup" ng-options="s as s.name for s in sailGroups" class="form-control small" ng-change="updateSails();">
-				                        <option value="">-- choose one --</option>
-				                    </select>
-								</div>
-								<div class="col-xs-5" ng-show="!prevision.oneDesign && prevision.selectedSailGroup.id != 9">
-									<select name="dd_sail" ng-model="prevision.selectedSail" ng-options="s as s.description for s in sails" class="form-control small" ng-change="calculateMts(); oneDesignCloths(); calculateDesignHours();">
-				                        <option value="">-- choose one --</option>
-				                    </select>
-								</div>
-								<div class="col-xs-4" ng-show="prevision.oneDesign">
-									<select name="dd_sailod" ng-model="prevision.selectedOneDesignSail" ng-options="s as s.sail for s in oneDesignSails" class="form-control small" ng-change="setBoatBySail(); oneDesignCloths();">
-                    <option value="">-- choose one --</option>
-                  </select>
-								</div>
-								<div class="col-xs-5" ng-show="prevision.oneDesign || prevision.selectedSailGroup.id == 9">
-									<input name="edit_sail" type="text" class="form-control small" ng-model="prevision.sailDescription">
-								</div>
+							<label class="control-label col-xs-3" for="edit_boat" translate>Boat</label>
+							<div class="col-xs-4" ng-show="!prevision.oneDesign">
+								<input name="edit_boat" type="text" class="form-control small" ng-model="prevision.boat">
+							</div>
+							<div class="col-xs-4" ng-show="prevision.oneDesign">
+								<select name="dd_boat" ng-model="prevision.selectedBoat" ng-options="b as b.boat for b in boats" class="form-control small" ng-change="filterSails();  oneDesignCloths();" ng-disabled="prevision.odAssigned">
+									<option value="">-- choose one --</option>
+								</select>
+							</div>
+
+							<label class="control-label col-xs-2" for="edit_feet" ng-show="prevision.selectedSailGroup.id != 8">&gt; 44</label>
+							<div class="col-xs-2" ng-hide="prevision.selectedSailGroup.id == 8">
+								<input name="edit_feet" type="checkbox" style="margin-top:8px;" ng-model="prevision.greaterThan44"  ng-change="calculateMts()">
+							</div>
 						</div>
 					</div>
 
-          <div class="row"  ng-show="prevision.selectedSail.rizo == 'Y'">
+          			<div class="row"  ng-show="prevision.selectedSail.rizo == 'Y'">
 						<div class="col-md-6 nopadding">
 						</div>
 						<div class="col-md-6 nopadding">
 								<label class="control-label col-xs-3" for="dd_sail" translate>Rizos</label>
-                <div class="col-xs-4">
-                </div>
+						<div class="col-xs-4">
+						</div>
 								<div class="col-xs-5">
 									<select name="dd_sailod" ng-model="prevision.rizo" class="form-control small" ng-change="calculateMts()">
-                      <option value="0" selected>0</option>
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                  </select>
+										<option value="0" selected>0</option>
+										<option value="1">1</option>
+										<option value="2">2</option>
+										<option value="3">3</option>
+									</select>
 								</div>
 						</div>
 					</div>
-
 					<div class="row">
 						<div class="col-md-6 nopadding">
 								<label class="control-label col-xs-4" for="edit_type" translate>Type</label>
@@ -154,23 +139,28 @@
 									<span ng-show="form.edit_type.$invalid" class="radio-inline error">!</span>
 								</div>
 						</div>
+						
 						<div class="col-md-6 nopadding">
-								<label class="control-label col-xs-3" for="edit_boat" translate>Boat</label>
-								<div class="col-xs-4" ng-show="!prevision.oneDesign">
-									<input name="edit_boat" type="text" class="form-control small" ng-model="prevision.boat">
-								</div>
-								<div class="col-xs-4" ng-show="prevision.oneDesign">
-									<select name="dd_boat" ng-model="prevision.selectedBoat" ng-options="b as b.boat for b in boats" class="form-control small" ng-change="filterSails();  oneDesignCloths();">
-										<option value="">-- choose one --</option>
-									</select>
-								</div>
-
-								<label class="control-label col-xs-2" for="edit_feet" ng-show="prevision.selectedSailGroup.id != 8">&gt; 44</label>
-								<div class="col-xs-2" ng-hide="prevision.selectedSailGroup.id == 8">
-									<input name="edit_feet" type="checkbox" style="margin-top:8px;" ng-model="prevision.greaterThan44"  ng-change="calculateMts()">
-								</div>
+							<label class="control-label col-xs-3" for="dd_sail" translate>Sail</label>
+							<div class="col-xs-4" ng-show="!prevision.oneDesign">
+								<select name="dd_sail" ng-model="prevision.selectedSailGroup" ng-options="s as s.name for s in sailGroups" class="form-control small" ng-change="updateSails();">
+									<option value="">-- choose one --</option>
+								</select>
+							</div>
+							<div class="col-xs-5" ng-show="!prevision.oneDesign && prevision.selectedSailGroup.id != 9">
+								<select name="dd_sail" ng-model="prevision.selectedSail" ng-options="s as s.description for s in sails" class="form-control small" ng-change="calculateMts(); oneDesignCloths(); calculateDesignHours();">
+									<option value="">-- choose one --</option>
+								</select>
+							</div>
+							<div class="col-xs-4" ng-show="prevision.oneDesign">
+								<select name="dd_sailod" ng-model="prevision.selectedOneDesignSail" ng-options="s as s.sail for s in oneDesignSails" class="form-control small" ng-change="setBoatBySail(); oneDesignCloths(); showModelsAvailableModal(prevision, modelAvailableSelection);" ng-disabled="prevision.odAssigned">
+									<option value="">-- choose one --</option>
+								</select>
+							</div>
+							<div class="col-xs-5" ng-show="prevision.oneDesign || prevision.selectedSailGroup.id == 9">
+								<input name="edit_sail" type="text" class="form-control small" ng-model="prevision.sailDescription" ng-disabled="true">
+							</div>
 						</div>
-
 					</div>
 
 					<div class="row">
@@ -181,9 +171,23 @@
 								</select>
 							</div>
 						</div>
-						<div class="col-md-6 nopadding">
+						<div class="col-md-6 nopadding" ng-if="prevision.oneDesign">
+							<label class="control-label col-xs-3" for="edit_date" translate>Fabrication</label>
+							<div class="col-xs-4">
+								<div class="input-group input-group-sm date" date-picker>
+									<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="prevision.fabricationDate" class="form-control small">
+									<span class="input-group-addon">
+										<span class="glyphicon-calendar glyphicon"></span>
+									</span>
+								</div>
+							</div>
+							<label class="control-label col-xs-2" for="edit_feet">WT</label>
+							<div class="col-xs-2">
+								<a ng-click="printDispatch(dispatch)" class="btn btn-default edit_person" style="background-color: #eeeeee;">
+									<span class="glyphicon glyphicon-print" style="color: grey;"></span>
+								</a>
+							</div>
 						</div>
-
 					</div>
 
 			<div class="panel panel-default ng-scope">
@@ -217,13 +221,16 @@
 								<div class="col-xs-2">
 									<input type="checkbox" class="" ng-model="prevision.excludeAutoUpdateDeliveryDate">
 								</div>
+
+								<label class="control-label col-xs-5 padding-top-3" translate>Exclude temporaries calculation</label>
+								<div class="col-xs-1 nopadding">
+									<input type="checkbox" class="" ng-model="prevision.excludeFromTemporariesCalculation">
+								</div>
+							</div>
 						</div>
-						</div>
-	
 					</div>
-	
-				</div>
-			</div>
+				</div>	
+			</div>			
 
           <div class="panel panel-default ng-scope">
             <div class="panel-heading nopadding">
@@ -440,21 +447,6 @@
   					</div>
   				</div>
 
-
-
-          <!-- <div class="row">
-            <div class="col-md-6 nopadding">
-                <label class="control-label col-xs-4" translate>Dispatch</label>
-                <div class="col-xs-6">
-                  <select name="dd_boat" ng-model="prevision.selectedDispatch" ng-options="b as b.boat for b in dispatchs" class="form-control small" ng-change="">
-                    <option value="">-- choose one --</option>
-                  </select>
-                </div>
-                <span class="glyphicon glyphicon-plus col-xs-1 control-label" ng-click="newDispatch()" style="text-align:center; cursor:pointer;"></span>
-            </div>
-          </div> -->
-
-
 					<div class="row border-bottom border-top">
 						<div class="col-md-2 nopadding">
 								<label class="control-label col-xs-4" for="edit_type" translate>P</label>
@@ -494,8 +486,8 @@
 								<label class="control-label col-xs-4" for="edit_cloth" translate>Cloth</label>
 								<div class="col-xs-8">
 									<select name="dd_cloth" ng-model="c.selectedCloth" ng-options="sc as sc.name for sc in cloths" class="form-control small" required ng-class="{error: innerForm.dd_cloth.$invalid}" ng-disabled="prevision.designed=='1' && prevision.id.indexOf('-prev')==-1" >
-                      <option value="">-- choose one --</option>
-                  </select>
+										<option value="">-- choose one --</option>
+									</select>
 								</div>
 						</div>
 						<div class="col-md-6 nopadding">
@@ -509,7 +501,7 @@
 						</ng-form>
 					</div>
 
-          <div class="row" ng-show="prevision.designOnly">
+					<div class="row" ng-show="prevision.designOnly">
 						<div class="col-md-6 nopadding">
 								<label class="control-label col-xs-4" for="edit_cloth" translate>Cloth</label>
 								<div class="col-xs-8">
@@ -534,7 +526,7 @@
 
 				<a ng-click="save()" class="btn btn-default floatright edit_person" 
 					ng-if="!prevision.deletedProductionOn"
-					 ng-disabled="(!form.$valid && !prevision.designOnly) || !prevision.orderNumber" access-allowed="admin,ordenes,produccion,velas-od,compras" >
+					 ng-disabled="(!form.$valid && !prevision.designOnly && !(prevision.oneDesign && !prevision.odAssigned)) || !prevision.orderNumber" access-allowed="admin,ordenes,produccion,velas-od,compras" >
 					<span class="glyphicon glyphicon-save"></span>
 					{{'Save' | translate}}
 				</a>
@@ -550,3 +542,5 @@
 <confirm-modal callback="deletePrevision"/>
 
 <dispatch-modal/>
+
+<od-models-available-modal/>

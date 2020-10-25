@@ -1,0 +1,78 @@
+<div class="jumbotron clearfix nopaddingright">
+	<h1><span translate>Stock One Design</span></h1>
+	
+	<div class="row">
+		<div class="col-md-6 nopadding">
+				<label class="control-label col-xs-2" translate>Clase</label>
+				<div class="col-xs-4">
+					<select name="dd_ty" ng-model="filter.selectedBoat" ng-options="boat for boat in filter.boats" class="form-control small">
+						<option value="">-- choose one --</option>
+		      		</select>
+				</div>
+				<!-- <label class="control-label col-xs-2" translate>Modelo</label>
+				<div class="col-xs-4">
+					<select name="dd_ty" ng-model="filter.selectedModel" ng-options="model for model in filter.models" class="form-control small" ng-change="filter();">
+						<option value="">-- choose one --</option>
+		      		</select>
+				</div> -->
+		</div>
+	</div>
+	<p class="bigmargin">
+	    <a ng-click="createOwnProduction()" class="btn btn-default floatright" access-restricted="read-only,plotter">
+	        <span class="glyphicon glyphicon-plus"></span>&nbsp;
+	        {{'Produccion propia' | translate}}
+	    </a>
+	</p>
+</div>
+
+<table class="table table-bordered table-striped table-hover">
+	<thead>
+		<tr>
+			<th translate>Clase</th>
+			<th translate>Sail</th>
+			<th translate>Modelo</th>
+			<th translate>Stock min</th>
+			<th translate>Stock</th>
+			<th translate>Manufactura</th>
+			<th translate>Plotter</th>
+			<th translate>Total</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="m in models | filter:boatFilter | filter:searchBox ">
+			<td nowrap>
+				{{m.boat}}
+			</td>
+			<td nowrap>
+				{{m.sail}}
+			</td>
+			<td>
+				<span ng-if="m.model"><a href="javascript:void(0);" ng-click="showModelDetailsModal(m)">{{m.model}}</a></span>
+				<span ng-if="!m.model"><a href="javascript:void(0);" ng-click="showModelDetailsModal(m)">&lt;completar&gt;</a></span>
+				<span style="color: red;">{{::(isNextModelSerieEmpty(m) ? '!' : '')}}</span>
+			</td>
+			<td>
+				{{m.minStock}}
+			</td>
+			<td>
+				{{::stock(m)}}
+			</td>
+			<td>
+				{{::manufacture(m)}}
+			</td>
+
+			<td>
+				{{::plotter(m)}}
+			</td>
+			<td>
+				{{::total(m)}}
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<confirm-modal/>
+
+<prevision-modal/>
+
+<od-model-details-modal/>

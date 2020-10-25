@@ -241,12 +241,22 @@ angular.module("vsko.stock", [
                 controller: 'HistoricCtrl',
                 access: 'public'
             })
-						.when('/dispatch', {
+            .when('/dispatch', {
                 templateUrl: 'views/dispatchs.html',
                 controller: 'DispatchCtrl',
                 access: 'public'
             })
-						.when('/canvas', {
+            .when('/stockOD', {
+                templateUrl: 'views/stockOD.html',
+                controller: 'StockODCtrl',
+                access: 'public'
+            })
+            .when('/historicOD', {
+                templateUrl: 'views/historicOD.html',
+                controller: 'HistoricODCtrl',
+                access: 'public'
+            })
+            .when('/canvas', {
                 templateUrl: 'views/canvas.html',
                 controller: 'CanvasCtrl',
                 access: 'public'

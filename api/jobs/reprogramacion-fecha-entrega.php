@@ -1,7 +1,8 @@
 <?php
 
 // update delivery date of previsions with % < 4
-// cron job: https://www.easycron.com/cron/log/id/2598459
+// cron job en directAdmin panel: /usr/local/bin/curl --silent http://nssudamerica-intranet.com/api/jobs/reprogramacion-fecha-entrega.php > /dev/null
+// cron job: https://www.easycron.com/cron/log/id/2598459  NO
 
 include_once '../../include/headers.php';
 include_once '../../include/dbutils.php';

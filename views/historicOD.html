@@ -1,0 +1,43 @@
+<div class="jumbotron clearfix nopaddingright">
+	<h1><span translate>Consumos One Design por año</span></h1>
+	<div class="row">
+		<div class="col-md-6 nopadding">
+				<label class="control-label col-xs-2" translate>Clase</label>
+				<div class="col-xs-4">
+					<select name="dd_ty" ng-model="filter.selectedBoat" ng-options="boat for boat in filter.boats" class="form-control small">
+						<option value="">-- choose one --</option>
+		      		</select>
+				</div>
+		</div>
+	</div>
+</div>
+
+<table class="table table-bordered table-striped table-hover">
+	<thead>
+		<tr>
+			<th translate>Clase</th>
+			<th translate>Sail</th>
+			<th translate>Modelo</th>
+			<th ng-repeat="y in years">{{y}}</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="d in models | filter:boatFilter | filter:searchBox ">
+			<td nowrap>
+				{{::d.boat}}
+			</td>
+			<td nowrap>
+				{{::d.sail}}
+			</td>
+			<td>
+				{{::d.model}}
+			</td>
+			<td ng-repeat="y in years">
+				<span ng-if="::yearAmount(d, y) !== '-'"><a href="javascript:void(0);" ng-click="showModelsConsumedModal(d, y)">{{::yearAmount(d, y)}}</a></span>
+				<span ng-if="::yearAmount(d, y) === '-'">{{::yearAmount(d, y)}}</span>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<od-models-consumed-modal/>
