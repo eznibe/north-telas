@@ -156,10 +156,10 @@
   "Cloth": "Tela",
   "Date": "Fecha",
   "Delivery date": "Fecha de entrega",
-  "Order number": "Número de orden",
   "Client": "Cliente",
   "Boat": "Barco",
   "Sail": "Vela",
+  "Sail number": "Nr de Vela",
   "Cancel": "Cancelar",
   "Save": "Guardar",
   "Documents": "Documentos",
@@ -168,7 +168,6 @@
   "System": "Sistema",
   "Invalid user or password": "Usuario o password inválido.",
   "Role": "Role",
-  "Name": "Nombre",
   "Create new user": "Crear nuevo usuario",
   "Remove": "Eliminar",
   "Delete": "Eliminar",
@@ -347,6 +346,7 @@
   "New": "Nueva",
   "Model": "Modelo",
   "Consumed": "Consumidos",
+  "Maximum": "Máximos",
 
   "": "",
   "notify": {

@@ -21,6 +21,10 @@ angular.module('vsko.stock').controller('StockODCtrl', ['$scope', '$rootScope', 
     return !$scope.filter.selectedBoat || model.boat === $scope.filter.selectedBoat;
   } 
 
+  $scope.lineFilter = (model) => {
+    return !$scope.filter.selectedLine || model.line === $scope.filter.selectedLine;
+  } 
+
   $scope.createOwnProduction = () => {
     $scope.showPrevisionModal({isNew: true, oneDesign: true, odUnassigned: true, ownProduction: true, greaterThan44: false, country: $rootScope.user.country})
   }

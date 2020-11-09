@@ -2,7 +2,7 @@ var XLSX = require('xlsx');
 
 // this is generated using view v_onedesign_max_sequence_by_model
 // var workbook = XLSX.readFile('/home/ezequiel/work/north-sites/telas/nodejs-scripts/raw-models.xls');
-const workbook = XLSX.readFile('/home/ezequiel/work/north-sites/telas/nodejs-scripts/v_onedesign_max_sequence_by_model.csv');
+const workbook = XLSX.readFile('/home/ezequiel/work/north-sites/telas/nodejs-scripts/v_onedesign_max_sequence_by_model.prod.csv');
 
 var sheet_name_list = workbook.SheetNames;
 
@@ -18,6 +18,8 @@ sheet_name_list.forEach(function(y) {
     
     xlData.forEach(function(row) {
       // console.log(row);
+      row.model = row.model || 'NULL';
+
       let updatedModel = row.model;
       let modelParts = row.model.split('-');
       let sequence = row.model.split('-').pop();
@@ -28,6 +30,7 @@ sheet_name_list.forEach(function(y) {
       // console.log(`UPDATE onedesignmodels SET model = '${updatedModel}' WHERE boat = '${row.boat}' and model = '${row.model}' and country = '${row.country}';`);
       let insert = `INSERT INTO onedesignmodels (boat, sail, model, country) VALUES ('${row.boat}', '${row.sail}', '${updatedModel}', '${row.country}');`;
       insert = insert.replace('\'<null>\'', 'null');
+      insert = insert.replace('\'NULL\'', 'null');
       console.log(insert);
     });
 });

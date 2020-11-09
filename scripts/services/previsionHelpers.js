@@ -13,10 +13,12 @@ angular.module('vsko.stock').factory('PrevisionHelpers',[ '$q', 'uuid4', 'OneDes
       client: previsionSource.client,
       orderNumber: previsionSource.orderNumber,
       deliveryDate: previsionSource.deliveryDate,
-      type: previsionSource.type,
+      type: previsionSource.type ? previsionSource.type : previsionTarget.type,
       selectedBoat: previsionSource.selectedBoat,
       selectedOneDesignSail: previsionSource.selectedOneDesignSail,
-      selectedSailGroup: previsionSource.selectedSailGroup
+      selectedSailGroup: previsionSource.selectedSailGroup,
+      hasInfo: previsionTarget.infoDate !== undefined,
+      hasAdvance: previsionTarget.advanceDate !== undefined,
     };
   };
 
@@ -43,7 +45,7 @@ angular.module('vsko.stock').factory('PrevisionHelpers',[ '$q', 'uuid4', 'OneDes
       sailOneDesign: prevision.selectedOneDesignSail.sail,
       sailDescription: prevision.sailDescription,
       percentage: prevision.percentage,
-      fabricationDate: prevision.fabricationDate,
+      productionDate: prevision.productionDate,
       week: prevision.week,
       line: prevision.selectedLine ? prevision.selectedLine.line : undefined,
       priority: prevision.priority,
@@ -61,7 +63,7 @@ angular.module('vsko.stock').factory('PrevisionHelpers',[ '$q', 'uuid4', 'OneDes
     prevision.selectedBoat = undefined;
     prevision.selectedOneDesignSail = undefined;
     // prevision.percentage = 0;
-    delete prevision.fabricationDate;
+    delete prevision.productionDate;
     delete prevision.sailDescription;
     prevision.ownProduction = false;
     return prevision;

@@ -32,6 +32,16 @@ angular.module('vsko.stock')
             return result;
         };
 
+        this.getModel = async function(boat, sail)
+        {
+            const startTime = Date.now();
+
+            const result = await $http.get(`${url}onedesign_GET.php?onedesignmodels=true&boat=${boat}&sail=${sail}`);
+            Utils.logTiming(startTime, `${url}onedesign_GET.php?onedesignmodels=true&boat=${boat}&sail=${sail}`, 'onedesignmodels.getModel', 'GET');
+
+            return result;
+        };
+
         this.getModelsHistoricData = async function(boat, sail, year)
         {
             const startTime = Date.now();
@@ -104,6 +114,63 @@ angular.module('vsko.stock')
 
         this.getModelPrevisions = function(boat, sail, onlyAvailables = false, onlyAssigned = false) {
             return $http.get(`${url}onedesign_GET.php?modelPrevisions=true&boat=${boat}&sail=${sail}&onlyAvailables=${onlyAvailables}&onlyAssigned=${onlyAssigned}`);
+        }
+
+        this.getModelMeasurements = (model) => {
+            return $http.get(`${url}onedesign_GET.php?modelMeasurements=true&modelId=${model.id}`);
+        }
+
+        this.saveModelMeasurement = (measure, modelId) => {
+            if (!measure.id) {
+                measure.id = uuid4.generate();
+            }
+            measure.modelId = modelId;
+
+            return $http.post(url + 'onedesign_POST.php?updateODModelMeasurement=true', measure);
+        }
+
+        this.updateModelField = function(entity, type, fieldName, isNumeric) {
+
+            let numeric = '';
+            if (isNumeric) {
+                numeric = '&isNumber=true';
+            }
+
+            const typeParam = `&type=${type}`;
+
+            return $http.post(url + 'onedesign_POST.php?edit='+fieldName + numeric + typeParam, entity);
+        };
+
+        this.deleteModelMeasurement = (measure) => {
+            return $http.post(url + 'onedesign_DELETE.php?deleteODModelMeasurement=true&id='+measure.id);
+        }
+
+        // model items
+        this.getModelItems = (model) => {
+            return $http.get(`${url}onedesign_GET.php?modelItems=true&modelId=${model.id}`);
+        }
+
+        this.saveModelItem = (item, modelId) => {
+            if (!item.id) {
+                item.id = uuid4.generate();
+            }
+            item.modelId = modelId;
+
+            return $http.post(url + 'onedesign_POST.php?updateODModelItem=true', item);
+        }
+
+        this.updateModelItemField = function(item, fieldName, isNumeric) {
+
+            var numeric = '';
+            if (isNumeric) {
+                numeric = '&isNumber=true';
+            }
+
+            return $http.post(url + 'onedesign_POST.php?edit='+fieldName + numeric, item);
+        };
+
+        this.deleteModelItem = (item) => {
+            return $http.post(url + 'onedesign_DELETE.php?deleteODModelItem=true&id='+item.id);
         }
 
         return this;

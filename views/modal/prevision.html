@@ -175,7 +175,7 @@
 							<label class="control-label col-xs-3" for="edit_date" translate>Fabrication</label>
 							<div class="col-xs-4">
 								<div class="input-group input-group-sm date" date-picker>
-									<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="prevision.fabricationDate" class="form-control small">
+									<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="prevision.productionDate" class="form-control small">
 									<span class="input-group-addon">
 										<span class="glyphicon-calendar glyphicon"></span>
 									</span>
@@ -183,7 +183,7 @@
 							</div>
 							<label class="control-label col-xs-2" for="edit_feet">WT</label>
 							<div class="col-xs-2">
-								<a ng-click="printDispatch(dispatch)" class="btn btn-default edit_person" style="background-color: #eeeeee;">
+								<a ng-click="printWorkticket()" class="btn btn-default edit_person" style="background-color: #eeeeee;">
 									<span class="glyphicon glyphicon-print" style="color: grey;"></span>
 								</a>
 							</div>
@@ -313,7 +313,55 @@
     									<input name="edit_od" type="checkbox" class="" ng-model="prevision.designOnly" ng-change="designOnlyOrder()">
     								</div>
                   </div>
-                </div>
+				</div>
+				
+				<div class="row">
+					<div class="col-md-3 nopadding">
+						<label class="control-label col-xs-6" translate>Color #1</label>
+						<div class="col-xs-6">
+							<input type="text" class="form-control small" ng-model="prevision.wtColor1">
+						</div>
+					</div>
+					<div class="col-md-3 nopadding">
+						<label class="control-label col-xs-6" translate>Insignia</label>
+						<div class="col-xs-6">
+							<input type="text" class="form-control small" ng-model="prevision.wtInsignia">
+						</div>
+					</div>
+					<div class="col-md-3 nopadding">
+						<label class="control-label col-xs-6" translate>Royalty</label>
+						<div class="col-xs-6">
+							<input type="text" class="form-control small" ng-model="prevision.wtRoyalty">
+						</div>
+					</div>
+					<div class="col-md-3 nopadding">
+					  	<label class="control-label col-xs-6" for="edit_od" translate>Draft</label>
+						<div class="col-xs-6">
+							<input type="text" class="form-control small" ng-model="prevision.wtDraft">
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-3 nopadding">
+						<label class="control-label col-xs-6" translate>Color #2</label>
+						<div class="col-xs-6">
+							<input type="text" class="form-control small" ng-model="prevision.wtColor2">
+						</div>
+					</div>
+					<div class="col-md-3 nopadding">
+						<label class="control-label col-xs-6" translate>Sail</label>
+						<div class="col-xs-6">
+							<input type="text" class="form-control small" ng-model="prevision.wtSail">
+						</div>
+					</div>
+					<div class="col-md-3 nopadding">
+						<label class="control-label col-xs-6" translate>Sail number</label>
+						<div class="col-xs-6">
+							<input type="text" class="form-control small" ng-model="prevision.wtSailNumber">
+						</div>
+					</div>
+				</div>
               </div>
             </div>
           </div>

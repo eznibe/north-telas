@@ -9,12 +9,14 @@
 						<option value="">-- choose one --</option>
 		      		</select>
 				</div>
-				<!-- <label class="control-label col-xs-2" translate>Modelo</label>
+				<label class="control-label col-xs-2" translate>Line</label>
 				<div class="col-xs-4">
-					<select name="dd_ty" ng-model="filter.selectedModel" ng-options="model for model in filter.models" class="form-control small" ng-change="filter();">
+					<select name="dd_ty" ng-model="filter.selectedLine" class="form-control small">
 						<option value="">-- choose one --</option>
+						<option value="OD">OD</option>
+						<option value="CA">CA</option>
 		      		</select>
-				</div> -->
+				</div>
 		</div>
 	</div>
 	<p class="bigmargin">
@@ -39,7 +41,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="m in models | filter:boatFilter | filter:searchBox ">
+		<tr ng-repeat="m in models | filter:boatFilter | filter:lineFilter | filter:searchBox ">
 			<td nowrap>
 				{{m.boat}}
 			</td>

@@ -22,8 +22,16 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 	if(isset($_GET['updateODModel'])) {
 		$value = updateODModel($json);		
 	}
-	else if(isset($_GET['todo'])) {
+	else if(isset($_GET['updateODModelMeasurement'])) {
+		$value = saveODModelMeasurement($json);		
 	}
+	else if(isset($_GET['updateODModelItem'])) {
+		$value = saveODModelItem($json);		
+	}
+	else if(isset($_GET['edit']) && isset($_GET['isNumber']))
+		$value = editODModelNumberField($json, $_GET['edit'], $_GET['type']);
+	else if(isset($_GET['edit']))
+		$value = editODModelField($json, $_GET['edit'], $_GET['type']);
 
 	//return JSON array
 	exit(json_encode($value));

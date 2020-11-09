@@ -34,6 +34,12 @@ angular.module('vsko.stock')
               loadModelPrevisions(model);
 
               model.nextSequence = await getModelNextSequence(model);
+
+              let result = await OneDesign.getModelMeasurements(model);
+              model.measurements = result.data;
+
+              result = await OneDesign.getModelItems(model);
+              model.items = result.data;
               
               $scope.odmodel = clean(model);
               
@@ -70,18 +76,82 @@ angular.module('vsko.stock')
               loadModelPrevisions($scope.odmodel);
             }
 
+            // Model measurement functions
+            $scope.showMeasurementModal = function(carry, type) {
 
-            $scope.deleteDispatchPrevision = function(prevision) {
+              $scope.measure = {};
+              $scope.modalMeasurement = $modal({template: 'views/modal/odModelMeasurement.html', show: false, scope: $scope, animation:'am-fade-and-slide-top'});
 
-              Dispatchs.removePrevision(prevision).then(function(result) {
-                if (result.data.successful) {
-                  $scope.dispatch.previsions = $scope.dispatch.previsions.filter(function(p) {
-                    return p.dpId != prevision.dpId;
-                  });
-                } else {
-                  Utils.showMessage('Error', 'error');
-                }
-              });
+              $scope.modalMeasurement.$promise.then($scope.modalMeasurement.show);
+            }
+
+            $scope.saveMeasurement = async (measure) => {
+              await OneDesign.saveModelMeasurement(measure, $scope.odmodel.id);
+              $scope.odmodel.measurements.push(measure);
+
+              $scope.modalMeasurement.hide();
+            }
+
+            $scope.closeMeasurement = () => {
+              $scope.modalMeasurement.hide();
+            }
+
+            $scope.changedMeasurement = {
+              field: function(entity, value, fieldName) {
+
+            		OneDesign.updateModelField(entity, 'measurements', fieldName).then(function() {
+            		});
+            	},
+
+              numericField: function(entity, value, fieldName) {
+
+            		OneDesign.updateModelField(entity, 'measurements', fieldName, true).then(function() {
+            		});
+            	}
+            };
+
+            $scope.deleteModelMeasurement = async (measure) => {
+              await OneDesign.deleteModelMeasurement(measure);
+              $scope.odmodel.measurements = $scope.odmodel.measurements.filter(m => m.id !== measure.id);
+            }
+
+            // Model items functions
+            $scope.showItemModal = function(carry, type) {
+
+              $scope.measure = {};
+              $scope.modalItem = $modal({template: 'views/modal/odModelItem.html', show: false, scope: $scope, animation:'am-fade-and-slide-top'});
+
+              $scope.modalItem.$promise.then($scope.modalItem.show);
+            }
+
+            $scope.saveItem = async (item) => {
+              await OneDesign.saveModelItem(item, $scope.odmodel.id);
+              $scope.odmodel.items.push(item);
+
+              $scope.modalItem.hide();
+            }
+
+            $scope.closeItem = () => {
+              $scope.modalItem.hide();
+            }
+
+            $scope.deleteModelItem = async (item) => {
+              await OneDesign.deleteModelItem(item);
+              $scope.odmodel.items = $scope.odmodel.items.filter(m => m.id !== item.id);
+            }
+
+            $scope.changedItem = {
+              field: function(entity, value, fieldName) {
+
+            		OneDesign.updateModelField(entity, 'items', fieldName).then(function() {
+            		});
+            	},
+
+              numericField: function(entity, value, fieldName) {
+
+            		OneDesign.updateModelField(entity, 'items', fieldName, true).then(function() {
+            		});
+            	}
             };
           }
         };

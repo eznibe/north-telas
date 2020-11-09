@@ -2,7 +2,7 @@
 
 angular.module('vsko.stock')
 
-.directive('previsionModal', function($modal, $rootScope, $q, $translate, countries, Utils, Stock, Previsions, Files, OneDesign, Lists, Production, Rules, Dispatchs, Users, PrevisionHelpers, DriveAPI, lkGoogleSettings) {
+.directive('previsionModal', function($modal, $rootScope, $q, $translate, countries, Utils, Stock, Previsions, Files, OneDesign, Lists, Production, Rules, Dispatchs, Users, PrevisionHelpers, OneDesignWorktickets, DriveAPI, lkGoogleSettings) {
 
   return {
     restrict: 'E',
@@ -168,8 +168,10 @@ angular.module('vsko.stock')
               const sourcePrevisionId = $scope.prevision.id;
               const sourcePrevisionIsNew = $scope.prevision.isNew;
 
-              // merge relevant data of this new unsaved prevision to the own production and keep using that one
+              // merge relevant data of this unsaved prevision to the own production and keep using that one
               $scope.prevision = PrevisionHelpers.mergeODPrevisions($scope.prevision, selectedPrevision)
+
+              setDropDownSelectedValues();
 
               $scope.prevision.cloths.each(function( cloth ) {
                 cloth.selectedCloth = $scope.cloths.findAll({id:cloth.id})[0];
@@ -237,7 +239,18 @@ angular.module('vsko.stock')
                 $scope.prevision = $scope.origPrevision;
               }
             }
+
+            $scope.printWorkticket = () => {
+              OneDesignWorktickets.printWorkticket($scope.prevision);
+            }
             // end OD assign functions
+
+            function setDropDownSelectedValues() {
+              $scope.prevision.selectedSeller = $scope.prevision.seller && $scope.sellers ? $scope.sellers.findAll({name:$scope.prevision.seller})[0] : {};
+              $scope.prevision.selectedLine = $scope.prevision.line ? $scope.lines.findAll({name:$scope.prevision.line})[0] : {};
+              $scope.prevision.selectedKitco = $scope.prevision.kitco || $scope.kitcos[0];
+              $scope.prevision.selectedDesigner = $scope.prevision.designer && $scope.designers ? $scope.designers.findAll({name:$scope.prevision.designer})[0] : {};
+            }
 
         	  $scope.showPrevisionModal = function(prevision, previousModal, callback) {
 
@@ -338,10 +351,7 @@ angular.module('vsko.stock')
           	  // set current selected one design sail
           	  $scope.prevision.selectedOneDesignSail = $scope.prevision.oneDesign ? $scope.oneDesignSails.findAll({sail:$scope.prevision.sailOneDesign})[0] : {};
 
-
-              $scope.prevision.selectedLine = $scope.prevision.line ? $scope.lines.findAll({name:$scope.prevision.line})[0] : {};
-
-              $scope.prevision.selectedKitco = $scope.prevision.kitco || $scope.kitcos[0];
+              setDropDownSelectedValues($scope.prevision);
 
               if (!$scope.prevision.week) {
                 $scope.prevision.week = 19;

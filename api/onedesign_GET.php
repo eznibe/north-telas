@@ -22,8 +22,14 @@ if(isset($_GET['modelNextSerie'])) {
 else if(isset($_GET['modelPrevisions'])) {
 	$value = getOneDesignModelPrevisions($_GET['boat'], $_GET['sail'], $_GET['onlyAvailables'], $_GET['onlyAssigned'], true);
 }
+else if(isset($_GET['modelMeasurements'])) {
+	$value = getOneDesignModelMeasurements($_GET['modelId']);
+}
+else if(isset($_GET['modelItems'])) {
+	$value = getOneDesignModelItems($_GET['modelId']);
+}
 else if(isset($_GET['onedesignmodels'])) {
-	$value = getOneDesignModels($_GET['model'], $_GET['skipLoadPrevisions']);
+	$value = getOneDesignModels($_GET['model'], $_GET['skipLoadPrevisions'], $_GET['boat'], $_GET['sail']);
 }
 else if(isset($_GET['onedesignmodelsHistoric'])) {
 	$value = getOneDesignModelsHistoric();
