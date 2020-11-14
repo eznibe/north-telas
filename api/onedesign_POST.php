@@ -4,6 +4,7 @@ include_once '../include/headers.php';
 include_once '../include/dbutils.php';
 include_once '../include/main.php';
 
+include_once 'domain/logs.php';
 include_once 'domain/sails.php';
 include_once 'domain/boats.php';
 

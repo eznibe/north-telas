@@ -153,7 +153,7 @@
 								</select>
 							</div>
 							<div class="col-xs-4" ng-show="prevision.oneDesign">
-								<select name="dd_sailod" ng-model="prevision.selectedOneDesignSail" ng-options="s as s.sail for s in oneDesignSails" class="form-control small" ng-change="setBoatBySail(); oneDesignCloths(); showModelsAvailableModal(prevision, modelAvailableSelection);" ng-disabled="prevision.odAssigned">
+								<select name="dd_sailod" ng-model="prevision.selectedOneDesignSail" title="{{prevision.selectedOneDesignSail.sail}}" ng-options="s as s.sail for s in oneDesignSails" class="form-control small" ng-change="setBoatBySail(); oneDesignCloths(); showModelsAvailableModal(prevision, modelAvailableSelection);" ng-disabled="prevision.odAssigned">
 									<option value="">-- choose one --</option>
 								</select>
 							</div>

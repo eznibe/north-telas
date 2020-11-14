@@ -152,6 +152,11 @@ function updateODModel($model) {
 	if(!mysql_query($query)) {
 		$obj->successful = false;
 		$obj->query = $query;
+	} else {
+		$log->type = "onedesign.saveModel";
+		$log->log = json_encode($model);
+		$log->user = "backend";
+		addLog($log);
 	}
 
 	return $obj;
