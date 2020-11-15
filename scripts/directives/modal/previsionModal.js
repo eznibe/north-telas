@@ -233,10 +233,13 @@ angular.module('vsko.stock')
                 console.log('To be saved  :', $scope.pendingPrevisionsToSave);
                 console.log('To be removed:', $scope.pendingPrevisionsToRemove);
               } else if (!$scope.prevision.odAssigned && !$scope.prevision.startedAsAssigned) {
-                // case when we assigned and before saving we want to unassign it again
+                // TODO check this, is never entering here?
+                // case when we already assigned and before saving we want to unassign it again
                 // => just revert the merged and clear the pendingPrevisionsToRemove
                 $scope.pendingPrevisionsToRemove = [];
                 $scope.prevision = $scope.origPrevision;
+              } else if ($scope.prevision.odAssigned) {
+                $scope.prevision.odAssignedOn = $.format.date(new Date(), "yyyy-MM-dd");
               }
             }
 
@@ -1045,7 +1048,7 @@ angular.module('vsko.stock')
 
   					var clothsIds = prevision.cloths.map(function(c) { return c.clothId; }).join(',');
 
-  					Previsions.updatePrevisionState(clothsIds).then(function(result) {
+  					Previsions.updatePrevisionState(clothsIds, null, 'previsionModal').then(function(result) {
 
               console.log('update prevision state', result);
               if(skipNotify) {

@@ -153,7 +153,7 @@ function ($scope, $rootScope, $translate, $timeout, $cookieStore, countries, Uti
 
         var clothsIds = prevision.cloths.map(function(c) { return c.clothId; }).join(',');
 
-        Previsions.updatePrevisionState(clothsIds, prevision.id).then(function() {
+        Previsions.updatePrevisionState(clothsIds, prevision.id, 'designController').then(function() {
           Utils.showMessage('notify.previsions_state_updated');
         });
       } else {

@@ -331,15 +331,12 @@ function getOneDesignModelsHistoric() {
 		$where = " WHERE m.country = '$country' ";
 	}
 
-	$query = "SELECT p.boat, p.sailOneDesign as sail, m.model, year(p.deliveryDate) as year, count(*) as amount
+	$query = "SELECT p.boat, p.sailOneDesign as sail, m.model, year(coalesce(p.odAssignedOn, p.deliveryDate)) as year, count(*) as amount
 		FROM onedesignmodels m join previsions p on p.boat = m.boat and p.sailOneDesign = m.sail
 		$where
-		and 
-		((p.deletedProductionOn is not null and year(p.deliveryDate) < $currentYear)
-		or
-		(p.odAssigned and year(p.deliveryDate) = 2020))
-		GROUP BY p.boat, p.sailOneDesign, m.model, year(p.deliveryDate)
-		order by p.boat, p.sailOneDesign, m.model, year(p.deliveryDate) desc";
+		and p.odAssigned = true
+		GROUP BY p.boat, p.sailOneDesign, m.model, year(coalesce(p.odAssignedOn, p.deliveryDate))
+		order by p.boat, p.sailOneDesign, m.model, year(coalesce(p.odAssignedOn, p.deliveryDate)) desc";
 
 	$result = mysql_query($query);
 
@@ -358,20 +355,18 @@ function getOneDesignModelsHistoricByModel($boat, $sail, $year) {
 	}
 
 	if (isset($year)) {
-		$yearCondition = " AND year(p.deliveryDate) = $year ";
+		$yearCondition = " AND year(coalesce(p.odAssignedOn, p.deliveryDate)) = $year ";
 	}
 
 	$query = "SELECT p.*, 
 		DATE_FORMAT(deliveryDate,'%d-%m-%Y') as deliveryDate, 
-		m.model, year(p.deliveryDate) as year
+		DATE_FORMAT(odAssignedOn,'%d-%m-%Y') as odAssignedOn, 
+		m.model, year(coalesce(p.odAssignedOn, p.deliveryDate)) as year
 		FROM onedesignmodels m join previsions p on p.boat = m.boat and p.sailOneDesign = m.sail
 		$where
-		and 
-		((p.deletedProductionOn is not null and year(p.deliveryDate) <= $currentYear)
-		or
-		(p.odAssigned and year(p.deliveryDate) = 2020))
+		and p.odAssigned = true
 		$modelCondition $yearCondition
-		order by p.boat, p.sailOneDesign, m.model, year(p.deliveryDate) desc";
+		order by p.boat, p.sailOneDesign, m.model, year(coalesce(p.odAssignedOn, p.deliveryDate)) desc";
 
 	$result = mysql_query($query);
 

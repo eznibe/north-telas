@@ -227,7 +227,7 @@ angular.module('vsko.stock')
         	// return $http.post(url + 'previsions_POST.php?edit=true&field='+field, prevision);
         };
 
-				this.updatePrevisionState = function(clothIds, previsionId) {
+				this.updatePrevisionState = function(clothIds, previsionId, fromAction) {
 
 					var d = $q.defer();
 					var startTime = Date.now();
@@ -235,7 +235,7 @@ angular.module('vsko.stock')
 					var previInitiator = previsionId ? ('&previsionInitiator=' + previsionId) : '';
 
 					$http.post(url + 'previsions_POST.php?updatePrevisionState=true&clothIds='+clothIds + previInitiator, clothIds).then(function(result) {
-						Utils.logTiming(startTime, url + 'previsions_POST.php?updatePrevisionState=true&clothIds='+clothIds, 'previsions.updatePrevisionState', 'POST', clothIds);
+						Utils.logTiming(startTime, url + 'previsions_POST.php?updatePrevisionState=true&clothIds='+clothIds, `previsions.updatePrevisionState${fromAction ? ('('+fromAction+')') : ''}`, 'POST', clothIds);
 						d.resolve(result);
 					});
 

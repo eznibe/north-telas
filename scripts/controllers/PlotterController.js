@@ -26,7 +26,7 @@ angular.module('vsko.stock').controller('PlotterCtrl', ['$scope', '$rootScope', 
 
 							Utils.showMessage('notify.cloth_cutted');
 
-							Previsions.updatePrevisionState(plotter.clothId).then(function() {
+							Previsions.updatePrevisionState(plotter.clothId, null, 'plotterController').then(function() {
 								Utils.showMessage('notify.previsions_state_updated');
 							});
 
@@ -150,7 +150,7 @@ angular.module('vsko.stock').controller('PlotterCtrl', ['$scope', '$rootScope', 
 
 							Utils.showMessage('notify.cloth_back_to_plotter');
 
-							Previsions.updatePrevisionState(plotter.clothId).then(function() {
+							Previsions.updatePrevisionState(plotter.clothId, null, 'plotterController').then(function() {
 								Utils.showMessage('notify.previsions_state_updated');
 							});
 						} else {
@@ -198,7 +198,7 @@ angular.module('vsko.stock').controller('PlotterCtrl', ['$scope', '$rootScope', 
 						Utils.showMessage('notify.plotter_back_to_design');
 
 						// TODO when a plotter returns to design also all cloths in the original prevision returns => need to send all
-						Previsions.updatePrevisionState(plotter.clothId).then(function() {
+						Previsions.updatePrevisionState(plotter.clothId, null, 'plotterController').then(function() {
 							Utils.showMessage('notify.previsions_state_updated');
 						});
         	});

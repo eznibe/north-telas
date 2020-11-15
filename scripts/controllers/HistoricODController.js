@@ -33,8 +33,7 @@ angular.module('vsko.stock').controller('HistoricODCtrl', ['$scope', '$rootScope
     $scope.filter.boats = Array.from($scope.models.reduce((set, item) => set.add(item.boat), new Set()));
   });
 
-  // TODO calculate
-  const currentYear = 2020;
+  const currentYear = new Date().getFullYear();
   $scope.years = [];
   for(let y=(currentYear); y > (currentYear - 8); y--) {
     $scope.years.push(y);
