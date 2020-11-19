@@ -239,7 +239,7 @@ function savePrevision($prevision)
 	$productionObservations = isset($prevision->productionObservations) ? $prevision->productionObservations : '' ;
 	$designObservations = isset($prevision->designObservations) ? $prevision->designObservations : '' ;
 	$boat = isset($prevision->boat) ? "'".$prevision->boat."'" : 'null' ;
-	$client = isset($prevision->client) ? $prevision->client : '' ;
+	$client = isset($prevision->client) ? mysql_real_escape_string($prevision->client) : '' ;
 	$sailId = isset($prevision->sailId) && $prevision->sailId!='' ? $prevision->sailId : 'null' ;
 	$sailGroupId = isset($prevision->sailGroupId) && $prevision->sailGroupId!='' ? $prevision->sailGroupId : 'null' ;
 	$sailDescription = isset($prevision->sailDescription) && $prevision->sailDescription!='' ? "'".$prevision->sailDescription."'" : 'null' ;
