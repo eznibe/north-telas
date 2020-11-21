@@ -36,8 +36,8 @@ angular.module('vsko.stock')
         {
             const startTime = Date.now();
 
-            const result = await $http.get(`${url}onedesign_GET.php?onedesignmodels=true&boat=${boat}&sail=${sail}`);
-            Utils.logTiming(startTime, `${url}onedesign_GET.php?onedesignmodels=true&boat=${boat}&sail=${sail}`, 'onedesignmodels.getModel', 'GET');
+            const result = await $http.get(`${url}onedesign_GET.php?onedesignmodels=true&boat=${boat}&sail=${encodeURIComponent(sail)}`);
+            Utils.logTiming(startTime, `${url}onedesign_GET.php?onedesignmodels=true&boat=${boat}&sail=${encodeURIComponent(sail)}`, 'onedesignmodels.getModel', 'GET');
 
             return result;
         };
@@ -46,7 +46,7 @@ angular.module('vsko.stock')
         {
             const startTime = Date.now();
 
-            const modelParam = boat && sail ? `&boat=${boat}&sail=${sail}` : '';
+            const modelParam = boat && sail ? `&boat=${boat}&sail=${encodeURIComponent(sail)}` : '';
             const yearParam = year ? `&year=${year}` : '';
 
             const requestUrl = boat && sail 
@@ -109,11 +109,11 @@ angular.module('vsko.stock')
         }
 
         this.getNextModelSerie = function(boat, sail) {
-            return $http.get(`${url}onedesign_GET.php?modelNextSerie=true&boat=${boat}&sail=${sail}`);
+            return $http.get(`${url}onedesign_GET.php?modelNextSerie=true&boat=${boat}&sail=${encodeURIComponent(sail)}`);
         }
 
         this.getModelPrevisions = function(boat, sail, onlyAvailables = false, onlyAssigned = false) {
-            return $http.get(`${url}onedesign_GET.php?modelPrevisions=true&boat=${boat}&sail=${sail}&onlyAvailables=${onlyAvailables}&onlyAssigned=${onlyAssigned}`);
+            return $http.get(`${url}onedesign_GET.php?modelPrevisions=true&boat=${boat}&sail=${encodeURIComponent(sail)}&onlyAvailables=${onlyAvailables}&onlyAssigned=${onlyAssigned}`);
         }
 
         this.getModelMeasurements = (model) => {

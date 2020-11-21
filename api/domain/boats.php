@@ -286,7 +286,7 @@ function calculateOneDesignModelSerie($boat, $sail) {
 
 	$query = "SELECT v.boat, m.model, v.maxSequence, m.nextSequence as manualNextSequence
 		FROM v_onedesign_max_sequence_by_model v join onedesignmodels m on v.boat = m.boat and v.sail = m.sail
-		WHERE v.boat = '$boat' AND v.sail = '$sail' AND v.country = '$country'";
+		WHERE v.boat = '$boat' AND v.sail = '$sail' AND v.country = '$country' AND m.country = '$country'";
 
 	$result = mysql_query($query);
 
