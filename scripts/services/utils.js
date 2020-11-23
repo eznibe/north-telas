@@ -49,8 +49,12 @@ angular.module('vsko.stock').factory('Utils',[ '$translate', '$http', '$timeout'
   that.logUIError = function (type, entity) {
     var log = {type : type, log: JSON.stringify(entity), user: $rootScope.user.name};
 
-    // TODO log to a remote server too (just as backup)
-    // $http.post(remoteAPIUrl + 'remotelog_POST.php', log);
+    return $http.post(baseUrl + 'log_POST.php', log);
+  };
+
+  // log an action done in the UI 
+  that.logUIAction = function (type, entity) {
+    var log = {type : type, log: JSON.stringify(entity), user: $rootScope.user.name};
 
     return $http.post(baseUrl + 'log_POST.php', log);
   };

@@ -178,7 +178,10 @@ angular.module('vsko.stock')
               });
 
               if (!sourcePrevisionIsNew) {
-                $scope.pendingPrevisionsToRemove = [...$scope.pendingPrevisionsToRemove, {id: sourcePrevisionId}];
+                $scope.pendingPrevisionsToRemove = [...$scope.pendingPrevisionsToRemove, {
+                  id: sourcePrevisionId,
+                  intoPrevisionId: $scope.prevision.id
+                }];
               }
 
               console.log('This prevision:', $scope.prevision);
@@ -205,6 +208,12 @@ angular.module('vsko.stock')
                 const prevision = $scope.pendingPrevisionsToSave[0];
   
                 const result = await Previsions.save(prevision, $rootScope.user.name);
+
+                Utils.logUIAction('onedesign.info.unmerge', {
+                  type: 'odUnassign.savePrevision',
+                  newPrevisionId: prevision.id, // created after unassign
+                  fromPrevisionId: prevision.fromPrevisionId
+                });
   
                 if(result.data.successful) {
                   if ($scope.previsions) {
@@ -220,27 +229,31 @@ angular.module('vsko.stock')
             }
 
             $scope.oneDesignToggleAssigned = async () => {
+              // if (!$scope.prevision.odAssigned && !$scope.prevision.startedAsAssigned) {
+              //   // TODO check this, is never entering here?
+              //   // case when we already assigned and before saving we want to unassign it again
+              //   // => just revert the merged and clear the pendingPrevisionsToRemove
+              //   $scope.pendingPrevisionsToRemove = [];
+              //   $scope.prevision = $scope.origPrevision;
+              // } else 
               if (!$scope.prevision.odAssigned) {
                 // unassign from own production
                 // 1. duplicate to new prevision data of own production
                 const ownProductionPrevision = PrevisionHelpers.extractODOwnProduction($scope.prevision);
-                $scope.pendingPrevisionsToSave.push(ownProductionPrevision);
+                $scope.pendingPrevisionsToSave.push({
+                  ...ownProductionPrevision,
+                  fromPrevisionId: $scope.prevision.id
+                });
 
                 // 2. current prevision (no assigned) remove data from own production boat/sail/sailDescription
                 $scope.prevision = PrevisionHelpers.removeODOwnProductionFields($scope.prevision);
 
-                console.log('This prevision:', $scope.prevision);
-                console.log('To be saved  :', $scope.pendingPrevisionsToSave);
-                console.log('To be removed:', $scope.pendingPrevisionsToRemove);
-              } else if (!$scope.prevision.odAssigned && !$scope.prevision.startedAsAssigned) {
-                // TODO check this, is never entering here?
-                // case when we already assigned and before saving we want to unassign it again
-                // => just revert the merged and clear the pendingPrevisionsToRemove
-                $scope.pendingPrevisionsToRemove = [];
-                $scope.prevision = $scope.origPrevision;
               } else if ($scope.prevision.odAssigned) {
                 $scope.prevision.odAssignedOn = $.format.date(new Date(), "yyyy-MM-dd");
               }
+              console.log('This prevision:', $scope.prevision);
+              console.log('To be saved  :', $scope.pendingPrevisionsToSave);
+              console.log('To be removed:', $scope.pendingPrevisionsToRemove);
             }
 
             $scope.printWorkticket = () => {
@@ -535,7 +548,14 @@ angular.module('vsko.stock')
               console.log('Removing previsions:', $scope.pendingPrevisionsToRemove);
               await Promise.all($scope.pendingPrevisionsToRemove.map(prevision => Previsions.remove(prevision)));
 
+              
               const previsionsToRemove = $scope.pendingPrevisionsToRemove.map(p => {
+                Utils.logUIAction('onedesign.info.merge', {
+                  type: 'odAssign.removePrevision',
+                  removedPrevisionId: p.id, //deleted one
+                  intoPrevisionId: p.intoPrevisionId
+                });
+
                 return $scope.previsions.find(prev => prev.id === p.id);
               })
               previsionsToRemove.forEach(p => {
