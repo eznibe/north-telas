@@ -261,21 +261,24 @@ function getOneDesignModels($model, $skipLoadPrevisions, $boat, $sail) {
 	return fetch_array($result);
 }
 
-function getOneDesignModelPrevisions($boat, $sail, $onlyAvailables, $onlyAssigned, $withCloths) {
+function getOneDesignModelPrevisions($boat, $sail, $onlyAvailables, $onlyAssigned, $onlyArchived, $withCloths) {
 	global $country;
 
 	$onlyAvailableCondition = $onlyAvailables == 'true' ? ' AND odAssigned = false' : '';
 	$onlyAssignedCondition = $onlyAssigned == 'true' ? ' AND odAssigned = true' : '';
+	$onlyArchivedCondition = $onlyArchived == 'true' ? ' AND deletedProductionOn is not null' : ' AND deletedProductionOn is null';
 
-	$query = "SELECT p.*, DATE_FORMAT(deliveryDate,'%d-%m-%Y') as deliveryDate, DATE_FORMAT(tentativeDate,'%d-%m-%Y') as tentativeDate, DATE_FORMAT(productionDate,'%d-%m-%Y') as productionDate, DATE_FORMAT(infoDate,'%d-%m-%Y') as infoDate, DATE_FORMAT(advanceDate,'%d-%m-%Y') as advanceDate
+	$query = "SELECT p.*, deliveryDate as unformattedDeliveryDate, year(coalesce(p.odAssignedOn, p.deliveryDate)) as year,
+			DATE_FORMAT(deliveryDate,'%d-%m-%Y') as deliveryDate, DATE_FORMAT(tentativeDate,'%d-%m-%Y') as tentativeDate, DATE_FORMAT(productionDate,'%d-%m-%Y') as productionDate, DATE_FORMAT(infoDate,'%d-%m-%Y') as infoDate, DATE_FORMAT(advanceDate,'%d-%m-%Y') as advanceDate
 		FROM previsions p
-		WHERE boat = '$boat' AND sailOneDesign = '$sail' AND country = '$country' AND deletedProductionOn is null 
+		WHERE boat = '$boat' AND sailOneDesign = '$sail' AND country = '$country' 
 		$onlyAvailableCondition 
-		$onlyAssignedCondition";
+		$onlyAssignedCondition
+		$onlyArchivedCondition";
 
 	$result = mysql_query($query);
 
-	// echo $onlyAvailables . $onlyAssigned;
+	// echo $onlyAvailables . $onlyAssigned . $onlyArchived;
 	// echo $query;
 
 	return isset($withCloths) && $withCloths ? previsionsWithCloths($result) : fetch_array($result);
@@ -286,7 +289,7 @@ function calculateOneDesignModelSerie($boat, $sail) {
 
 	$query = "SELECT v.boat, m.model, v.maxSequence, m.nextSequence as manualNextSequence
 		FROM v_onedesign_max_sequence_by_model v join onedesignmodels m on v.boat = m.boat and v.sail = m.sail
-		WHERE v.boat = '$boat' AND v.sail = '$sail' AND v.country = '$country' AND m.country = '$country'";
+		WHERE v.boat = '$boat' AND v.sail = '$sail' AND v.country = '$country'";
 
 	$result = mysql_query($query);
 
@@ -334,7 +337,7 @@ function getOneDesignModelsHistoric() {
 	$query = "SELECT p.boat, p.sailOneDesign as sail, m.model, year(coalesce(p.odAssignedOn, p.deliveryDate)) as year, count(*) as amount
 		FROM onedesignmodels m join previsions p on p.boat = m.boat and p.sailOneDesign = m.sail
 		$where
-		and p.odAssigned = true
+		and p.odAssigned = true and p.country = '$country'
 		GROUP BY p.boat, p.sailOneDesign, m.model, year(coalesce(p.odAssignedOn, p.deliveryDate))
 		order by p.boat, p.sailOneDesign, m.model, year(coalesce(p.odAssignedOn, p.deliveryDate)) desc";
 
@@ -364,13 +367,13 @@ function getOneDesignModelsHistoricByModel($boat, $sail, $year) {
 		m.model, year(coalesce(p.odAssignedOn, p.deliveryDate)) as year
 		FROM onedesignmodels m join previsions p on p.boat = m.boat and p.sailOneDesign = m.sail
 		$where
-		and p.odAssigned = true
+		and p.odAssigned = true and p.country = '$country'
 		$modelCondition $yearCondition
 		order by p.boat, p.sailOneDesign, m.model, year(coalesce(p.odAssignedOn, p.deliveryDate)) desc";
 
 	$result = mysql_query($query);
 
-	return fetch_array($result);
+	return previsionsWithCloths($result);
 }
 
 function getOneDesignModelMeasurements($modelId) {

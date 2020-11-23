@@ -112,8 +112,8 @@ angular.module('vsko.stock')
             return $http.get(`${url}onedesign_GET.php?modelNextSerie=true&boat=${boat}&sail=${encodeURIComponent(sail)}`);
         }
 
-        this.getModelPrevisions = function(boat, sail, onlyAvailables = false, onlyAssigned = false) {
-            return $http.get(`${url}onedesign_GET.php?modelPrevisions=true&boat=${boat}&sail=${encodeURIComponent(sail)}&onlyAvailables=${onlyAvailables}&onlyAssigned=${onlyAssigned}`);
+        this.getModelPrevisions = function(boat, sail, onlyAvailables = false, onlyAssigned = false, onlyArchived = false) {
+            return $http.get(`${url}onedesign_GET.php?modelPrevisions=true&boat=${boat}&sail=${encodeURIComponent(sail)}&onlyAvailables=${onlyAvailables}&onlyAssigned=${onlyAssigned}&onlyArchived=${onlyArchived}`);
         }
 
         this.getModelMeasurements = (model) => {

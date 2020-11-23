@@ -225,6 +225,61 @@
 					</tbody>
 				</table>
 
+        <div class="panel panel-default ng-scope" style="margin-top: 15px;">
+					<div class="panel-heading nopadding">
+						<h2 class="panel-title panel-title-minimalist fullwidth">
+              <a data-toggle="collapse" data-target="#collapseArchived" href="javascript:void(0)" class="collapsed">
+								<span translate>Archivadas</span>
+								<span>({{archivedOrders.length}})</span>
+              </a>
+						</h2>
+					</div>
+		
+					<div id="collapseArchived" class="panel-collapse collapse" style="height: auto;">
+						<div class="panel-body">
+              <table id="groups" class="table table-bordered table-striped table-hover">
+                <thead>
+                  <tr>
+                    <th translate>Order</th>
+                    <th translate>Model</th>
+                    <th translate>Client</th>
+                    <th translate>Boat</th>
+                    <th translate>Sail</th>
+                    <th translate>%</th>
+                    <th translate>Year</th>
+                    <!-- <th translate>Observations</th> -->
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="o in archivedOrders | orderBy:'-unformattedDeliveryDate'">
+                    <td nowrap>
+                      <a href="javascript:void(0);" ng-click="showPrevisionModal(o, null, previsionClosed)">{{o.orderNumber}}</a>
+                    </td>
+                    <td>
+                      {{o.sailDescription}}
+                    </td>
+                    <td style="min-width: 110px;">
+                      {{o.client}}
+                    </td>
+                    <td>
+                      {{o.boat}}
+                    </td>
+                    <td>
+                      {{o.sailOneDesign}}
+                    </td>
+                    <td>
+                      {{o.percentage}}
+                    </td>
+                    <td>
+                      {{o.year}}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+						</div>
+					</div>	
+        </div>
+        
       </div>
 
 		</div>

@@ -19,9 +19,11 @@ angular.module('vsko.stock')
             async function loadModelPrevisions(model) {
               const notAssigned = await OneDesign.getModelPrevisions(model.boat, model.sail, true, false);
               const assigned = await OneDesign.getModelPrevisions(model.boat, model.sail, false, true);
-              
+              const archived = await OneDesign.getModelPrevisions(model.boat, model.sail, false, false, true);
+
               $scope.notAssignedOrders = notAssigned.data;
               $scope.assignedOrders = assigned.data;
+              $scope.archivedOrders = archived.data;
             }
 
             async function getModelNextSequence(model) {

@@ -23,6 +23,7 @@
 						<tr>
 							<th translate>Order</th>
 							<th translate>Modelo - serie</th>
+							<th translate>Client</th>
 							<th translate>Boat</th>
 							<th translate>Sail</th>
 							<th translate>%</th>
@@ -33,11 +34,14 @@
 					<tbody>
 						<tr ng-repeat="p in consumedOrders | orderBy:'sailDescription'">
 							<td nowrap>
-								{{p.orderNumber}}
+								<a href="javascript:void(0);" ng-click="showPrevisionModal(p)">{{p.orderNumber}}</a>
+								<!-- {{p.orderNumber}} -->
 							</td>
 							<td nowrap>
-								<!-- <a href="javascript:void(0);" ng-click="showPrevisionModal(o)">{{o.orderNumber}}</a> -->
 								{{p.sailDescription}}
+							</td>
+							<td>
+								{{p.client}}
 							</td>
 							<td>
 								{{p.boat}}

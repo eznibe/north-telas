@@ -30,7 +30,9 @@ angular.module('vsko.stock')
           results.map(function(result) {
             prevision[result.column] = result.driveId;
             //  store new drive id in prevision
-            Previsions.editField(prevision, result.column);
+            if (result.driveId) {
+              Previsions.editField(prevision, result.column);
+            }
           })
 
           d.resolve();

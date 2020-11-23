@@ -20,7 +20,7 @@ if(isset($_GET['modelNextSerie'])) {
 	$value = calculateOneDesignModelSerie($_GET['boat'], $_GET['sail']);
 } 
 else if(isset($_GET['modelPrevisions'])) {
-	$value = getOneDesignModelPrevisions($_GET['boat'], $_GET['sail'], $_GET['onlyAvailables'], $_GET['onlyAssigned'], true);
+	$value = getOneDesignModelPrevisions($_GET['boat'], $_GET['sail'], $_GET['onlyAvailables'], $_GET['onlyAssigned'], $_GET['onlyArchived'], true);
 }
 else if(isset($_GET['modelMeasurements'])) {
 	$value = getOneDesignModelMeasurements($_GET['modelId']);
