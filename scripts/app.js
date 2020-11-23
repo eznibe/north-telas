@@ -19,6 +19,8 @@ angular.module("vsko.stock", [
     .run(['$cookieStore', '$rootScope', '$translate', '$window', function ($cookieStore, $rootScope, $translate, $window) {
     	console.log('vsko.stock run');
 
+        $rootScope.logRocketKey = 's1wzqz/north-telas-prod';
+
     	var user = $cookieStore.get('user');
     	$rootScope.user = user ? user : {};
 
@@ -43,7 +45,15 @@ angular.module("vsko.stock", [
 			}
 
 			$rootScope.searchBoxChangedObservers = [];
-			$rootScope.pageChangedObservers = [];
+            $rootScope.pageChangedObservers = [];
+            
+            if ($rootScope.user.id) {
+                LogRocket.identify($rootScope.user.id, {
+                    name: $rootScope.user.name,
+                    roles: $rootScope.user.roles,
+                    country: $rootScope.user.country,
+                });
+            }
 
 			// notify of a view change to all registered observers
 			$rootScope.$on('$locationChangeStart', function(event) {
@@ -54,11 +64,11 @@ angular.module("vsko.stock", [
 
 			// watch for online status modifications
 			$rootScope.online = navigator.onLine;
-      $window.addEventListener("offline", function() {
-        $rootScope.$apply(function() {
-          $rootScope.online = false;
-        });
-      }, false);
+            $window.addEventListener("offline", function() {
+                $rootScope.$apply(function() {
+                    $rootScope.online = false;
+                });
+            }, false);
 
       $window.addEventListener("online", function() {
         $rootScope.$apply(function() {
