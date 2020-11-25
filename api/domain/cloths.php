@@ -29,8 +29,35 @@ function getCloths($groupId, $expand)
 	while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
 
 		$row['providers'] = getProviders($row['id'], $expand);
-		$row['previsions'] = getPrevisions($row['id'], 'false', $expand, null, null, null, null, null);
-		$row['plotters'] = getPlotters($row['id'], 'false', null, null);
+		
+		if ($expand != 'SUMMARY') {
+			$row['previsions'] = getPrevisions($row['id'], 'false', $expand, null, null, null, null, null);
+			$row['plotters'] = getPlotters($row['id'], 'false', null, null);
+
+			$intransit = getInTransit($row['id']);
+			$sumInTransit=0;
+			foreach ($intransit as $order) {
+				foreach ($order['products'] as $product) {
+
+					if($product['clothId'] == $row['id']) {
+						$sumInTransit += $product['amount'];
+					}
+				}
+			}
+			$row['sumInTransit'] = $sumInTransit;
+
+			$tobuy = getToBuy($row['id']);
+			$sumToBuy=0;
+			foreach ($tobuy as $order) {
+				foreach ($order['products'] as $product) {
+
+					if($product['clothId'] == $row['id']) {
+						$sumToBuy += $product['amount'];
+					}
+				}
+			}
+			$row['sumToBuy'] = $sumToBuy;
+		}
 		$row['djais'] = getDjais($row['id'], $expand);
 		if($expand=='WITH_ROLLS')
 			$row['rolls'] = getClothRolls($row['id'], true);
@@ -40,30 +67,6 @@ function getCloths($groupId, $expand)
 			$sumDjais += $value['amount'];
 		}
 		$row['sumDjais'] = $sumDjais;
-
-		$intransit = getInTransit($row['id']);
-		$sumInTransit=0;
-		foreach ($intransit as $order) {
-			foreach ($order['products'] as $product) {
-
-				if($product['clothId'] == $row['id']) {
-					$sumInTransit += $product['amount'];
-				}
-			}
-		}
-		$row['sumInTransit'] = $sumInTransit;
-
-		$tobuy = getToBuy($row['id']);
-		$sumToBuy=0;
-		foreach ($tobuy as $order) {
-			foreach ($order['products'] as $product) {
-
-				if($product['clothId'] == $row['id']) {
-					$sumToBuy += $product['amount'];
-				}
-			}
-		}
-		$row['sumToBuy'] = $sumToBuy;
 
 		array_push($rows, $row);
 	}

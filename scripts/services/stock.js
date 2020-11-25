@@ -8,35 +8,21 @@ angular.module('vsko.stock')
 
 		var url = telasAPIUrl;
 
-        this.getAllGroups = function(light)
+        this.getAllGroups = function(light, expand)
         {
-					var expand = '?expand=FULL'
+          const d = $q.defer();
+					const startTime = Date.now();
+					let expandCondition = '?expand=FULL';
 					if(light) {
-						expand = '?expand=NONE';
-					}
-        	return $http.get(url + 'groups_GET.php' + expand );
-        };
-
-        this.idp = function()
-        {
-//        	return $http.post('http://testproefidp.vvkbao.be/idp/api/enscriptions', {test:'test', input:'inputTests'});
-//        	return $http.post('http://testproefidp.vvkbao.be/idp/alive', "{test:'test', input:'inputTests'}");
-//        	return $http.post('http://testproefidp.vvkbao.be/idp/alive?input=Belgie', {'test':'test', 'input':'inputTests'});
-
-//		return $http.post('http://localhost:8080/idp/alive?input=test');
-        	//return $http.post('http://testproefidp.vvkbao.be/idp/alive?input=test');
-//        	return $http.get('http://testproefidp.vvkbao.be/idp/alive?input=test');
-
-//		return $http.post('http://localhost:8080/files/alive?input=Belgie', {'test':'test', 'input':'inputTests'});
-
-//        	return $http.post('http://eznibe.no-ip.biz/files/alive?input=Belgie', {'test':'test', 'input':'inputTests'});
-
-//        	return $http.post('http://accfiles.vsko.be/files/alive?input=Belgie', {'test':'test', 'input':'inputTests'});
-
-	//	return $http.post('http://testdavid.vsko.be/david/alive?input=Belgie', {'test':'test', 'input':'inputTests'});
-
-//        	return $http.post('http://testwerkgroepen.vsko.be/alive?input=Belgi%C3%AB', {'test':'test', 'input':'inputTests'});
-        	return $http.get('http://testwerkgroepen.vsko.be/alive?input=Belgi%C3%AB');
+						expandCondition = '?expand=NONE';
+					} else if (expand === 'SUMMARY') {
+            expandCondition = `?expand=${expand}`;
+          }
+          $http.get(url + 'groups_GET.php' + expandCondition).then(function(result) {
+						Utils.logTiming(startTime, url + 'groups_GET.php' + expandCondition, 'stock.getAllGroups', 'GET');
+						d.resolve(result);
+          });
+          return d.promise;
         };
 
         this.alive = function() {
