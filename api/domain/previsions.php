@@ -122,7 +122,9 @@ function getPrevisionsBasic()
 
 	$query = "SELECT p.id, p.orderNumber, p.boat, p.percentage, p.client,
 									 coalesce(p.sailDescription, p.sailOneDesign, s.description) as sailName
-						FROM previsions p LEFT JOIN sails s on s.id=p.sailId WHERE p.country = '$country'";
+						FROM previsions p LEFT JOIN sails s on s.id=p.sailId WHERE p.country = '$country'
+						AND deletedProductionOn is null
+						";
 
 	$result = mysql_query($query);
 
