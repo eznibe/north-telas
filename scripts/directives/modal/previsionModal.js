@@ -104,6 +104,7 @@ angular.module('vsko.stock')
                     $scope.sails = result.data;
                   }
                   translateSails();
+                  $scope.prevision.sailId = undefined;
                 });
               } else {
                 $scope.sails = [];

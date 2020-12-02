@@ -157,8 +157,11 @@
 									<option value="">-- choose one --</option>
 								</select>
 							</div>
-							<div class="col-xs-5" ng-show="prevision.oneDesign || prevision.selectedSailGroup.id == 9">
+							<div class="col-xs-5" ng-show="prevision.oneDesign">
 								<input name="edit_sail" type="text" class="form-control small" ng-model="prevision.sailDescription" ng-disabled="true">
+              </div>
+              <div class="col-xs-5" ng-show="!prevision.oneDesign && prevision.selectedSailGroup.id == 9">
+								<input name="edit_sail" type="text" class="form-control small" ng-model="prevision.sailDescription">
 							</div>
 						</div>
 					</div>
