@@ -3,13 +3,9 @@
 angular.module('vsko.stock').controller('GroupsCtrl', ['$scope', '$location', 'Utils', 'Stock', '$modal', function ($scope, $location, Utils, Stock, $modal) {
 
         // initial list of cloth groups
-        Stock.getAllGroups().then(function(result) {
-        	$scope.groups = result.data;
+        Stock.getAllGroups(false, 'SUMMARY').then(function(result) {
+                $scope.groups = result.data
         });
-
-//	 Stock.idp().then(function(result) {
-//        	console.log(result.data);
-//        });
 
 //        Stock.alive();
 

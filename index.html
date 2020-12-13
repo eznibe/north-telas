@@ -75,6 +75,13 @@
                             <li><a href="#/historic" translate>Historics</a></li>
                             <li><a href="#/lists/worktickets" translate>Worktickets</a></li>
 			                    </ul>
+              </li>
+              <li>
+								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'One Design' | translate }} {{ ' ' + user.country}} <span class="caret"></span></a>
+			                    <ul class="dropdown-menu" role="menu">
+                            <li><a href="#/stockOD" translate>Stock OD</a></li>
+                            <li><a href="#/historicOD" translate>Consumos</a></li>
+			                    </ul>
 							</li>
               <li access-allowed="temporaries">
 								<a class="dropdown-toggle" data-toggle="dropdown">{{ 'Temporaries menu' | translate }} <span class="caret"></span></a>
@@ -127,9 +134,9 @@
 							<li>
 								<a class="dropdown-toggle" data-toggle="dropdown" onclick="focusSearch()">{{ 'Search' | translate }}</a>
                 <ul class="dropdown-menu" role="menu">
-                  <li style="padding:0px 10px;">
-                    <input type="search" id="appsearch" ng-model="$parent.searchBox" ng-change="::$parent.searchBoxChanged()" ng-model-options="{ debounce: 1000 }" stop-propagation/>
-                  </li>
+                    <li style="padding:0px 10px;">
+                      <input type="search" id="appsearch" ng-model="$parent.searchBox" ng-change="::$parent.searchBoxChanged()" ng-model-options="{ debounce: 1000 }" stop-propagation/>
+                    </li>
                 </ul>
 							</li>
               <!-- <li> -->
@@ -182,9 +189,17 @@
 		</div> <!-- /container -->
 
     <!-- <script src="build/bower.js"></script> -->
-    <script src="build/dependencies.js"></script>
+    <!-- <script src="build/dependencies.js"></script> -->
+    <script src="build/dependencies.min.js"></script>
 
     <script src="scripts/external/printThis.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx-populate/1.21.0/xlsx-populate.min.js" integrity="sha512-JVBz6zJ6cvcRjn7GayGJ/dsfYmykXq/O+BG5jqvCotbSkRd7pD/k0q/wqoIKEgXTh9lBxWoInk0DgrDhpXc9JA==" crossorigin="anonymous"></script>
+    <script src="scripts/external/populate-xls.js"></script>
+
+    <script src="https://cdn.lr-ingest.io/LogRocket.min.js" crossorigin="anonymous"></script>
+    <script>window.LogRocket && window.LogRocket.init('nxe6lb/north-telas-prod_DISABLED');</script>
+    
 
     <!-- <script src="node_modules/angular-google-picker/dist/google-picker.js"></script> -->
 
@@ -239,6 +254,8 @@
         <script src="scripts/controllers/SeasonWeeksController.js"></script>
         <script src="scripts/controllers/DesignHoursController.js"></script>
         <script src="scripts/controllers/OnedesignController.js"></script>
+        <script src="scripts/controllers/StockODController.js"></script>
+        <script src="scripts/controllers/HistoricODController.js"></script>
         <script src="scripts/controllers/AuthorizationController.js"></script>
         <script src="scripts/controllers/DefaultPageController.js"></script>
         <script src="scripts/controllers/UsersController.js"></script>
@@ -268,12 +285,14 @@
         <script src="scripts/services/orders.js"></script>
         <script src="scripts/services/dispatchs.js"></script>
         <script src="scripts/services/oneDesign.js"></script>
+        <script src="scripts/services/oneDesignWorktickets.js"></script>
         <script src="scripts/services/files.js"></script>
         <script src="scripts/services/users.js"></script>
         <script src="scripts/services/lists.js"></script>
         <script src="scripts/services/production.js"></script>
         <script src="scripts/services/utils.js"></script>
         <script src="scripts/services/rules.js"></script>
+        <script src="scripts/services/previsionHelpers.js"></script>
         <script src="scripts/services/driveAPI.js"></script>
         <script src="scripts/services/temporaries.js"></script>
         <script src="scripts/directives/utils.js"></script>
@@ -306,6 +325,9 @@
         <script src="scripts/directives/modal/providerModal.js"></script>
         <script src="scripts/directives/modal/onedesignModal.js"></script>
         <script src="scripts/directives/modal/dispatchModal.js"></script>
+        <script src="scripts/directives/modal/odModelDetailsModal.js"></script>
+        <script src="scripts/directives/modal/odModelsAvailableModal.js"></script>
+        <script src="scripts/directives/modal/odModelsConsumedModal.js"></script>
         <script src="scripts/directives/modal/manualRollModal.js"></script>
         <script src="scripts/directives/modal/editTextModal.js"></script>
         <script src="scripts/directives/modal/previsionFilesModal.js"></script>

@@ -53,6 +53,17 @@ function updateSailName($sail) {
 	if(!mysql_query($query)) {
 		$obj->successful = false;
 		$obj->query = $query;
+	} else {
+		// also update previsions and onedesignmodels with the same sail name
+		$query = "UPDATE previsions SET sailOneDesign = '".$sail->sail."' WHERE sailOneDesign = '".$sail->oldName."'";
+		mysql_query($query);
+		$query = "UPDATE onedesignmodels SET sail = '".$sail->sail."' WHERE sail = '".$sail->oldName."'";
+		mysql_query($query);
+
+		$log->type = 'info.updateSailName';
+		$log->log = json_encode($sail);
+		$log->user = "backend";
+		addLog($log);
 	}
 
 	return $obj;

@@ -22,7 +22,7 @@ angular.module('vsko.stock')
         		  Previsions.updateClothMts(cloth).then(function(result){
         			  console.log("Changed cloth to "+cloth.mts+" mts");
 
-      					Previsions.updatePrevisionState(cloth.id).then(function() {
+      					Previsions.updatePrevisionState(cloth.id, null, 'designClothsTags').then(function() {
       						// $.notify("Estado de previsiones actualizado.", {className: "success", globalPosition: "bottom right"});
       					});
         		  });

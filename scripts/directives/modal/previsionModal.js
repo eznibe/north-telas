@@ -2,7 +2,7 @@
 
 angular.module('vsko.stock')
 
-.directive('previsionModal', function($modal, $rootScope, $q, $translate, countries, Utils, Stock, Previsions, Files, OneDesign, Lists, Production, Rules, Dispatchs, Users, DriveAPI, lkGoogleSettings) {
+.directive('previsionModal', function($modal, $rootScope, $q, $translate, countries, Utils, Stock, Previsions, Files, OneDesign, Lists, Production, Rules, Dispatchs, Users, PrevisionHelpers, OneDesignWorktickets, DriveAPI, lkGoogleSettings) {
 
   return {
     restrict: 'E',
@@ -104,6 +104,7 @@ angular.module('vsko.stock')
                     $scope.sails = result.data;
                   }
                   translateSails();
+                  $scope.prevision.sailId = undefined;
                 });
               } else {
                 $scope.sails = [];
@@ -138,15 +139,149 @@ angular.module('vsko.stock')
 
             };
 
-        	  $scope.showPrevisionModal = function(prevision, previousModal) {
+            // OD assign functions
+            $scope.odDisabledOrderFields = () => {
+              return $scope.prevision.oneDesign && $scope.prevision.ownProduction && !$scope.prevision.odAssigned;
+            }
 
+            $scope.setDefaultODModelNumber = async () => {
+              // get model + next serie number 
+              if (!$scope.prevision.odAssigned && $scope.prevision.selectedBoat && $scope.prevision.selectedBoat.boat && $scope.prevision.selectedOneDesignSail && $scope.prevision.selectedOneDesignSail.sail) {
+                let nextModelSerie = await OneDesign.getNextModelSerie($scope.prevision.selectedBoat.boat, $scope.prevision.selectedOneDesignSail.sail);
+                nextModelSerie = nextModelSerie.data;
 
+                const serieNr = nextModelSerie.serie === 0 ? 100 : nextModelSerie.serie;
+                const code = nextModelSerie.successful ? `${nextModelSerie.model}-${serieNr}` : '';
+
+                $scope.prevision.orderNumber = $scope.prevision.ownProduction || !$scope.prevision.orderNumber ? code : $scope.prevision.orderNumber;
+                $scope.prevision.sailDescription = code; 
+                
+                if (!$scope.prevision.ownProduction) {
+                  $scope.prevision.odAssigned = true;
+                }
+              } else {
+                $scope.prevision.orderNumber = undefined;
+                $scope.prevision.sailDescription = undefined;
+              }
+            }
+
+            function assignToCurrentPrevision(selectedPrevision) {
+              const sourcePrevisionId = $scope.prevision.id;
+              const sourcePrevisionIsNew = $scope.prevision.isNew;
+
+              // merge relevant data of this unsaved prevision to the own production and keep using that one
+              $scope.prevision = PrevisionHelpers.mergeODPrevisions($scope.prevision, selectedPrevision)
+
+              setDropDownSelectedValues();
+
+              $scope.prevision.cloths.each(function( cloth ) {
+                cloth.selectedCloth = $scope.cloths.findAll({id:cloth.id})[0];
+              });
+
+              if (!sourcePrevisionIsNew) {
+                $scope.pendingPrevisionsToRemove = [...$scope.pendingPrevisionsToRemove, {
+                  id: sourcePrevisionId,
+                  intoPrevisionId: $scope.prevision.id
+                }];
+              }
+
+              console.log('This prevision:', $scope.prevision);
+              console.log('To be saved  :', $scope.pendingPrevisionsToSave);
+              console.log('To be removed:', $scope.pendingPrevisionsToRemove);
+            }
+
+            $scope.modelAvailableSelection = (selection) => {
+              // check if something already available was chosen use that one (ver $scope.selectedPrevision)
+              // otherwise create a new one (setDefaultOdModel)
+              if (selection.newOwnProduction) {
+                $scope.setDefaultODModelNumber();
+              } else if (selection.prevision) {
+                assignToCurrentPrevision(selection.prevision);
+              } else {  
+                // TODO cancelled selection, go back to previous sail selection state?
+              }
+            }
+
+            // will be used to save previsions created after od unassign
+            async function savePendingPrevisions() {
+              if ($scope.pendingPrevisionsToSave.length) {
+
+                const prevision = $scope.pendingPrevisionsToSave[0];
+  
+                const result = await Previsions.save(prevision, $rootScope.user.name);
+
+                Utils.logUIAction('onedesign.info.unmerge', {
+                  type: 'odUnassign.savePrevision',
+                  newPrevisionId: prevision.id, // created after unassign
+                  fromPrevisionId: prevision.fromPrevisionId
+                });
+  
+                if(result.data.successful) {
+                  if ($scope.previsions) {
+                    $scope.previsions.push(prevision);
+                  }
+                  
+                  const state = await updatePrevisionState(prevision);
+                  console.log('Ended update prev state (new):', state);
+                }
+  
+                $scope.pendingPrevisionsToSave = [];
+              }
+            }
+
+            $scope.oneDesignToggleAssigned = async () => {
+              // if (!$scope.prevision.odAssigned && !$scope.prevision.startedAsAssigned) {
+              //   // TODO check this, is never entering here?
+              //   // case when we already assigned and before saving we want to unassign it again
+              //   // => just revert the merged and clear the pendingPrevisionsToRemove
+              //   $scope.pendingPrevisionsToRemove = [];
+              //   $scope.prevision = $scope.origPrevision;
+              // } else 
+              if (!$scope.prevision.odAssigned) {
+                // unassign from own production
+                // 1. duplicate to new prevision data of own production
+                const ownProductionPrevision = PrevisionHelpers.extractODOwnProduction($scope.prevision);
+                $scope.pendingPrevisionsToSave.push({
+                  ...ownProductionPrevision,
+                  fromPrevisionId: $scope.prevision.id
+                });
+
+                // 2. current prevision (no assigned) remove data from own production boat/sail/sailDescription
+                $scope.prevision = PrevisionHelpers.removeODOwnProductionFields($scope.prevision);
+
+              } else if ($scope.prevision.odAssigned) {
+                $scope.prevision.odAssignedOn = $.format.date(new Date(), "yyyy-MM-dd");
+              }
+              console.log('This prevision:', $scope.prevision);
+              console.log('To be saved  :', $scope.pendingPrevisionsToSave);
+              console.log('To be removed:', $scope.pendingPrevisionsToRemove);
+            }
+
+            $scope.printWorkticket = () => {
+              OneDesignWorktickets.printWorkticket($scope.prevision);
+            }
+            // end OD assign functions
+
+            function setDropDownSelectedValues() {
+              $scope.prevision.selectedSeller = $scope.prevision.seller && $scope.sellers ? $scope.sellers.findAll({name:$scope.prevision.seller})[0] : {};
+              $scope.prevision.selectedLine = $scope.prevision.line ? $scope.lines.findAll({name:$scope.prevision.line})[0] : {};
+              $scope.prevision.selectedKitco = $scope.prevision.kitco || $scope.kitcos[0];
+              $scope.prevision.selectedDesigner = $scope.prevision.designer && $scope.designers ? $scope.designers.findAll({name:$scope.prevision.designer})[0] : {};
+            }
+
+        	  $scope.showPrevisionModal = function(prevision, previousModal, callback) {
 
         		  $scope.prevision = prevision ? prevision : {isNew: true, oneDesign: false, greaterThan44: false, country: $rootScope.user.country};
 
         		  $scope.origPrevision = prevision ? $.extend(true, {}, prevision) : {}; // used when the user cancel the modifications (close the modal)
 
               $scope.prevision.startedAsOD = prevision ? prevision.oneDesign : true;
+              $scope.prevision.startedAsAssigned = prevision ? prevision.odAssigned : false;
+
+              $scope.callback = callback;
+
+              $scope.pendingPrevisionsToRemove = [];
+              $scope.pendingPrevisionsToSave = [];
 
               // handle creation/load of drive folders if they dont exists yet
               handlePrevisionDriveFolders(prevision);
@@ -233,10 +368,7 @@ angular.module('vsko.stock')
           	  // set current selected one design sail
           	  $scope.prevision.selectedOneDesignSail = $scope.prevision.oneDesign ? $scope.oneDesignSails.findAll({sail:$scope.prevision.sailOneDesign})[0] : {};
 
-
-              $scope.prevision.selectedLine = $scope.prevision.line ? $scope.lines.findAll({name:$scope.prevision.line})[0] : {};
-
-              $scope.prevision.selectedKitco = $scope.prevision.kitco || $scope.kitcos[0];
+              setDropDownSelectedValues($scope.prevision);
 
               if (!$scope.prevision.week) {
                 $scope.prevision.week = 19;
@@ -323,7 +455,7 @@ angular.module('vsko.stock')
           	  }
           };
 
-          $scope.save = function() {
+          $scope.save = async () => {
 
             // save changes in each cloth (extending current values only if a new cloth was selected)
             $scope.prevision.cloths.each(function( item ) {
@@ -348,10 +480,14 @@ angular.module('vsko.stock')
 
             if($scope.prevision.selectedBoat && $scope.prevision.selectedBoat.boat) {
               $scope.prevision.boat = $scope.prevision.selectedBoat.boat;
+            } else if (!$scope.prevision.selectedBoat) {
+              $scope.prevision.boat = null;
             }
 
             if($scope.prevision.selectedOneDesignSail && $scope.prevision.selectedOneDesignSail.sail) {
               $scope.prevision.sailOneDesign = $scope.prevision.selectedOneDesignSail.sail;
+            } else if (!$scope.prevision.selectedOneDesignSail) {
+              $scope.prevision.sailOneDesign = null;
             }
 
             if (!$scope.prevision.oneDesign) {
@@ -399,10 +535,37 @@ angular.module('vsko.stock')
                 $scope.onSavePrevision($scope.prevision);
               }
 
+              if ($scope.callback) {
+                $scope.callback();
+              }
+
               // special case when the country was changed -> remove from list
               if ($scope.origPrevision.country && $scope.origPrevision.country != $scope.prevision.country) {
                 $scope.previsions.remove($scope.prevision);
               }
+            }
+
+            if ($scope.pendingPrevisionsToRemove.length) {
+              console.log('Removing previsions:', $scope.pendingPrevisionsToRemove);
+              await Promise.all($scope.pendingPrevisionsToRemove.map(prevision => Previsions.remove(prevision)));
+
+              
+              const previsionsToRemove = $scope.pendingPrevisionsToRemove.map(p => {
+                Utils.logUIAction('onedesign.info.merge', {
+                  type: 'odAssign.removePrevision',
+                  removedPrevisionId: p.id, //deleted one
+                  intoPrevisionId: p.intoPrevisionId
+                });
+
+                return $scope.previsions.find(prev => prev.id === p.id);
+              })
+              previsionsToRemove.forEach(p => {
+                $scope.previsions.remove(p);
+              });
+
+              $scope.previsions = $scope.previsions.map(prevision => {
+                return prevision.id === $scope.prevision.id ? $scope.prevision : prevision;
+              })
             }
 
             Previsions.validateUniqueOrderNumber($scope.prevision.orderNumber).then(function(result) {
@@ -413,11 +576,13 @@ angular.module('vsko.stock')
               if (($scope.prevision.id && (result.data.valid || $scope.prevision.id == result.data.previsionId || $scope.prevision.previsionId == result.data.previsionId))
                       || (!$scope.prevision.id && result.data.valid)) {
 
-                Previsions.save($scope.prevision, $rootScope.user.name).then(function(result) {
+                Previsions.save($scope.prevision, $rootScope.user.name).then(async (result) => {
 
                   if(result.data.successful && result.data.isNew) {
 
-                    $scope.previsions.push($scope.prevision);
+                    if ($scope.previsions) {
+                      $scope.previsions.push($scope.prevision);
+                    }
 
                     delete $scope.prevision.isNew;
 
@@ -495,10 +660,19 @@ angular.module('vsko.stock')
                       $scope.onSavePrevision($scope.prevision);
                     }
 
+                    if ($scope.callback) {
+                      $scope.callback();
+                    }
+
                     // special case when the country was changed -> remove from list
                     if ($scope.origPrevision.country && $scope.origPrevision.country != $scope.prevision.country) {
                       $scope.previsions.remove($scope.prevision);
                     }
+                  }
+
+                  if ($scope.pendingPrevisionsToSave.length) {
+                    console.log('Adding extra previsions:', $scope.pendingPrevisionsToSave);
+                    await savePendingPrevisions();
                   }
                 }, function(err) {
                   Utils.showIntrusiveMessage('notify.unknown_error', 'error');
@@ -524,7 +698,11 @@ angular.module('vsko.stock')
           	  Previsions.remove($scope.prevision).then(function(result) {
           		  $scope.previsions.remove(prevision);
 
-          		  $scope.modalPrevision.hide();
+                $scope.modalPrevision.hide();
+                
+                if ($scope.callback) {
+                  $scope.callback();
+                }
 
                 Utils.showMessage('notify.prevision_deleted');
 
@@ -612,8 +790,8 @@ angular.module('vsko.stock')
 
         	  $.extend($scope.prevision, $scope.origPrevision);
 
-        	  $scope.modalPrevision.hide();
-
+            $scope.modalPrevision.hide();
+            
         	  if($scope.previousModal) {
         		  $scope.previousModal.show();
         	  }
@@ -891,7 +1069,7 @@ angular.module('vsko.stock')
 
   					var clothsIds = prevision.cloths.map(function(c) { return c.clothId; }).join(',');
 
-  					Previsions.updatePrevisionState(clothsIds).then(function(result) {
+  					Previsions.updatePrevisionState(clothsIds, null, 'previsionModal').then(function(result) {
 
               console.log('update prevision state', result);
               if(skipNotify) {

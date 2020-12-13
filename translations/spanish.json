@@ -156,10 +156,10 @@
   "Cloth": "Tela",
   "Date": "Fecha",
   "Delivery date": "Fecha de entrega",
-  "Order number": "Número de orden",
   "Client": "Cliente",
   "Boat": "Barco",
   "Sail": "Vela",
+  "Sail number": "Nr de Vela",
   "Cancel": "Cancelar",
   "Save": "Guardar",
   "Documents": "Documentos",
@@ -168,7 +168,6 @@
   "System": "Sistema",
   "Invalid user or password": "Usuario o password inválido.",
   "Role": "Role",
-  "Name": "Nombre",
   "Create new user": "Crear nuevo usuario",
   "Remove": "Eliminar",
   "Delete": "Eliminar",
@@ -295,7 +294,6 @@
   "Historic design": "Históricos",
   "Designed between dates": "Diseñado entre fechas",
   "Design hours": "Cálculo horas diseño",
-  "Amount": "Cantidad",
   "by_designer": "Por diseñador",
   "by_orders": "Por órdenes",
   "Help": "Ayuda",
@@ -343,6 +341,14 @@
   "Only available in files": "Solo con saldo",
   "Exclude temporaries calculation": "Excluir cálculo temp.",
   "Editable by sellers": "Editable por vendedores",
+  "Fabrication": "Fabricación",
+  "Next serie": "Nr. serie sig.",
+  "New": "Nueva",
+  "Model": "Modelo",
+  "Consumed": "Consumidos",
+  "Maximum": "Máximos",
+  "OD Assigned date": "Fecha de asignada",
+  "Year": "Año",
 
   "": "",
   "notify": {
@@ -420,7 +426,9 @@
     "line_updated": "Valor de linea actualizado.",
     "sail_updated": "Valor de vela actualizado.",
     "download_saved": "Descarga guardada.",
-    "download_deleted": "Descarga eliminada."
+    "download_deleted": "Descarga eliminada.",
+    "odmodel_updated": "Modelo actualizado.",
+    "odmodel_save_error": "Error actualizando modelo."
   },
   "percentages": {
     "title": "% de Producción",

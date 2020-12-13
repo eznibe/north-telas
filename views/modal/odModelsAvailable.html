@@ -1,0 +1,70 @@
+<div class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" style="margin-top: 0px;">
+		<div class="modal-content" id="printDispatch">
+
+			<div class="modal-header">
+				<div class="edit_person">
+					<h2>
+						<span class="glyphicon glyphicon-file"></span>
+						<span translate>Modelo</span>
+					</h2>
+				</div>
+				<a href="javascript:void(0)" class="btn btn-lg closebtn noprint" ng-click="closeModelsAvailableModal()">
+					<span class="glyphicon glyphicon-remove"></span>
+				</a>
+        <div class="dispatch-logo onlyprint"></div>
+		  </div>
+
+			<div class="modal-body">
+
+        <div class="row">
+          <div class="col-md-12">
+            <a ng-click="newOwnProduction()" class="btn btn-default floatright">
+              <span class="glyphicon glyphicon-plus"></span>&nbsp;
+              {{'New' | translate}}
+            </a>
+          </div>
+        </div>
+
+        <div>Disponibles</div>
+				<table id="groups" class="table table-bordered table-striped table-hover">
+					<thead>
+						<tr>
+							<th translate>Modelo - serie</th>
+							<th translate>Boat</th>
+							<th translate>Sail</th>
+							<th translate>%</th>
+							<th style="width: 100px;"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="p in notAssignedOrders | orderBy:'sailDescription'">
+							<td nowrap>
+								<!-- <a href="javascript:void(0);" ng-click="showPrevisionModal(o)">{{o.orderNumber}}</a> -->
+								{{p.sailDescription}}
+							</td>
+              				<td>
+								{{p.boat}}
+							</td>
+              				<td>
+								{{p.sailOneDesign}}
+							</td>
+							<td>
+								{{p.percentage}}
+							</td>
+              <td style="text-align: center; width: 100px;">
+                <a href="javascript:void(0);" ng-click="select(p)">Seleccionar</a>
+							</td>
+						</tr>
+					</tbody>
+        </table>
+      </div>
+
+		</div>
+	</div>
+
+</div>
+
+<confirm-modal/>
+
+<prevision-modal/>

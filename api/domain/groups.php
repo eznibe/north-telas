@@ -28,7 +28,7 @@ function getGroups($expand)
 	$query = "SELECT * FROM groups g WHERE country is null or country = '$country' ORDER BY cast(g.id as unsigned)";
 	$result = mysql_query($query);
 
-	if($expand=='FULL') {
+	if($expand!='NONE') {
 
 		$rows = array();
 		while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {

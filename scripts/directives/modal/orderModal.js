@@ -40,7 +40,7 @@ angular.module('vsko.stock')
 
                   if(order.status == orderStatus.in_transit) {
                     var clothsIds = order.products.map(function(p) { return p.clothId; }).join(',');
-                    Previsions.updatePrevisionState(clothsIds).then(function() {
+                    Previsions.updatePrevisionState(clothsIds, null, 'orderModal').then(function() {
                       Utils.showMessage('notify.previsions_state_updated');
                     });
                   }
@@ -58,7 +58,7 @@ angular.module('vsko.stock')
                   Utils.showMessage('notify.order_item_deleted');
 
                   if($scope.order.status == orderStatus.in_transit) {
-                    Previsions.updatePrevisionState(orderproduct.clothId).then(function() {
+                    Previsions.updatePrevisionState(orderproduct.clothId, null, 'orderModal').then(function() {
                       Utils.showMessage('notify.previsions_state_updated');
                     });
                   }
@@ -108,7 +108,7 @@ angular.module('vsko.stock')
                 console.log('Updated product amount to '+product.amount);
 
                 if($scope.order.status == orderStatus.in_transit) {
-                  Previsions.updatePrevisionState(product.clothId).then(function() {
+                  Previsions.updatePrevisionState(product.clothId, null, 'orderModal').then(function() {
                     Utils.showMessage('notify.previsions_state_updated');
         					});
                 }

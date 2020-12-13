@@ -1,0 +1,294 @@
+<div class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" style="margin-top: 0px;">
+		<div class="modal-content" id="printDispatch">
+
+			<div class="modal-header">
+				<div class="edit_person">
+					<h2>
+						<span class="glyphicon glyphicon-file"></span>
+						<span translate>Modelo</span>
+					</h2>
+				</div>
+				<a href="javascript:void(0)" class="btn btn-lg closebtn noprint" ng-click="closeModelDetailsModal()">
+					<span class="glyphicon glyphicon-remove"></span>
+				</a>
+        <div class="dispatch-logo onlyprint"></div>
+		  </div>
+
+			<div class="modal-body">
+
+				<div class="row">
+					<div class="col-md-3 nopadding">
+							<label class="control-label col-xs-4" for="edit_order" translate>Code</label>
+							<div class="col-xs-8">
+								<input name="edit_order" type="text" class="form-control small" ng-model="odmodel.model" />
+							</div>
+					</div>
+					<div class="col-md-3 nopadding">
+							<label class="control-label col-xs-6" for="edit_client" translate>Next serie</label>
+							<div class="col-xs-5">
+								<input name="edit_client" type="number" class="form-control small" ng-model="odmodel.nextSequence">
+							</div>
+					</div>
+					<div class="col-md-3 nopadding">
+						<label class="control-label col-xs-6" for="edit_client" translate>Stock min</label>
+						<div class="col-xs-5">
+							<input name="edit_client" type="number" class="form-control small" ng-model="odmodel.minStock">
+						</div>
+          </div>
+          <div class="col-md-3 nopadding">
+						<label class="control-label col-xs-4" for="edit_client" translate>Line</label>
+						<div class="col-xs-8">
+              <select name="dd_line" ng-model="odmodel.line" class="form-control small">
+                <option value="OD">OD</option>
+                <option value="CA">CA</option>
+              </select>
+            </div>
+					</div>
+        </div>
+        
+        <div class="row" style="margin-top: 10px;">
+          <div class="col-md-10 nopadding"></div>
+          <div class="col-md-2 nopadding">
+            <div class="col-xs-12">
+              <a ng-click="saveModelDetails(odmodel)" class="btn btn-default floatright edit_person" >
+                <span class="glyphicon glyphicon-save"></span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+				<div class="panel panel-default ng-scope" style="margin-top: 15px;" ng-if="odmodel.line === 'OD'">
+					<div class="panel-heading nopadding">
+						<h2 class="panel-title panel-title-minimalist fullwidth">
+              <a data-toggle="collapse" data-target="#collapseConf" href="javascript:void(0)" class="collapsed">
+								<span translate>Measures</span>
+								<span>({{odmodel.measurements.length}})</span>
+              </a>
+						</h2>
+					</div>
+		
+					<div id="collapseConf" class="panel-collapse collapse" style="height: auto;">
+						<div class="panel-body">
+		
+              <div style="text-align: right;">
+                <a ng-click="showMeasurementModal()" class="btn btn-default floatright" style="margin-bottom: 15px;">
+                  <span class="glyphicon glyphicon-plus"></span>
+                  {{'New' | translate}}
+                </a>
+              </div>
+
+              <table id="groups" class="table table-bordered table-striped table-hover">
+                <thead>
+                  <tr>
+                    <th translate>Name</th>
+                    <th translate>Target (mm)</th>
+                    <th translate>Maximos (mm)</th>
+                    <th access-restricted="read-only,plotter" class="noprint" translate>Delete</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="m in odmodel.measurements">
+                    <td nowrap>
+                      <editable-production-input entity="::m" field="'name'" callback="::changedMeasurement.field" width="100" editable-by-role="'admin,produccion,velas-od'" style="display:inline-block;"></editable-production-input>
+                    </td>
+                    <td style="min-width: 110px;">
+                      <editable-production-input entity="::m" field="'target'" callback="::changedMeasurement.numericField" width="50" editable-by-role="'admin,produccion,velas-od'" style="display:inline-block;"></editable-production-input>
+                    </td>
+                    <td>
+                      <editable-production-input entity="::m" field="'maximum'" callback="::changedMeasurement.numericField" width="50" editable-by-role="'admin,produccion,velas-od'" style="display:inline-block;"></editable-production-input>
+                    </td>
+                    <td access-restricted="read-only,plotter,plotter" style="width:80px; text-align:center;" class="noprint">
+                      <span class="glyphicon glyphicon-trash icon-link" ng-click="showConfirmModal(m, deleteModelMeasurement)"></span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+						</div>
+					</div>	
+				</div>	
+
+				<div class="panel panel-default ng-scope" style="margin-top: 15px;" ng-if="odmodel.line === 'CA'">
+					<div class="panel-heading nopadding">
+						<h2 class="panel-title panel-title-minimalist fullwidth">
+              <a data-toggle="collapse" data-target="#collapseItems" href="javascript:void(0)" class="collapsed">
+								<span translate>Items</span>
+								<span>({{odmodel.items.length}})</span>
+              </a>
+						</h2>
+					</div>
+		
+					<div id="collapseItems" class="panel-collapse collapse" style="height: auto;">
+						<div class="panel-body">
+		
+              <div style="text-align: right;">
+                <a ng-click="showItemModal()" class="btn btn-default floatright" style="margin-bottom: 15px;">
+                  <span class="glyphicon glyphicon-plus"></span>
+                  {{'New' | translate}}
+                </a>
+              </div>
+
+              <table id="groups" class="table table-bordered table-striped table-hover">
+                <thead>
+                  <tr>
+                    <th translate>Name</th>
+                    <th translate>Amount</th>
+                    <th access-restricted="read-only,plotter" class="noprint" translate>Delete</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="m in odmodel.items">
+                    <td nowrap>
+                      <editable-production-input entity="::m" field="'name'" callback="::changedItem.field" width="100" editable-by-role="'admin,produccion,velas-od'" style="display:inline-block;"></editable-production-input>
+                    </td>
+                    <td style="min-width: 110px;">
+                      <editable-production-input entity="::m" field="'amount'" callback="::changedItem.numericField" width="50" editable-by-role="'admin,produccion,velas-od'" style="display:inline-block;"></editable-production-input>
+                    </td>
+                    <td access-restricted="read-only,plotter,plotter" style="width:80px; text-align:center;" class="noprint">
+                      <span class="glyphicon glyphicon-trash icon-link" ng-click="showConfirmModal(m, deleteModelItem)"></span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+						</div>
+					</div>	
+				</div>
+
+				<hr>
+
+        <div>No asignadas</div>
+				<table id="groups" class="table table-bordered table-striped table-hover">
+					<thead>
+						<tr>
+							<th translate>Modelo - serie</th>
+							<th translate>Boat</th>
+							<th translate>Sail</th>
+							<th translate>%</th>
+							<!-- <th translate>Observations</th> -->
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="o in notAssignedOrders | orderBy:'sailDescription'">
+							<td nowrap>
+								<a href="javascript:void(0);" ng-click="showPrevisionModal(o, null, previsionClosed)">{{o.sailDescription}}</a>
+							</td>
+              <td>
+								{{o.boat}}
+							</td>
+              <td>
+								{{o.sailOneDesign}}
+							</td>
+							<td>
+								{{o.percentage}}
+							</td>
+              <!-- <td>
+                {{o.observations}}
+							</td> -->
+						</tr>
+					</tbody>
+        </table>
+        
+        <div>Asignadas</div>
+        <table id="groups" class="table table-bordered table-striped table-hover">
+					<thead>
+						<tr>
+							<th translate>Order</th>
+							<th translate>Model</th>
+							<th translate>Client</th>
+							<th translate>Boat</th>
+							<th translate>Sail</th>
+							<th translate>%</th>
+							<!-- <th translate>Observations</th> -->
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="o in assignedOrders | orderBy:'orderNumber'">
+							<td nowrap>
+								<a href="javascript:void(0);" ng-click="showPrevisionModal(o, null, previsionClosed)">{{o.orderNumber}}</a>
+							</td>
+							<td>
+								{{o.sailDescription}}
+							</td>
+							<td style="min-width: 110px;">
+								{{o.client}}
+							</td>
+              <td>
+								{{o.boat}}
+							</td>
+              <td>
+								{{o.sailOneDesign}}
+							</td>
+							<td>
+								{{o.percentage}}
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+        <div class="panel panel-default ng-scope" style="margin-top: 15px;">
+					<div class="panel-heading nopadding">
+						<h2 class="panel-title panel-title-minimalist fullwidth">
+              <a data-toggle="collapse" data-target="#collapseArchived" href="javascript:void(0)" class="collapsed">
+								<span translate>Archivadas</span>
+								<span>({{archivedOrders.length}})</span>
+              </a>
+						</h2>
+					</div>
+		
+					<div id="collapseArchived" class="panel-collapse collapse" style="height: auto;">
+						<div class="panel-body">
+              <table id="groups" class="table table-bordered table-striped table-hover">
+                <thead>
+                  <tr>
+                    <th translate>Order</th>
+                    <th translate>Model</th>
+                    <th translate>Client</th>
+                    <th translate>Boat</th>
+                    <th translate>Sail</th>
+                    <th translate>%</th>
+                    <th translate>Year</th>
+                    <!-- <th translate>Observations</th> -->
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="o in archivedOrders | orderBy:'-unformattedDeliveryDate'">
+                    <td nowrap>
+                      <a href="javascript:void(0);" ng-click="showPrevisionModal(o, null, previsionClosed)">{{o.orderNumber}}</a>
+                    </td>
+                    <td>
+                      {{o.sailDescription}}
+                    </td>
+                    <td style="min-width: 110px;">
+                      {{o.client}}
+                    </td>
+                    <td>
+                      {{o.boat}}
+                    </td>
+                    <td>
+                      {{o.sailOneDesign}}
+                    </td>
+                    <td>
+                      {{o.percentage}}
+                    </td>
+                    <td>
+                      {{o.year}}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+						</div>
+					</div>	
+        </div>
+        
+      </div>
+
+		</div>
+	</div>
+
+</div>
+
+<confirm-modal/>
+
+<prevision-modal/>
+
+<model-measurement-modal/>

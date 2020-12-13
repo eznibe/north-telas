@@ -2067,7 +2067,8 @@ th {
 .table > thead > tr > th {
   vertical-align: bottom;
   border-bottom: 2px solid #efefef;
-  font-family: segoeui;
+  /* font-family: segoeui; */
+  font-size: 11px !important;
 }
 .table > caption + thead > tr:first-child > th,
 .table > colgroup + thead > tr:first-child > th,
@@ -6498,7 +6499,7 @@ mark {
   margin-bottom: 15px;
 }
 .jumbotron h1 span {
-   font-family: Lato;
+   /* font-family: Lato; */
  }
 .jumbotron p {
   margin-bottom: 15px;
@@ -7602,18 +7603,17 @@ td.new.day {
    color: lightgray;
 }
 
-@font-face {
+/* @font-face {
   font-family: 'sourceSansPro';
   src: url('../fonts/sourcesanspro-regular.ttf');
-}
+} */
 
-@font-face {
-  /*font-family: "Segoe UI",Arial,Helvetica,sans-serif;*/
-  font-family: "segoeui"
+/* @font-face {
+  font-family: "segoeui";
   src: url('../fonts/segoeui.ttf');
-}
+} */
 
-@font-face {
+/* @font-face {
   font-family: 'Lato';
   src: url("../fonts/LatoLatin-Medium.eot?") format("eot"), url("../fonts/LatoLatin-Medium.woff") format("woff"), url("../fonts/LatoLatin-Medium.ttf") format("truetype");
 }
@@ -7634,4 +7634,4 @@ td.new.day {
   font-family: 'Lato';
   src: url("../fonts/LatoLatin-Regular.eot?") format("eot"), url("../fonts/LatoLatin-Regular.woff") format("woff"), url("../fonts/LatoLatin-Regular.ttf") format("truetype");
   font-weight: 400;
-  font-style: normal; }
+  font-style: normal; } */

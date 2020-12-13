@@ -4,7 +4,7 @@
 
 angular.module('vsko.stock')
 
-.factory('OneDesign', ['$http', '$q', 'uuid4', function ($http, $q, uuid4) {
+.factory('OneDesign', ['$http', '$q', 'uuid4', 'Utils', function ($http, $q, uuid4, Utils) {
 
 		var url = telasAPIUrl;
 
@@ -20,6 +20,45 @@ angular.module('vsko.stock')
         	return $http.get(url + 'sails_GET.php?onedesign=true'+storedCountry);
         };
 
+        this.getModels = async function(storedCountry)
+        {
+            storedCountry = storedCountry === 'BRA' ? '&storedCountry=BRA' : '';
+            
+            const startTime = Date.now();
+
+            const result = await $http.get(url + 'onedesign_GET.php?onedesignmodels=true'+storedCountry);
+            Utils.logTiming(startTime, url + 'onedesign_GET.php?onedesignmodels=true'+storedCountry, 'onedesignmodels.getAll', 'GET');
+
+            return result;
+        };
+
+        this.getModel = async function(boat, sail)
+        {
+            const startTime = Date.now();
+
+            const result = await $http.get(`${url}onedesign_GET.php?onedesignmodels=true&boat=${boat}&sail=${encodeURIComponent(sail)}`);
+            Utils.logTiming(startTime, `${url}onedesign_GET.php?onedesignmodels=true&boat=${boat}&sail=${encodeURIComponent(sail)}`, 'onedesignmodels.getModel', 'GET');
+
+            return result;
+        };
+
+        this.getModelsHistoricData = async function(boat, sail, year)
+        {
+            const startTime = Date.now();
+
+            const modelParam = boat && sail ? `&boat=${boat}&sail=${encodeURIComponent(sail)}` : '';
+            const yearParam = year ? `&year=${year}` : '';
+
+            const requestUrl = boat && sail 
+                ? `${url}onedesign_GET.php?onedesignmodelsHistoricByModel=true${modelParam}${yearParam}`
+                : `${url}onedesign_GET.php?onedesignmodelsHistoric=true`; 
+            
+            const result = await $http.get(requestUrl);
+            Utils.logTiming(startTime, requestUrl, 'onedesignmodelsHistoric.getAll', 'GET');
+
+            return result;
+        };
+
         this.updateSailName = function(sail) {
 
         	return $http.post(url + 'sails_POST.php?updateSailName=true', sail);
@@ -30,6 +69,10 @@ angular.module('vsko.stock')
        		onedesign.id = uuid4.generate();
 
         	return $http.post(url + 'boats_POST.php?onedesign=true', onedesign);
+        };
+
+        this.saveModel = function(model) {
+            return $http.post(url + 'onedesign_POST.php?updateODModel=true', model);
         };
 
         this.updateBoatName = function(boat) {
@@ -63,6 +106,71 @@ angular.module('vsko.stock')
                 value: value
             };
             return $http.post(url + 'previsions_POST.php?properties=true', property);
+        }
+
+        this.getNextModelSerie = function(boat, sail) {
+            return $http.get(`${url}onedesign_GET.php?modelNextSerie=true&boat=${boat}&sail=${encodeURIComponent(sail)}`);
+        }
+
+        this.getModelPrevisions = function(boat, sail, onlyAvailables = false, onlyAssigned = false, onlyArchived = false) {
+            return $http.get(`${url}onedesign_GET.php?modelPrevisions=true&boat=${boat}&sail=${encodeURIComponent(sail)}&onlyAvailables=${onlyAvailables}&onlyAssigned=${onlyAssigned}&onlyArchived=${onlyArchived}`);
+        }
+
+        this.getModelMeasurements = (model) => {
+            return $http.get(`${url}onedesign_GET.php?modelMeasurements=true&modelId=${model.id}`);
+        }
+
+        this.saveModelMeasurement = (measure, modelId) => {
+            if (!measure.id) {
+                measure.id = uuid4.generate();
+            }
+            measure.modelId = modelId;
+
+            return $http.post(url + 'onedesign_POST.php?updateODModelMeasurement=true', measure);
+        }
+
+        this.updateModelField = function(entity, type, fieldName, isNumeric) {
+
+            let numeric = '';
+            if (isNumeric) {
+                numeric = '&isNumber=true';
+            }
+
+            const typeParam = `&type=${type}`;
+
+            return $http.post(url + 'onedesign_POST.php?edit='+fieldName + numeric + typeParam, entity);
+        };
+
+        this.deleteModelMeasurement = (measure) => {
+            return $http.post(url + 'onedesign_DELETE.php?deleteODModelMeasurement=true&id='+measure.id);
+        }
+
+        // model items
+        this.getModelItems = (model) => {
+            return $http.get(`${url}onedesign_GET.php?modelItems=true&modelId=${model.id}`);
+        }
+
+        this.saveModelItem = (item, modelId) => {
+            if (!item.id) {
+                item.id = uuid4.generate();
+            }
+            item.modelId = modelId;
+
+            return $http.post(url + 'onedesign_POST.php?updateODModelItem=true', item);
+        }
+
+        this.updateModelItemField = function(item, fieldName, isNumeric) {
+
+            var numeric = '';
+            if (isNumeric) {
+                numeric = '&isNumber=true';
+            }
+
+            return $http.post(url + 'onedesign_POST.php?edit='+fieldName + numeric, item);
+        };
+
+        this.deleteModelItem = (item) => {
+            return $http.post(url + 'onedesign_DELETE.php?deleteODModelItem=true&id='+item.id);
         }
 
         return this;

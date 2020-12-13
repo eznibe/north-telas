@@ -205,7 +205,7 @@ angular.module('vsko.stock')
 
 			var clothsIds = order.products.map(function(p) { return p.clothId; }).join(',');
 
-			Previsions.updatePrevisionState(clothsIds).then(function() {
+			Previsions.updatePrevisionState(clothsIds, null, 'ordersController').then(function() {
 				Utils.showMessage('notify.previsions_state_updated');
 			});
 		}
