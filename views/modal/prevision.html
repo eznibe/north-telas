@@ -128,7 +128,7 @@
 					</div>
 					<div class="row">
 						<div class="col-md-6 nopadding">
-								<label class="control-label col-xs-4" for="edit_type" translate>Type</label>
+								<label class="control-label col-xs-4" for="edit_type" ng-style="{'color': form.edit_type.$invalid ? 'red' : ''}" translate>Type</label>
 								<div class="col-xs-8">
 									<label class="radio-inline">
 										<input type="radio" name="edit_type" value="TEMP" ng-model="prevision.type" required> Temp
@@ -385,9 +385,9 @@
                 <div class="row">
                   <div class="col-md-6 nopadding">
                     <div class="col-xs-6 nopadding">
-                      <label class="control-label col-xs-6" translate>Seller</label>
+                      <label class="control-label col-xs-6" ng-style="{'color': (form.dd_seller.$invalid || !prevision.selectedSeller.name) ? 'red' : ''}" translate>Seller</label>
                       <div class="col-xs-6">
-                        <select name="dd_seller" ng-model="prevision.selectedSeller" ng-options="s as s.name for s in sellers" class="form-control small" ng-change="">
+                        <select name="dd_seller" ng-model="prevision.selectedSeller" ng-options="s as s.name for s in sellers" class="form-control small" required>
                           <option value="">-- choose one --</option>
                         </select>
                       </div>
@@ -407,9 +407,9 @@
                       </div>
                     </div>
                     <div class="col-xs-6 nopadding">
-                      <label class="control-label col-xs-4" translate>Line</label>
+                      <label class="control-label col-xs-4" ng-style="{'color': form.dd_line.$invalid || !prevision.selectedLine.name ? 'red' : ''}" translate>Line</label>
                       <div class="col-xs-8">
-                        <select name="dd_line" ng-model="prevision.selectedLine" ng-options="l as l.name for l in lines" class="form-control small" ng-change="updatePrevisionDeliveryDate(); calculateMts(); calculateDesignHours();">
+                        <select name="dd_line" ng-model="prevision.selectedLine" ng-options="l as l.name for l in lines" class="form-control small" ng-change="updatePrevisionDeliveryDate(); calculateMts(); calculateDesignHours();" required>
                           <option value="">-- choose one --</option>
                         </select>
                       </div>
