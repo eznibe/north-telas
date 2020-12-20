@@ -1,7 +1,7 @@
 /**
  *
  */
-angular.module('vsko.stock').factory('PrevisionHelpers',[ '$q', 'uuid4', 'OneDesign', function ($q, uuid4, OneDesign) { //eslint-disable-line
+angular.module('vsko.stock').factory('PrevisionHelpers',[ '$q', 'uuid4', 'Previsions', function ($q, uuid4, Previsions) { //eslint-disable-line
   var that = {};
 
   // used when assigning an order
@@ -24,8 +24,10 @@ angular.module('vsko.stock').factory('PrevisionHelpers',[ '$q', 'uuid4', 'OneDes
 
   // used when unassigning an order
   // result: new own production prevision that keeps the needed values from the given prevision
-  that.extractODOwnProduction = function (prevision) {
+  that.extractODOwnProduction = async function (prevision) {
     const newPrevisionId = uuid4.generate();
+
+    const plotters = await Previsions.getPrevisionPlotters(prevision.id);
 
     const cloths = prevision.cloths.map(cloth => {
       return {
@@ -51,6 +53,10 @@ angular.module('vsko.stock').factory('PrevisionHelpers',[ '$q', 'uuid4', 'OneDes
       priority: prevision.priority,
       cloths
     };
+
+    if (plotters.data.length) {
+      newPrevision.plotters = plotters.data;
+    }
 
     delete newPrevision.client;
     delete newPrevision.deliveryDate;

@@ -37,7 +37,7 @@ function getPlotters($clothId, $cutted, $search, $upToDate) {
 		  LEFT JOIN sails s on s.id=p.sailId
 			LEFT JOIN sailgroups sg on sg.id=s.sailGroupId
 		  WHERE 1=1 and pl.country = '$country' $cuttedCondition $orderCondition $searchCondition $upToDateCondition ORDER BY p.orderNumber, c.name";
-
+// echo $queryGral;
 	$result = mysql_query($queryGral);
 
 	$rows = fetch_array($result);
@@ -705,6 +705,15 @@ function hasPlotterCuts($previsionId) {
 	$rows = fetch_array($result);
 
 	return $rows[0]['count'] == '0' ? false : true;
+}
+
+function getPrevisionPlotters($previsionId) {
+
+	$query = "SELECT * FROM plotters p where p.previsionId = '$previsionId'";
+
+	$result = mysql_query($query);
+
+	return fetch_array($result);
 }
 
 ?>

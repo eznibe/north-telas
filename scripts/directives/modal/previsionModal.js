@@ -240,7 +240,7 @@ angular.module('vsko.stock')
               if (!$scope.prevision.odAssigned) {
                 // unassign from own production
                 // 1. duplicate to new prevision data of own production
-                const ownProductionPrevision = PrevisionHelpers.extractODOwnProduction($scope.prevision);
+                const ownProductionPrevision = await PrevisionHelpers.extractODOwnProduction($scope.prevision);
                 $scope.pendingPrevisionsToSave.push({
                   ...ownProductionPrevision,
                   fromPrevisionId: $scope.prevision.id
@@ -248,6 +248,10 @@ angular.module('vsko.stock')
 
                 // 2. current prevision (no assigned) remove data from own production boat/sail/sailDescription
                 $scope.prevision = PrevisionHelpers.removeODOwnProductionFields($scope.prevision);
+
+                // 3. current prevision has no cloths they belong and were assigned to the new prevision
+                // NOTE: I'm not sure if this is correct, commented for the moment
+                // $scope.prevision.cloths = [{}];
 
               } else if ($scope.prevision.odAssigned) {
                 $scope.prevision.odAssignedOn = $.format.date(new Date(), "yyyy-MM-dd");

@@ -280,6 +280,10 @@ angular.module('vsko.stock')
 					return $http.get(url + 'plotters_GET.php?previsionId='+previsionId+'&hasPlotterCuts=true');
 				};
 
+				this.getPrevisionPlotters = function(previsionId) {
+					return $http.get(url + 'plotters_GET.php?previsionId='+previsionId+'&previsionPlotters=true');
+				};
+
 				this.isInSomeDispatch = function(previsionId) {
 					return $http.get(url + 'previsions_GET.php?previsionId='+previsionId+'&isInSomeDispatch=true');
 				};

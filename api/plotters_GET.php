@@ -20,6 +20,9 @@ if(isset($_GET['search'])) {
 else if(isset($_GET['hasPlotterCuts'])) {
 	$value = hasPlotterCuts($_GET['previsionId']);
 }
+else if(isset($_GET['previsionPlotters'])) {
+	$value = getPrevisionPlotters($_GET['previsionId']);
+}
 else {
 	$value = getPlotters($clothId, $cutted, null, null);
 }

@@ -20,7 +20,7 @@ angular.module('vsko.stock')
 
         this.search = function(input) {
 
-        	return $http.get(url + 'plotters_GET.php?search='+input);
+        	return $http.get(url + 'plotters_GET.php?search='+encodeURIComponent(input));
         };
 
         this.cutted = function(plotter, loggedUser) {

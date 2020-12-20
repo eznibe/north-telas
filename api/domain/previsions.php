@@ -337,6 +337,11 @@ function savePrevision($prevision)
 			$obj->isNew = true;
 
 			logPrevisionUpdateFull($prevision->id, 'newPrevision');
+
+			if (isset($prevision->plotters)) {
+				// special case where we need to reassign some plotters to the new prevision created (OD unassign)
+				updatePlotters($prevision->plotters, $prevision->id);
+			}
 		}
 		else {
 			$obj->successfulInsert = false;
@@ -351,6 +356,25 @@ function savePrevision($prevision)
 	$obj->prevision = $prevision;
 
 	return $obj;
+}
+
+function updatePlotters($plotters, $previsionId, $obj) {
+	$obj->successfulPloters = true;
+
+	foreach ($plotters as $plotter) {
+
+		// update plotter
+		$query = "UPDATE plotters SET previsionId = '$previsionId' WHERE id = '".$plotter->id."'";
+
+		if(!mysql_query($query)) {
+			$obj->successfulPlotters = false;
+		} else {
+			$log->type = 'update.plotter.prevision'; 
+			$log->log = "plotter: '".$plotter->id."' to prevision: $previsionId";
+			$log->user = 'backend'; 
+			addLog($log);
+		}
+	}
 }
 
 function handleCloths($prevision, $rows, $obj) {
