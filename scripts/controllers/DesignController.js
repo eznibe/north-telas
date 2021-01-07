@@ -247,7 +247,7 @@ function ($scope, $rootScope, $translate, $timeout, $cookieStore, countries, Uti
       return filter.length > 0 ? filter[0].color : '';
     }
 
-    return prevision.designWeek ? getColor(prevision.designWeek) : '';
+    return prevision.week ? getColor(prevision.week) : '';
   }
 
   $scope.designerDisplayFn = function(designer, config) {
