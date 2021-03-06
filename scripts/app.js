@@ -142,14 +142,16 @@ angular.module("vsko.stock", [
 	    };
 	    return random;
 	}])
-	.factory('AddCountry', ['$rootScope', function($rootScope) {
+	.factory('AddCountryAndUser', ['$rootScope', function($rootScope) {
 	    var country = {
         request: function(config) {
 
 					// add user country from rootscope to every request to the php api
           if(config.url.indexOf('php') != -1) {
 
-	          config.url += (config.url.substr(config.url.length-4, config.url.length)=='.php' ? '?' : '&') + 'country='+$rootScope.user.country;
+	          config.url += (config.url.substr(config.url.length-4, config.url.length)=='.php' ? '?' : '&') 
+                + 'country='+$rootScope.user.country
+                + '&currentUser='+$rootScope.user.name;
           }
 
           return config;
@@ -176,7 +178,7 @@ angular.module("vsko.stock", [
         $httpProvider.interceptors.push('Authorization');
         $httpProvider.interceptors.push('PageAccess');
         $httpProvider.interceptors.push('ClearSearchBox');
-				$httpProvider.interceptors.push('AddCountry');
+				$httpProvider.interceptors.push('AddCountryAndUser');
 				$httpProvider.interceptors.push('AvoidCache');
     }
     ])

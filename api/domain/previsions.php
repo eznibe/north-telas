@@ -918,10 +918,11 @@ function updateProperties($property) {
 // will log the state of the prevision just before an update will be perfomed
 function logPrevisionUpdateFull($previsionId, $method) {
 	global $country;
+	global $currentUser;
 
-	$update = "INSERT INTO previsionfulllogs (id,orderNumber,deliveryDate,client,sailId,sailDescription,boat,type,designed,oneDesign,greaterThan44,p,e,i,j,area,sailOneDesign,observations,designedOn,createdOn,state,prevState,stateAccepted,stateChanged,stateAcceptedDate,seller,dispatchId,line,week,priority,percentage,advance,tentativeDate,productionDate,infoDate,advanceDate,deletedProductionOn,deletedProductionBy,productionObservations,designObservations,driveIdProduction,driveIdDesign,sailGroupId,rizo,country,deliveryDateManuallyUpdated,kitco,excludeAutoUpdateDeliveryDate,odAssigned,odAssignedOn,ownProduction, wtColor1, wtInsignia, wtRoyalty, wtDraft, wtColor2, wtSail, wtSailNumber, method,insertedon)
+	$update = "INSERT INTO previsionfulllogs (id,orderNumber,deliveryDate,client,sailId,sailDescription,boat,type,designed,oneDesign,greaterThan44,p,e,i,j,area,sailOneDesign,observations,designedOn,createdOn,state,prevState,stateAccepted,stateChanged,stateAcceptedDate,seller,dispatchId,line,week,priority,percentage,advance,tentativeDate,productionDate,infoDate,advanceDate,deletedProductionOn,deletedProductionBy,productionObservations,designObservations,driveIdProduction,driveIdDesign,sailGroupId,rizo,country,deliveryDateManuallyUpdated,kitco,excludeAutoUpdateDeliveryDate,odAssigned,odAssignedOn,ownProduction, wtColor1, wtInsignia, wtRoyalty, wtDraft, wtColor2, wtSail, wtSailNumber, method,insertedon,insertedBy)
 	 						SELECT id,orderNumber,deliveryDate,client,sailId,sailDescription,boat,type,designed,oneDesign,greaterThan44,p,e,i,j,area,sailOneDesign,observations,designedOn,createdOn,state,prevState,stateAccepted,stateChanged,stateAcceptedDate,seller,dispatchId,line,week,priority,percentage,advance,tentativeDate,productionDate,infoDate,advanceDate,deletedProductionOn,deletedProductionBy,productionObservations,designObservations,driveIdProduction,driveIdDesign,sailGroupId,rizo,country,deliveryDateManuallyUpdated,kitco,excludeAutoUpdateDeliveryDate,odAssigned,odAssignedOn,ownProduction, wtColor1, wtInsignia, wtRoyalty, wtDraft, wtColor2, wtSail, wtSailNumber 
-							, '$method', now() FROM previsions WHERE id = '$previsionId'";
+							, '$method', now(), '$currentUser' FROM previsions WHERE id = '$previsionId'";
 
 	$obj->successful = true;
 	if(!mysql_query($update)) {
