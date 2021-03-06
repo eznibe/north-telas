@@ -270,6 +270,7 @@ function savePrevision($prevision)
 	$infoDate = isset($prevision->infoDate) && trim($prevision->infoDate)!='' ? "STR_TO_DATE('".$prevision->infoDate."', '%d-%m-%Y')" : 'null' ;
 	$advanceDate = isset($prevision->advanceDate) && trim($prevision->advanceDate)!='' ? "STR_TO_DATE('".$prevision->advanceDate."', '%d-%m-%Y')" : 'null' ;
 	$dispatchId = isset($prevision->dispatchId) && trim($prevision->dispatchId)!='' ? "'".$prevision->dispatchId."'" : 'null' ;
+	$deliveryDate = isset($prevision->deliveryDate) && trim($prevision->deliveryDate)!='' ? "STR_TO_DATE('".$prevision->deliveryDate."', '%d-%m-%Y')" : '"2099-01-01"' ;
 
 	$designed = isset($prevision->designed) && $prevision->designed ? 'true' : 'false' ;
 	$designer = isset($prevision->designer) && trim($prevision->designer)!='' ? $prevision->designer : '' ;
@@ -296,11 +297,13 @@ function savePrevision($prevision)
 	$wtSail = isset($prevision->wtSail) && trim($prevision->wtSail)!='' ? "'".$prevision->wtSail."'" : 'null' ;
 	$wtSailNumber = isset($prevision->wtSailNumber) && trim($prevision->wtSailNumber)!='' ? "'".$prevision->wtSailNumber."'" : 'null' ;
 
+	$createdOn = isset($prevision->createdOn) && trim($prevision->createdOn)!='' ? "'".$prevision->createdOn."'" : 'now()' ;
+
 	if ($num_results != 0)
 	{
 		logPrevisionUpdateFull($prevision->id, 'savePrevision');
 		// update
-		$update = "UPDATE previsions SET orderNumber = '".$prevision->orderNumber."', deliveryDate = STR_TO_DATE('".$prevision->deliveryDate."', '%d-%m-%Y'), client = '".$client."', sailId = $sailId, sailGroupId = $sailGroupId, sailDescription = $sailDescription, boat = $boat, type = '".$prevision->type."', oneDesign = ".$oneDesign.", greaterThan44 = ".$greaterThan44.
+		$update = "UPDATE previsions SET orderNumber = '".$prevision->orderNumber."', deliveryDate = $deliveryDate, client = '".$client."', sailId = $sailId, sailGroupId = $sailGroupId, sailDescription = $sailDescription, boat = $boat, type = '".$prevision->type."', oneDesign = ".$oneDesign.", greaterThan44 = ".$greaterThan44.
 																		", p = ".$p.", e = ".$e.", i = ".$i.", j = ".$j.", area = ".$area.", sailOneDesign = $sailOneDesign, observations = '$observations'".
 																		", productionObservations = '$productionObservations', designObservations = '$designObservations', dispatchId = $dispatchId".
 																		", week = $week, priority = $priority, line = $line, seller = $seller, advance = $advance, percentage = $percentage".
@@ -308,6 +311,7 @@ function savePrevision($prevision)
 																		", deliveryDateManuallyUpdated = $deliveryDateManuallyUpdated, excludeFromStateCalculation = $excludeFromStateCalculation, excludeFromTemporariesCalculation = $excludeFromTemporariesCalculation, excludeAutoUpdateDeliveryDate = $excludeAutoUpdateDeliveryDate".
 																		", designer = '$designer', designHours = $designHours, designWeek = $designWeek, designOnly = $designOnly, designOnlyCloth = '$designOnlyCloth', kitco = '$kitco', odAssigned = $odAssigned, odAssignedOn = $odAssignedOn, ownProduction = $ownProduction".
 																		", wtColor1 = $wtColor1, wtInsignia = $wtInsignia, wtRoyalty = $wtRoyalty, wtDraft = $wtDraft, wtColor2 = $wtColor2, wtSail = $wtSail, wtSailNumber = $wtSailNumber".
+																		", createdOn = $createdOn".
 																		" WHERE id = '".$prevision->id."'";
 
 		if(mysql_query($update)) {
@@ -325,12 +329,12 @@ function savePrevision($prevision)
 				type, designed, oneDesign, greaterThan44, p, e, i,j, area, sailOneDesign, observations, productionObservations, designObservations,
 				week, priority, line, seller, advance, percentage, tentativeDate, productionDate, infoDate, advanceDate, dispatchId, rizo, country, excludeFromStateCalculation, excludeFromTemporariesCalculation, excludeAutoUpdateDeliveryDate, 
 			  	designer, designHours, designWeek, designOnly, designOnlyCloth, kitco, odAssigned, odAssignedOn, ownProduction,
-			  	wtColor1, wtInsignia, wtRoyalty, wtDraft, wtColor2, wtSail, wtSailNumber)
-				VALUES ('".$prevision->id."', '".$prevision->orderNumber."', STR_TO_DATE('".$prevision->deliveryDate."', '%d-%m-%Y'), '".$client."', $sailId, $sailGroupId, $sailDescription, $boat, '".$prevision->type."', $designed, ".$oneDesign.", ".$greaterThan44.", ".
+			  	wtColor1, wtInsignia, wtRoyalty, wtDraft, wtColor2, wtSail, wtSailNumber, createdOn)
+				VALUES ('".$prevision->id."', '".$prevision->orderNumber."', $deliveryDate, '".$client."', $sailId, $sailGroupId, $sailDescription, $boat, '".$prevision->type."', $designed, ".$oneDesign.", ".$greaterThan44.", ".
 								$p.", ".$e.", ".$i.", ".$j.", ".$area.", $sailOneDesign, '$observations', '$productionObservations', '$designObservations',
 								$week, $priority, $line, $seller, $advance, $percentage, $tentativeDate, $productionDate, $infoDate, $advanceDate, $dispatchId, $rizo, '$country', $excludeFromStateCalculation, $excludeFromTemporariesCalculation, $excludeAutoUpdateDeliveryDate,
 								'$designer', $designHours, $designWeek, $designOnly, '$designOnlyCloth', '$kitco', $odAssigned, $odAssignedOn, $ownProduction,
-								$wtColor1, $wtInsignia, $wtRoyalty, $wtDraft, $wtColor2, $wtSail, $wtSailNumber)" ;
+								$wtColor1, $wtInsignia, $wtRoyalty, $wtDraft, $wtColor2, $wtSail, $wtSailNumber, $createdOn)" ;
 
 		if(mysql_query($insert)) {
 			$obj->successful = true;
