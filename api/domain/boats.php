@@ -124,9 +124,16 @@ function saveOneDesign($onedesign) {
 		$obj->query = $query;
 	}
 	else {
-		$insertModel = "INSERT INTO onedesignmodels (boat, sail, model, country, nextSequence) VALUES ('".$onedesign->boat."', '".$onedesign->sail."', null, '$country', 1)";
-		mysql_query($insertModel);
+		$queryModel = "SELECT * FROM onedesignmodels WHERE boat = '".$onedesign->boat."' and sail = '".$onedesign->sail."' and country = '$country'";
+		
+		$result = mysql_query($queryModel);
 
+		if (mysql_num_rows($result) == 0) {
+
+			$insertModel = "INSERT INTO onedesignmodels (boat, sail, model, country, nextSequence) VALUES ('".$onedesign->boat."', '".$onedesign->sail."', null, '$country', 1)";
+			mysql_query($insertModel);
+		}
+	
 		$query = "SELECT o.*, o.sailPrefix as sail, c.name as cloth FROM onedesign o JOIN cloths c on c.id = o.clothId WHERE o.id = '".$onedesign->id."'";
 
 		$result = mysql_query($query);

@@ -21,7 +21,7 @@ function updateAllPrevisionsStates($clothId, $limit, $offset) {
 
 	$conditionClothId = "";
 	if(isset($clothId)) {
-		$conditionClothId = " AND clothId = '$clothId' ";
+		$conditionClothId = " AND pc.clothId = '$clothId' ";
 	}
 
 	$limitCondition = "";
@@ -32,8 +32,6 @@ function updateAllPrevisionsStates($clothId, $limit, $offset) {
 	// $offsetCondition = "";
 	if(isset($offset)) {
 		$offsetCondition = " OFFSET $offset";
-	} else {
-		$offsetCondition = " OFFSET 0";
 	}
 
 
@@ -162,7 +160,7 @@ function updatePrevisionState($clothIdsStr, $skipUpdateStateAccepted) {
 			$previsions = array();
 			foreach (fetch_array($result) as $prevision) { // unique result
 
-        $prevision['cloths'] = getPrevisionCloths($prevision);
+        		$prevision['cloths'] = getPrevisionCloths($prevision);
 
 				//$obj->prevCloths = $prevision['cloths'];
 				$country = $prevision['clothCountry'];
