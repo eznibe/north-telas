@@ -19,7 +19,7 @@
 				</div>
 		</div>
 	</div>
-	<p class="bigmargin">
+	<p class="bigmargin" access-restricted="vendedor">
 	    <a ng-click="createOwnProduction()" class="btn btn-default floatright" access-restricted="read-only,plotter">
 	        <span class="glyphicon glyphicon-plus"></span>&nbsp;
 	        {{'Produccion propia' | translate}}
@@ -48,10 +48,13 @@
 			<td nowrap>
 				{{m.sail}}
 			</td>
-			<td>
+			<td access-restricted="vendedor">
 				<span ng-if="m.model"><a href="javascript:void(0);" ng-click="showModelDetailsModal(m)">{{m.model}}</a></span>
 				<span ng-if="!m.model"><a href="javascript:void(0);" ng-click="showModelDetailsModal(m)">&lt;completar&gt;</a></span>
 				<span style="color: red;">{{::(isNextModelSerieEmpty(m) ? '!' : '')}}</span>
+			</td>
+			<td access-allowed="vendedor">
+				{{m.model}}
 			</td>
 			<td>
 				{{m.minStock}}
