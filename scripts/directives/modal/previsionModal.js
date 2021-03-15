@@ -700,7 +700,9 @@ angular.module('vsko.stock')
         	  console.log('Deleteing prevision: '+prevision.id);
 
           	  Previsions.remove($scope.prevision).then(function(result) {
-          		  $scope.previsions.remove(prevision);
+          		  if ($scope.previsions) {
+                  $scope.previsions.remove(prevision);
+                }
 
                 $scope.modalPrevision.hide();
                 
