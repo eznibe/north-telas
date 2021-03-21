@@ -495,6 +495,11 @@ function setDesigned($prevision) {
 			if(!mysql_query($insert)) {
 				$obj->successfulInsert = false;
 				$obj->insert = $insert;
+
+				$log->type = "error.insertPlotter";
+				$log->log = $insert;
+				$log->user = "backend";
+				addLog($log);
 			}
 		}
 
