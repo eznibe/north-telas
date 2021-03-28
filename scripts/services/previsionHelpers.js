@@ -68,7 +68,8 @@ angular.module('vsko.stock').factory('PrevisionHelpers',[ '$q', 'uuid4', 'Previs
   that.removeODOwnProductionFields = function (prevision) {
     prevision.selectedBoat = undefined;
     prevision.selectedOneDesignSail = undefined;
-    // prevision.percentage = 0;
+    prevision.percentage = 0;
+    prevision.designed = false;
     delete prevision.productionDate;
     delete prevision.sailDescription;
     prevision.ownProduction = false;

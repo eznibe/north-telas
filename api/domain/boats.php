@@ -504,4 +504,17 @@ function deleteODModelItem($id) {
 	return $obj;	
 }
 
+function deleteODModel($id) {
+	$obj->successful = true;
+
+	$query = "DELETE FROM onedesignmodels WHERE id = '$id'";
+
+	if(!mysql_query($query)) {
+		$obj->successful = false;
+		$obj->query = $query;
+	}
+
+	return $obj;	
+}
+
 ?>

@@ -306,7 +306,7 @@ function savePrevision($prevision)
 		$update = "UPDATE previsions SET orderNumber = '".$prevision->orderNumber."', deliveryDate = $deliveryDate, client = '".$client."', sailId = $sailId, sailGroupId = $sailGroupId, sailDescription = $sailDescription, boat = $boat, type = '".$prevision->type."', oneDesign = ".$oneDesign.", greaterThan44 = ".$greaterThan44.
 																		", p = ".$p.", e = ".$e.", i = ".$i.", j = ".$j.", area = ".$area.", sailOneDesign = $sailOneDesign, observations = '$observations'".
 																		", productionObservations = '$productionObservations', designObservations = '$designObservations', dispatchId = $dispatchId".
-																		", week = $week, priority = $priority, line = $line, seller = $seller, advance = $advance, percentage = $percentage".
+																		", week = $week, priority = $priority, line = $line, seller = $seller, advance = $advance, percentage = $percentage, designed = $designed".
 																		", tentativeDate = $tentativeDate, productionDate = $productionDate, infoDate = $infoDate, advanceDate = $advanceDate, rizo = $rizo, country = '$country'".
 																		", deliveryDateManuallyUpdated = $deliveryDateManuallyUpdated, excludeFromStateCalculation = $excludeFromStateCalculation, excludeFromTemporariesCalculation = $excludeFromTemporariesCalculation, excludeAutoUpdateDeliveryDate = $excludeAutoUpdateDeliveryDate".
 																		", designer = '$designer', designHours = $designHours, designWeek = $designWeek, designOnly = $designOnly, designOnlyCloth = '$designOnlyCloth', kitco = '$kitco', odAssigned = $odAssigned, odAssignedOn = $odAssignedOn, ownProduction = $ownProduction".

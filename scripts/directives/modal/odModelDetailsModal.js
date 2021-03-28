@@ -117,6 +117,16 @@ angular.module('vsko.stock')
               $scope.odmodel.measurements = $scope.odmodel.measurements.filter(m => m.id !== measure.id);
             }
 
+            $scope.deleteModel = async () => {
+              await OneDesign.deleteModel($scope.odmodel);
+              $scope.models = $scope.models.filter(m => m.id !== $scope.odmodel.id);
+              $scope.modalModelDetails.hide();
+            }
+
+            $scope.deleteModelAllowed = () => {
+              return $scope.notAssignedOrders.length + $scope.assignedOrders.length + $scope.archivedOrders.length === 0;
+            }
+
             // Model items functions
             $scope.showItemModal = function(carry, type) {
 

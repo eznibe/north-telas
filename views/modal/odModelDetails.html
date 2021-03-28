@@ -98,7 +98,7 @@
                     <td>
                       <editable-production-input entity="::m" field="'maximum'" callback="::changedMeasurement.numericField" width="50" editable-by-role="'admin,produccion,velas-od'" style="display:inline-block;"></editable-production-input>
                     </td>
-                    <td access-restricted="read-only,plotter,plotter" style="width:80px; text-align:center;" class="noprint">
+                    <td access-restricted="read-only,plotter" style="width:80px; text-align:center;" class="noprint">
                       <span class="glyphicon glyphicon-trash icon-link" ng-click="showConfirmModal(m, deleteModelMeasurement)"></span>
                     </td>
                   </tr>
@@ -280,6 +280,19 @@
 					</div>	
         </div>
         
+        <div class="row">
+          <div class="col-md-6">
+
+            <a href="javascript:void(0)" class="btn btn-warning floatleft" 
+               ng-click="showConfirmDeleteModal(odmodel, deleteModel)" 
+               ng-show="deleteModelAllowed()"
+               access-restricted="read-only,plotter">
+              <span class="glyphicon glyphicon-trash"></span>
+              {{'Delete' | translate}}
+            </a>
+          </div>
+        </div>
+
       </div>
 
 		</div>

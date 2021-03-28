@@ -42,5 +42,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 		//return JSON array
 		exit(json_encode($response));
 	}
+	else if(isset($_GET['deleteODModel'])) {
+
+		$response = deleteODModel($_GET['id']);
+
+		//return JSON array
+		exit(json_encode($response));
+	}
 }
 ?>

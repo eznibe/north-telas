@@ -145,6 +145,10 @@ angular.module('vsko.stock')
             return $http.post(url + 'onedesign_DELETE.php?deleteODModelMeasurement=true&id='+measure.id);
         }
 
+        this.deleteModel = (odmodel) => {
+            return $http.post(url + 'onedesign_DELETE.php?deleteODModel=true&id='+odmodel.id);
+        }
+
         // model items
         this.getModelItems = (model) => {
             return $http.get(`${url}onedesign_GET.php?modelItems=true&modelId=${model.id}`);
