@@ -118,6 +118,8 @@ function saveOneDesign($onedesign) {
 
 	$obj->successful = true;
 
+	$onedesign->selectedCloth = null;
+
 	$query = "INSERT INTO onedesign (id, boat, sailPrefix, clothId, mts, country) VALUES ('".$onedesign->id."', '".$onedesign->boat."', '".$onedesign->sail."', '".$onedesign->clothId."', ".$onedesign->mts.", '$country')";
 	if(!mysql_query($query)) {
 		$obj->successful = false;
@@ -132,6 +134,11 @@ function saveOneDesign($onedesign) {
 
 			$insertModel = "INSERT INTO onedesignmodels (boat, sail, model, country, nextSequence) VALUES ('".$onedesign->boat."', '".$onedesign->sail."', null, '$country', 1)";
 			mysql_query($insertModel);
+
+			$log->type = 'info.newOneDesignModel';
+			$log->log = json_encode($onedesign);
+			$log->user = "backend";
+			$obj->log = addLog($log);
 		}
 	
 		$query = "SELECT o.*, o.sailPrefix as sail, c.name as cloth FROM onedesign o JOIN cloths c on c.id = o.clothId WHERE o.id = '".$onedesign->id."'";
@@ -143,6 +150,11 @@ function saveOneDesign($onedesign) {
 		$obj->onedesign = new stdClass();
 		$obj->onedesign = $rows[0];
 	}
+
+	$log->type = 'info.newOneDesign';
+	$log->log = json_encode($onedesign);
+	$log->user = "backend";
+	$obj->log = addLog($log);
 
 	return $obj;
 }

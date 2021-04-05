@@ -40,6 +40,8 @@ function getOneDesignSails() {
 
 function updateSailName($sail) {
 
+	global $country;
+
 	$obj->successful = true;
 
 	if(!isset($sail->sail) || $sail->sail=="") {
@@ -54,10 +56,22 @@ function updateSailName($sail) {
 		$obj->successful = false;
 		$obj->query = $query;
 	} else {
-		// also update previsions and onedesignmodels with the same sail name
+		$queryModel = "SELECT * FROM onedesignmodels WHERE boat = '".$sail->boat."' and sail = '".$sail->sail."' and country = '$country'";
+		
+		$result = mysql_query($queryModel);
+		
+		if (mysql_num_rows($result) == 0 || $sail->sail == $sail->oldName) {
+			// also update onedesignmodels with the same sail name if the combination boat/sail doesn't exists yet
+			$query = "UPDATE onedesignmodels SET sail = '".$sail->sail."' WHERE sail = '".$sail->oldName."'";
+			mysql_query($query);
+		} else {
+			// the combination boat/sail already exists => merge them
+			$query = "DELETE FROM onedesignmodels WHERE sail = '".$sail->oldName."'";
+			mysql_query($query);
+		}
+
+		// the previsions are always updated with the new name
 		$query = "UPDATE previsions SET sailOneDesign = '".$sail->sail."' WHERE sailOneDesign = '".$sail->oldName."'";
-		mysql_query($query);
-		$query = "UPDATE onedesignmodels SET sail = '".$sail->sail."' WHERE sail = '".$sail->oldName."'";
 		mysql_query($query);
 
 		$log->type = 'info.updateSailName';
