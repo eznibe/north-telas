@@ -372,9 +372,14 @@ angular.module("vsko.stock", [
                 controller: 'DispatchsHistoricCtrl',
                 access: 'public'
             })
-		.when('/lists/worktickets', {
+		    .when('/lists/worktickets', {
                 templateUrl: 'views/lists/worktickets.html',
                 controller: 'WorkticketsCtrl',
+                access: 'public'
+            })
+            .when('/lists/dispatchsCourier', {
+                templateUrl: 'views/lists/dispatchsCourier.html',
+                controller: 'DispatchsCourierCtrl',
                 access: 'public'
             })
             .when('/temporaries/lists/temporariesForDispatcher', {

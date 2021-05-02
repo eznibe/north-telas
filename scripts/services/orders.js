@@ -93,5 +93,13 @@ angular.module('vsko.stock')
           return $http.get(url + 'orders_GET.php?search='+value);
         }
 
+        this.getCourierDispatchs = function(filter)
+        {
+          const startDate = filter && filter.startDate ? filter.startDate : "01-01-1000";
+          const endDate = filter && filter.endDate ? filter.endDate : "12-12-2999";
+
+        	return $http.get(url + 'orders_GET.php?couriers=true&startDate='+startDate+"&endDate="+endDate);
+        };
+
         return this;
     }]);

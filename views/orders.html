@@ -115,7 +115,7 @@
 							<ul>
 								<li ng-repeat="o in orders_transit | orderBy:'orderDate' | filter:searchBox" ng-click="showOrderModal(o)">
 									<h3><span style="color:black;">{{o.provider}} - #{{o.number}}</span></h3>
-									<h3 ng-show="o.orderDate"><small translate>Date</small> <span>{{o.formattedDate}}</span></h3>
+									<h3 ng-show="o.orderDate"><small translate>Date</small> <span>{{o.arriveDate || o.formattedDate}}</span></h3>
 									<h3><small translate>Nr. of Products</small> <span>{{o.products.length}}</span></h3>
 								</li>
 							</ul>
@@ -145,7 +145,7 @@
 							<ul>
 								<li ng-repeat="o in orders_search | orderBy:'provider' | filter:searchBox" ng-click="showOrderModal(o)">
 									<h3><span style="color:black;">{{o.provider}} - #{{o.number}}</span></h3>
-									<h3 ng-show="o.orderDate"><small translate>Date</small> <span>{{o.formattedDate}}</span></h3>
+									<h3 ng-show="o.orderDate"><small translate>Date</small> <span>{{o.arriveDate || o.formattedDate}}</span></h3>
 									<h3><small translate>Nr. of Products</small> <span>{{o.products.length}}</span></h3>
 								</li>
 							</ul>

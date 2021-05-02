@@ -20,7 +20,7 @@
 						<tr>
 							<th style="min-width: 150px;" translate>Product</th>
 							<th translate>Code</th>
-							<th ng-show="order.status!='TO_BUY'">AR</th>
+							<!-- <th ng-show="order.status!='TO_BUY'">AR</th> -->
 							<th translate>Amount</th>
 							<th access-allowed="temporaries" translate>Temporaries col</th>
 							<th ng-show="order.status!='TO_BUY'" translate>Rolls</th>
@@ -38,9 +38,9 @@
 							<td nowrap>
 								{{p.code}}
 							</td>
-							<td ng-show="order.status!='TO_BUY'">
+							<!-- <td ng-show="order.status!='TO_BUY'">
 								<editable-input entity="p" field="'ar'" callback="updateProductAR" allow-empty="true" editable-by-role="'admin'" width="50" style="display:inline-block;"></editable-input>
-							</td>
+							</td> -->
 							<td>
                 				<editable-input entity="p" field="'amount'" callback="updateProductAmount" editable-by-role="'admin,compras'" width="50" style="display:inline-block;"></editable-input>
 								<!--<span ng-if="order.status=='TO_BUY'">{{p.amount}}</span>-->
@@ -69,7 +69,7 @@
 						<tr class="totalRow">
 							<td style="color: #000;">Total</td>
 							<td></td>
-							<td></td>
+							<!-- <td></td> -->
 							<td></td>
 							<td access-allowed="temporaries"></td>
 							<td ng-show="order.status!='TO_BUY'">
@@ -137,7 +137,7 @@
 										<input type="text" class="form-control small" ng-model="order.dispatch">
 									</div>
 								</div>
-                				<div class="col-md-6 nopadding" ng-show="order.status=='IN_TRANSIT'">
+                				<div class="col-md-6 nopadding" ng-show="order.status=='IN_TRANSIT' || order.status=='ARRIVED'">
 									<label class="control-label col-xs-5" for="edit_type" translate>Arrive date</label>
 									<div class="col-xs-7">
 										<div class="input-group input-group-sm date" date-picker>
@@ -155,6 +155,21 @@
 									<label class="control-label col-xs-3" translate>Dolar</label>
 									<div class="col-xs-7">
 										<input type="text" class="form-control small" ng-model="order.dolar">
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-md-6 nopadding">
+									<label class="control-label col-xs-3" translate>Invoice AR</label>
+									<div class="col-xs-7">
+										<input type="text" class="form-control small" ng-model="order.invoiceAR">
+									</div>
+								</div>
+								<div class="col-md-6 nopadding">
+									<label class="control-label col-xs-5" translate>Provider AR</label>
+									<div class="col-xs-7">
+										<input type="text" class="form-control small" ng-model="order.providerAR">
 									</div>
 								</div>
 							</div>

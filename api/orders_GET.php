@@ -22,6 +22,9 @@ if(isset($_GET['id'])) {
 else if(isset($_GET['search'])) {
 	$value = searchOrders($_GET['search']);
 }
+else if(isset($_GET['couriers'])) {
+	$value = getCourierOrderDispatchs($_GET['startDate'], $_GET['endDate']);
+}
 else {
 	$value = getOrders($status, $_GET['providerId'], $expand);
 }

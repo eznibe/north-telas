@@ -1,0 +1,77 @@
+<div class="nopaddingright jumbotron clearfix">
+	<h1><span translate>Dispatchs courier</span></h1>
+	<div class="row">
+		<div class="col-md-6 nopadding">
+				<label class="control-label col-xs-2" for="edit_cloth" translate>Between</label>
+				<div class="col-xs-4">
+					<div class="input-group input-group-sm date" date-picker>
+						<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="filter.startDate" class="form-control small" required>
+						<span class="input-group-addon">
+							<span class="glyphicon-calendar glyphicon"></span>
+						</span>
+					</div>
+				</div>
+
+				<label class="control-label col-xs-2" for="edit_cloth" style="text-align: center;" translate>and</label>
+				<div class="col-xs-4">
+					<div class="input-group input-group-sm date" date-picker>
+						<input id="edit_date_dob" name="edit_date_dob" type="text" ng-model="filter.endDate" class="form-control small" required>
+						<span class="input-group-addon">
+							<span class="glyphicon-calendar glyphicon"></span>
+						</span>
+					</div>
+				</div>
+		</div>
+		<div class="col-md-6 nopadding">
+			<div class="col-xs-4">
+				<span class="glyphicon glyphicon-search icon-with-label"></span>
+				<span><a ng-click="search()" class="btn-link">{{'Search' | translate}}</a><span>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<!-- Consumos -->
+<table class="table table-bordered table-striped table-hover">
+	<thead>
+		<tr>
+			<th translate>Dispatch number</th>
+			<th translate>Invoice AR</th>
+			<th translate>Units</th>
+			<th translate>Dispatch date col</th>
+			<th translate>Total usd</th>
+			<th translate>Provider AR</th>
+			<th translate>Orders</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="d in dispatchs | filter:searchBox ">
+			<td>
+				{{d.dispatch}}
+			</td>
+			<td>
+				{{d.invoiceAR}}
+			</td>
+			<td>
+				{{(+d.units).toFixed(0)}}
+			</td>
+			<td>
+				{{d.arriveDate}}
+			</td>
+			<td>
+				{{(+d.total).toFixed(2)}}
+			</td>
+			<td>
+				{{d.providerAR}}
+			</td>
+			<td>
+				<dispatch-courier-orders dispatch="d" style="display:inline-block;"></dispatch-courier-orders>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<confirm-modal/>
+
+<order-modal callback="confirm"></order-modal>

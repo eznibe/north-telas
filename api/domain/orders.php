@@ -331,9 +331,11 @@ function updateInfo($order) {
 	if(isset($order->estimatedArriveDate) && $order->estimatedArriveDate!='') $estimatedArriveDate = "STR_TO_DATE('".$order->estimatedArriveDate."', '%d-%m-%Y')"; else $estimatedArriveDate = "null";
 	if(isset($order->dispatch)) $dispatch = "'".$order->dispatch."'"; else $dispatch = "null";
 	if(isset($order->dolar) && $order->dolar!='') $dolar = $order->dolar; else $dolar = "null";
+	if(isset($order->invoiceAR) && $order->invoiceAR!='') $invoiceAR = "'".$order->invoiceAR."'"; else $invoiceAR = "null";
+	if(isset($order->providerAR) && $order->providerAR!='') $providerAR = "'".$order->providerAR."'"; else $providerAR = "null";
 
 
-	$update = "UPDATE orders SET invoiceNumber = $invoice, type = $type, description = $description, deliveryType = $deliveryType, arriveDate = $arriveDate, estimatedArriveDate = $estimatedArriveDate, dispatch = $dispatch, dolar = $dolar WHERE orderId = '".$order->orderId."'" ;
+	$update = "UPDATE orders SET invoiceNumber = $invoice, type = $type, description = $description, deliveryType = $deliveryType, arriveDate = $arriveDate, estimatedArriveDate = $estimatedArriveDate, dispatch = $dispatch, dolar = $dolar, invoiceAR = $invoiceAR, providerAR = $providerAR WHERE orderId = '".$order->orderId."'" ;
 
 	if(mysql_query($update)) {
 		$obj->successful = true;
@@ -543,4 +545,37 @@ function deleteOrderProduct($opId, $orderId, $productId) {
 	return $response;
 }
 
+function getCourierOrderDispatchs($startDate, $endDate)
+{
+	global $country;
+
+	$startDateCondition = "";
+	if(isset($startDate)) {
+		$startDateCondition = " AND arriveDate is not null AND arriveDate >= STR_TO_DATE('".$startDate."', '%d-%m-%Y')";
+	}
+
+	$endDateCondition = "";
+	if(isset($endDate)) {
+		$endDateCondition = " AND arriveDate is not null AND arriveDate <= STR_TO_DATE('".$endDate."', '%d-%m-%Y')";
+	}
+	
+
+	$queryGral = "SELECT dispatch, count(*) products, sum(op.amount) units, DATE_FORMAT(max(arriveDate),'%d-%m-%Y') as arriveDate, sum(op.price * op.amount) total, coalesce(max(o.invoiceAR), o.invoiceNumber) invoiceAR, o.providerAR, GROUP_CONCAT(o.number) orders
+				FROM orders o join orderproduct op on o.orderId = op.orderId
+				WHERE dispatch is not null AND deliveryType = 'Courier' AND o.country = '$country' $startDateCondition $endDateCondition 
+				GROUP BY o.dispatch
+				ORDER BY o.arriveDate desc";
+
+	// echo $queryGral;
+
+	$result = mysql_query($queryGral);
+
+	$rows = array();
+	while($dispatchRow = mysql_fetch_array($result, MYSQL_ASSOC)) {
+		$dispatchRow['orders'] = array_unique(explode(",", $dispatchRow['orders']));
+		array_push($rows, $dispatchRow);
+	}
+
+	return $rows;
+}
 ?>
