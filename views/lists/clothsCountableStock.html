@@ -38,6 +38,7 @@
 			<th style="min-width: 200px" translate>Cloth</th>
 			<th translate>Arancelary</th>
 			<th translate>Invoice</th>
+			<th translate>Invoice AR</th>
 			<th translate>Dispatch nr</th>
 			<th translate>Arrive date</th>
 			<th translate>Provider</th>
@@ -63,6 +64,9 @@
 			</td>
 			<td>
 				{{c.invoiceNumber}}
+			</td>
+			<td>
+				{{c.invoiceAR}}
 			</td>
 			<td>
 				{{c.dispatch}}
@@ -106,6 +110,7 @@
 		</tr>
 		<tr class="totalRow">
 			<td style="color: #000;" translate>Total valued</td>
+			<td></td>
 			<td></td>
 			<td></td>
 			<td></td>

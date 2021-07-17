@@ -256,7 +256,7 @@ function getClothsUpToDateSplitByOrder($groupId, $date, $includeStock0, $joinPro
 	$query = "
 						SELECT p.clothId, sum(r.mtsOriginal) as mtsOriginal, coalesce(cuts.mtsCutted, 0) as mtsCutted,
 						sum(r.mtsOriginal - coalesce(cuts.mtsCutted, 0)) as available, c.name, coalesce(pro.name, '?') as provider, coalesce(p.price, '?') as price, p.productId, p.code, c.arancelary,
-						r.number, r.lote, r.mtsOriginal, r.type, r.price as rollPrice, o.invoiceNumber, o.dispatch, o.arriveDate, DATE_FORMAT(o.arriveDate,'%d-%m-%Y') as formattedArriveDate, o.dolar as dolarValue, o.orderId
+						r.number, r.lote, r.mtsOriginal, r.type, r.price as rollPrice, o.invoiceNumber, o.invoiceAR, o.dispatch, o.arriveDate, DATE_FORMAT(o.arriveDate,'%d-%m-%Y') as formattedArriveDate, o.dolar as dolarValue, o.orderId
 						FROM v_rolls r JOIN products p on p.productId=r.productId JOIN orders o on o.orderId=r.orderId JOIN cloths c on c.id=p.clothId left JOIN providers pro on pro.id=p.providerId
 						LEFT JOIN
 						(
@@ -274,7 +274,7 @@ function getClothsUpToDateSplitByOrder($groupId, $date, $includeStock0, $joinPro
 	  $query = $query . " UNION all
 							SELECT p.clothId, r.mtsOriginal, coalesce(cuts.mtsCutted, 0) as mtsCutted,
 							(r.mtsOriginal - coalesce(cuts.mtsCutted, 0)) as available, c.name, coalesce(pro.name, '?') as provider, coalesce(p.price, '?') as price, p.productId, p.code, c.arancelary,
-							r.number, r.lote, r.mtsOriginal, r.type, r.price as rollPrice, o.invoiceNumber, o.dispatch, o.arriveDate, DATE_FORMAT(o.arriveDate,'%d-%m-%Y') as formattedArriveDate, o.dolar as dolarValue, o.orderId
+							r.number, r.lote, r.mtsOriginal, r.type, r.price as rollPrice, o.invoiceNumber, o.invoiceAR, o.dispatch, o.arriveDate, DATE_FORMAT(o.arriveDate,'%d-%m-%Y') as formattedArriveDate, o.dolar as dolarValue, o.orderId
 							FROM v_rolls r JOIN products p on p.productId=r.productId JOIN orders o on o.orderId=r.orderId JOIN cloths c on c.id=p.clothId left JOIN providers pro on pro.id=p.providerId
 							LEFT JOIN
 							(
@@ -291,7 +291,7 @@ function getClothsUpToDateSplitByOrder($groupId, $date, $includeStock0, $joinPro
 		$query = $query . " UNION all
 							SELECT p.clothId, r.mtsOriginal, coalesce(cuts.mtsCutted, 0) as mtsCutted,
 							0 as available, c.name, coalesce(pro.name, '?') as provider, coalesce(p.price, '?') as price, p.productId, p.code, c.arancelary,
-							r.number, r.lote, r.mtsOriginal, r.type, r.price as rollPrice, o.invoiceNumber, o.dispatch, o.arriveDate, DATE_FORMAT(o.arriveDate,'%d-%m-%Y') as formattedArriveDate, o.dolar as dolarValue, o.orderId
+							r.number, r.lote, r.mtsOriginal, r.type, r.price as rollPrice, o.invoiceNumber, o.invoiceAR, o.dispatch, o.arriveDate, DATE_FORMAT(o.arriveDate,'%d-%m-%Y') as formattedArriveDate, o.dolar as dolarValue, o.orderId
 							FROM v_rolls r JOIN products p on p.productId=r.productId JOIN orders o on o.orderId=r.orderId JOIN cloths c on c.id=p.clothId left JOIN providers pro on pro.id=p.providerId
 							LEFT JOIN
 							(
