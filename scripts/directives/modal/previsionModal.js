@@ -474,7 +474,7 @@ angular.module('vsko.stock')
               $scope.prevision.sailId = $scope.prevision.selectedSail.id;
             }
 
-            if($scope.prevision.selectedSailGroup.id) {
+            if($scope.prevision.selectedSailGroup.id && !$scope.prevision.oneDesign) {
               $scope.prevision.sailGroupId = $scope.prevision.selectedSailGroup.id;
               if ($scope.prevision.selectedSailGroup.id != '9' && $scope.prevision.createdOn > '2016-10-07') {
                 // group different to 'Otra' -> always clear sail description field
