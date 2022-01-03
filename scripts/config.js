@@ -31,9 +31,9 @@ var workticketsFolder = '1bknFUHd6yiYsn0hp1PeakW513BRK315N';
 
 // var workticketsFolder = '197ybabB0kX15XoBdZ6FO5jfjfqDxpT-E';
 
-var drive_client_id = '331531529676-qgg6ph5m6t6m9mjqkcb027knvh0chu96.apps.googleusercontent.com';
-var drive_api_key = 'AIzaSyCGEMPtsFzhy2PaqoWyKyiwkdux9irxklA';
+//var drive_client_id = '331531529676-qgg6ph5m6t6m9mjqkcb027knvh0chu96.apps.googleusercontent.com';
+//var drive_api_key = 'AIzaSyCGEMPtsFzhy2PaqoWyKyiwkdux9irxklA';
 
 // different google app 'north sails - worktickets'
-// var drive_client_id = '905864529586-glu800fdjf932uqq6a1v2jn59aufbs5l.apps.googleusercontent.com';
-// var drive_api_key = 'AIzaSyDlXGc6arSqIycaLIjZxlWUd-VTw9eDHas';
+var drive_client_id = '905864529586-glu800fdjf932uqq6a1v2jn59aufbs5l.apps.googleusercontent.com';
+var drive_api_key = 'AIzaSyDlXGc6arSqIycaLIjZxlWUd-VTw9eDHas';

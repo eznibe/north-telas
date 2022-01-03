@@ -1,6 +1,6 @@
 
 // PRODUCTION keys
-var telasAPIUrl = 'http://nssudamerica-intranet.com/api/';
+var telasAPIUrl = '/api/';
 //var remoteAPIUrl = 'http://localhost:90/telas/api/';
 var googleAnalytics = true;
 
@@ -24,5 +24,5 @@ var productionFolders = {OD: '0B7pV9nMgniCgMFFGLWFuaTZ3bk0', CA: '0B7pV9nMgniCgS
 
 var workticketsFolder = '1bknFUHd6yiYsn0hp1PeakW513BRK315N';
 
-var drive_client_id = '331531529676-qgg6ph5m6t6m9mjqkcb027knvh0chu96.apps.googleusercontent.com';
-var drive_api_key = 'AIzaSyCGEMPtsFzhy2PaqoWyKyiwkdux9irxklA'; 
+var drive_client_id = '905864529586-glu800fdjf932uqq6a1v2jn59aufbs5l.apps.googleusercontent.com';
+var drive_api_key = 'AIzaSyDlXGc6arSqIycaLIjZxlWUd-VTw9eDHas';
