@@ -317,25 +317,41 @@ function calculateOneDesignModelSerie($boat, $sail) {
 	$response->sail = $sail;
 
 	$rows = fetch_array($result);
-	foreach ($rows as $row) {
-		$response->model = $row['model'];
-
-		if (!is_numeric($row['maxSequence']) && isset($row['manualNextSequence'])) {
-			$response->serie = $row['manualNextSequence'] + 0;
-			$response->manual = true;
-		} else if (is_numeric($row['maxSequence']) && !isset($row['manualNextSequence'])) {
-			$response->serie = $row['maxSequence'] + 1;
-			$response->view = true;
-		} else if (is_numeric($row['maxSequence']) && isset($row['manualNextSequence'])) {
-			$response->serie = $row['manualNextSequence'] > $row['maxSequence'] 
-				? $row['manualNextSequence'] + 0 : $row['maxSequence'] + 1;
-			$response->compare = true;
-		} else {
-			$response->serie = 0;
-			$response->notset = true;
+	if (count($rows) > 0) {
+		foreach ($rows as $row) {
+			$response->model = $row['model'];
+	
+			if (!is_numeric($row['maxSequence']) && isset($row['manualNextSequence'])) {
+				$response->serie = $row['manualNextSequence'] + 0;
+				$response->manual = true;
+			} else if (is_numeric($row['maxSequence']) && !isset($row['manualNextSequence'])) {
+				$response->serie = $row['maxSequence'] + 1;
+				$response->view = true;
+			} else if (is_numeric($row['maxSequence']) && isset($row['manualNextSequence'])) {
+				$response->serie = $row['manualNextSequence'] > $row['maxSequence'] 
+					? $row['manualNextSequence'] + 0 : $row['maxSequence'] + 1;
+				$response->compare = true;
+			} else {
+				$response->serie = 0;
+				$response->notset = true;
+			}
+	
+			$response->successful = true;
 		}
+	} else {
+		// it doesn't exists in v_onedesign_max_sequence_by_model because there are no previsions for it yet
+		$query = "SELECT m.boat, m.model, m.nextSequence
+					FROM onedesignmodels m
+					WHERE m.boat = '$boat' AND m.sail = '$sail' AND m.country = '$country'";
+		
+		$result = mysql_query($query);
+		$rows = fetch_array($result);
 
-		$response->successful = true;
+		foreach ($rows as $row) {
+			$response->model = $row['model'];
+			$response->serie = 1;
+			$response->successful = true;
+		}
 	}
 
 	return $response;
