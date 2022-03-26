@@ -795,13 +795,15 @@ function deletePrevision($id) {
 
 function weekUp($req) {
 
+	global $country;
+	
 	$obj->successful = true;
 
 	$column = $req->column;
 
 	if (empty($req->ids)) {
 		// no selection -> update all previsions with week betwwen 1 and 8
-		$update = "UPDATE previsions SET $column = $column + 1 WHERE $column >= 1 and $column <= 8";
+		$update = "UPDATE previsions SET $column = $column + 1 WHERE $column >= 1 and $column <= 8 and country = '$country'";
 
 		if(!mysql_query($update)) {
 			$obj->successful = false;
@@ -818,7 +820,7 @@ function weekUp($req) {
 		foreach ($req->ids as $id) {
 			logPrevisionUpdateFull($id, 'weekUp');
 
-			$update = "UPDATE previsions SET $column = $column + 1 WHERE id = '$id'";
+			$update = "UPDATE previsions SET $column = $column + 1 WHERE id = '$id' and country = '$country'";
 
 			if(!mysql_query($update)) {
 				$obj->successful = false;
@@ -832,13 +834,15 @@ function weekUp($req) {
 
 function weekDown($req) {
 
+	global $country;
+
 	$obj->successful = true;
 
 	$column = $req->column;
 
 	if (empty($req->ids)) {
 		// no selection -> update all previsions with week betwwen 1 and 8
-		$update = "UPDATE previsions SET $column = $column - 1 WHERE $column >= 2 and $column <= 9";
+		$update = "UPDATE previsions SET $column = $column - 1 WHERE $column >= 2 and $column <= 9 and country = '$country'";
 
 		if(!mysql_query($update)) {
 			$obj->successful = false;
@@ -855,7 +859,7 @@ function weekDown($req) {
 		foreach ($req->ids as $id) {
 			logPrevisionUpdateFull($id, 'weekDown');
 
-			$update = "UPDATE previsions SET $column = (case when $column > 0 then $column-1 else 0 end) WHERE id = '$id'";
+			$update = "UPDATE previsions SET $column = (case when $column > 0 then $column-1 else 0 end) WHERE id = '$id' and country = '$country'";
 
 			if(!mysql_query($update)) {
 				$obj->successful = false;
