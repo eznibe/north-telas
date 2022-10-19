@@ -307,7 +307,7 @@ function getClothRolls($clothId, $onlyAvailables) {
 							left join orders o on o.orderId=r.orderId
 							WHERE p.clothId = '$clothId' AND pro.country = '$country'
 							$condition
-							group by r.id, r.number, r.lote, r.type, r.mtsOriginal, r.incoming
+							group by r.id, r.number, r.lote, r.type, r.mtsOriginal, r.incoming, o.status
 							order by r.number";
 
 	$result = mysql_query($query);

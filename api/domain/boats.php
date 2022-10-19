@@ -260,8 +260,8 @@ function getOneDesignModels($model, $skipLoadPrevisions, $boat, $sail) {
 		$modelCondition = " AND m.boat = '$boat' AND m.sail = '$sail' ";
 	}
 
-	$query = "SELECT m.*,
-		v.maxSequence,
+	$query = "SELECT m.boat, m.sail, m.model, m.minStock,
+		max(v.maxSequence) as maxSequence,
 		sum(case when p.percentage > 99 then 1 else 0 end) stock, 
 		sum(case when p.percentage < 100 and p.percentage >= 25 then 1 else 0 end) manufacture, 
 		sum(case when p.percentage < 25 then 1 else 0 end) plotter
@@ -270,8 +270,8 @@ function getOneDesignModels($model, $skipLoadPrevisions, $boat, $sail) {
 		LEFT JOIN v_onedesign_max_sequence_by_model v on v.boat = m.boat and v.sail = m.sail and v.country = m.country
 		$where 
 		$modelCondition
-		GROUP BY m.boat, m.sail
-		ORDER BY m.boat, m.sail";
+		GROUP BY m.boat, m.sail, m.model, m.minStock
+		ORDER BY m.boat, m.sail, m.model, m.minStock";
 
 	// echo $query;
 
@@ -298,7 +298,6 @@ function getOneDesignModelPrevisions($boat, $sail, $onlyAvailables, $onlyAssigne
 	$result = mysql_query($query);
 
 	// echo $onlyAvailables . $onlyAssigned . $onlyArchived;
-	// echo $query;
 
 	return isset($withCloths) && $withCloths ? previsionsWithCloths($result) : fetch_array($result);
 }

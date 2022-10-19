@@ -89,7 +89,7 @@ function updatePrevisionStateWithDeliveryType($deliveryType) {
 	$result = mysql_query($query);
 	foreach (fetch_array($result) as $cloth) {
 		$clothResult = new stdClass();
-		$res = updatePrevisionState($cloth['id']);
+		$res = updatePrevisionState($cloth['id'], false);
 
 		$clothResult->countModified = count($res->modifiedPrevisions);
 		$clothResult->clothId = $cloth['id'];
@@ -126,7 +126,6 @@ function updatePrevisionState($clothIdsStr, $skipUpdateStateAccepted) {
 	$touchedPrevisions = array();
 	$builtPrevisions = array();
 	$recurses = 0;
-
 	$obj->successful = false;
 	$obj->method = "updatePrevisionState($clothIdsStr)";
 
@@ -139,7 +138,7 @@ function updatePrevisionState($clothIdsStr, $skipUpdateStateAccepted) {
 			// process each of the given cloths
 
 			// seek the last prevision by delivery date (including previsions of given cloth still in plotter)
-			$query = "SELECT pre.id, pre.deliveryDate, pre.createdOn, pre.orderNumber, IF(pl.id is null, 'in_design', 'in_plotter') as location, c.country as clothCountry, pre.excludeFromStateCalculation, IF(pre.excludeFromStateCalculation = true, '2999-01-01', pre.deliveryDate) as deliveryDateMod
+			$query = "SELECT pre.id, pre.deliveryDate, pre.createdOn, pre.orderNumber, IF(any_value(pl.id) is null, 'in_design', 'in_plotter') as location, c.country as clothCountry, pre.excludeFromStateCalculation, IF(pre.excludeFromStateCalculation = true, '2999-01-01', pre.deliveryDate) as deliveryDateMod
 								FROM previsions pre
 								JOIN previsioncloth pc on pc.previsionId = pre.id
 								JOIN cloths c on c.id = pc.clothId
@@ -159,7 +158,6 @@ function updatePrevisionState($clothIdsStr, $skipUpdateStateAccepted) {
 
 			$previsions = array();
 			foreach (fetch_array($result) as $prevision) { // unique result
-
         		$prevision['cloths'] = getPrevisionCloths($prevision);
 
 				//$obj->prevCloths = $prevision['cloths'];
@@ -379,7 +377,7 @@ function getPriorityPrevisions($clothId, &$prevision) {
 	// this query is including previsions of the given cloth not designed
 	// and also previsions of the given cloth already designed but still to be cutted
 	// all of them should be prior to the given prevision
-	$query = "SELECT pre.id, pre.deliveryDate, pre.createdOn, pre.orderNumber, IF(pl.id is null, 'in_design', 'in_plotter') as location, pre.excludeFromStateCalculation, IF(pre.excludeFromStateCalculation = true, '2999-01-01', pre.deliveryDate) as deliveryDateMod
+	$query = "SELECT pre.id, pre.deliveryDate, pre.createdOn, pre.orderNumber, IF(any_value(pl.id) is null, 'in_design', 'in_plotter') as location, pre.excludeFromStateCalculation, IF(pre.excludeFromStateCalculation = true, '2999-01-01', pre.deliveryDate) as deliveryDateMod
 					  FROM previsions pre
 						JOIN previsioncloth pc on pc.previsionId = pre.id
 						LEFT JOIN plotters pl on pl.previsionId = pre.id
@@ -456,7 +454,7 @@ function fillClothDisponibility(&$clothsDisponibility, $clothId) {
 		$c->inTransitType = $inTransitType;
 
 		// available stock (available in rolls - plotters)
-		$providers = getProviders($clothId);
+		$providers = getProviders($clothId, false);
 		$sumAvailable=0;
 		foreach ($providers as $provider) {
 				$sumAvailable += $provider['stock'];
@@ -573,7 +571,7 @@ function calculateAndUpdateState($prevision, $skipUpdateStateAccepted, &$clothsD
 
 	$previsionId = $prevision['id'];
 
-	logPrevisionUpdateFull($previsionId, 'calculateAndUpdateState');
+	//logPrevisionUpdateFull($previsionId, 'calculateAndUpdateState');
 
 	$update = "UPDATE previsions
 						    SET prevState = state,
@@ -583,6 +581,7 @@ function calculateAndUpdateState($prevision, $skipUpdateStateAccepted, &$clothsD
 					    WHERE id = '$previsionId'
 							  AND (state is null OR state != '$state')";
 
+	// echo $update;
 	if(!mysql_query($update)) {
 		$prevision['updateError'] = $update;
 	}

@@ -1,5 +1,7 @@
 <?php
 
+include_once 'mysql.php';
+
 function db_connect()
 {
  $db = mysql_pconnect("localhost", "suda_telas", "telas123");

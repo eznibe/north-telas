@@ -46,7 +46,7 @@ else if(isset($_GET['updateAllPrevisionsStates'])) {
 	$value = updateAllPrevisionsStates($_GET['updateClothId'], $_GET['limit'], $_GET['offset']);
 }
 else if(isset($_GET['updatePrevisionState'])) {
-	$value = updatePrevisionState($_GET['updateClothId']);
+	$value = updatePrevisionState($_GET['updateClothId'], false);
 }
 else if(isset($_GET['weeksBySeason'])) {
 	$value = getWeeksBySeason($_GET['weeksBySeason']);
@@ -61,7 +61,7 @@ else if(isset($_GET['properties'])) {
 	$value = getProperties($_GET['filter']);
 }
 else {
-	$value = getPrevisions(null, $designed, $expand, null);
+	$value = getPrevisions(null, $designed, $expand, null, null, null, null, null);
 }
 
 //return JSON array

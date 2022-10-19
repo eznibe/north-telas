@@ -34,7 +34,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 	else if(isset($_GET['edit']))
 		$value = editPrevisionField($json, $_GET['field']);
 	else if(isset($_GET['updatePrevisionState']) && isset($_GET['clothIds']))
-		$value = updatePrevisionState($_GET['clothIds']);
+		$value = updatePrevisionState($_GET['clothIds'], false);
 	else if(isset($_GET['updatePrevisionState']) && isset($_GET['deliveryType']))
 		$value = updatePrevisionStateWithDeliveryType($_GET['deliveryType']);
 	else if(isset($_GET['updateAllPrevisionsStates']))
