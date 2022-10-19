@@ -372,6 +372,10 @@ function updatePlotters($plotters, $previsionId, $obj) {
 
 		if(!mysql_query($query)) {
 			$obj->successfulPlotters = false;
+			$log->type = 'update.plotter.prevision.failed'; 
+			$log->log = $query;
+			$log->user = 'backend'; 
+			addLog($log);
 		} else {
 			$log->type = 'update.plotter.prevision'; 
 			$log->log = "plotter: '".$plotter->id."' to prevision: $previsionId";
