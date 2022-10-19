@@ -1,5 +1,7 @@
 <?php
 
+include_once 'logs.php';
+
 function getBoats() {
 
 	$prevBoat="";
@@ -260,7 +262,7 @@ function getOneDesignModels($model, $skipLoadPrevisions, $boat, $sail) {
 		$modelCondition = " AND m.boat = '$boat' AND m.sail = '$sail' ";
 	}
 
-	$query = "SELECT m.boat, m.sail, m.model, m.minStock,
+	$query = "SELECT m.*,
 		max(v.maxSequence) as maxSequence,
 		sum(case when p.percentage > 99 then 1 else 0 end) stock, 
 		sum(case when p.percentage < 100 and p.percentage >= 25 then 1 else 0 end) manufacture, 
@@ -270,8 +272,8 @@ function getOneDesignModels($model, $skipLoadPrevisions, $boat, $sail) {
 		LEFT JOIN v_onedesign_max_sequence_by_model v on v.boat = m.boat and v.sail = m.sail and v.country = m.country
 		$where 
 		$modelCondition
-		GROUP BY m.boat, m.sail, m.model, m.minStock
-		ORDER BY m.boat, m.sail, m.model, m.minStock";
+		GROUP BY m.boat, m.sail, m.model
+		ORDER BY m.boat, m.sail, m.model, m.minStock, m.line, m.country";
 
 	// echo $query;
 
