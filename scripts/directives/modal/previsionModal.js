@@ -582,6 +582,11 @@ angular.module('vsko.stock')
 
                 Previsions.save($scope.prevision, $rootScope.user.name).then(async (result) => {
 
+                  if ($scope.pendingPrevisionsToSave.length) {
+                    console.log('Adding extra previsions:', $scope.pendingPrevisionsToSave);
+                    await savePendingPrevisions();
+                  }
+
                   if(result.data.successful && result.data.isNew) {
 
                     if ($scope.previsions) {
@@ -672,11 +677,6 @@ angular.module('vsko.stock')
                     if ($scope.origPrevision.country && $scope.origPrevision.country != $scope.prevision.country) {
                       $scope.previsions.remove($scope.prevision);
                     }
-                  }
-
-                  if ($scope.pendingPrevisionsToSave.length) {
-                    console.log('Adding extra previsions:', $scope.pendingPrevisionsToSave);
-                    await savePendingPrevisions();
                   }
                 }, function(err) {
                   Utils.showIntrusiveMessage('notify.unknown_error', 'error');

@@ -1,7 +1,7 @@
 /**
  *
  */
-angular.module('vsko.stock').factory('PrevisionHelpers',[ '$q', 'uuid4', 'Previsions', function ($q, uuid4, Previsions) { //eslint-disable-line
+angular.module('vsko.stock').factory('PrevisionHelpers',[ '$q', 'uuid4', 'Previsions', 'Utils', function ($q, uuid4, Previsions, Utils) { //eslint-disable-line
   var that = {};
 
   // used when assigning an order
@@ -28,6 +28,13 @@ angular.module('vsko.stock').factory('PrevisionHelpers',[ '$q', 'uuid4', 'Previs
     const newPrevisionId = uuid4.generate();
 
     const plotters = await Previsions.getPrevisionPlotters(prevision.id);
+
+    Utils.logUIAction('onedesign.info.extractOD', {
+      type: 'odUnassign.extractOD',
+      newPrevisionId: newPrevisionId, // created after unassign
+      fromPrevisionId: prevision.id,
+      plotters: plotters.data
+    });
 
     const cloths = prevision.cloths.map(cloth => {
       return {

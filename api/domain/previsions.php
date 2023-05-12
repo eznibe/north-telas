@@ -342,6 +342,11 @@ function savePrevision($prevision)
 
 			logPrevisionUpdateFull($prevision->id, 'newPrevision');
 
+			$log->type = 'new.prevision.plotters'; 
+			$log->log = "new prevision: " . $prevision->id . " with plotters: " . (isset($prevision->plotters) ? sizeof($prevision->plotters) : 0);
+			$log->user = 'backend'; 
+			addLog($log);
+
 			if (isset($prevision->plotters)) {
 				// special case where we need to reassign some plotters to the new prevision created (OD unassign)
 				updatePlotters($prevision->plotters, $prevision->id);

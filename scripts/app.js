@@ -19,8 +19,6 @@ angular.module("vsko.stock", [
     .run(['$cookieStore', '$rootScope', '$translate', '$window', function ($cookieStore, $rootScope, $translate, $window) {
     	console.log('vsko.stock run');
 
-        $rootScope.logRocketKey = 's1wzqz/north-telas-prod';
-
     	var user = $cookieStore.get('user');
     	$rootScope.user = user ? user : {};
 
@@ -47,7 +45,9 @@ angular.module("vsko.stock", [
 			$rootScope.searchBoxChangedObservers = [];
             $rootScope.pageChangedObservers = [];
             
-            if ($rootScope.user.id) {
+            if ($rootScope.user.id == "f015d927-546b-4c8f-a895-0f803224d97d") {
+                LogRocket.init('nxe6lb/north-telas-prod');
+
                 LogRocket.identify($rootScope.user.id, {
                     name: $rootScope.user.name,
                     roles: $rootScope.user.roles,
