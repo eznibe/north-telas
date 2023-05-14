@@ -184,7 +184,12 @@ function getRolls($productId, $orderId) {
 	$query = "SELECT * FROM rolls r WHERE r.productId = '$productId' ".$orderIdCondition.$arrivedCondition;
 
 	$result = mysql_query($query);
-	return mysql_fetch_array($result, MYSQL_ASSOC);
+	
+	$rows = array();
+	while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+		array_push($rows, $row);
+	}
+	return $rows;
 }
 
 
