@@ -8,5 +8,5 @@ $db = mysql_pconnect("localhost", "telas", "telas");
 
  
 
-//phpinfo();
+phpinfo();
 ?>
